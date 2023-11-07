@@ -95,4 +95,4 @@ RUN DATABASE_URL="" \
 
 ENTRYPOINT ["/entrypoint"]
 
-CMD /start
+CMD /caprover_start
