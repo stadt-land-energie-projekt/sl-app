@@ -2,8 +2,8 @@
 
 {% block content %}
   <div class="container">
-    <h2 class="mt-4">Detailansicht</h2>
-    <div class="row mt-5">
+    <h1 class="mt-4">Detailansicht</h1>
+    <div class="row mt-4">
       <table class="table w-auto">
         <thead>
           <tr>
@@ -92,6 +92,10 @@
           </tr>
         </tbody>
       </table>
+      <a href="" class="text-muted"><i>Tabelle als CSV speichern</i></a>
+    </div>
+    <div class="mt-4">
+      <a class="btn btn-primary" href="{% url 'parameters' %}" role="button">Mit Energiesystemoptimierung für diese Gemeinden beginnen</a>
     </div>
   </div>
 {% endblock content %}
