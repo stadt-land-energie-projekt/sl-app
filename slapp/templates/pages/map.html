@@ -1,1 +1,38 @@
 {% extends "base.html" %}
+
+{% block content %}
+  <div class="container-fluid h-100">
+    <div class="row h-100">
+      <div class="col-3 sidebar pt-3 border-end border-2">
+        <!-- Add your content here -->
+        <h4 class="text-center">Karte</h4>
+        <p class="text-center">
+          Auf dieser Karte wird der Ist-Zustand der Energieerzeugung und des Verbrauchs auf Gemeindeebene dargestellt.
+        </p>
+        <p>
+          <strong>Darstellung</strong>
+        </p>
+        <select class="form-select" aria-label="Default select example">
+          <option selected value="1">installierte Leistung EE</option>
+          <option value="2">installierte Leistung Windkraft</option>
+          <option value="3">installierte Leistung PV</option>
+        </select>
+        <p class="mt-4">im Verhältnis zu</p>
+        <select class="form-select" aria-label="Default select example">
+          <option value="1" selected>...</option>
+          <option value="2">Bevölkerung</option>
+          <option value="3">Fläche</option>
+        </select>
+        <p class="mt-5">
+          Um <strong>alle Details</strong> von einer oder mehrerer Gemeinden auf einen Blick zu sehen, gehen Sie zur Detailansicht.
+        </p>
+        <p>
+          Außerdem können Sie eine <strong>kostenminimierende Energiesystemoptimierung</strong> für eine oder mehrere Gemeinden durchrechnen lassen.
+        </p>
+      </div>
+      <div class="col-9">
+        <div id="map"></div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

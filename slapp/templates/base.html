@@ -82,7 +82,7 @@
         </div>
       </nav>
     </div>
-    <div class="container mt-4">
+    <div class="container">
       {% if messages %}
         {% for message in messages %}
           <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
@@ -94,10 +94,9 @@
           </div>
         {% endfor %}
       {% endif %}
-      {% block content %}
-        <p>Hello!</p>
-      {% endblock content %}
     </div>
+    {% block content %}
+    {% endblock content %}
     <!-- /container -->
     {% block modal %}
     {% endblock modal %}
