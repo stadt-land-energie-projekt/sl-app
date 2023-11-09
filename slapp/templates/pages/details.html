@@ -1,5 +1,97 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <p>Use this document as a way to quick start any new project.</p>
+  <div class="container">
+    <h2 class="mt-4">Detailansicht</h2>
+    <div class="row mt-5">
+      <table class="table w-auto">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th class="text-end fs-5" scope="col">
+              <span class="badge bg-primary me-2 mb-2">Eichstetten am Kaiserstuhl <span class="badge-close">×</span></span>
+            </th>
+            <th class="text-end fs-5" scope="col">
+              <span class="badge bg-primary me-2 mb-2">Bahlingen am Kaiserstuhl <span class="badge-close">×</span></span>
+            </th>
+            <th class="text-end" scope="col">
+              <form id="itemForm" class="row g-3 align-items-center">
+                <div class="col-auto">
+                  <input type="text"
+                         class="form-control form-control-sm"
+                         id="itemInput"
+                         placeholder="Gemeinde hinzufügen" />
+                </div>
+                <div class="col-auto">
+                  <button type="submit" class="btn btn-secondary btn-sm">Hinzufügen</button>
+                </div>
+              </form>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <tr>
+            <th scope="row">Bevölkerung</th>
+            <td class="text-end">3.642</td>
+            <td class="text-end">4.388</td>
+          </tr>
+          <tr>
+            <th scope="row">Fläche</th>
+            <td class="text-end">12</td>
+            <td class="text-end">13</td>
+          </tr>
+          <tr class="table-active">
+            <th scope="row">Stromerzeugung (in KW)</th>
+            <td class="text-end">4.104</td>
+            <td class="text-end">4.567</td>
+          </tr>
+          <tr>
+            <td>Aufdach-PV</td>
+            <td class="text-end">4.084</td>
+            <td class="text-end">4.567</td>
+          </tr>
+          <tr>
+            <td>Freiflächen-PV</td>
+            <td class="text-end">0</td>
+            <td class="text-end">0</td>
+          </tr>
+          <tr>
+            <td>Windkraft</td>
+            <td class="text-end">0</td>
+            <td class="text-end">0</td>
+          </tr>
+          <tr>
+            <td>Biomasse</td>
+            <td class="text-end">20</td>
+            <td class="text-end">0</td>
+          </tr>
+          <tr>
+            <td>Wasserkraft</td>
+            <td class="text-end">0</td>
+            <td class="text-end">0</td>
+          </tr>
+          <tr class="table-active">
+            <th scope="row">Stromspeicherung (in KWh)</th>
+            <td class="text-end">373</td>
+            <td class="text-end">629</td>
+          </tr>
+          <tr>
+            <td>Batteriespeicher</td>
+            <td class="text-end">373</td>
+            <td class="text-end">629</td>
+          </tr>
+          <tr>
+            <td>sonst. Speicher</td>
+            <td class="text-end">0</td>
+            <td class="text-end">0</td>
+          </tr>
+          <tr class="table-active">
+            <th scope="row">jährl. Energiebedarf (in MWh)</th>
+            <td class="text-end">39.073</td>
+            <td class="text-end">46.629</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 {% endblock content %}
