@@ -81,6 +81,8 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "drf_spectacular",
+    "django_mapengine",
+    "django_distill",
 ]
 
 LOCAL_APPS = [
@@ -344,3 +346,30 @@ SPECTACULAR_SETTINGS = {
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
+# django-mapengine
+# ------------------------------------------------------------------------------
+# https://github.com/rl-institut/django-mapengine
+
+MAP_ENGINE_CENTER_AT_STARTUP = [10.407237624103573, 51.22757621251938]
+MAP_ENGINE_ZOOM_AT_STARTUP = 5.546712433728557
+MAP_ENGINE_MAX_BOUNDS: [[-2.54, 46.35], [23.93, 55.87]]
+MAP_ENGINE_LAYERS_AT_STARTUP = []
+
+MAP_ENGINE_STYLES_FOLDER = "slapp/static/styles/"
+MAP_ENGINE_MIN_ZOOM = 2
+
+# needs to be empty to disable centration- and moveto-behavior onclick
+MAP_ENGINE_ZOOM_LEVELS = {
+    # "country": setup.Zoom(2, 7),
+    # "state": setup.Zoom(7, 9),
+    # "district": setup.Zoom(9, 11),
+    # "municipality": setup.Zoom(11, 13),
+}
+
+MAP_ENGINE_IMAGES = []
+MAP_ENGINE_API_MVTS = {}
+MAP_ENGINE_API_CLUSTERS = []
+MAP_ENGINE_MAPLAYER_MODEL = "MapLayer"
+# not needed when using MAPLAYER_MODEL
+MAP_ENGINE_CHOROPLETHS = []
+MAP_ENGINE_POPUPS = []

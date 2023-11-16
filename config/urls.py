@@ -18,6 +18,7 @@ urlpatterns = [
     path("map/", TemplateView.as_view(template_name="pages/map.html"), name="map"),
     path("details/", TemplateView.as_view(template_name="pages/details.html"), name="details"),
     path("parameters/", TemplateView.as_view(template_name="pages/parameters.html"), name="parameters"),
+    # path("map/", include("django_mapengine.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS

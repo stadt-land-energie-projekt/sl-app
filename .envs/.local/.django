@@ -1,13 +1,23 @@
 # General
 # ------------------------------------------------------------------------------
-USE_DOCKER=yes
+USE_DOCKER=no
 IPYTHONDIR=/app/.ipython
+DATABASE_URL=postgres://postgres:password@localhost:5432/slapp
+
+# Mapbox
+# ------------------------------------------------------------------------------
+
+TILING_SERVICE_TOKEN=GWZONJhjMFBnGpzoP3UY
+TILING_SERVICE_STYLE_ID=50f05aa1-d313-4a6c-b520-22f2d669b543
+
+USE_DISTILLED_MVTS=False
 # Redis
 # ------------------------------------------------------------------------------
 REDIS_URL=redis://redis:6379/0
 
 # Celery
 # ------------------------------------------------------------------------------
+ CELERY_BROKER_URL=redis://localhost:6379/0
 
 # Flower
 CELERY_FLOWER_USER=LgzixLOVPLdhgjIDyQJUZWBJjgRPsqAR
