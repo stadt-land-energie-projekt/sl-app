@@ -28,3 +28,4 @@ git+https://github.com/rl-institut/django-mapengine.git@optional_map_layer_model
 django-distill>=2.6,<3.0
 geojson>=2.5.0,<3.0
 django-geojson>=3.1.0,<4.0
+pandas

@@ -5,6 +5,10 @@ from pathlib import Path
 
 import environ
 
+ROOT_DIR = environ.Path(__file__) - 3  # (slapp/config/settings/base.py - 3 = slapp/)
+APPS_DIR = ROOT_DIR.path("slapp")
+DATA_DIR = APPS_DIR.path("data")
+GEODATA_DIR = DATA_DIR.path("geodata")
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # slapp/
 APPS_DIR = BASE_DIR / "slapp"
@@ -69,6 +73,7 @@ DJANGO_APPS = [
     # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
     "django.forms",
+    "django.contrib.gis",
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",

@@ -1,0 +1,1853 @@
+{
+    "name": "stadt-land-energie-datapackage",
+    "description": "Datapackage for Digiplan app",
+    "resources": {
+        "base_data": {
+            "scalars": {
+                "population": {
+                    "description": "Bev\u00f6lkerung",
+                    "path": "scalars/population.csv",
+                    "fields": {
+                        "2010": {
+                            "description": "Bev\u00f6lkerung 2010",
+                            "unit": "-"
+                        },
+                        "2015": {
+                            "description": "Bev\u00f6lkerung 2015",
+                            "unit": "-"
+                        },
+                        "2020": {
+                            "description": "Bev\u00f6lkerung 2020",
+                            "unit": "-"
+                        },
+                        "2021": {
+                            "description": "Bev\u00f6lkerung 2021",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bev\u00f6lkerung 2022",
+                            "unit": "-"
+                        },
+                        "2025": {
+                            "description": "Bev\u00f6lkerung 2025",
+                            "unit": "-"
+                        },
+                        "2030": {
+                            "description": "Bev\u00f6lkerung 2030",
+                            "unit": "-"
+                        },
+                        "2035": {
+                            "description": "Bev\u00f6lkerung 2035",
+                            "unit": "-"
+                        },
+                        "2040": {
+                            "description": "Bev\u00f6lkerung 2040",
+                            "unit": "-"
+                        },
+                        "2045": {
+                            "description": "Bev\u00f6lkerung 2045",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "population_region",
+                        "file": "population.csv"
+                    }
+                },
+                "employment": {
+                    "description": "Besch\u00e4ftigte und Betriebe",
+                    "path": "scalars/employment.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "employees_total": {
+                            "description": "Sozialversicherungspflichtige Besch\u00e4ftigte gesamt",
+                            "unit": "-"
+                        },
+                        "companies_total": {
+                            "description": "Betriebe gesamt",
+                            "unit": "-"
+                        },
+                        "employees_ind": {
+                            "description": "Sozialversicherungspflichtige Besch\u00e4ftigte in der Industrie",
+                            "unit": "-"
+                        },
+                        "companies_ind": {
+                            "description": "Industriebetriebe",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "employment_region",
+                        "file": "employment.csv"
+                    }
+                },
+                "osm_buildings": {
+                    "description": "Geb\u00e4udegrundfl\u00e4chen und regionaler Anteil",
+                    "path": "scalars/osm_buildings_ground_area.json",
+                    "fields": {
+                        "building_ground_area_country": {
+                            "description": "Summe Geb\u00e4udegrundfl\u00e4che in Deutschland",
+                            "unit": "m2"
+                        },
+                        "building_ground_area_region": {
+                            "description": "Summe Geb\u00e4udegrundfl\u00e4che in der Region",
+                            "unit": "m2"
+                        },
+                        "building_ground_area_share_region": {
+                            "description": "Regionaler Anteil an Geb\u00e4udegrundfl\u00e4chen",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "osm_buildings",
+                        "file": "osm_buildings_ground_area.json"
+                    }
+                }
+            },
+            "geodata": {
+                "bkg_vg250_region": {
+                    "description": "Region",
+                    "path": "geodata/bkg_vg250_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "bkg_vg250_region",
+                        "file": "bkg_vg250_region.gpkg"
+                    }
+                },
+                "bkg_vg250_districts_region": {
+                    "description": "Landkreise",
+                    "path": "geodata/bkg_vg250_districts_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "bkg_vg250_districts_region",
+                        "file": "bkg_vg250_districts_region.gpkg"
+                    }
+                },
+                "bkg_vg250_muns_region": {
+                    "description": "Gemeinden",
+                    "path": "geodata/bkg_vg250_muns_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "bkg_vg250_muns_region",
+                        "file": "bkg_vg250_muns_region.gpkg"
+                    }
+                },
+                "air_traffic_control_system_region": {
+                    "description": "Drehfunkfeuer",
+                    "path": "geodata/air_traffic_control_system_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "air_traffic_control_system_region.gpkg"
+                    }
+                },
+                "aviation_region": {
+                    "description": "Luftverkehr",
+                    "path": "geodata/aviation_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "aviation_region.gpkg"
+                    }
+                },
+                "biosphere_reserve_region": {
+                    "description": "Biosph\u00e4renreservate",
+                    "path": "geodata/biosphere_reserve_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "biosphere_reserve_region.gpkg"
+                    }
+                },
+                "drinking_water_protection_area_region": {
+                    "description": "Wasserschutzgebiete",
+                    "path": "geodata/drinking_water_protection_area_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "drinking_water_protection_area_region.gpkg"
+                    }
+                },
+                "fauna_flora_habitat_region": {
+                    "description": "Fauna-Flora-Habitate",
+                    "path": "geodata/fauna_flora_habitat_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "fauna_flora_habitat_region.gpkg"
+                    }
+                },
+                "floodplain_region": {
+                    "description": "\u00dcberschwemmungsgebiete",
+                    "path": "geodata/floodplain_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "floodplain_region.gpkg"
+                    }
+                },
+                "forest_region": {
+                    "description": "W\u00e4lder",
+                    "path": "geodata/forest_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "forest_region.gpkg"
+                    }
+                },
+                "grid_region": {
+                    "description": "Stromnetze (>=110 kV)",
+                    "path": "geodata/grid_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "grid_region.gpkg"
+                    }
+                },
+                "industry_region": {
+                    "description": "Industrie- und Gewerbegebiete",
+                    "path": "geodata/industry_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "industry_region.gpkg"
+                    }
+                },
+                "landscape_protection_area_region": {
+                    "description": "Landschaftsschutzgebiete",
+                    "path": "geodata/landscape_protection_area_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "landscape_protection_area_region.gpkg"
+                    }
+                },
+                "less_favoured_areas_agricultural_region": {
+                    "description": "Benachteiligte Gebiete",
+                    "path": "geodata/less_favoured_areas_agricultural_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "less_favoured_areas_agricultural_region.gpkg"
+                    }
+                },
+                "military_region": {
+                    "description": "Milit\u00e4rische Sperrgebiete und Liegenschaften",
+                    "path": "geodata/military_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "military_region.gpkg"
+                    }
+                },
+                "nature_conservation_area_region": {
+                    "description": "Naturschutzgebiete",
+                    "path": "geodata/nature_conservation_area_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "nature_conservation_area_region.gpkg"
+                    }
+                },
+                "railway_region": {
+                    "description": "Bahnverkehr",
+                    "path": "geodata/railway_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "railway_region.gpkg"
+                    }
+                },
+                "road_region": {
+                    "description": "Stra\u00dfen",
+                    "path": "geodata/road_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "road_region.gpkg"
+                    }
+                },
+                "road_railway-500m_region": {
+                    "description": "Stra\u00dfen und Bahnverkehr (500 m Puffer)",
+                    "path": "geodata/road_railway-500m_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "road_railway-500m_region.gpkg"
+                    }
+                },
+                "settlement-0m_region": {
+                    "description": "Siedlungen",
+                    "path": "geodata/settlement-0m_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "settlement-0m_region.gpkg"
+                    }
+                },
+                "soil_quality_high_region": {
+                    "description": "Ackerfl\u00e4chen mit hoher Bodenqualit\u00e4t (Soil Quality Rating >= 40)",
+                    "path": "geodata/soil_quality_high_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "soil_quality_high_region.gpkg"
+                    }
+                },
+                "soil_quality_low_region": {
+                    "description": "Ackerfl\u00e4chen mit geringer Bodenqualit\u00e4t (Soil Quality Rating < 40)",
+                    "path": "geodata/soil_quality_low_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "soil_quality_low_region.gpkg"
+                    }
+                },
+                "special_protection_area_region": {
+                    "description": "Vogelschutzgebiete",
+                    "path": "geodata/special_protection_area_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "special_protection_area_region.gpkg"
+                    }
+                },
+                "water_region": {
+                    "description": "Gew\u00e4ssser",
+                    "path": "geodata/water_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "rli_pv_wfr_region",
+                        "file": "water_region.gpkg"
+                    }
+                }
+            }
+        },
+        "production": {
+            "scalars": {
+                "biomass": {
+                    "description": "Biomasseanlagen: Installierte Leistung und Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_biomass_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "capacity_net": {
+                            "description": "Nennleistung",
+                            "unit": "MW"
+                        },
+                        "count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_biomass_region",
+                        "file": "bnetza_mastr_biomass_stats_muns.csv"
+                    }
+                },
+                "combustion": {
+                    "description": "Verbrennungskraftwerke: Installierte Leistung und Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_combustion_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "capacity_net": {
+                            "description": "Nennleistung",
+                            "unit": "MW"
+                        },
+                        "count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_combustion_region",
+                        "file": "bnetza_mastr_combustion_stats_muns.csv"
+                    }
+                },
+                "gsgk": {
+                    "description": "Geo- oder Solarthermie-, Grubengas- und Kl\u00e4rschlamm-Anlagen: Installierte Leistung und Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_gsgk_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "capacity_net": {
+                            "description": "Nennleistung",
+                            "unit": "MW"
+                        },
+                        "count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_gsgk_region",
+                        "file": "bnetza_mastr_gsgk_stats_muns.csv"
+                    }
+                },
+                "hydro-ror": {
+                    "description": "Wasserkraftanlagen: Installierte Leistung und Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_hydro_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "capacity_net": {
+                            "description": "Nennleistung",
+                            "unit": "MW"
+                        },
+                        "count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_hydro_region",
+                        "file": "bnetza_mastr_hydro_stats_muns.csv"
+                    }
+                },
+                "solar-pv_ground": {
+                    "description": "PV-Freifl\u00e4chenanlagen: Installierte Leistung und Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_pv_ground_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "capacity_net": {
+                            "description": "Nennleistung",
+                            "unit": "MW"
+                        },
+                        "count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_pv_ground_region",
+                        "file": "bnetza_mastr_pv_ground_stats_muns.csv"
+                    }
+                },
+                "solar-pv_ground_development_over_time": {
+                    "description": "Ver\u00e4nderung (pro Jahr) der installierten Gesamtleistung und der Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_pv_ground_development_over_time.csv",
+                    "fields": {
+                        "year": {
+                            "description": "Jahr",
+                            "unit": "-"
+                        },
+                        "capacity_net": {
+                            "description": "Nennleistung",
+                            "unit": "MW"
+                        },
+                        "unit_count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_pv_ground_region",
+                        "file": "bnetza_mastr_pv_ground_development_over_time.csv"
+                    }
+                },
+                "solar-pv_rooftop": {
+                    "description": "PV-Aufdachanlagen: Installierte Leistung und Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_pv_roof_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "capacity_net": {
+                            "description": "Nennleistung",
+                            "unit": "MW"
+                        },
+                        "count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_pv_roof_region",
+                        "file": "bnetza_mastr_pv_roof_stats_muns.csv"
+                    }
+                },
+                "solar-pv_rooftop_development_over_time": {
+                    "description": "Ver\u00e4nderung (pro Jahr) der installierten Gesamtleistung und der Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_pv_roof_development_over_time.csv",
+                    "fields": {
+                        "year": {
+                            "description": "Jahr",
+                            "unit": "-"
+                        },
+                        "capacity_net": {
+                            "description": "Nennleistung",
+                            "unit": "MW"
+                        },
+                        "unit_count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_pv_roof_region",
+                        "file": "bnetza_mastr_pv_roof_development_over_time.csv"
+                    }
+                },
+                "storage": {
+                    "description": "Batteriespeicher gesamt: Installierte Leistung und Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_storage_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "storage_capacity": {
+                            "description": "Speicherkapazit\u00e4t",
+                            "unit": "MWh"
+                        },
+                        "count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_storage_region",
+                        "file": "bnetza_mastr_storage_stats_muns.csv"
+                    }
+                },
+                "storage_large": {
+                    "description": "Batteriespeicher gro\u00df (>=100 kWh): Installierte Leistung und Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_storage_large_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "storage_capacity": {
+                            "description": "Speicherkapazit\u00e4t",
+                            "unit": "MWh"
+                        },
+                        "count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_storage_region",
+                        "file": "bnetza_mastr_storage_large_stats_muns.csv"
+                    }
+                },
+                "storage_small": {
+                    "description": "Batteriespeicher klein (<100 kWh): Installierte Leistung und Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_storage_small_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "storage_capacity": {
+                            "description": "Speicherkapazit\u00e4t",
+                            "unit": "MWh"
+                        },
+                        "count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_storage_region",
+                        "file": "bnetza_mastr_storage_small_stats_muns.csv"
+                    }
+                },
+                "storage_pv_roof": {
+                    "description": "Spezifische Kapazit\u00e4t und Leistung von Batteriespeichern, die PV-Aufdachanlagen zugeordnet sind (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_storage_pv_roof.json",
+                    "fields": {
+                        "pv_roof_share": {
+                            "all_storages": {
+                                "description": "Anteil von PV-Aufdachanlagen mit Speicher (alle Anlagen und Speicher)",
+                                "unit": "-"
+                            },
+                            "home_storages": {
+                                "description": "Anteil von PV-Aufdachanlagen mit Speicher (kleine Anlagen und Speicher)",
+                                "unit": ""
+                            }
+                        },
+                        "specific_capacity": {
+                            "all_storages": {
+                                "description": "Mittlere spezifische Kapazit\u00e4t aller Speicher",
+                                "unit": "kWh/kWp"
+                            },
+                            "home_storages": {
+                                "description": "Mittlere spezifische Kapazit\u00e4t von kleinen Speichern",
+                                "unit": "kWh/kWp"
+                            }
+                        },
+                        "specific_power": {
+                            "all_storages": {
+                                "description": "Mittlere spezifische Leistung aller Speicher",
+                                "unit": "kW/kWp"
+                            },
+                            "home_storages": {
+                                "description": "Mittlere spezifische Leistung von kleinen Speichern",
+                                "unit": "kW/kWp"
+                            }
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_storage_region",
+                        "file": "bnetza_mastr_storage_pv_roof.json"
+                    }
+                },
+                "wind-onshore": {
+                    "description": "Windenergieanlagen: Installierte Leistung und Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_wind_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "capacity_net": {
+                            "description": "Nennleistung",
+                            "unit": "MW"
+                        },
+                        "count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_wind_region",
+                        "file": "bnetza_mastr_wind_stats_muns.csv"
+                    }
+                },
+                "wind-onshore_development_over_time": {
+                    "description": "Ver\u00e4nderung (pro Jahr) der installierten Gesamtleistung und der Anzahl (in Betrieb)",
+                    "path": "scalars/bnetza_mastr_wind_development_over_time.csv",
+                    "fields": {
+                        "year": {
+                            "description": "Jahr",
+                            "unit": "-"
+                        },
+                        "capacity_net": {
+                            "description": "Nennleistung",
+                            "unit": "MW"
+                        },
+                        "unit_count": {
+                            "description": "Anzahl",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_wind_region",
+                        "file": "bnetza_mastr_wind_development_over_time.csv"
+                    }
+                },
+                "technology_data": {
+                    "description": "Volllaststunden je Technologie und Jahr",
+                    "path": "scalars/technology_data.json",
+                    "fields": {
+                        "full_load_hours": {
+                            "wind": {
+                                "description": "Volllaststunden Windenergie",
+                                "unit": "-"
+                            },
+                            "pv_ground": {
+                                "description": "Volllaststunden Freifl\u00e4chen-PV",
+                                "unit": "-"
+                            },
+                            "pv_roof": {
+                                "description": "Volllaststunden Aufdach-PV",
+                                "unit": "-"
+                            },
+                            "st": {
+                                "description": "Volllaststunden Solarthermie",
+                                "unit": "-"
+                            },
+                            "ror": {
+                                "description": "Volllaststunden Laufwasserkraft",
+                                "unit": "-"
+                            },
+                            "bioenergy": {
+                                "description": "Volllaststunden Bioenergie-Stromerzeugung (ohne biogenen Teil des Abfalls)",
+                                "unit": "-"
+                            }
+                        },
+                        "power_density": {
+                            "wind": {
+                                "description": "Leistungsdichte Windenergie",
+                                "unit": "MW/km2"
+                            },
+                            "pv_ground": {
+                                "description": "Leistungsdichte PV-Freifl\u00e4chenanlagen",
+                                "unit": "MW/km2"
+                            },
+                            "pv_roof": {
+                                "description": "Leistungsdichte PV-Aufdachanlagen",
+                                "unit": "MW/km2"
+                            },
+                            "st": {
+                                "description": "Leistungsdichte Solarthermie",
+                                "unit": "MW/km2"
+                            }
+                        },
+                        "nominal_power_per_unit": {
+                            "wind": {
+                                "description": "Nennleistung je Anlage",
+                                "unit": "MW/Anlage"
+                            }
+                        },
+                        "batteries": {
+                            "large": {
+                                "nominal_power_per_storage_capacity": {
+                                    "description": "Speichernennleistung je Speicherkapazit\u00e4t",
+                                    "unit": "kW/kWh"
+                                }
+                            },
+                            "small": {
+                                "nominal_power_per_storage_capacity": {
+                                    "description": "Speichernennleistung je Speicherkapazit\u00e4t",
+                                    "unit": "kW/kWh"
+                                },
+                                "storage_capacity_per_pv_power": {
+                                    "description": "Speicherkapazit\u00e4t je Nennleistung der PV-Anlage",
+                                    "unit": "kWh/kWp"
+                                }
+                            }
+                        },
+                        "hot_water_storages": {
+                            "large": {
+                                "nominal_power_per_storage_capacity": {
+                                    "description": "Speichernennleistung je Speicherkapazit\u00e4t",
+                                    "unit": "kW/kWh"
+                                }
+                            },
+                            "small": {
+                                "nominal_power_per_storage_capacity": {
+                                    "description": "Speichernennleistung je Speicherkapazit\u00e4t",
+                                    "unit": "kW/kWh"
+                                }
+                            }
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "technology_data",
+                        "file": "technology_data.json"
+                    }
+                }
+            },
+            "sequences": {
+                "solar-pv_ground_profile": {
+                    "description": "Einspeisezeitreihe PV-Freifl\u00e4chenanlagen, auf 1 normalisiert",
+                    "path": "sequences/pv_feedin_timeseries.csv",
+                    "fields": {
+                        "power": {
+                            "description": "Einspeisung",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "renewable_feedin",
+                        "file": "pv_feedin_timeseries.csv"
+                    }
+                },
+                "solar-pv_rooftop_profile": {
+                    "description": "Einspeisezeitreihe PV-Aufdachanlagen, auf 1 normalisiert",
+                    "path": "sequences/pv_feedin_timeseries.csv",
+                    "fields": {
+                        "power": {
+                            "description": "Einspeisung",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "renewable_feedin",
+                        "file": "pv_feedin_timeseries.csv"
+                    }
+                },
+                "solar-thermalcollector_profile": {
+                    "description": "Einspeisezeitreihe Solarthermie, auf 1 normalisiert",
+                    "path": "sequences/st_feedin_timeseries.csv",
+                    "fields": {
+                        "power": {
+                            "description": "Einspeisung",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "renewable_feedin",
+                        "file": "st_feedin_timeseries.csv"
+                    }
+                },
+                "hydro-ror_profile": {
+                    "description": "Einspeisezeitreihe Wasserkraft, auf 1 normalisiert",
+                    "path": "sequences/ror_feedin_timeseries.csv",
+                    "fields": {
+                        "power": {
+                            "description": "Einspeisung",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "renewable_feedin",
+                        "file": "ror_feedin_timeseries.csv"
+                    }
+                },
+                "wind-onshore_profile": {
+                    "description": "Einspeisezeitreihe Windenergie, auf 1 normalisiert",
+                    "path": "sequences/wind_feedin_timeseries.csv",
+                    "fields": {
+                        "power": {
+                            "description": "Einspeisung",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "renewable_feedin",
+                        "file": "wind_feedin_timeseries.csv"
+                    }
+                },
+                "heatpump-cop_profile": {
+                    "description": "W\u00e4rmepumpen COP-Zeitreihe",
+                    "path": "sequences/heatpump_cop_timeseries.csv",
+                    "fields": {
+                        "cop": {
+                            "description": "COP",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "heatpump_cop",
+                        "file": "heatpump_cop_timeseries.csv"
+                    }
+                }
+            },
+            "geodata": {
+                "bnetza_mastr_biomass_agg_region": {
+                    "description": "Biomasseanlagen (In Betrieb oder geplant)",
+                    "path": "geodata/bnetza_mastr_biomass_agg_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_biomass_region",
+                        "file": "bnetza_mastr_biomass_agg_region.gpkg"
+                    }
+                },
+                "bnetza_mastr_combustion_agg_region": {
+                    "description": "Verbrennungskraftwerke (In Betrieb oder geplant)",
+                    "path": "geodata/bnetza_mastr_combustion_agg_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_combustion_region",
+                        "file": "bnetza_mastr_combustion_agg_region.gpkg"
+                    }
+                },
+                "bnetza_mastr_gsgk_agg_region": {
+                    "description": "Geo- oder Solarthermie-, Grubengas- und Kl\u00e4rschlamm-Anlagen (In Betrieb oder geplant)",
+                    "path": "geodata/bnetza_mastr_gsgk_agg_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_gsgk_region",
+                        "file": "bnetza_mastr_gsgk_agg_region.gpkg"
+                    }
+                },
+                "bnetza_mastr_hydro_agg_region": {
+                    "description": "Wasserkraftanlagen (In Betrieb oder geplant)",
+                    "path": "geodata/bnetza_mastr_hydro_agg_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_hydro_region",
+                        "file": "bnetza_mastr_hydro_agg_region.gpkg"
+                    }
+                },
+                "bnetza_mastr_pv_ground_agg_region": {
+                    "description": "PV-Freifl\u00e4chenanlagen (In Betrieb oder geplant)",
+                    "path": "geodata/bnetza_mastr_pv_ground_agg_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_pv_ground_region",
+                        "file": "bnetza_mastr_pv_ground_agg_region.gpkg"
+                    }
+                },
+                "bnetza_mastr_pv_roof_agg_region": {
+                    "description": "PV-Aufdachanlagen (In Betrieb oder geplant)",
+                    "path": "geodata/bnetza_mastr_pv_roof_agg_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_pv_roof_region",
+                        "file": "bnetza_mastr_pv_roof_agg_region.gpkg"
+                    }
+                },
+                "bnetza_mastr_storage_agg_region": {
+                    "description": "Batteriespeicher (In Betrieb oder geplant)",
+                    "path": "geodata/bnetza_mastr_storage_agg_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_storage_region",
+                        "file": "bnetza_mastr_storage_agg_region.gpkg"
+                    }
+                },
+                "bnetza_mastr_wind_agg_region": {
+                    "description": "Windenergieanlagen (In Betrieb oder geplant)",
+                    "path": "geodata/bnetza_mastr_wind_agg_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "bnetza_mastr_wind_region",
+                        "file": "bnetza_mastr_wind_agg_region.gpkg"
+                    }
+                }
+            }
+        },
+        "demand": {
+            "scalars": {
+                "electricity-demand_hh": {
+                    "description": "Strombedarf Haushalte",
+                    "path": "scalars/demand_hh_power_demand.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bedarf 2022",
+                            "unit": "MWh"
+                        },
+                        "2045": {
+                            "description": "Bedarf 2045",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_electricity_region",
+                        "file": "demand_hh_power_demand.csv"
+                    }
+                },
+                "electricity-demand_cts": {
+                    "description": "Strombedarf GHD",
+                    "path": "scalars/demand_cts_power_demand.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bedarf 2022",
+                            "unit": "MWh"
+                        },
+                        "2045": {
+                            "description": "Bedarf 2045",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_electricity_region",
+                        "file": "demand_cts_power_demand.csv"
+                    }
+                },
+                "electricity-demand_ind": {
+                    "description": "Strombedarf Industrie",
+                    "path": "scalars/demand_ind_power_demand.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bedarf 2022",
+                            "unit": "MWh"
+                        },
+                        "2045": {
+                            "description": "Bedarf 2045",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_electricity_region",
+                        "file": "demand_ind_power_demand.csv"
+                    }
+                },
+                "heat-demand_hh": {
+                    "description": "W\u00e4rmebedarf Haushalte gesamt",
+                    "path": "scalars/demand_hh_heat_demand.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bedarf 2022",
+                            "unit": "MWh"
+                        },
+                        "2045": {
+                            "description": "Bedarf 2045",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_hh_heat_demand.csv"
+                    }
+                },
+                "heat_central-demand_hh": {
+                    "description": "W\u00e4rmebedarf Haushalte Fernw\u00e4rme",
+                    "path": "scalars/demand_hh_heat_demand_cen.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bedarf 2022",
+                            "unit": "MWh"
+                        },
+                        "2045": {
+                            "description": "Bedarf 2045",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_hh_heat_demand_cen.csv"
+                    }
+                },
+                "heat_decentral-demand_hh": {
+                    "description": "W\u00e4rmebedarf Haushalte dezentral",
+                    "path": "scalars/demand_hh_heat_demand_dec.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bedarf 2022",
+                            "unit": "MWh"
+                        },
+                        "2045": {
+                            "description": "Bedarf 2045",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_hh_heat_demand_dec.csv"
+                    }
+                },
+                "heat-demand_cts": {
+                    "description": "W\u00e4rmebedarf GHD gesamt",
+                    "path": "scalars/demand_cts_heat_demand.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bedarf 2022",
+                            "unit": "MWh"
+                        },
+                        "2045": {
+                            "description": "Bedarf 2045",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_cts_heat_demand.csv"
+                    }
+                },
+                "heat_central-demand_cts": {
+                    "description": "W\u00e4rmebedarf GHD Fernw\u00e4rme",
+                    "path": "scalars/demand_cts_heat_demand_cen.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bedarf 2022",
+                            "unit": "MWh"
+                        },
+                        "2045": {
+                            "description": "Bedarf 2045",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_cts_heat_demand_cen.csv"
+                    }
+                },
+                "heat_decentral-demand_cts": {
+                    "description": "W\u00e4rmebedarf GHD dezentral",
+                    "path": "scalars/demand_cts_heat_demand_dec.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bedarf 2022",
+                            "unit": "MWh"
+                        },
+                        "2045": {
+                            "description": "Bedarf 2045",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_cts_heat_demand_dec.csv"
+                    }
+                },
+                "heat-demand_ind": {
+                    "description": "W\u00e4rmebedarf Industrie gesamt",
+                    "path": "scalars/demand_ind_heat_demand.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bedarf 2022",
+                            "unit": "MWh"
+                        },
+                        "2045": {
+                            "description": "Bedarf 2045",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_ind_heat_demand.csv"
+                    }
+                },
+                "heat_central-demand_ind": {
+                    "description": "W\u00e4rmebedarf Industrie Fernw\u00e4rme",
+                    "path": "scalars/demand_ind_heat_demand_cen.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bedarf 2022",
+                            "unit": "MWh"
+                        },
+                        "2045": {
+                            "description": "Bedarf 2045",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_ind_heat_demand_cen.csv"
+                    }
+                },
+                "heat_decentral-demand_ind": {
+                    "description": "W\u00e4rmebedarf Industrie dezentral",
+                    "path": "scalars/demand_ind_heat_demand_dec.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "2022": {
+                            "description": "Bedarf 2022",
+                            "unit": "MWh"
+                        },
+                        "2045": {
+                            "description": "Bedarf 2045",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_ind_heat_demand_dec.csv"
+                    }
+                },
+                "heating_structure_decentral": {
+                    "description": "Beheizungsstruktur dezentral (energetische Anteile)",
+                    "path": "scalars/demand_heat_structure_esys_dec.csv",
+                    "fields": {
+                        "year": {
+                            "description": "Jahr",
+                            "unit": "-"
+                        },
+                        "carrier": {
+                            "description": "Energietr\u00e4ger",
+                            "unit": "-"
+                        },
+                        "demand_rel": {
+                            "description": "Relativer Bedarf",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_heat_structure_esys_dec.csv"
+                    }
+                },
+                "heating_structure_central": {
+                    "description": "Beheizungsstruktur Fernw\u00e4rme (energetische Anteile)",
+                    "path": "scalars/demand_heat_structure_esys_cen.csv",
+                    "fields": {
+                        "year": {
+                            "description": "Jahr",
+                            "unit": "-"
+                        },
+                        "carrier": {
+                            "description": "Energietr\u00e4ger",
+                            "unit": "-"
+                        },
+                        "demand_rel": {
+                            "description": "Relativer Bedarf",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_heat_structure_esys_cen.csv"
+                    }
+                }
+            },
+            "sequences": {
+                "electricity-demand_hh_profile": {
+                    "description": "Strombedarfszeitreihe Haushalte, auf 1 normalisiert",
+                    "path": "sequences/demand_hh_power_timeseries.csv",
+                    "fields": {
+                        "demand_norm": {
+                            "description": "Bedarf",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_electricity_region",
+                        "file": "demand_hh_power_timeseries.csv"
+                    }
+                },
+                "electricity-demand_cts_profile": {
+                    "description": "Strombedarfszeitreihe GHD, auf 1 normalisiert",
+                    "path": "sequences/demand_cts_power_timeseries.csv",
+                    "fields": {
+                        "demand_norm": {
+                            "description": "Bedarf",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_electricity_region",
+                        "file": "demand_cts_power_timeseries.csv"
+                    }
+                },
+                "electricity-demand_ind_profile": {
+                    "description": "Strombedarfszeitreihe Industrie, auf 1 normalisiert",
+                    "path": "sequences/demand_ind_power_timeseries.csv",
+                    "fields": {
+                        "demand_norm": {
+                            "description": "Bedarf",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_electricity_region",
+                        "file": "demand_ind_power_timeseries.csv"
+                    }
+                },
+                "heat-demand_hh_profile": {
+                    "description": "W\u00e4rmebedarfszeitreihe Haushalte, auf 1 normalisiert",
+                    "path": "sequences/demand_hh_heat_timeseries.csv",
+                    "fields": {
+                        "demand_norm": {
+                            "description": "Bedarf",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_hh_heat_timeseries.csv"
+                    }
+                },
+                "heat-demand_cts_profile": {
+                    "description": "W\u00e4rmebedarfszeitreihe GHD, auf 1 normalisiert",
+                    "path": "sequences/demand_cts_heat_timeseries.csv",
+                    "fields": {
+                        "demand_norm": {
+                            "description": "Bedarf",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_cts_heat_timeseries.csv"
+                    }
+                },
+                "heat-demand_ind_profile": {
+                    "description": "W\u00e4rmebedarfszeitreihe Industrie, auf 1 normalisiert",
+                    "path": "sequences/demand_ind_heat_timeseries.csv",
+                    "fields": {
+                        "demand_norm": {
+                            "description": "Bedarf",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "demand_heat_region",
+                        "file": "demand_ind_heat_timeseries.csv"
+                    }
+                }
+            }
+        },
+        "potential_areas": {
+            "scalars": {
+                "wind_area_stats": {
+                    "description": "Fl\u00e4chensumme Potenzialfl\u00e4chen Windenergie je Fl\u00e4chentyp",
+                    "path": "scalars/potentialarea_wind_area_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "stp_2018_vreg": {
+                            "description": "STP Wind 2018 - Vorrang-/Eignungsgebiete",
+                            "unit": "km2"
+                        },
+                        "stp_2027_vr": {
+                            "description": "STP Wind 2027 - Planabsicht Vorranggebiete",
+                            "unit": "km2"
+                        },
+                        "stp_2027_repowering": {
+                            "description": "STP Wind 2027 - Planabsicht Repoweringgebiete",
+                            "unit": "km2"
+                        },
+                        "stp_2027_search_area_forest_area": {
+                            "description": "STP Wind 2027 - Suchraum Wald",
+                            "unit": "km2"
+                        },
+                        "stp_2027_search_area_open_area": {
+                            "description": "STP Wind 2027 - Suchraum Offenland",
+                            "unit": "km2"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "potentialarea_wind_region",
+                        "file": "potentialarea_wind_area_stats_muns.csv"
+                    }
+                },
+                "pv_ground_area_stats": {
+                    "description": "Fl\u00e4chensumme Potenzialfl\u00e4chen PV-Freifl\u00e4chenanlagen je Fl\u00e4chentyp",
+                    "path": "scalars/potentialarea_pv_ground_area_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "agriculture_lfa-off_region": {
+                            "description": "Freifl\u00e4chen-PV auf Acker- und Gr\u00fcnlandfl\u00e4chen mit geringer Bodeng\u00fcte",
+                            "unit": "km2"
+                        },
+                        "road_railway_region": {
+                            "description": "Potenzialfl\u00e4chen f\u00fcr Freifl\u00e4chen-PV entlang von Bundesautobahnen und Schienenwegen (500m-Streifen)",
+                            "unit": "km2"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "potentialarea_pv_ground_region",
+                        "file": "potentialarea_pv_ground_area_stats_muns.csv"
+                    }
+                },
+                "pv_ground_area_shares": {
+                    "description": "Anteil Potenzialfl\u00e4chen an Regionsfl\u00e4che nach Fl\u00e4chentyp",
+                    "path": "scalars/potentialarea_pv_ground_area_shares.json",
+                    "fields": {
+                        "road_railway": {
+                            "description": "Anteil Potenzialfl\u00e4chen entlang von Bundesautobahnen und Schienenwegen an Regionsfl\u00e4che",
+                            "unit": "-"
+                        },
+                        "agri": {
+                            "description": "Anteil Potenzialfl\u00e4chen auf Acker- und Gr\u00fcnlandfl\u00e4chen mit geringer Bodeng\u00fcte an Regionsfl\u00e4che",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "potentialarea_pv_ground_region",
+                        "file": "potentialarea_pv_ground_area_shares.json"
+                    }
+                },
+                "pv_ground_area_targets": {
+                    "description": "Regionale, aus Bundeszielen anhand der Potenzialfl\u00e4chen desaggregierte Bundesziele f\u00fcr Freifl\u00e4chen-PV nach Fl\u00e4chentyp",
+                    "path": "scalars/potentialarea_pv_ground_regionalized_targets.json",
+                    "fields": {
+                        "target_area_total": {
+                            "description": "Regionales Fl\u00e4chenziel gesamt",
+                            "unit": "km2"
+                        },
+                        "target_area_road_railway": {
+                            "description": "Regionales Fl\u00e4chenziel entlang von Bundesautobahnen und Schienenwegen",
+                            "unit": "km2"
+                        },
+                        "target_area_agri": {
+                            "description": "Regionales Fl\u00e4chenziel auf Acker- und Gr\u00fcnlandfl\u00e4chen mit geringer Bodeng\u00fcte",
+                            "unit": "km2"
+                        },
+                        "target_power_total": {
+                            "description": "Regionales Leistungsziel gesamt",
+                            "unit": "MW"
+                        },
+                        "target_power_road_railway": {
+                            "description": "Regionales Leistungsziel entlang von Bundesautobahnen und Schienenwegen",
+                            "unit": "MW"
+                        },
+                        "target_power_agri": {
+                            "description": "Regionales Leistungsziel auf Acker- und Gr\u00fcnlandfl\u00e4chen mit geringer Bodeng\u00fcte",
+                            "unit": "MW"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "potentialarea_pv_ground_region",
+                        "file": "potentialarea_pv_ground_regionalized_targets.json"
+                    }
+                },
+                "pv_roof_area_stats": {
+                    "description": "Potenziale PV-Aufdachanlagen (alle Geb\u00e4ude)",
+                    "path": "scalars/potentialarea_pv_roof_area_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "roof_count": {
+                            "description": "Anzahl der D\u00e4cher/Geb\u00e4ude",
+                            "unit": "-"
+                        },
+                        "building_area_sqm": {
+                            "description": "Gesamtgrundfl\u00e4che",
+                            "unit": "m2"
+                        },
+                        "historic_preservation_count": {
+                            "description": "Anzahl der Geb\u00e4ude unter Denkmalschutz",
+                            "unit": "-"
+                        },
+                        "installable_power_south": {
+                            "description": "Installierbare Gesamtleistung (S\u00fcdausrichtung)",
+                            "unit": "MW"
+                        },
+                        "installable_power_north": {
+                            "description": "Installierbare Gesamtleistung (Nordausrichtung)",
+                            "unit": "MW"
+                        },
+                        "installable_power_east": {
+                            "description": "Installierbare Gesamtleistung (Ostausrichtung)",
+                            "unit": "MW"
+                        },
+                        "installable_power_west": {
+                            "description": "Installierbare Gesamtleistung (Westausrichtung)",
+                            "unit": "MW"
+                        },
+                        "installable_power_flat": {
+                            "description": "Installierbare Gesamtleistung (Flachdach)",
+                            "unit": "MW"
+                        },
+                        "installable_power_total": {
+                            "description": "Installierbare Gesamtleistung (Summe)",
+                            "unit": "MW"
+                        },
+                        "energy_annual_south": {
+                            "description": "Erzielbarer Energieertrag (S\u00fcdausrichtung)",
+                            "unit": "MWh"
+                        },
+                        "energy_annual_north": {
+                            "description": "Erzielbarer Energieertrag (Nordausrichtung)",
+                            "unit": "MWh"
+                        },
+                        "energy_annual_east": {
+                            "description": "Erzielbarer Energieertrag (Ostausrichtung)",
+                            "unit": "MWh"
+                        },
+                        "energy_annual_west": {
+                            "description": "Erzielbarer Energieertrag (Westausrichtung)",
+                            "unit": "MWh"
+                        },
+                        "energy_annual_flat": {
+                            "description": "Erzielbarer Energieertrag (Flachdach)",
+                            "unit": "MWh"
+                        },
+                        "energy_annual_total": {
+                            "description": "Erzielbarer Energieertrag (Summe)",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "potentialarea_pv_roof_region",
+                        "file": "potentialarea_pv_roof_area_stats_muns.csv"
+                    }
+                },
+                "pv_roof_area_deployment_stats": {
+                    "description": "Genutzte Potenziale PV-Aufdachanlagen (alle Geb\u00e4ude)",
+                    "path": "scalars/potentialarea_pv_roof_deployment_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "relative_deployment": {
+                            "description": "Relative Potenzialnutzung",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "potentialarea_pv_roof_region",
+                        "file": "potentialarea_pv_roof_deployment_stats_muns.csv"
+                    }
+                },
+                "pv_roof_wo_historic_area_stats": {
+                    "description": "Potenziale PV-Aufdachanlagen (ohne denkmalgesch\u00fctzte Geb\u00e4ude)",
+                    "path": "scalars/potentialarea_pv_roof_wo_historic_area_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "roof_count": {
+                            "description": "Anzahl der D\u00e4cher/Geb\u00e4ude",
+                            "unit": "-"
+                        },
+                        "building_area_sqm": {
+                            "description": "Gesamtgrundfl\u00e4che",
+                            "unit": "m2"
+                        },
+                        "historic_preservation_count": {
+                            "description": "Anzahl der Geb\u00e4ude unter Denkmalschutz",
+                            "unit": "-"
+                        },
+                        "installable_power_south": {
+                            "description": "Installierbare Gesamtleistung (S\u00fcdausrichtung)",
+                            "unit": "MW"
+                        },
+                        "installable_power_north": {
+                            "description": "Installierbare Gesamtleistung (Nordausrichtung)",
+                            "unit": "MW"
+                        },
+                        "installable_power_east": {
+                            "description": "Installierbare Gesamtleistung (Ostausrichtung)",
+                            "unit": "MW"
+                        },
+                        "installable_power_west": {
+                            "description": "Installierbare Gesamtleistung (Westausrichtung)",
+                            "unit": "MW"
+                        },
+                        "installable_power_flat": {
+                            "description": "Installierbare Gesamtleistung (Flachdach)",
+                            "unit": "MW"
+                        },
+                        "installable_power_total": {
+                            "description": "Installierbare Gesamtleistung (Summe)",
+                            "unit": "MW"
+                        },
+                        "energy_annual_south": {
+                            "description": "Erzielbarer Energieertrag (S\u00fcdausrichtung)",
+                            "unit": "MWh"
+                        },
+                        "energy_annual_north": {
+                            "description": "Erzielbarer Energieertrag (Nordausrichtung)",
+                            "unit": "MWh"
+                        },
+                        "energy_annual_east": {
+                            "description": "Erzielbarer Energieertrag (Ostausrichtung)",
+                            "unit": "MWh"
+                        },
+                        "energy_annual_west": {
+                            "description": "Erzielbarer Energieertrag (Westausrichtung)",
+                            "unit": "MWh"
+                        },
+                        "energy_annual_flat": {
+                            "description": "Erzielbarer Energieertrag (Flachdach)",
+                            "unit": "MWh"
+                        },
+                        "energy_annual_total": {
+                            "description": "Erzielbarer Energieertrag (Summe)",
+                            "unit": "MWh"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "potentialarea_pv_roof_region",
+                        "file": "potentialarea_pv_roof_wo_historic_area_stats_muns.csv"
+                    }
+                },
+                "pv_roof_wo_historic_area_deployment_stats": {
+                    "description": "Genutzte Potenziale PV-Aufdachanlagen (ohne denkmalgesch\u00fctzte Geb\u00e4ude)",
+                    "path": "scalars/potentialarea_pv_roof_wo_historic_deployment_stats_muns.csv",
+                    "fields": {
+                        "municipality_id": {
+                            "description": "Gemeinde-ID",
+                            "unit": "-"
+                        },
+                        "relative_deployment": {
+                            "description": "Relative Potenzialnutzung",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "potentialarea_pv_roof_region",
+                        "file": "potentialarea_pv_roof_wo_historic_deployment_stats_muns.csv"
+                    }
+                },
+                "pv_roof_area_targets": {
+                    "description": "Regionale, aus Bundeszielen anhand der Geb\u00e4udegrundfl\u00e4chen desaggregierte Bundesziele f\u00fcr Aufdach-PV",
+                    "path": "scalars/potentialarea_pv_roof_regionalized_targets.json",
+                    "fields": {
+                        "target_power_total": {
+                            "description": "Regionales Leistungsziel gesamt",
+                            "unit": "MW"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "potentialarea_pv_roof_region",
+                        "file": "potentialarea_pv_roof_regionalized_targets.json"
+                    }
+                }
+            },
+            "geodata": {
+                "potentialarea_pv_agriculture_lfa-off_region": {
+                    "description": "Potenzialfl\u00e4chen Freifl\u00e4chen-PV auf Ackerfl\u00e4chen inner- und au\u00dferhalb benachteiligter Gebiete",
+                    "path": "geodata/potentialarea_pv_agriculture_lfa-off_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "potentialarea_pv_ground_region",
+                        "file": "potentialarea_pv_agriculture_lfa-off_region.gpkg"
+                    }
+                },
+                "potentialarea_pv_road_railway_region": {
+                    "description": "Potenzialfl\u00e4chen Freifl\u00e4chen-PV entlang von Autobahnen und Schienenwegen",
+                    "path": "geodata/potentialarea_pv_road_railway_region.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "potentialarea_pv_ground_region",
+                        "file": "potentialarea_pv_road_railway_region.gpkg"
+                    }
+                },
+                "potentialarea_wind_stp_2018_vreg": {
+                    "description": "Potenzialfl\u00e4chen Windenergie: STP Wind 2018 - Vorrang-/Eignungsgebiete",
+                    "path": "geodata/potentialarea_wind_stp_2018_vreg.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "potentialarea_wind_region",
+                        "file": "potentialarea_wind_stp_2018_vreg.gpkg"
+                    }
+                },
+                "potentialarea_wind_stp_2027_repowering": {
+                    "description": "Potenzialfl\u00e4chen Windenergie: STP Wind 2027 - Planabsicht Repoweringgebiete",
+                    "path": "geodata/potentialarea_wind_stp_2027_repowering.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "potentialarea_wind_region",
+                        "file": "potentialarea_wind_stp_2027_repowering.gpkg"
+                    }
+                },
+                "potentialarea_wind_stp_2027_search_area_forest_area": {
+                    "description": "Potenzialfl\u00e4chen Windenergie: STP Wind 2027 - Suchraum Wald",
+                    "path": "geodata/potentialarea_wind_stp_2027_search_area_forest_area.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "potentialarea_wind_region",
+                        "file": "potentialarea_wind_stp_2027_search_area_forest_area.gpkg"
+                    }
+                },
+                "potentialarea_wind_stp_2027_search_area_open_area": {
+                    "description": "Potenzialfl\u00e4chen Windenergie: STP Wind 2027 - Suchraum Offenland",
+                    "path": "geodata/potentialarea_wind_stp_2027_search_area_open_area.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "potentialarea_wind_region",
+                        "file": "potentialarea_wind_stp_2027_search_area_open_area.gpkg"
+                    }
+                },
+                "potentialarea_wind_stp_2027_vr": {
+                    "description": "Potenzialfl\u00e4chen Windenergie: STP Wind 2027 - Planabsicht Vorranggebiete",
+                    "path": "geodata/potentialarea_wind_stp_2027_vr.gpkg",
+                    "fields": [],
+                    "_source_path": {
+                        "dataset": "potentialarea_wind_region",
+                        "file": "potentialarea_wind_stp_2027_vr.gpkg"
+                    }
+                }
+            }
+        },
+        "emissions": {
+            "scalars": {
+                "emissions": {
+                    "description": "Emissionen f\u00fcr Sachsen-Anhalt und die Region ABW f\u00fcr 1990 und 2019",
+                    "path": "scalars/emissions.csv",
+                    "fields": {
+                        "sector": {
+                            "description": "Sektor nach CRF",
+                            "unit": "-"
+                        },
+                        "cat": {
+                            "description": "Kategorie nach CRF",
+                            "unit": "-"
+                        },
+                        "subcat": {
+                            "description": "Unterkategorie nach CRF",
+                            "unit": "-"
+                        },
+                        "name": {
+                            "description": "Bezeichner",
+                            "unit": "-"
+                        },
+                        "st": {
+                            "description": "Emissionen Sachsen-Anhalt",
+                            "unit": "kt CO2\u00e4q"
+                        },
+                        "abw": {
+                            "description": "Emissionen Region ABW",
+                            "unit": "kt CO2\u00e4q"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "emissions_region",
+                        "file": "emissions.csv"
+                    }
+                },
+                "emissions_chart_overview": {
+                    "description": "Chartdaten: Emissionen f\u00fcr Sachsen-Anhalt und die Region ABW f\u00fcr 1990 und 2019",
+                    "path": "scalars/emissions_chart_overview.json",
+                    "fields": {
+                        "energy_industry": {
+                            "description": "Energiewirtschaft",
+                            "unit": "kt CO2\u00e4q"
+                        },
+                        "industry": {
+                            "description": "Industrie",
+                            "unit": "kt CO2\u00e4q"
+                        },
+                        "traffic": {
+                            "description": "Verkehr",
+                            "unit": "kt CO2\u00e4q"
+                        },
+                        "buildings_firing": {
+                            "description": "Sonst. Energie (insbes. Geb\u00e4ude)",
+                            "unit": "kt CO2\u00e4q"
+                        },
+                        "agricultural": {
+                            "description": "Landwirtschaft",
+                            "unit": "kt CO2\u00e4q"
+                        },
+                        "waste_waste_water": {
+                            "description": "Abfall und Abwasser",
+                            "unit": "kt CO2\u00e4q"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "emissions_region",
+                        "file": "emissions_chart_overview.json"
+                    }
+                }
+            }
+        },
+        "settings": {
+            "panels": {
+                "energy_settings_panel": {
+                    "description": "Einstellungen f\u00fcr Panel Strom",
+                    "path": "settings/energy_settings_panel.json",
+                    "fields": {
+                        "s_w_1": {
+                            "description": "Attribute f\u00fcr Slider s_w_1",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "app_settings",
+                        "file": "energy_settings_panel.json"
+                    }
+                },
+                "heat_settings_panel": {
+                    "description": "Einstellungen f\u00fcr Panel W\u00e4rme",
+                    "path": "settings/heat_settings_panel.json",
+                    "fields": {
+                        "w_d_wp_1": {
+                            "description": "Attribute f\u00fcr Slider w_d_wp_1",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "app_settings",
+                        "file": "heat_settings_panel.json"
+                    }
+                },
+                "traffic_settings_panel": {
+                    "description": "Einstellungen f\u00fcr Panel Verkehr",
+                    "path": "settings/traffic_settings_panel.json",
+                    "fields": {
+                        "v_iv_1": {
+                            "description": "Attribute f\u00fcr Slider v_iv_1",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "app_settings",
+                        "file": "traffic_settings_panel.json"
+                    }
+                }
+            },
+            "map": {
+                "map_panel_layer_list": {
+                    "description": "Layerliste (rechtes Panel)",
+                    "path": "settings/map_panel_layer_list.json",
+                    "fields": {
+                        "boundaries": {
+                            "description": "Grenzen",
+                            "unit": "-"
+                        },
+                        "energy": {
+                            "description": "Energie",
+                            "unit": "-"
+                        },
+                        "settlements_infrastructure": {
+                            "description": "Siedlungen und Infrastruktur",
+                            "unit": "-"
+                        },
+                        "nature_landscape": {
+                            "description": "Natur und Landschaft",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "app_settings",
+                        "file": "map_panel_layer_list.json"
+                    }
+                }
+            }
+        },
+        "captions": {
+            "captions": {
+                "captions_fields": {
+                    "description": "Captions f\u00fcr Datensatzfelder",
+                    "path": "captions/captions_fields.json",
+                    "fields": {
+                        "datasets_caption_map": {
+                            "description": "Mapping File -> Eintrag",
+                            "unit": "-"
+                        },
+                        "captions": {
+                            "description": "Eintrag mit Beschriftungstexten",
+                            "unit": "-"
+                        }
+                    },
+                    "_source_path": {
+                        "dataset": "app_captions",
+                        "file": "captions_fields.json"
+                    }
+                }
+            }
+        }
+    }
+}
