@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # psycopg2 dependencies
   libpq-dev \
   # git \
-  git \
+  git
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements .
