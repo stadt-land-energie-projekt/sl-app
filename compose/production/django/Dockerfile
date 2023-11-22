@@ -51,13 +51,11 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
-# All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
-# copy python dependency wheels from python-build-stage
-COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
+# Copy your requirements.txt file to the container
+COPY ./requirements ${APP_HOME}/requirements
 
-# use wheels to install python dependencies
-RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
-  && rm -rf /wheels/
+# Install Python dependencies directly from requirements.txt
+RUN pip install --no-cache-dir -r ${APP_HOME}/requirements/${BUILD_ENVIRONMENT}.txt
 
 
 COPY --chown=django:django ./compose/production/django/entrypoint /entrypoint
