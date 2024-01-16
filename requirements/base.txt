@@ -30,3 +30,6 @@ geojson>=2.5.0,<3.0
 django-geojson>=3.1.0,<4.0
 pandas
 poetry-core
+
+django-filter~=23.3
+djangorestframework-gis~=1.0
