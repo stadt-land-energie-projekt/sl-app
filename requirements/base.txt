@@ -11,7 +11,7 @@ flower==2.0.1  # https://github.com/mher/flower
 
 # Django
 # ------------------------------------------------------------------------------
-django==4.2.6  # pyup: < 5.0  # https://www.djangoproject.com/
+django==5.0.1  # pyup: < 5.0  # https://www.djangoproject.com/
 django-environ  # https://github.com/joke2k/django-environ
 django-model-utils==4.3.1  # https://github.com/jazzband/django-model-utils
 django-allauth==0.57.0  # https://github.com/pennersr/django-allauth
