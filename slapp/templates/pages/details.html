@@ -5,44 +5,42 @@
     <h1 class="mt-4">Detailansicht</h1>
     <div class="row mt-4">
       <div class="col-4">
-        <form method="get" class="row g-3 align-items-center">
-          {{ filter.form }}
-          <button type="submit" class="btn btn-secondary btn-sm">Auswählen</button>
+        <form>
+          <input type="text"
+                 hx-post="{% url 'explorer:search-municipality' %}"
+                 hx-target='#results'
+                 hx-trigger="keyup changed delay:500ms"
+                 hx-vals='{"param_string": "{{ request.get_full_path }}"}'
+                 name="search"
+                 class="form-control-sm mr-2"
+                 placeholder="Search municipalities..." />
         </form>
+        <div id="results"></div>
       </div>
     </div>
-    <div class="row mt-4">
-      <table class="table w-auto">
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            {% for obj in filter.qs %}
-              <th class="text-end fs-5" scope="col">
-                <span class="badge bg-primary me-2 mb-2">{{ obj.name }}<span class="badge-close">×</span></span>
-              </th>
-            {% endfor %}
-          </tr>
-        </thead>
-        <tbody class="table-group-divider">
-          <tr>
-            <th scope="row">Fläche</th>
-            {% for obj in filter.qs %}<td class="text-end">{{ obj.area }}</td>{% endfor %}
-          </tr>
-          <tr>
-            <td>Aufdach-PV</td>
-            {% for obj in filter.qs %}<td class="text-end">{{ obj.pvroof_net }}</td>{% endfor %}
-          </tr>
-          <tr>
-            <td>Freiflächen-PV</td>
-            {% for obj in filter.qs %}<td class="text-end">{{ obj.pvground_net }}</td>{% endfor %}
-          </tr>
-          <tr>
-            <td>Windkraft</td>
-            {% for obj in filter.qs %}<td class="text-end">{{ obj.wind_net }}</td>{% endfor %}
-          </tr>
-        </tbody>
-      </table>
-      <a href="" class="text-muted"><i>Tabelle als CSV speichern</i></a>
+    <div class="row mt-4 g-0" id="municipality-results">
+      <div class="col-3">
+        <ul class="list-group rounded-0">
+          <li class="list-group-item">Gemeinde</li>
+          <li class="list-group-item">Freiflächen-PV</li>
+          <li class="list-group-item">Dachflächen-PV</li>
+          <li class="list-group-item">Windkraft</li>
+          <li class="list-group-item">Biomasse</li>
+          <li class="list-group-item">Wasserkraft</li>
+        </ul>
+      </div>
+      {% for municipality in municipalities %}
+        <div class="col-3">
+          <ul class="list-group rounded-0">
+            <li class="list-group-item">{{ municipality.name }}</li>
+            <li class="list-group-item">{{ municipality.pvground_net }}</li>
+            <li class="list-group-item">{{ municipality.pvroof_net }}</li>
+            <li class="list-group-item">{{ municipality.wind_net }}</li>
+            <li class="list-group-item">{{ municipality.biomass_net }}</li>
+            <li class="list-group-item">{{ municipality.biomass_net }}</li>
+          </ul>
+        </div>
+      {% endfor %}
     </div>
     <div class="mt-4">
       <a class="btn btn-primary" href="{% url 'parameters' %}" role="button">Mit Energiesystemoptimierung für diese

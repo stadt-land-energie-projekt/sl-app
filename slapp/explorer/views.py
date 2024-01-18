@@ -1,8 +1,7 @@
 from django.db.models import Sum
-from django.utils.translation import gettext_lazy as _
+from django.db.models.functions import Round
+from django.shortcuts import render
 from django.views.generic import TemplateView
-from django_filters import AllValuesMultipleFilter, FilterSet
-from django_filters.views import FilterView
 from django_mapengine import views
 
 from .models import Municipality
@@ -19,25 +18,33 @@ class MapGLView(TemplateView, views.MapEngineMixin):
         return context
 
 
-class MunicipalityFilter(FilterSet):
-    name = AllValuesMultipleFilter(field_name="name", lookup_expr="icontains", label=_("Municipality"))
+def details_list(request):
+    ids = request.GET.getlist("id")
+    if ids:
+        municipalities = (
+            Municipality.objects.filter(id__in=ids)
+            .annotate(biomass_net=Round(Sum("biomass__capacity_net"), precision=2))
+            .annotate(pvground_net=Round(Sum("pvground__capacity_net"), precision=2))
+            .annotate(pvroof_net=Round(Sum("pvroof__capacity_net"), precision=2))
+            .annotate(wind_net=Round(Sum("windturbine__capacity_net"), precision=2))
+            .annotate(storage_net=Round(Sum("storage__capacity_net"), precision=2))
+        )
+    else:
+        municipalities = None
+    return render(request, "pages/details.html", {"municipalities": municipalities})
 
-    class Meta:
-        model = Municipality
-        fields = ["name"]
 
+def search_municipality(request):
+    search_text = request.POST.get("search")
+    param_string = request.POST.get("param_string")
+    print(param_string)
+    if param_string == "/map/details/":
+        new_param_string = param_string + "?id="
+    else:
+        new_param_string = param_string + "&id="
 
-class MunicipalityListView(FilterView):
-    model = Municipality
-    filterset_class = MunicipalityFilter
-    template_name = "pages/details.html"
-    context_object_name = "municipalities"
-
-    queryset = (
-        Municipality.objects.all()
-        .annotate(biomass_net=Sum("biomass__capacity_net"))
-        .annotate(pvground_net=Sum("pvground__capacity_net"))
-        .annotate(pvroof_net=Sum("pvroof__capacity_net"))
-        .annotate(wind_net=Sum("windturbine__capacity_net"))
-        .annotate(storage_net=Sum("storage__capacity_net"))
+    # look up all municipalities that contain the text
+    results = Municipality.objects.filter(name__icontains=search_text)
+    return render(
+        request, "pages/partials/search-results.html", {"results": results, "new_param_string": new_param_string}
     )
