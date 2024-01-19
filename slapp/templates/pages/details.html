@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load humanize %}
+
 {% block content %}
   <div class="container">
     <h1 class="mt-4">Detailansicht</h1>
@@ -20,8 +22,8 @@
     </div>
     <div class="row mt-4 g-0" id="municipality-results">
       <div class="col-3">
-        <ul class="list-group rounded-0">
-          <li class="list-group-item">Gemeinde</li>
+        <ul class="list-group rounded-0 fw-bold">
+          <li class="list-group-item fw-bold">Gemeinde</li>
           <li class="list-group-item">Freiflächen-PV</li>
           <li class="list-group-item">Dachflächen-PV</li>
           <li class="list-group-item">Windkraft</li>
@@ -32,12 +34,15 @@
       {% for municipality in municipalities %}
         <div class="col-3">
           <ul class="list-group rounded-0">
-            <li class="list-group-item">{{ municipality.name }}</li>
-            <li class="list-group-item">{{ municipality.pvground_net }}</li>
-            <li class="list-group-item">{{ municipality.pvroof_net }}</li>
-            <li class="list-group-item">{{ municipality.wind_net }}</li>
-            <li class="list-group-item">{{ municipality.biomass_net }}</li>
-            <li class="list-group-item">{{ municipality.biomass_net }}</li>
+            <li class="list-group-item text-end fw-bold">
+              {{ municipality.name }}
+              <a href="{% url 'explorer:details' %}?{% for municipality_ids in municipalities %} {% if municipality_ids.id != municipality.id %}id={{ municipality_ids.id }}&{% endif %}{% endfor %}">entfernen</a>
+            </li>
+            <li class="list-group-item text-end">{{ municipality.pvground_net|intword }}</li>
+            <li class="list-group-item text-end">{{ municipality.pvroof_net|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.wind_net|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.biomass_net|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.biomass_net|intcomma }}</li>
           </ul>
         </div>
       {% endfor %}
