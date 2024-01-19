@@ -23,11 +23,27 @@ def details_list(request):
     if ids:
         municipalities = (
             Municipality.objects.filter(id__in=ids)
-            .annotate(biomass_net=Round(Sum("biomass__capacity_net", default=0) / 1000, precision=2))
-            .annotate(pvground_net=Round(Sum("pvground__capacity_net", default=0) / 1000, precision=2))
-            .annotate(pvroof_net=Round(Sum("pvroof__capacity_net", default=0) / 1000, precision=2))
-            .annotate(wind_net=Round(Sum("windturbine__capacity_net", default=0) / 1000, precision=2))
+            .annotate(biomass_net=Round(Sum("biomass__capacity_net", default=0) / 1000, precision=0))
+            .annotate(pvground_net=Round(Sum("pvground__capacity_net", default=0) / 1000, precision=0))
+            .annotate(pvroof_net=Round(Sum("pvroof__capacity_net", default=0) / 1000, precision=0))
+            .annotate(wind_net=Round(Sum("windturbine__capacity_net", default=0) / 1000, precision=0))
+            .annotate(hydro_net=Round(Sum("hydro__capacity_net", default=0) / 1000, precision=0))
+            .annotate(
+                total_net=Round(
+                    (
+                        Sum("windturbine__capacity_net", default=0)
+                        + Sum("hydro__capacity_net", default=0)
+                        + Sum("pvroof__capacity_net", default=0)
+                        + Sum("pvground__capacity_net", default=0)
+                        + Sum("biomass__capacity_net", default=0)
+                    )
+                    / 1000,
+                    precision=0,
+                )
+            )
             .annotate(storage_net=Round(Sum("storage__capacity_net", default=0) / 1000, precision=2))
+            .annotate(kwk_el_net=Round(Sum("combustion__capacity_net", default=0) / 1000, precision=2))
+            .annotate(kwk_th_net=Round(Sum("combustion__th_capacity", default=0) / 1000, precision=2))
         )
     else:
         municipalities = None
