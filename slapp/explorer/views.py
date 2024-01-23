@@ -27,6 +27,7 @@ def details_list(request):
             messages.add_message(request, messages.WARNING, "Es können maximal 3 Gemeinden ausgewählt werden.")
         municipalities = (
             Municipality.objects.filter(id__in=ids)
+            .values("id", "name")
             .annotate(area_rounded=Round("area", precision=1))
             .annotate(biomass_net=Round(Sum("biomass__capacity_net", default=0) / 1000, precision=1))
             .annotate(pvground_net=Round(Sum("pvground__capacity_net", default=0) / 1000, precision=1))
