@@ -50,7 +50,7 @@ def details_list(request):
             .annotate(storage_net=Round(Sum("storage__capacity_net", default=0) / 1000, precision=1))
             .annotate(kwk_el_net=Round(Sum("combustion__capacity_net", default=0) / 1000, precision=1))
             .annotate(kwk_th_net=Round(Sum("combustion__th_capacity", default=0) / 1000, precision=1))
-        )
+        ).order_by("id", "name")
     else:
         municipalities = None
 
