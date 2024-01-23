@@ -23,11 +23,12 @@ def details_list(request):
     if ids:
         municipalities = (
             Municipality.objects.filter(id__in=ids)
-            .annotate(biomass_net=Round(Sum("biomass__capacity_net", default=0) / 1000, precision=0))
-            .annotate(pvground_net=Round(Sum("pvground__capacity_net", default=0) / 1000, precision=0))
-            .annotate(pvroof_net=Round(Sum("pvroof__capacity_net", default=0) / 1000, precision=0))
-            .annotate(wind_net=Round(Sum("windturbine__capacity_net", default=0) / 1000, precision=0))
-            .annotate(hydro_net=Round(Sum("hydro__capacity_net", default=0) / 1000, precision=0))
+            .annotate(area_rounded=Round("area", precision=1))
+            .annotate(biomass_net=Round(Sum("biomass__capacity_net", default=0) / 1000, precision=1))
+            .annotate(pvground_net=Round(Sum("pvground__capacity_net", default=0) / 1000, precision=1))
+            .annotate(pvroof_net=Round(Sum("pvroof__capacity_net", default=0) / 1000, precision=1))
+            .annotate(wind_net=Round(Sum("windturbine__capacity_net", default=0) / 1000, precision=1))
+            .annotate(hydro_net=Round(Sum("hydro__capacity_net", default=0) / 1000, precision=1))
             .annotate(
                 total_net=Round(
                     (
@@ -38,12 +39,12 @@ def details_list(request):
                         + Sum("biomass__capacity_net", default=0)
                     )
                     / 1000,
-                    precision=0,
+                    precision=1,
                 )
             )
-            .annotate(storage_net=Round(Sum("storage__capacity_net", default=0) / 1000, precision=2))
-            .annotate(kwk_el_net=Round(Sum("combustion__capacity_net", default=0) / 1000, precision=2))
-            .annotate(kwk_th_net=Round(Sum("combustion__th_capacity", default=0) / 1000, precision=2))
+            .annotate(storage_net=Round(Sum("storage__capacity_net", default=0) / 1000, precision=1))
+            .annotate(kwk_el_net=Round(Sum("combustion__capacity_net", default=0) / 1000, precision=1))
+            .annotate(kwk_th_net=Round(Sum("combustion__th_capacity", default=0) / 1000, precision=1))
         )
     else:
         municipalities = None
