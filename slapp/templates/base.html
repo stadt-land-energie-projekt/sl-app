@@ -35,10 +35,13 @@
         <script src="{% static 'vendors/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
         <script defer src="{% static 'js/project.js' %}"></script>
         <script defer src="{% static 'vendors/matomo/matomo.js' %}"></script>
+        <!-- HTMX -->
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
       {% endcompress %}
     {% endblock javascript %}
   </head>
-  <body class="d-flex flex-column h-100">
+  <body class="d-flex flex-column h-100"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <div class="mb-1">
       <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="container-fluid">
@@ -62,7 +65,7 @@
                 <a class="nav-link" href="{% url 'explorer:details' %}">Details</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'parameters' %}">Energiesystemoptimierung</a>
+                <a class="nav-link" href="{% url 'explorer:parameters' %}">Energiesystemoptimierung</a>
               </li>
               {% if request.user.is_authenticated %}
                 <li class="nav-item">
