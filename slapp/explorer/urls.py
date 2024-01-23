@@ -7,6 +7,7 @@ app_name = "explorer"
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/map.html"), name="map"),
     path("details/", views.details_list, name="details"),
+    path("parameters/", TemplateView.as_view(template_name="pages/parameters.html"), name="parameters"),
 ]
 
 htmx_urlpatterns = [

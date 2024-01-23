@@ -98,7 +98,9 @@
       </div>
     </div>
     <div class="mt-4">
-      <a class="btn btn-primary" href="{% url 'parameters' %}" role="button">Mit Energiesystemoptimierung für diese
+      <a class="btn btn-primary"
+         href="{% url 'explorer:parameters' %}?{% for municipality_ids in municipalities %}id={{ municipality_ids.id }}&{% endfor %}"
+         role="button">Mit Energiesystemoptimierung für diese
       Gemeinden beginnen</a>
     </div>
   </div>

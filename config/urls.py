@@ -16,7 +16,6 @@ urlpatterns = [
     path("users/", include("slapp.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     path("map/", include("slapp.explorer.urls", namespace="explorer")),
-    path("parameters/", TemplateView.as_view(template_name="pages/parameters.html"), name="parameters"),
     # path("map/", include("django_mapengine.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

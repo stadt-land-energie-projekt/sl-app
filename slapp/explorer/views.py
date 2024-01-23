@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.db.models import Sum
 from django.db.models.functions import Round
 from django.shortcuts import render
@@ -21,6 +22,9 @@ class MapGLView(TemplateView, views.MapEngineMixin):
 def details_list(request):
     ids = request.GET.getlist("id")
     if ids:
+        if len(ids) > 3:
+            ids = ids[:-1]
+            messages.add_message(request, messages.WARNING, "Es können maximal 3 Gemeinden ausgewählt werden.")
         municipalities = (
             Municipality.objects.filter(id__in=ids)
             .annotate(area_rounded=Round("area", precision=1))
@@ -48,6 +52,7 @@ def details_list(request):
         )
     else:
         municipalities = None
+
     return render(request, "pages/details.html", {"municipalities": municipalities})
 
 
