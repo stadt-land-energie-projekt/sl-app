@@ -8,6 +8,7 @@ urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/map.html"), name="map"),
     path("details/", views.details_list, name="details"),
     path("parameters/", TemplateView.as_view(template_name="pages/parameters.html"), name="parameters"),
+    path("details/csv/", views.details_csv, name="details-csv"),
 ]
 
 htmx_urlpatterns = [
