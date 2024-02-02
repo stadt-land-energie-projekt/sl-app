@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static compress %}
+
 {% block content %}
   <div class="container-fluid h-100">
     <div class="row h-100">
@@ -31,8 +33,32 @@
         </p>
       </div>
       <div class="col-9">
+        <div id="legend" class="legend"></div>
         <div id="map"></div>
       </div>
     </div>
   </div>
 {% endblock content %}
+{% block javascript %}
+  {{ block.super }}
+  {% compress js %}
+    <script src="{% static 'vendors/maplibre/js/maplibre-gl.js' %}"></script>
+    <script src="{% static 'vendors/pubsub/js/pubsub.js' %}"></script>
+  {% endcompress %}
+{% endblock javascript %}
+{% block inline_javascript %}
+  <script>
+    const eventTopics = {};
+  </script>
+  {% include 'django_mapengine/map_json.html' %}
+  {% compress js %}
+    {% include 'django_mapengine/map_js.html' %}
+  {% endcompress %}
+{% endblock inline_javascript %}
+{% block css %}
+  {{ block.super }}
+  {% compress css %}
+    <link href="{% static 'vendors/maplibre/css/maplibre-gl.css' %}"
+          rel='stylesheet' />
+  {% endcompress %}
+{% endblock css %}
