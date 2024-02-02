@@ -80,4 +80,8 @@ update_vendor_assets:
 	rm -r slapp/static/vendors/pubsub/js/*
 	cp node_modules/pubsub-js/src/pubsub.js slapp/static/vendors/pubsub/js/
 
+	# HTMX https://github.com/jquery/jquery
+	rm -r slapp/static/vendors/htmx/js/*
+	cp node_modules/htmx.org/dist/htmx.js slapp/static/vendors/htmx/js/
+
 	# Done

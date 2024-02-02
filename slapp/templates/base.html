@@ -15,14 +15,16 @@
     <meta name="description"
           content="The (django) webapp for the scenario-explorer of the Stadt-Land-Energie project" />
     <meta name="author" content="Finn Hees" />
+    <meta name="author" content="Hendrik Huyskens" />
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
     {% block css %}
       <!-- Your stuff: Third-party CSS libraries go here -->
       <!-- This file stores project-specific CSS -->
       {% compress css %}
         <link href="{% static 'css/project.css' %}" rel="stylesheet" />
-        <link href="{% static 'vendors/bootstrap/css/bootstrap.min.css' %}"
-              rel="stylesheet" />
+        <link href="{% static 'vendors/bootstrap/scss/bootstrap.scss' %}"
+              rel="stylesheet"
+              type="text/x-scss" />
       {% endcompress %}
     {% endblock css %}
     <!-- Le javascript
@@ -32,11 +34,12 @@
       <!-- Your stuff: Third-party javascript libraries go here -->
       <!-- place project specific Javascript in this file -->
       {% compress js %}
-        <script src="{% static 'vendors/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'vendors/bootstrap/js/bootstrap.min.js' %}"></script>
         <script defer src="{% static 'js/project.js' %}"></script>
         <script defer src="{% static 'vendors/matomo/matomo.js' %}"></script>
         <!-- HTMX -->
-        <script defer src="{% static 'vendors/htmx/htmx_1.9.10.min.js.js' %}"></script>
+        <script defer src="{% static 'vendors/htmx/js/htmx.js' %}"></script>
+        <script src="{% static 'vendors/jquery/js/jquery.min.js' %}"></script>
       {% endcompress %}
     {% endblock javascript %}
   </head>

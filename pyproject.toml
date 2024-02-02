@@ -108,7 +108,7 @@ indent_size = 2
 # ==== ruff ====
 [tool.ruff]
 line-length = 120
-select = ["ALL"]
+lint.select = ["ALL"]
 exclude = [
   "manage.py",
   "slapp/utils/ogr_layer_mapping.py",
@@ -117,7 +117,7 @@ exclude = [
   "merge_local_dotenvs_in_dotenv.py",
   "slapp/utils/context_processors.py"
 ]
-ignore = [
+lint.ignore = [
   "I001",    # Import block is un-sorted or un-formatted (done by isort)
   "D203",    # 1 blank line required before class docstring
   "D212",    # Multi-line docstring summary should start at the first line pydocstyle
@@ -139,9 +139,9 @@ ignore = [
 ]
 fix = true
 show-fixes = true
-unfixable = ["UP007", "I001"]
+lint.unfixable = ["UP007", "I001"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/*" = [
   "PLR2004", # Magic value used in comparison
   "ANN201",  # Missing return type annotation for public function
