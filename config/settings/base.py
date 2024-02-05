@@ -356,7 +356,7 @@ SPECTACULAR_SETTINGS = {
 MAP_ENGINE_CENTER_AT_STARTUP = [10.407237624103573, 51.22757621251938]
 MAP_ENGINE_ZOOM_AT_STARTUP = 5.546712433728557
 MAP_ENGINE_MAX_BOUNDS: [[-2.54, 46.35], [23.93, 55.87]]
-MAP_ENGINE_LAYERS_AT_STARTUP = []
+MAP_ENGINE_LAYERS_AT_STARTUP = ["municipality", "wind_offshore_wind_parks_2035"]
 
 MAP_ENGINE_STYLES_FOLDER = "slapp/static/styles/"
 MAP_ENGINE_MIN_ZOOM = 2
@@ -371,6 +371,8 @@ MAP_ENGINE_API_MVTS = {
         setup.MVTAPI("municipalitylabel", "explorer", "Municipality", "label_tiles"),
     ],
 }
-MAP_ENGINE_API_CLUSTERS = []
+MAP_ENGINE_API_CLUSTERS = [
+    setup.ClusterAPI("wind_offshore_wind_parks_2035", "explorer", "WindTurbine", properties=["id"]),
+]
 MAP_ENGINE_CHOROPLETHS = []
 MAP_ENGINE_POPUPS = []
