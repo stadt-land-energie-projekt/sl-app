@@ -1,9 +1,18 @@
+"""Explorer views."""
+
+from __future__ import annotations
+
 import csv
+from typing import TYPE_CHECKING
 
 from django.contrib import messages
 from django.db.models import Sum
 from django.db.models.functions import Round
 from django.http import HttpResponse
+
+if TYPE_CHECKING:
+    from django.http.request import HttpRequest
+
 from django.shortcuts import render
 from django.templatetags.l10n import localize
 from django.views.generic import TemplateView
@@ -11,19 +20,18 @@ from django_mapengine import views
 
 from .models import Municipality
 
+MAX_MUNICIPALITY_COUNT = 3
+
 
 class MapGLView(TemplateView, views.MapEngineMixin):
+    """Single view for whole app as SPA."""
+
     template_name = "pages/map.html"
     extra_context = {}
 
-    def get_context_data(self, **kwargs):
-        # Add unique session ID
-        context = super().get_context_data(**kwargs)
 
-        return context
-
-
-def municipalities_details(ids):
+def municipalities_details(ids: list[int]) -> list[Municipality]:
+    """Return municipalities."""
     municipalities = (
         Municipality.objects.filter(id__in=ids)
         .annotate(area_rounded=Round("area", precision=1))
@@ -43,7 +51,7 @@ def municipalities_details(ids):
                 )
                 / 1000,
                 precision=1,
-            )
+            ),
         )
         .annotate(storage_net=Round(Sum("storage__capacity_net", default=0) / 1000, precision=1))
         .annotate(kwk_el_net=Round(Sum("combustion__capacity_net", default=0) / 1000, precision=1))
@@ -52,10 +60,11 @@ def municipalities_details(ids):
     return municipalities
 
 
-def details_list(request):
+def details_list(request: HttpRequest) -> HttpResponse:
+    """Render details page for given municipality IDs."""
     ids = request.GET.getlist("id")
     if ids:
-        if len(ids) > 3:
+        if len(ids) > MAX_MUNICIPALITY_COUNT:
             ids = ids[:-1]
             messages.add_message(request, messages.WARNING, "Es können maximal 3 Gemeinden ausgewählt werden.")
         municipalities = municipalities_details(ids)
@@ -65,29 +74,25 @@ def details_list(request):
     return render(request, "pages/details.html", {"municipalities": municipalities})
 
 
-def search_municipality(request):
+def search_municipality(request: HttpRequest) -> HttpResponse:
+    """Return list of municipalities for given search text."""
     search_text = request.POST.get("search")
     param_string = request.POST.get("param_string")
-    print(param_string)
-    if param_string == "/map/details/":
-        new_param_string = param_string + "?id="
-    else:
-        new_param_string = param_string + "&id="
+    new_param_string = param_string + "?id=" if param_string == "/explorer/details/" else param_string + "&id="
 
     # look up all municipalities that contain the text
     results = Municipality.objects.filter(name__icontains=search_text)
     return render(
-        request, "pages/partials/search-results.html", {"results": results, "new_param_string": new_param_string}
+        request,
+        "pages/partials/search-results.html",
+        {"results": results, "new_param_string": new_param_string},
     )
 
 
-def details_csv(request):
+def details_csv(request: HttpRequest) -> HttpResponse:
+    """Return details as CSV for given municipalities."""
     ids = request.GET.getlist("id")
-
-    if ids:
-        municipalities = municipalities_details(ids)
-    else:
-        municipalities = None
+    municipalities = municipalities_details(ids) if ids else None
 
     response = HttpResponse(
         content_type="text/csv",

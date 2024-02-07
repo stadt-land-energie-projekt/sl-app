@@ -1,9 +1,8 @@
-"""
-Base settings to build other settings files upon.
-"""
+"""Base settings to build other settings files upon."""
 from pathlib import Path
 
 import environ
+from django_mapengine import setup
 
 ROOT_DIR = environ.Path(__file__) - 3  # (slapp/config/settings/base.py - 3 = slapp/)
 APPS_DIR = ROOT_DIR.path("slapp")
@@ -30,13 +29,6 @@ DEBUG = env.bool("DJANGO_DEBUG", False)
 TIME_ZONE = "Europe/Berlin"
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = "en-us"
-# https://docs.djangoproject.com/en/dev/ref/settings/#languages
-# from django.utils.translation import gettext_lazy as _
-# LANGUAGES = [
-#     ('en', _('English')),
-#     ('fr-fr', _('French')),
-#     ('pt-br', _('Portuguese')),
-# ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
@@ -92,7 +84,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "slapp.users",
-    "slapp.explorer"
+    "slapp.explorer",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -198,7 +190,7 @@ TEMPLATES = [
                 "slapp.users.context_processors.allauth_settings",
             ],
         },
-    }
+    },
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#form-renderer
@@ -262,7 +254,7 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "verbose",
-        }
+        },
     },
     "root": {"level": "INFO", "handlers": ["console"]},
 }
@@ -290,10 +282,8 @@ CELERY_TASK_SERIALIZER = "json"
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html#std:setting-result_serializer
 CELERY_RESULT_SERIALIZER = "json"
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html#task-time-limit
-# TODO: set to whatever value is adequate in your circumstances
 CELERY_TASK_TIME_LIMIT = 5 * 60
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html#task-soft-time-limit
-# TODO: set to whatever value is adequate in your circumstances
 CELERY_TASK_SOFT_TIME_LIMIT = 60
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html#beat-scheduler
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
@@ -327,6 +317,13 @@ SOCIALACCOUNT_FORMS = {"signup": "slapp.users.forms.UserSocialSignupForm"}
 # https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
 INSTALLED_APPS += ["compressor"]
 STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
+
+# django-libsass
+# ------------------------------------------------------------------------------
+# https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
+COMPRESS_PRECOMPILERS = [("text/x-scss", "django_libsass.SassCompiler")]
+COMPRESS_CACHEABLE_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
+
 # django-rest-framework
 # -------------------------------------------------------------------------------
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
@@ -335,7 +332,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
@@ -359,23 +356,23 @@ SPECTACULAR_SETTINGS = {
 MAP_ENGINE_CENTER_AT_STARTUP = [10.407237624103573, 51.22757621251938]
 MAP_ENGINE_ZOOM_AT_STARTUP = 5.546712433728557
 MAP_ENGINE_MAX_BOUNDS: [[-2.54, 46.35], [23.93, 55.87]]
-MAP_ENGINE_LAYERS_AT_STARTUP = []
+MAP_ENGINE_LAYERS_AT_STARTUP = ["municipality", "wind_offshore_wind_parks_2035"]
 
 MAP_ENGINE_STYLES_FOLDER = "slapp/static/styles/"
 MAP_ENGINE_MIN_ZOOM = 2
 
 # needs to be empty to disable centration- and moveto-behavior onclick
-MAP_ENGINE_ZOOM_LEVELS = {
-    # "country": setup.Zoom(2, 7),
-    # "state": setup.Zoom(7, 9),
-    # "district": setup.Zoom(9, 11),
-    # "municipality": setup.Zoom(11, 13),
-}
+MAP_ENGINE_ZOOM_LEVELS = {}
 
 MAP_ENGINE_IMAGES = []
-MAP_ENGINE_API_MVTS = {}
-MAP_ENGINE_API_CLUSTERS = []
-MAP_ENGINE_MAPLAYER_MODEL = "MapLayer"
-# not needed when using MAPLAYER_MODEL
+MAP_ENGINE_API_MVTS = {
+    "municipality": [
+        setup.MVTAPI("municipality", "explorer", "Municipality"),
+        setup.MVTAPI("municipalitylabel", "explorer", "Municipality", "label_tiles"),
+    ],
+}
+MAP_ENGINE_API_CLUSTERS = [
+    setup.ClusterAPI("wind_offshore_wind_parks_2035", "explorer", "WindTurbine", properties=["id"]),
+]
 MAP_ENGINE_CHOROPLETHS = []
 MAP_ENGINE_POPUPS = []

@@ -1,6 +1,11 @@
 """Module to hold MVT managers."""
 
-import django.db.models
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import django.db.models
 from django.contrib.gis.db import models
 from django.contrib.gis.db.models.functions import Transform
 from django.contrib.gis.geos import Polygon
@@ -102,6 +107,7 @@ class MVTManager(models.Manager):
         ------
         ValidationError
             if sql query cannot be build with given parameters
+
         """
         query = self._get_mvt_geom_query(x, y, z)
         query = self._filter_query(query, x, y, z, filters)
@@ -111,7 +117,7 @@ class MVTManager(models.Manager):
         except FieldError as error:
             raise ValidationError(str(error)) from error
         with connection.cursor() as cursor:
-            return cursor.mogrify(sql, params).decode("utf-8")
+            return cursor.mogrify(sql, params)
 
     def _get_non_geom_columns(self) -> list[str]:
         """
@@ -121,6 +127,7 @@ class MVTManager(models.Manager):
         -------
         list-of-str
             List of column names (excluding geom)
+
         """
         columns = []
         for field in self.model._meta.get_fields():  # noqa: SLF001

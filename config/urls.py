@@ -1,3 +1,4 @@
+"""Urls for project."""
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -15,9 +16,10 @@ urlpatterns = [
     # User management
     path("users/", include("slapp.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
-    path("map/", include("slapp.explorer.urls", namespace="explorer")),
-    # path("map/", include("django_mapengine.urls")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path("explorer/", include("slapp.explorer.urls", namespace="explorer")),
+    path("map/", include("django_mapengine.urls")),
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
+]
 
 # API URLS
 urlpatterns += [
@@ -57,4 +59,4 @@ if settings.DEBUG:
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
 
-        urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+        urlpatterns = [path("__debug__/", include(debug_toolbar.urls)), *urlpatterns]
