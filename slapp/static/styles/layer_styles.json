@@ -245,19 +245,19 @@
       "text-halo-blur": 1.5
     }
   },
-  "wind_offshore_wind_parks_2035": {
+  "wind": {
     "type": "symbol",
     "filter": ["!", ["has", "point_count"]],
     "layout": {
       "icon-image": "wind",
-      "icon-size": 0.8,
-      "icon-allow-overlap": false
+      "icon-size": 0.4,
+      "icon-allow-overlap": true
     },
     "paint": {
       "icon-color": "blue"
     }
   },
-  "wind_offshore_wind_parks_2035_cluster": {
+  "wind_cluster": {
     "type": "circle",
     "filter": ["has", "point_count"],
     "paint": {
@@ -265,15 +265,15 @@
       "circle-radius": [
         "step",
         ["get", "point_count"],
-        15,
-        125,
         20,
-        950,
-        25
+        15,
+        30,
+        50,
+        40
       ]
     }
   },
-  "wind_offshore_wind_parks_2035_cluster_count": {
+  "wind_cluster_count": {
     "type": "symbol",
     "filter": ["has", "point_count"],
     "layout": {
@@ -282,49 +282,12 @@
       "text-size": 12
     }
   },
-  "wind_onshore_wind_parks_2035": {
+  "pvroof": {
     "type": "symbol",
     "filter": ["!", ["has", "point_count"]],
     "layout": {
-      "icon-image": "wind",
-      "icon-size": 0.8,
-      "icon-allow-overlap": false
-    },
-    "paint": {
-      "icon-color": "blue"
-    }
-  },
-  "wind_onshore_wind_parks_2035_cluster": {
-    "type": "circle",
-    "filter": ["has", "point_count"],
-    "paint": {
-      "circle-color": "#6A89CC",
-      "circle-radius": [
-        "step",
-        ["get", "point_count"],
-        15,
-        125,
-        20,
-        950,
-        25
-      ]
-    }
-  },
-  "wind_onshore_wind_parks_2035_cluster_count": {
-    "type": "symbol",
-    "filter": ["has", "point_count"],
-    "layout": {
-      "text-field": "{point_count_abbreviated}",
-      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-      "text-size": 12
-    }
-  },
-  "pv_roof-top_pv_plants_2035": {
-    "type": "symbol",
-    "filter": ["!", ["has", "point_count"]],
-    "layout": {
-      "icon-image": "solar",
-      "icon-size": 0.8,
+      "icon-image": "pv",
+      "icon-size": 0.4,
       "icon-allow-overlap": true
     },
     "paint": {
@@ -332,15 +295,23 @@
       "icon-halo-color": "red"
     }
   },
-  "pv_roof-top_pv_plants_2035_cluster": {
+  "pvroof_cluster": {
     "type": "circle",
     "filter": ["has", "point_count"],
     "paint": {
       "circle-color": "#FFD660",
-      "circle-radius": 20
+      "circle-radius": [
+        "step",
+        ["get", "point_count"],
+        20,
+        15,
+        30,
+        50,
+        40
+      ]
     }
   },
-  "pv_roof-top_pv_plants_2035_cluster_count": {
+  "pvroof_cluster_count": {
     "type": "symbol",
     "filter": ["has", "point_count"],
     "layout": {
@@ -349,191 +320,35 @@
       "text-size": 12
     }
   },
-  "pv_ground-mounted_pv_plants_2035": {
+  "pvground": {
     "type": "symbol",
     "filter": ["!", ["has", "point_count"]],
     "layout": {
-      "icon-image": "solar",
-      "icon-size": 0.8,
+      "icon-image": "pv",
+      "icon-size": 0.4,
       "icon-allow-overlap": true
     },
     "paint": {
       "icon-color": "yellow"
     }
   },
-  "pv_ground-mounted_pv_plants_2035_cluster": {
+  "pvground_cluster": {
     "type": "circle",
     "filter": ["has", "point_count"],
     "paint": {
-      "circle-color": "#F6B93B",
+      "circle-color": "#EFAD25",
       "circle-radius": [
         "step",
         ["get", "point_count"],
+        20,
         15,
-        125,
-        20,
-        950,
-        25
-      ]
-    }
-  },
-  "pv_ground-mounted_pv_plants_2035_cluster_count": {
-    "type": "symbol",
-    "filter": ["has", "point_count"],
-    "layout": {
-      "text-field": "{point_count_abbreviated}",
-      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-      "text-size": 12
-    }
-  },
-  "wind_onshore_potential_areas_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "darkblue",
-      "fill-opacity": 0.8
-    }
-  },
-  "demand_transport_heavy_duty_transport_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "grey",
-      "fill-opacity": 0.8
-    }
-  },
-  "gas_potential_natural_gas_production_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "grey",
-      "fill-opacity": 0.8
-    }
-  },
-  "gas_potential_biogas_production_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "pv_ground-mounted_potential_areas_agriculture_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "gold",
-      "fill-opacity": 0.8
-    }
-  },
-  "pv_ground-mounted_potential_areas_highways_railroad_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "gold",
-      "fill-opacity": 0.8
-    }
-  },
-  "ehv_line_2035": {
-    "type": "line",
-    "paint": {
-      "line-color": "blue"
-    }
-  },
-  "flex_electricity_dynamic_line_rating_2035": {
-    "type": "line",
-    "paint": {
-      "line-color": [
-      "case",
-      ["==", ["get", "dlr"], 1],
-      "red",
-      "black"
-    ],
-      "line-width": 1
-    }
-  },
-  "methan_grid_line_2035": {
-    "type": "line",
-    "paint": {
-      "line-color": "darkblue"
-    }
-  },
-  "hv_line_2035": {
-    "type": "line",
-    "paint": {
-      "line-color": "darkblue"
-    }
-  },
-  "potential_h2_underground_storage_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "potential_ch4_store_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "heat_solarthermal_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "heat_geothermal_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "central_heatpumps_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "heating_households_cts_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "ehv_hv_station_2035": {
-    "type": "symbol",
-    "filter": ["!", ["has", "point_count"]],
-    "layout": {
-      "icon-image": "station",
-      "icon-size": 0.5,
-      "icon-allow-overlap": true
-    }
-  },
-  "ehv_hv_station_2035_cluster": {
-    "type": "circle",
-    "filter": ["has", "point_count"],
-    "paint": {
-      "circle-color": [
-        "step",
-        ["get", "point_count"],
-        "#51bbd6",
-        100,
-        "#f1f075",
-        750,
-        "#f28cb1"
-      ],
-      "circle-radius": [
-        "step",
-        ["get", "point_count"],
-        20,
-        100,
         30,
-        750,
+        50,
         40
       ]
     }
   },
-  "ehv_hv_station_2035_cluster_count": {
+  "pvground_cluster_count": {
     "type": "symbol",
     "filter": ["has", "point_count"],
     "layout": {
@@ -542,420 +357,35 @@
       "text-size": 12
     }
   },
-  "hv_mv_station_2035": {
+  "hydro": {
     "type": "symbol",
     "filter": ["!", ["has", "point_count"]],
     "layout": {
-      "icon-image": "station",
-      "icon-size": 0.8,
+      "icon-image": "hydro",
+      "icon-size": 0.4,
       "icon-allow-overlap": true
-    }
-  },
-  "hv_mv_station_2035_cluster": {
-    "type": "circle",
-    "filter": ["has", "point_count"],
-    "paint": {
-      "circle-color": [
-        "step",
-        ["get", "point_count"],
-        "#51bbd6",
-        100,
-        "#f1f075",
-        750,
-        "#f28cb1"
-      ],
-      "circle-radius": [
-        "step",
-        ["get", "point_count"],
-        20,
-        100,
-        30,
-        750,
-        40
-      ]
-    }
-  },
-  "hv_mv_station_2035_cluster_count": {
-    "type": "symbol",
-    "filter": ["has", "point_count"],
-    "layout": {
-      "text-field": "{point_count_abbreviated}",
-      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-      "text-size": 12
-    }
-  },
-  "mv_grid_district_data_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.3,
-      "fill-outline-color": "rgba(115,62,136,0.2)"
-    }
-  },
-  "mv_grid_district_data_line_2035": {
-    "type": "line",
-    "paint": {
-      "line-color": "rgba(115,62,136,0.2)",
-      "line-width": 0.8
-    }
-  },
-  "load_area_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.6
-    }
-  },
-  "load_area_line_2035": {
-    "type": "line",
-    "paint": {
-      "line-color": "rgb(115,62,136)",
-      "line-width": 0.8
-    }
-  },
-  "h2_voronoi_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.3,
-      "fill-outline-color": "rgba(115,62,136,0.2)"
-    }
-  },
-  "h2_voronoi_line_2035": {
-    "type": "line",
-    "paint": {
-      "line-color": "rgba(115,62,136,0.2)",
-      "line-width": 0.8
-    }
-  },
-  "ch4_voronoi_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.3,
-      "fill-outline-color": "rgba(115,62,136,0.2)"
-    }
-  },
-  "ch4_voronoi_line_2035": {
-    "type": "line",
-    "paint": {
-      "line-color": "rgba(115,62,136,0.2)",
-      "line-width": 0.8
-    }
-  },
-  "transport_heavy-duty_transport_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.3,
-      "fill-outline-color": "rgba(115,62,136,0.2)"
-    }
-  },
-  "gas_methane_for_industry_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.3,
-      "fill-outline-color": "rgba(115,62,136,0.2)"
-    }
-  },
-  "gas_hydrogen_for_industry_2035": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.3,
-      "fill-outline-color": "rgba(115,62,136,0.2)"
-    }
-  },
-  "wind_offshore_wind_parks_100re": {
-    "type": "symbol",
-    "filter": ["!", ["has", "point_count"]],
-    "layout": {
-      "icon-image": "wind",
-      "icon-size": 0.8,
-      "icon-allow-overlap": false
     },
     "paint": {
       "icon-color": "blue"
     }
   },
-  "wind_offshore_wind_parks_100re_cluster": {
+  "hydro_cluster": {
     "type": "circle",
     "filter": ["has", "point_count"],
     "paint": {
-      "circle-color": "#6A89CC",
+      "circle-color": "#A9BDE8",
       "circle-radius": [
         "step",
         ["get", "point_count"],
+        20,
         15,
-        125,
-        20,
-        950,
-        25
-      ]
-    }
-  },
-  "wind_offshore_wind_parks_100re_cluster_count": {
-    "type": "symbol",
-    "filter": ["has", "point_count"],
-    "layout": {
-      "text-field": "{point_count_abbreviated}",
-      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-      "text-size": 12
-    }
-  },
-  "wind_onshore_wind_parks_100re": {
-    "type": "symbol",
-    "filter": ["!", ["has", "point_count"]],
-    "layout": {
-      "icon-image": "wind",
-      "icon-size": 0.8,
-      "icon-allow-overlap": false
-    },
-    "paint": {
-      "icon-color": "blue"
-    }
-  },
-  "wind_onshore_wind_parks_100re_cluster": {
-    "type": "circle",
-    "filter": ["has", "point_count"],
-    "paint": {
-      "circle-color": "#6A89CC",
-      "circle-radius": [
-        "step",
-        ["get", "point_count"],
-        15,
-        125,
-        20,
-        950,
-        25
-      ]
-    }
-  },
-  "wind_onshore_wind_parks_100re_cluster_count": {
-    "type": "symbol",
-    "filter": ["has", "point_count"],
-    "layout": {
-      "text-field": "{point_count_abbreviated}",
-      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-      "text-size": 12
-    }
-  },
-  "pv_roof-top_pv_plants_100re": {
-    "type": "symbol",
-    "filter": ["!", ["has", "point_count"]],
-    "layout": {
-      "icon-image": "solar",
-      "icon-size": 0.8,
-      "icon-allow-overlap": true
-    },
-    "paint": {
-      "icon-color": "yellow",
-      "icon-halo-color": "red"
-    }
-  },
-  "pv_roof-top_pv_plants_100re_cluster": {
-    "type": "circle",
-    "filter": ["has", "point_count"],
-    "paint": {
-      "circle-color": "#FFD660",
-      "circle-radius": 20
-    }
-  },
-  "pv_roof-top_pv_plants_100re_cluster_count": {
-    "type": "symbol",
-    "filter": ["has", "point_count"],
-    "layout": {
-      "text-field": "{point_count_abbreviated}",
-      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-      "text-size": 12
-    }
-  },
-  "pv_ground-mounted_pv_plants_100re": {
-    "type": "symbol",
-    "filter": ["!", ["has", "point_count"]],
-    "layout": {
-      "icon-image": "solar",
-      "icon-size": 0.8,
-      "icon-allow-overlap": true
-    },
-    "paint": {
-      "icon-color": "yellow"
-    }
-  },
-  "pv_ground-mounted_pv_plants_100re_cluster": {
-    "type": "circle",
-    "filter": ["has", "point_count"],
-    "paint": {
-      "circle-color": "#F6B93B",
-      "circle-radius": [
-        "step",
-        ["get", "point_count"],
-        15,
-        125,
-        20,
-        950,
-        25
-      ]
-    }
-  },
-  "pv_ground-mounted_pv_plants_100re_cluster_count": {
-    "type": "symbol",
-    "filter": ["has", "point_count"],
-    "layout": {
-      "text-field": "{point_count_abbreviated}",
-      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-      "text-size": 12
-    }
-  },
-  "wind_onshore_potential_areas_100re": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "darkblue",
-      "fill-opacity": 0.8
-    }
-  },
-  "demand_transport_heavy_duty_transport_100re": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "grey",
-      "fill-opacity": 0.8
-    }
-  },
-  "gas_potential_natural_gas_production_100re": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "grey",
-      "fill-opacity": 0.8
-    }
-  },
-  "gas_potential_biogas_production_100re": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "pv_ground-mounted_potential_areas_agriculture_100re": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "gold",
-      "fill-opacity": 0.8
-    }
-  },
-  "pv_ground-mounted_potential_areas_highways_railroad_100re": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "gold",
-      "fill-opacity": 0.8
-    }
-  },
-  "ehv_line_100re": {
-    "type": "line",
-    "paint": {
-      "line-color": "blue"
-    }
-  },
-  "flex_electricity_dynamic_line_rating_100re": {
-    "type": "line",
-    "paint": {
-      "line-color": [
-      "case",
-      ["==", ["get", "dlr"], 1],
-      "red",
-      "black"
-    ],
-      "line-width": 1
-    }
-  },
-  "methan_grid_line_100re": {
-    "type": "line",
-    "paint": {
-      "line-color": "darkblue"
-    }
-  },
-  "hv_line_100re": {
-    "type": "line",
-    "paint": {
-      "line-color": "darkblue"
-    }
-  },
-  "potential_h2_underground_storage_100re": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "potential_ch4_store_100re": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "heat_solarthermal_100re": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "heat_geothermal_100re": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "central_heatpumps_100re": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "heating_households_cts_100re": {
-    "type": "fill",
-    "paint": {
-      "fill-color": "#52C41A",
-      "fill-opacity": 0.8
-    }
-  },
-  "ehv_hv_station_100re": {
-    "type": "symbol",
-    "filter": ["!", ["has", "point_count"]],
-    "layout": {
-      "icon-image": "station",
-      "icon-size": 0.5,
-      "icon-allow-overlap": true
-    }
-  },
-  "ehv_hv_station_100re_cluster": {
-    "type": "circle",
-    "filter": ["has", "point_count"],
-    "paint": {
-      "circle-color": [
-        "step",
-        ["get", "point_count"],
-        "#51bbd6",
-        100,
-        "#f1f075",
-        750,
-        "#f28cb1"
-      ],
-      "circle-radius": [
-        "step",
-        ["get", "point_count"],
-        20,
-        100,
         30,
-        750,
+        50,
         40
       ]
     }
   },
-  "ehv_hv_station_100re_cluster_count": {
+  "hydro_cluster_count": {
     "type": "symbol",
     "filter": ["has", "point_count"],
     "layout": {
@@ -964,40 +394,35 @@
       "text-size": 12
     }
   },
-  "hv_mv_station_100re": {
+  "biomass": {
     "type": "symbol",
     "filter": ["!", ["has", "point_count"]],
     "layout": {
-      "icon-image": "station",
-      "icon-size": 0.8,
+      "icon-image": "biomass",
+      "icon-size": 0.4,
       "icon-allow-overlap": true
+    },
+    "paint": {
+      "icon-color": "green"
     }
   },
-  "hv_mv_station_100re_cluster": {
+  "biomass_cluster": {
     "type": "circle",
     "filter": ["has", "point_count"],
     "paint": {
-      "circle-color": [
-        "step",
-        ["get", "point_count"],
-        "#51bbd6",
-        100,
-        "#f1f075",
-        750,
-        "#f28cb1"
-      ],
+      "circle-color": "#52C41A",
       "circle-radius": [
         "step",
         ["get", "point_count"],
         20,
-        100,
+        15,
         30,
-        750,
+        50,
         40
       ]
     }
   },
-  "hv_mv_station_100re_cluster_count": {
+  "biomass_cluster_count": {
     "type": "symbol",
     "filter": ["has", "point_count"],
     "layout": {
@@ -1006,87 +431,318 @@
       "text-size": 12
     }
   },
-  "mv_grid_district_data_100re": {
+  "gsgk": {
+    "type": "symbol",
+    "filter": ["!", ["has", "point_count"]],
+    "layout": {
+      "icon-image": "gsgk",
+      "icon-size": 0.4,
+      "icon-allow-overlap": true
+    },
+    "paint": {
+      "icon-color": "black"
+    }
+  },
+  "gsgk_cluster": {
+    "type": "circle",
+    "filter": ["has", "point_count"],
+    "paint": {
+      "circle-color": "#C27BA0",
+      "circle-radius": [
+        "step",
+        ["get", "point_count"],
+        20,
+        15,
+        30,
+        50,
+        40
+      ]
+    }
+  },
+  "gsgk_cluster_count": {
+    "type": "symbol",
+    "filter": ["has", "point_count"],
+    "layout": {
+      "text-field": "{point_count_abbreviated}",
+      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+      "text-size": 12
+    },
+    "paint": {
+      "text-color": "white"
+    }
+  },
+  "storage": {
+    "type": "symbol",
+    "filter": ["!", ["has", "point_count"]],
+    "layout": {
+      "icon-image": "storage",
+      "icon-size": 0.4,
+      "icon-allow-overlap": true
+    },
+    "paint": {
+      "icon-color": "black"
+    }
+  },
+  "storage_cluster": {
+    "type": "circle",
+    "filter": ["has", "point_count"],
+    "paint": {
+      "circle-color": "#8D2D5F",
+      "circle-radius": [
+        "step",
+        ["get", "point_count"],
+        20,
+        15,
+        30,
+        50,
+        40
+      ]
+    }
+  },
+  "storage_cluster_count": {
+    "type": "symbol",
+    "filter": ["has", "point_count"],
+    "layout": {
+      "text-field": "{point_count_abbreviated}",
+      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+      "text-size": 12
+    },
+    "paint": {
+      "text-color": "white"
+    }
+  },
+  "combustion": {
+    "type": "symbol",
+    "filter": ["!", ["has", "point_count"]],
+    "layout": {
+      "icon-image": "combustion",
+      "icon-size": 0.4,
+      "icon-allow-overlap": true
+    },
+    "paint": {
+      "icon-color": "black"
+    }
+  },
+  "combustion_cluster": {
+    "type": "circle",
+    "filter": ["has", "point_count"],
+    "paint": {
+      "circle-color": "#E6772E",
+      "circle-radius": [
+        "step",
+        ["get", "point_count"],
+        20,
+        15,
+        30,
+        50,
+        40
+      ]
+    }
+  },
+  "combustion_cluster_count": {
+    "type": "symbol",
+    "filter": ["has", "point_count"],
+    "layout": {
+      "text-field": "{point_count_abbreviated}",
+      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+      "text-size": 12
+    },
+    "paint": {
+      "text-color": "white"
+    }
+  },
+  "results": {
     "type": "fill",
     "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.3,
-      "fill-outline-color": "rgba(115,62,136,0.2)"
+      "fill-color": [
+        "interpolate",
+        [
+          "linear"
+        ],
+        [
+          "feature-state",
+          "value"
+        ],
+        0.3,
+        "#fef0d9",
+        0.6,
+        "#fdcc8a",
+        0.8,
+        "#fc8d59",
+        0.9,
+        "#e34a33",
+        1,
+        "#b30000"
+      ],
+      "fill-opacity": 0.8
     }
   },
-  "mv_grid_district_data_line_100re": {
-    "type": "line",
-    "paint": {
-      "line-color": "rgba(115,62,136,0.2)",
-      "line-width": 0.8
-    }
-  },
-  "load_area_100re": {
+  "potentialarea_pv_road_railway_region": {
     "type": "fill",
     "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.6
+      "fill-color": "#ffd744"
     }
   },
-  "load_area_line_100re": {
-    "type": "line",
-    "paint": {
-      "line-color": "rgb(115,62,136)",
-      "line-width": 0.8
-    }
-  },
-  "h2_voronoi_100re": {
+  "potentialarea_pv_agriculture_lfa-off_region": {
     "type": "fill",
     "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.3,
-      "fill-outline-color": "rgba(115,62,136,0.2)"
+      "fill-color": "#c19800"
     }
   },
-  "h2_voronoi_line_100re": {
-    "type": "line",
-    "paint": {
-      "line-color": "rgba(115,62,136,0.2)",
-      "line-width": 0.8
-    }
-  },
-  "ch4_voronoi_100re": {
+  "potentialarea_wind_stp_2018_vreg": {
     "type": "fill",
     "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.3,
-      "fill-outline-color": "rgba(115,62,136,0.2)"
+      "fill-color": "#6A89CC"
     }
   },
-  "ch4_voronoi_line_100re": {
-    "type": "line",
-    "paint": {
-      "line-color": "rgba(115,62,136,0.2)",
-      "line-width": 0.8
-    }
-  },
-  "transport_heavy-duty_transport_100re": {
+  "potentialarea_wind_stp_2027_vr": {
     "type": "fill",
     "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.3,
-      "fill-outline-color": "rgba(115,62,136,0.2)"
+      "fill-color": "#6A89CC"
     }
   },
-  "gas_methane_for_industry_100re": {
+  "potentialarea_wind_stp_2027_repowering": {
     "type": "fill",
     "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.3,
-      "fill-outline-color": "rgba(115,62,136,0.2)"
+      "fill-color": "#273f73"
     }
   },
-  "gas_hydrogen_for_industry_100re": {
+  "potentialarea_wind_stp_2027_search_area_open_area": {
     "type": "fill",
     "paint": {
-      "fill-color": "#ffffff",
-      "fill-opacity": 0.3,
-      "fill-outline-color": "rgba(115,62,136,0.2)"
+      "fill-color": "#6A89CC"
+    }
+  },
+  "potentialarea_wind_stp_2027_search_area_forest_area": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#273f73"
+    }
+  },
+  "air_traffic": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#969696"
+    }
+  },
+  "aviation": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#CCCCCC"
+    }
+  },
+  "biosphere_reserve": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#238443"
+    }
+  },
+  "drinking_water_protection_area": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#6BAED6"
+    }
+  },
+  "fauna_flora_habitat": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#78C679"
+    }
+  },
+  "floodplain": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#08306B"
+    }
+  },
+  "forest": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#004529"
+    }
+  },
+  "grid": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#252525"
+    }
+  },
+  "industry": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#BCBDDC"
+    }
+  },
+  "landscape_protection_area": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#006837"
+    }
+  },
+  "less_favoured_areas_agricultural": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#66c2a4"
+    }
+  },
+  "military": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#636363"
+    }
+  },
+  "nature_conservation_area": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#ADDD8E"
+    }
+  },
+  "railway": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#54278F"
+    }
+  },
+  "road_default": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#756BB1"
+    }
+  },
+  "road_railway-500m_region": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#9E9AC8"
+    }
+  },
+  "settlement-0m": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#DADAEB"
+    }
+  },
+  "soil_quality_low": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#A63603"
+    }
+  },
+  "soil_quality_high": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#FD8D3C"
+    }
+  },
+  "special_protection_area": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#41AB5D"
+    }
+  },
+  "water": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#2171B5"
     }
   }
 }

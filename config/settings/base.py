@@ -356,7 +356,7 @@ SPECTACULAR_SETTINGS = {
 MAP_ENGINE_CENTER_AT_STARTUP = [10.407237624103573, 51.22757621251938]
 MAP_ENGINE_ZOOM_AT_STARTUP = 5.546712433728557
 MAP_ENGINE_MAX_BOUNDS: [[-2.54, 46.35], [23.93, 55.87]]
-MAP_ENGINE_LAYERS_AT_STARTUP = ["municipality", "wind_offshore_wind_parks_2035"]
+MAP_ENGINE_LAYERS_AT_STARTUP = ["municipality", "wind"]
 
 MAP_ENGINE_STYLES_FOLDER = "slapp/static/styles/"
 MAP_ENGINE_MIN_ZOOM = 2
@@ -370,9 +370,40 @@ MAP_ENGINE_API_MVTS = {
         setup.MVTAPI("municipality", "explorer", "Municipality"),
         setup.MVTAPI("municipalitylabel", "explorer", "Municipality", "label_tiles"),
     ],
+    "static": [
+        setup.MVTAPI("soil_quality_low", "explorer", "SoilQualityLow"),
+        setup.MVTAPI("soil_quality_high", "explorer", "SoilQualityHigh"),
+        setup.MVTAPI("landscape_protection_area", "explorer", "LandscapeProtectionArea"),
+        setup.MVTAPI("forest", "explorer", "Forest"),
+        setup.MVTAPI("special_protection_area", "explorer", "SpecialProtectionArea"),
+        setup.MVTAPI("air_traffic", "explorer", "AirTraffic"),
+        setup.MVTAPI("aviation", "explorer", "Aviation"),
+        setup.MVTAPI("biosphere_reserve", "explorer", "BiosphereReserve"),
+        setup.MVTAPI("drinking_water_protection_area", "explorer", "DrinkingWaterArea"),
+        setup.MVTAPI("fauna_flora_habitat", "explorer", "FaunaFloraHabitat"),
+        setup.MVTAPI("floodplain", "explorer", "Floodplain"),
+        setup.MVTAPI("grid", "explorer", "Grid"),
+        setup.MVTAPI("industry", "explorer", "Industry"),
+        setup.MVTAPI("less_favoured_areas_agricultural", "explorer", "LessFavouredAreasAgricultural"),
+        setup.MVTAPI("military", "explorer", "Military"),
+        setup.MVTAPI("nature_conservation_area", "explorer", "NatureConservationArea"),
+        setup.MVTAPI("railway", "explorer", "Railway"),
+        setup.MVTAPI("road_default", "explorer", "Road"),
+        setup.MVTAPI("road_railway-500m_region", "explorer", "RoadRailway500m"),
+        setup.MVTAPI("settlement-0m", "explorer", "Settlement0m"),
+        setup.MVTAPI("water", "explorer", "Water"),
+    ],
 }
 MAP_ENGINE_API_CLUSTERS = [
-    setup.ClusterAPI("wind_offshore_wind_parks_2035", "explorer", "WindTurbine", properties=["id"]),
+    setup.ClusterAPI("wind", "explorer", "WindTurbine", properties=["id"]),
+    setup.ClusterAPI("pvroof", "explorer", "PVroof", properties=["id"]),
+    setup.ClusterAPI("pvground", "explorer", "PVground", properties=["id"]),
+    setup.ClusterAPI("hydro", "explorer", "Hydro", properties=["id"]),
+    setup.ClusterAPI("biomass", "explorer", "Biomass", properties=["id"]),
+    setup.ClusterAPI("combustion", "explorer", "Combustion", properties=["id"]),
+    setup.ClusterAPI("gsgk", "explorer", "GSGK", properties=["id"]),
+    setup.ClusterAPI("storage", "explorer", "Storage", properties=["id"]),
 ]
+
 MAP_ENGINE_CHOROPLETHS = []
 MAP_ENGINE_POPUPS = []
