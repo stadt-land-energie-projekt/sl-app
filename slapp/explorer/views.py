@@ -65,7 +65,7 @@ def details_list(request: HttpRequest) -> HttpResponse:
     ids = request.GET.getlist("id")
     if ids:
         if len(ids) > MAX_MUNICIPALITY_COUNT:
-            ids = ids[:-1]
+            ids = ids[:MAX_MUNICIPALITY_COUNT]
             messages.add_message(request, messages.WARNING, "Es können maximal 3 Gemeinden ausgewählt werden.")
         municipalities = municipalities_details(ids)
     else:
@@ -78,7 +78,10 @@ def search_municipality(request: HttpRequest) -> HttpResponse:
     """Return list of municipalities for given search text."""
     search_text = request.POST.get("search")
     param_string = request.POST.get("param_string")
-    new_param_string = param_string + "?id=" if param_string == "/explorer/details/" else param_string + "&id="
+
+    first_item = param_string in ["/explorer/details/", "/explorer/parameters/"]
+
+    new_param_string = param_string + "?id=" if first_item else param_string + "&id="
 
     # look up all municipalities that contain the text
     results = Municipality.objects.filter(name__icontains=search_text)
@@ -113,3 +116,17 @@ def details_csv(request: HttpRequest) -> HttpResponse:
     writer.writerow(["thermische Leistung", *[localize(item["kwk_th_net"]) for item in data], "kW"])
     writer.writerow(["elektrische Leistung", *[localize(item["kwk_el_net"]) for item in data], "kW"])
     return response
+
+
+def optimization_parameters(request: HttpRequest) -> HttpResponse:
+    """Render parameters page for given municipality IDs."""
+    ids = request.GET.getlist("id")
+    if ids:
+        if len(ids) > MAX_MUNICIPALITY_COUNT:
+            ids = ids[:MAX_MUNICIPALITY_COUNT]
+            messages.add_message(request, messages.WARNING, "Es können maximal 3 Gemeinden ausgewählt werden.")
+        municipalities = Municipality.objects.filter(id__in=ids)
+    else:
+        municipalities = None
+
+    return render(request, "pages/parameters.html", {"municipalities": municipalities})

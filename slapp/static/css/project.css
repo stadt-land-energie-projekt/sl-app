@@ -12,6 +12,30 @@
   border-color: #eed3d7;
 }
 
+.h-55px {
+  height: 55px;
+}
+
+.h-155px {
+  height: 155px;
+}
+
+.h-270px {
+  height: 270px;
+}
+
+.table-row {
+      display: flex;
+      align-items: stretch; /* Ensure all children have the same height */
+      margin-bottom: 10px; /* Adjust as needed */
+    }
+
+.table-cell {
+      flex: 1;
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+
 #map {
   width: 100%;
   height: 100%
