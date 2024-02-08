@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load humanize %}
+
 {% block content %}
   <div class="container">
     <h1 mt-3>Energiesystemoptimierung</h1>
@@ -12,82 +14,87 @@
         <div class="col">3. Robustheit</div>
       </div>
     </div>
-    <form>
-      <div class="container mt-5">
-        <h4>Einbezogene Gemeinden</h4>
-        <button type="button" class="btn btn-outline-secondary">Gemeinde hinzufügen</button>
-      </div>
-      <div class="container mt-5">
-        <h4>Ziel der Deckung des eigenen Energiebedarfs in %:</h4>
-        <div class="row g-3 align-items-center">
-          <div class="col-auto">
-            <label for="inputgoal" class="col-form-label">Eichstetten am Kaiserstuhl</label>
-          </div>
-          <div class="col-auto">
-            <input type="number"
-                   id="inputgoal"
-                   class="form-control form-control-sm"
-                   aria-describedby="inputgoal"
-                   value="75" />
-          </div>
-          <div class="col-auto">
-            <label for="inputgoal" class="col-form-label">%</label>
-          </div>
+    <div class="mt-5">
+      <div class="row mt-4">
+        <div class="col-4">
+          <form autocomplete="off">
+            <input type="text"
+                   hx-post="{% url 'explorer:search-municipality' %}"
+                   hx-target='#results'
+                   hx-trigger="keyup changed delay:500ms"
+                   hx-vals='{"param_string": "{{ request.get_full_path }}"}'
+                   name="search"
+                   class="form-control mr-2"
+                   placeholder="Gemeinden suchen & hinzufügen" />
+          </form>
+          <div id="results"></div>
         </div>
       </div>
-      <div class="container mt-5">
-        <h4>Jährlicher Energiebedarf in MWh:</h4>
-        <div class="row g-3 align-items-center">
-          <div class="col-auto">
-            <label for="inputEnergyNeed" class="col-form-label">Eichstetten am Kaiserstuhl</label>
-          </div>
-          <div class="col-auto">
-            <input type="number"
-                   id="inputEnergyNeed"
-                   class="form-control form-control-sm"
-                   aria-describedby="inputEnergyNeed"
-                   value="30,98" />
-          </div>
-          <div class="col-auto">
-            <label for="inputEnergyNeed" class="col-form-label">
-              MWh <i>(aktueller errechneter Wert: 30,98 MWh)</i>
-            </label>
+    </div>
+    {% if municipalities %}
+      <div class="row mt-4 g-0" id="municipality-results">
+        <div class="col-3">
+          <div class="rounded-0text-start">
+            <div class="h-55px table-cell"></div>
+            <div class="h-55px table-cell">Energiebedarfsdeckung in %:</div>
+            <div class="h-55px table-cell">Jährlicher Energiebedarf in MWh:</div>
+            <div class="h-270px table-cell">Phtotovoltaik</div>
+            <div class="h-270px table-cell">Windkraft</div>
+            <div class="h-155px table-cell">Wasserkraft</div>
+            <div class="h-155px table-cell">Biomasse</div>
+            <div class="h-155px table-cell">Speicherkapazität</div>
           </div>
         </div>
-      </div>
-      <div class="container mt-5">
-        <h4>Erzeugung und Speicherung</h4>
-        <div class="accordion" id="accordionPanelsStayOpenExample">
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-              <button class="accordion-button"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#panelsStayOpen-collapseOne"
-                      aria-expanded="true"
-                      aria-controls="panelsStayOpen-collapseOne">Photovoltaik</button>
-            </h2>
-            <div id="panelsStayOpen-collapseOne"
-                 class="accordion-collapse collapse show"
-                 aria-labelledby="panelsStayOpen-headingOne">
-              <div class="accordion-body">
+        {% for municipality in municipalities %}
+          <div class="col-3">
+            <div class="rounded-0 h-100px text-start">
+              <div class="h-55px  table-cell fw-bold bg-secondary text-white">
+                {{ municipality.name }}
+                <a class="icon-link text-white"
+                   href="{% url 'explorer:parameters' %}?  {% for municipality_ids in municipalities %}{% if municipality_ids.id != municipality.id %}id={{ municipality_ids.id }}&{% endif %}{% endfor %}">
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       width="16"
+                       height="16"
+                       fill="currentColor"
+                       class="bi bi-x-circle-fill"
+                       viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+                  </svg>
+                </a>
+              </div>
+              <div class="h-55px table-cell">
+                <input type="number"
+                       id="{{ municipality.id }}-coverage"
+                       class="form-control form-control-sm"
+                       aria-describedby="inputgoal"
+                       value="75" />
+              </div>
+              <div class="h-55px table-cell">
+                <input type="number"
+                       id="{{ municipality.id }}-energy-need"
+                       class="form-control form-control-sm"
+                       aria-describedby="inputgoal"
+                       value="75" />
+              </div>
+              <!-- PV -->
+              <div class="h-270px table-cell">
                 <fieldset class="mb-3">
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
-                           name="limitSelection1"
-                           id="noLimitRadio"
+                           name="pv-{{ municipality.id }}-selection"
+                           id="pv-{{ municipality.id }}-noLimitRadio"
                            checked />
-                    <label class="form-check-label" for="noLimitRadio">keine Obergrenze angeben</label>
+                    keine Obergrenze angeben
                   </div>
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
-                           name="limitSelection1"
-                           id="maxOutputRadio" />
+                           name="pv-{{ municipality.id }}-selection"
+                           id="pv-{{ municipality.id }}-MW" />
                     <!-- This is the additional input field right next to the second radio button -->
                     <input type="text"
-                           id="maxOutputValue"
+                           id="pv-{{ municipality.id }}-MW"
                            class="form-control d-inline-block w-auto form-control-sm"
                            value="0,12" />
                     <label class="form-check-label d-inline-block" for="maxOutputRadio">
@@ -97,51 +104,39 @@
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
-                           name="limitSelection1"
-                           id="maxOutputRadio" />
+                           name="pv-{{ municipality.id }}-selection"
+                           id="pv-{{ municipality.id }}-area" />
                     <!-- This is the additional input field right next to the second radio button -->
                     <input type="text"
                            id="maxOutputValue"
                            class="form-control d-inline-block w-auto form-control-sm"
                            value="0,27" />
-                    <label class="form-check-label d-inline-block" for="maxOutputRadio">
+                    <label class="form-check-label d-inline-block"
+                           for="pv-{{ municipality.id }}-area">
                       km² max. Flächenverbrauch <i>(1,73 km² ausgewiesen, davon derzeit 0,27 km² belegt)</i>
                     </label>
                   </div>
                 </fieldset>
               </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-              <button class="accordion-button collapsed"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#panelsStayOpen-collapseTwo"
-                      aria-expanded="false"
-                      aria-controls="panelsStayOpen-collapseTwo">Windkraft</button>
-            </h2>
-            <div id="panelsStayOpen-collapseTwo"
-                 class="accordion-collapse collapse"
-                 aria-labelledby="panelsStayOpen-headingTwo">
-              <div class="accordion-body">
+              <!-- Wind -->
+              <div class="h-270px table-cell">
                 <fieldset class="mb-3">
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
-                           name="limitSelection2"
-                           id="noLimitRadio"
+                           name="wind-{{ municipality.id }}-selection"
+                           id="wind-{{ municipality.id }}-noLimitRadio"
                            checked />
-                    <label class="form-check-label" for="noLimitRadio">keine Obergrenze angeben</label>
+                    keine Obergrenze angeben
                   </div>
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
-                           name="limitSelection2"
-                           id="maxOutputRadio" />
-                    <!-- This is the additional input field -->
+                           name="wind-{{ municipality.id }}-selection"
+                           id="wind-{{ municipality.id }}-MW" />
+                    <!-- This is the additional input field right next to the second radio button -->
                     <input type="text"
-                           id="maxOutputValue"
+                           id="wind-{{ municipality.id }}-MW"
                            class="form-control d-inline-block w-auto form-control-sm"
                            value="0,12" />
                     <label class="form-check-label d-inline-block" for="maxOutputRadio">
@@ -151,51 +146,93 @@
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
-                           name="limitSelection2"
-                           id="maxOutputRadio" />
-                    <!-- This is the additional input field -->
+                           name="wind-{{ municipality.id }}-selection"
+                           id="wind-{{ municipality.id }}-area" />
+                    <!-- This is the additional input field right next to the second radio button -->
                     <input type="text"
                            id="maxOutputValue"
                            class="form-control d-inline-block w-auto form-control-sm"
                            value="0,27" />
-                    <label class="form-check-label d-inline-block" for="maxOutputRadio">
+                    <label class="form-check-label d-inline-block"
+                           for="pv-{{ municipality.id }}-area">
                       km² max. Flächenverbrauch <i>(1,73 km² ausgewiesen, davon derzeit 0,27 km² belegt)</i>
                     </label>
                   </div>
                 </fieldset>
               </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-              <button class="accordion-button collapsed"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#panelsStayOpen-collapseThree"
-                      aria-expanded="false"
-                      aria-controls="panelsStayOpen-collapseThree">Wasserkraft</button>
-            </h2>
-            <div id="panelsStayOpen-collapseThree"
-                 class="accordion-collapse collapse"
-                 aria-labelledby="panelsStayOpen-headingThree">
-              <div class="accordion-body">
+              <!-- Hydro Power -->
+              <div class="h-155px table-cell">
                 <fieldset class="mb-3">
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
-                           name="limitSelection3"
-                           id="noLimitRadio" />
-                    <label class="form-check-label" for="noLimitRadio">keine Obergrenze angeben</label>
+                           name="hydro-{{ municipality.id }}-selection"
+                           id="hydro-{{ municipality.id }}-noLimitRadio"
+                           checked />
+                    keine Obergrenze angeben
                   </div>
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
-                           name="limitSelection3"
-                           id="maxOutputRadio"
-                           checked />
-                    <!-- This is the additional input field -->
+                           name="hydro-{{ municipality.id }}-selection"
+                           id="hydro-{{ municipality.id }}-MW" />
+                    <!-- This is the additional input field right next to the second radio button -->
                     <input type="text"
-                           id="maxOutputValue"
+                           id="hydro-{{ municipality.id }}-MW"
+                           class="form-control d-inline-block w-auto form-control-sm"
+                           value="0,12" />
+                    <label class="form-check-label d-inline-block" for="maxOutputRadio">
+                      MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
+                    </label>
+                  </div>
+                </fieldset>
+              </div>
+              <!-- Biomasse -->
+              <div class="h-155px table-cell">
+                <fieldset class="mb-3">
+                  <div class="form-check">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="biomass-{{ municipality.id }}-selection"
+                           id="biomass-{{ municipality.id }}-noLimitRadio"
+                           checked />
+                    keine Obergrenze angeben
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="biomass-{{ municipality.id }}-selection"
+                           id="biomass-{{ municipality.id }}-MW" />
+                    <!-- This is the additional input field right next to the second radio button -->
+                    <input type="text"
+                           id="biomass-{{ municipality.id }}-MW"
+                           class="form-control d-inline-block w-auto form-control-sm"
+                           value="0,12" />
+                    <label class="form-check-label d-inline-block" for="maxOutputRadio">
+                      MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
+                    </label>
+                  </div>
+                </fieldset>
+              </div>
+              <!-- Batteries -->
+              <div class="h-155px table-cell">
+                <fieldset class="mb-3">
+                  <div class="form-check">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="battery-{{ municipality.id }}-selection"
+                           id="battery-{{ municipality.id }}-noLimitRadio"
+                           checked />
+                    keine Obergrenze angeben
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="battery-{{ municipality.id }}-selection"
+                           id="battery-{{ municipality.id }}-MW" />
+                    <!-- This is the additional input field right next to the second radio button -->
+                    <input type="text"
+                           id="battery-{{ municipality.id }}-MW"
                            class="form-control d-inline-block w-auto form-control-sm"
                            value="0,12" />
                     <label class="form-check-label d-inline-block" for="maxOutputRadio">
@@ -206,93 +243,15 @@
               </div>
             </div>
           </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="panelsStayOpen-headingFour">
-              <button class="accordion-button collapsed"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#panelsStayOpen-collapseFour"
-                      aria-expanded="false"
-                      aria-controls="panelsStayOpen-collapseFour">Biomasse</button>
-            </h2>
-            <div id="panelsStayOpen-collapseFour"
-                 class="accordion-collapse collapse"
-                 aria-labelledby="panelsStayOpen-headingFour">
-              <div class="accordion-body">
-                <fieldset class="mb-3">
-                  <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="limitSelection4"
-                           id="noLimitRadio" />
-                    <label class="form-check-label" for="noLimitRadio">keine Obergrenze angeben</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="limitSelection4"
-                           id="maxOutputRadio"
-                           checked />
-                    <!-- This is the additional input field -->
-                    <input type="text"
-                           id="maxOutputValue"
-                           class="form-control d-inline-block w-auto form-control-sm"
-                           value="0,12" />
-                    <label class="form-check-label d-inline-block" for="maxOutputRadio">
-                      MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
-                    </label>
-                  </div>
-                </fieldset>
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="panelsStayOpen-headingFive">
-              <button class="accordion-button collapsed"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#panelsStayOpen-collapseFive"
-                      aria-expanded="false"
-                      aria-controls="panelsStayOpen-collapseFive">Speicherkapazität</button>
-            </h2>
-            <div id="panelsStayOpen-collapseFive"
-                 class="accordion-collapse collapse"
-                 aria-labelledby="panelsStayOpen-headingFive">
-              <div class="accordion-body">
-                <fieldset class="mb-3">
-                  <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="limitSelection5"
-                           id="noLimitRadio" />
-                    <label class="form-check-label" for="noLimitRadio">keine Obergrenze angeben</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="limitSelection5"
-                           id="maxOutputRadio"
-                           checked />
-                    <!-- This is the additional input field -->
-                    <input type="text"
-                           id="maxOutputValue"
-                           class="form-control d-inline-block w-auto form-control-sm"
-                           value="0,12" />
-                    <label class="form-check-label d-inline-block" for="maxOutputRadio">
-                      MWh max. Gesamtkapazität <i>(aktuell: 0,12 MWh)</i>
-                    </label>
-                  </div>
-                </fieldset>
-              </div>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
       <br />
       <i>Je nach Anzahl der Gemeinden dauert eine Modellierung & Optimierung mehrere Minuten.</i>
       <div class="mb-3">
         <button type="submit" class="btn btn-primary">Energiesystemoptimierung starten</button>
       </div>
-    </form>
+    {% else %}
+      <div class="mt-3">Fügen Sie zunächst Gemeinden für die Optimierung hinzu.</div>
+    {% endif %}
   </div>
 {% endblock content %}
