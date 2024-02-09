@@ -8,8 +8,10 @@ app_name = "explorer"
 urlpatterns = [
     path("", views.MapGLView.as_view(), name="map"),
     path("details/", views.details_list, name="details"),
-    path("parameters/", views.optimization_parameters, name="parameters"),
     path("details/csv/", views.details_csv, name="details-csv"),
+    path("parameters/", views.optimization_parameters, name="parameters"),
+    path("results", views.optimization_results, name="results"),
+    path("robustness", views.robustness, name="robustness"),
 ]
 
 htmx_urlpatterns = [

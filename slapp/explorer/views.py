@@ -24,7 +24,7 @@ MAX_MUNICIPALITY_COUNT = 3
 
 
 class MapGLView(TemplateView, views.MapEngineMixin):
-    """Single view for whole app as SPA."""
+    """Single view for the map."""
 
     template_name = "pages/map.html"
     extra_context = {}
@@ -130,3 +130,33 @@ def optimization_parameters(request: HttpRequest) -> HttpResponse:
         municipalities = None
 
     return render(request, "pages/parameters.html", {"municipalities": municipalities})
+
+
+def optimization_results(request: HttpRequest) -> HttpResponse:
+    """Return optimiziation results per municipality."""
+    ids = request.GET.getlist("id")
+
+    if ids:
+        if len(ids) > MAX_MUNICIPALITY_COUNT:
+            ids = ids[:MAX_MUNICIPALITY_COUNT]
+            messages.add_message(request, messages.WARNING, "Es können maximal 3 Gemeinden ausgewählt werden.")
+        municipalities = municipalities_details(ids)
+    else:
+        municipalities = None
+
+    return render(request, "pages/results.html", {"municipalities": municipalities})
+
+
+def robustness(request: HttpRequest) -> HttpResponse:
+    """Render robustness page."""
+    ids = request.GET.getlist("id")
+
+    if ids:
+        if len(ids) > MAX_MUNICIPALITY_COUNT:
+            ids = ids[:MAX_MUNICIPALITY_COUNT]
+            messages.add_message(request, messages.WARNING, "Es können maximal 3 Gemeinden ausgewählt werden.")
+        municipalities = municipalities_details(ids)
+    else:
+        municipalities = None
+
+    return render(request, "pages/robustness.html", {"municipalities": municipalities})

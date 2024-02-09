@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block content %}
+  <div class="container">
+    <h1 mt-3>Energiesystemoptimierung</h1>
+    <div class="container text-center border-top border-bottom mt-4 mb-4 pt-2 pb-2">
+      <div class="row align-items-start">
+        <div class="col">1. Parameter</div>
+        <div class="col">2. Optimierungsergebnis</div>
+        <div class="col">
+          <strong>3. Robustheit</strong>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <h2>Robustheit berechnen</h2>
+    </div>
+    <p>
+      Bei einer Robustheitsoptimierung wird die Systemoptimierung sehr häufig mit leicht modifizierten Parametern (max.
+      +/- 20%) berechnet. Dadurch kann das Ergebnis festgestellt werden, dass am wenigsten anfällig für Änderungen der
+      Ausgangslage ist.
+      <br />
+      Da die Robustheitsoptimierung sehr rechenaufwändig ist und einige Zeit brauchen, müssen Sie sich zunächst
+      registrieren.
+      Sobald das Ergebnis verfügbar ist, kontaktieren wir Sie per E-Mail und Sie erhalten einen Link zum Ergebnis.
+      <br />
+      Es sind maximal 3 Robustheitsoptimierungen pro Tag und Account möglich.
+    </p>
+  </div>
+{% endblock content %}
