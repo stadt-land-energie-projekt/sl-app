@@ -144,6 +144,17 @@ def optimization_results(request: HttpRequest) -> HttpResponse:
     else:
         municipalities = None
 
+    for municipality in municipalities:
+        municipality.biomass_net_optimized = round(municipality.biomass_net * 1.1, 1)
+        municipality.pvground_net_optimized = round(municipality.pvground_net * 1.1, 1)
+        municipality.pvroof_net_optimized = round(municipality.pvroof_net * 1.1, 1)
+        municipality.wind_net_optimized = round(municipality.wind_net * 1.1, 1)
+        municipality.hydro_net_optimized = round(municipality.hydro_net * 1.1, 1)
+        municipality.total_net_optimized = round(municipality.total_net * 1.1, 1)
+        municipality.storage_net_optimized = round(municipality.storage_net * 1.1, 1)
+        municipality.kwk_el_net_optimized = round(municipality.kwk_el_net * 1.1, 1)
+        municipality.kwk_th_net_optimized = round(municipality.kwk_th_net * 1.1, 1)
+
     return render(request, "pages/results.html", {"municipalities": municipalities})
 
 
