@@ -150,7 +150,14 @@ def optimization_results(request: HttpRequest) -> HttpResponse:
         municipality.pvroof_net_optimized = round(municipality.pvroof_net * 1.1, 1)
         municipality.wind_net_optimized = round(municipality.wind_net * 1.1, 1)
         municipality.hydro_net_optimized = round(municipality.hydro_net * 1.1, 1)
-        municipality.total_net_optimized = round(municipality.total_net * 1.1, 1)
+        municipality.total_net_optimized = round(
+            municipality.hydro_net_optimized
+            + municipality.wind_net_optimized
+            + municipality.biomass_net_optimized
+            + municipality.pvground_net_optimized
+            + municipality.pvroof_net_optimized,
+            1,
+        )
         municipality.storage_net_optimized = round(municipality.storage_net * 1.1, 1)
         municipality.kwk_el_net_optimized = round(municipality.kwk_el_net * 1.1, 1)
         municipality.kwk_th_net_optimized = round(municipality.kwk_th_net * 1.1, 1)
@@ -169,5 +176,41 @@ def robustness(request: HttpRequest) -> HttpResponse:
         municipalities = municipalities_details(ids)
     else:
         municipalities = None
+
+    for municipality in municipalities:
+        municipality.biomass_net_optimized = round(municipality.biomass_net * 1.1, 1)
+        municipality.pvground_net_optimized = round(municipality.pvground_net * 1.1, 1)
+        municipality.pvroof_net_optimized = round(municipality.pvroof_net * 1.1, 1)
+        municipality.wind_net_optimized = round(municipality.wind_net * 1.1, 1)
+        municipality.hydro_net_optimized = round(municipality.hydro_net * 1.1, 1)
+        municipality.total_net_optimized = round(
+            municipality.hydro_net_optimized
+            + municipality.wind_net_optimized
+            + municipality.biomass_net_optimized
+            + municipality.pvground_net_optimized
+            + municipality.pvroof_net_optimized,
+            1,
+        )
+        municipality.storage_net_optimized = round(municipality.storage_net * 1.1, 1)
+        municipality.kwk_el_net_optimized = round(municipality.kwk_el_net * 1.1, 1)
+        municipality.kwk_th_net_optimized = round(municipality.kwk_th_net * 1.1, 1)
+
+    for municipality in municipalities:
+        municipality.biomass_net_robust = round(municipality.biomass_net * 1.0, 1)
+        municipality.pvground_net_robust = round(municipality.pvground_net * 1.2, 1)
+        municipality.pvroof_net_robust = round(municipality.pvroof_net * 1.3, 1)
+        municipality.wind_net_robust = round(municipality.wind_net * 1.0, 1)
+        municipality.hydro_net_robust = round(municipality.hydro_net * 1.0, 1)
+        municipality.total_net_robust = round(
+            municipality.hydro_net_robust
+            + municipality.wind_net_robust
+            + municipality.biomass_net_robust
+            + municipality.pvground_net_robust
+            + municipality.pvroof_net_robust,
+            1,
+        )
+        municipality.storage_net_robust = round(municipality.storage_net * 1.2, 1)
+        municipality.kwk_el_net_robust = round(municipality.kwk_el_net * 1.0, 1)
+        municipality.kwk_th_net_robust = round(municipality.kwk_th_net * 1.2, 1)
 
     return render(request, "pages/robustness.html", {"municipalities": municipalities})

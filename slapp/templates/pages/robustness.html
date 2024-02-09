@@ -28,5 +28,117 @@
       <br />
       Es sind maximal 3 Robustheitsoptimierungen pro Tag und Account möglich.
     </p>
+    <div class="alert alert-warning" role="alert">
+      Die Werte werden aktuell noch nicht wirklich berechnet und dienen nur Anschauungszwecken.
+    </div>
+    <div class="row mt-4 g-0" id="municipality-results">
+      <div class="col-2"></div>
+      {% for municipality in municipalities %}
+        <div class="col-3">
+          <ul class="list-group rounded-0">
+            <li class="list-group-item text-center fw-bold bg-secondary text-white">{{ municipality.name }}</li>
+          </ul>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="row mt-0 g-0" id="municipality-results">
+      <div class="col-2">
+        <ul class="list-group rounded-0 text-truncate">
+          <li class="list-group-item fw-bold bg-secondary text-white">&nbsp;</li>
+          <li class="list-group-item fw-bold text-truncate">erneuerbare Stromerzeugung</li>
+          <li class="list-group-item text-truncate">Freiflächen-PV</li>
+          <li class="list-group-item text-truncate">Dachflächen-PV</li>
+          <li class="list-group-item text-truncate">Windkraft</li>
+          <li class="list-group-item text-truncate">Biomasse</li>
+          <li class="list-group-item text-truncate">Wasserkraft</li>
+          <li class="list-group-item fw-bold text-truncate">Stromspeicher</li>
+          <li class="list-group-item text-truncate">Speicherkapazität</li>
+          <li class="list-group-item fw-bold text-truncate">Wärmegewinnung (KWK)</li>
+          <li class="list-group-item text-truncate">thermische Leistung</li>
+          <li class="list-group-item text-truncate">elektrische Leistung</li>
+          <li class="list-group-item fw-bold text-truncate">Energiebedarf (errechnet)</li>
+          <li class="list-group-item text-truncate">Strombedarf</li>
+          <li class="list-group-item text-truncate">Wärmebedarf</li>
+        </ul>
+      </div>
+      {% for municipality in municipalities %}
+        <div class="col-1 text-truncate">
+          <ul class="list-group rounded-0">
+            <li class="list-group-item text-end fw-bold bg-secondary text-white">aktuell</li>
+            <li class="list-group-item text-end fw-bold">{{ municipality.total_net|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.pvground_net|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.pvroof_net|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.wind_net|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.biomass_net|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.hydro_net|intcomma }}</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+            <li class="list-group-item text-end">{{ municipality.storage_net|intcomma }}</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+            <li class="list-group-item text-end">{{ municipality.kwk_th_net|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.kwk_el_net|intcomma }}</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+          </ul>
+        </div>
+        <div class="col-1 text-truncate">
+          <ul class="list-group rounded-0">
+            <li class="list-group-item text-end fw-bold bg-secondary text-white">optimiert</li>
+            <li class="list-group-item text-end fw-bold">{{ municipality.total_net_optimized|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.pvground_net_optimized|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.pvroof_net_optimized|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.wind_net_optimized|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.biomass_net_optimized|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.hydro_net_optimized|intcomma }}</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+            <li class="list-group-item text-end">{{ municipality.storage_net_optimized|intcomma }}</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+            <li class="list-group-item text-end">{{ municipality.kwk_th_net_optimized|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.kwk_el_net_optimized|intcomma }}</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+          </ul>
+        </div>
+        <div class="col-1 text-truncate">
+          <ul class="list-group rounded-0">
+            <li class="list-group-item text-end fw-bold bg-secondary text-white">robust</li>
+            <li class="list-group-item text-end fw-bold">{{ municipality.total_net_robust|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.pvground_net_robust|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.pvroof_net_robust|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.wind_net_robust|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.biomass_net_robust|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.hydro_net_robust|intcomma }}</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+            <li class="list-group-item text-end">{{ municipality.storage_net_robust|intcomma }}</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+            <li class="list-group-item text-end">{{ municipality.kwk_th_net_robust|intcomma }}</li>
+            <li class="list-group-item text-end">{{ municipality.kwk_el_net_robust|intcomma }}</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+            <li class="list-group-item fw-bold">&nbsp</li>
+          </ul>
+        </div>
+      {% endfor %}
+      <div class="col-1">
+        <ul class="list-group rounded-0">
+          <li class="list-group-item bg-secondary text-white">Einheit</li>
+          <li class="list-group-item fw-bold">kW</li>
+          <li class="list-group-item">kW</li>
+          <li class="list-group-item">kW</li>
+          <li class="list-group-item">kW</li>
+          <li class="list-group-item">kW</li>
+          <li class="list-group-item">kW</li>
+          <li class="list-group-item fw-bold">&nbsp</li>
+          <li class="list-group-item">kWh</li>
+          <li class="list-group-item fw-bold">&nbsp</li>
+          <li class="list-group-item">kW</li>
+          <li class="list-group-item">kW</li>
+          <li class="list-group-item fw-bold">&nbsp</li>
+          <li class="list-group-item">kWh</li>
+          <li class="list-group-item">kWh</li>
+        </ul>
+      </div>
+    </div>
   </div>
 {% endblock content %}
