@@ -23,28 +23,6 @@ Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings
 
 For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
 
-### Type checks
-
-Running type checks with mypy:
-
-    $ mypy slapp
-
-### Test coverage
-
-To run the tests, check your test coverage, and generate an HTML coverage report:
-
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
-
-#### Running tests with pytest
-
-    $ pytest
-
-### Live reloading and Sass CSS compilation
-
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).
-
 ### Celery
 
 This app comes with Celery.
@@ -79,9 +57,55 @@ The system is set up with reasonable defaults, including 404 logging and integra
 
 You must set the DSN url in production.
 
-## Deployment
+### Load data into application
 
-The following details how to deploy this application.
+First you have to set up all tables in the database by runnning:
+
+```
+python manage.py migrate
+```
+
+Afterwards you have to load in data. To simplify data commands a _Makefile_ has been
+added, which can be used by command `make`.
+You can load all data by running (or you can run them one-by-one):
+
+```
+make load_regions load_data
+```
+
+And you can empty all data by running:
+
+```
+make empty_data empty_regions
+```
+
+## Deployment
+This application is ready to be deployed via Caprover. Make sure to define the following Environmental Variables:
+
+REDIS_URL=
+DATABASE_URL=postgis://
+DJANGO_DEBUG=False
+DJANGO_SETTINGS_MODULE=config.settings.production
+DJANGO_SECRET_KEY=
+DJANGO_ADMIN_URL=
+DJANGO_ALLOWED_HOSTS=
+DJANGO_ACCOUNT_ALLOW_REGISTRATION=True
+SENTRY_DSN=
+POSTGRES_HOST=
+POSTGRES_PORT=
+POSTGRES_DB=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+STARTUP_COMMAND=/start
+CELERY_BROKER_URL=redis://
+TILING_SERVICE_TOKEN=
+TILING_SERVICE_STYLE_ID=
+USE_DISTILLED_MVTS=
+
+### To upload new data, its is probably the easiest to make them work locally, create a backup and use that backup on the target postgres/gis:
+
+* create a backup of the local DB: pg_dump -Fc db_name > db_name.tar
+* restore DB to remote server: pg_restore -h server_url -p server_url -d remote_db_name -U remote_db_name -c db_name.tar
 
 ### Docker
 
