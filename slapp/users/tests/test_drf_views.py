@@ -6,7 +6,7 @@ from slapp.users.models import User
 
 
 class TestUserViewSet:
-    @pytest.fixture
+    @pytest.fixture()
     def api_rf(self) -> APIRequestFactory:
         return APIRequestFactory()
 

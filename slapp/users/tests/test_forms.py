@@ -19,7 +19,6 @@ class TestUserAdminCreationForm:
             2) Only 1 error is raised by the UserCreation Form
             3) The desired error message is raised
         """
-
         # The user already exists,
         # hence cannot be created.
         form = UserAdminCreationForm(
@@ -27,7 +26,7 @@ class TestUserAdminCreationForm:
                 "email": user.email,
                 "password1": user.password,
                 "password2": user.password,
-            }
+            },
         )
 
         assert not form.is_valid()

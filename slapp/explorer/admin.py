@@ -1,3 +1,5 @@
+"""Add models to admin interface."""
+
 from django.contrib import admin
 
 from slapp.explorer.models import (
@@ -79,5 +81,5 @@ admin.site.register(
         PotentialareaWindSTP2027SearchAreaForestArea,
         PotentialareaWindSTP2027SearchAreaOpenArea,
         PotentialareaWindSTP2027VR,
-    ]
+    ],
 )
