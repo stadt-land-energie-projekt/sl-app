@@ -364,7 +364,9 @@ MAP_ENGINE_MIN_ZOOM = 2
 # needs to be empty to disable centration- and moveto-behavior onclick
 MAP_ENGINE_ZOOM_LEVELS = {}
 
-MAP_ENGINE_IMAGES = []
+MAP_ENGINE_IMAGES = [
+    setup.MapImage("wind", "images/icons/map_wind.png"),
+]
 MAP_ENGINE_API_MVTS = {
     "municipality": [
         setup.MVTAPI("municipality", "explorer", "Municipality"),
