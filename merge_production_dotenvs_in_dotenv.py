@@ -1,3 +1,4 @@
+"""Merge env vars from docker config into env file."""
 import os
 from collections.abc import Sequence
 from pathlib import Path
@@ -15,6 +16,7 @@ def merge(
     output_file: Path,
     files_to_merge: Sequence[Path],
 ) -> None:
+    """Merge env vars from multiple files into single file."""
     merged_content = ""
     for merge_file in files_to_merge:
         merged_content += merge_file.read_text()

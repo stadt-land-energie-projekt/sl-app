@@ -1,4 +1,10 @@
-from pathlib import Path
+"""Test for merging production dotenvs into env file."""
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 import pytest
 
@@ -21,6 +27,7 @@ def test_merge(
     input_contents: list[str],
     expected_output: str,
 ):
+    """Test merging production dotenvs into single file."""
     output_file = tmp_path / ".env"
 
     files_to_merge = []

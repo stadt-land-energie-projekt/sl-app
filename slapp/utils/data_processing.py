@@ -1,9 +1,13 @@
 """Module to load (geo-)data into digiplan models."""
 
+from __future__ import annotations
+
 import logging
 import pathlib
+from typing import TYPE_CHECKING
 
-from django.db.models import Model
+if TYPE_CHECKING:
+    from django.db.models import Model
 
 from config.settings.base import GEODATA_DIR
 from slapp.explorer import models
