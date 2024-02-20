@@ -1,6 +1,6 @@
 python-slugify==8.0.1  # https://github.com/un33k/python-slugify
 Pillow==10.1.0  # https://github.com/python-pillow/Pillow
-rcssmin==1.1.2  # https://github.com/ndparker/rcssmin
+rcssmin==1.1.1  # due to django-compressor  # https://github.com/ndparker/rcssmin
 argon2-cffi==23.1.0  # https://github.com/hynek/argon2_cffi
 whitenoise==6.6.0  # https://github.com/evansd/whitenoise
 redis==5.0.1  # https://github.com/redis/redis-py
@@ -11,8 +11,8 @@ flower==2.0.1  # https://github.com/mher/flower
 
 # Django
 # ------------------------------------------------------------------------------
-django==5.0.2  # pyup: < 5.0  # https://www.djangoproject.com/
-django-environ  # https://github.com/joke2k/django-environ
+django==4.2.10  # pyup: < 5.0  # https://www.djangoproject.com/
+django-environ==0.11.2  # https://github.com/joke2k/django-environ
 django-model-utils==4.3.1  # https://github.com/jazzband/django-model-utils
 django-allauth==0.57.0  # https://github.com/pennersr/django-allauth
 django-crispy-forms==2.1  # https://github.com/django-crispy-forms/django-crispy-forms
@@ -24,7 +24,7 @@ djangorestframework==3.14.0  # https://github.com/encode/django-rest-framework
 django-cors-headers==4.3.0  # https://github.com/adamchainz/django-cors-headers
 # DRF-spectacular for api documentation
 drf-spectacular==0.26.5  # https://github.com/tfranzel/drf-spectacular
-git+https://github.com/rl-institut/django-mapengine.git@v0.15.0  # django-mapengine
+git+https://github.com/rl-institut/django-mapengine.git@v0.17.0  # django-mapengine
 django-distill>=2.6,<3.0
 geojson>=2.5.0,<3.0
 django-geojson>=3.1.0,<4.0
