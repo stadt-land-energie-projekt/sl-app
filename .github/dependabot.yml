@@ -92,3 +92,4 @@ updates:
     ignore:
       - dependency-name: "django"
       - dependency-name: "rcssmin"
+      - dependency-name: "mypy"
