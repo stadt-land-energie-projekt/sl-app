@@ -89,3 +89,6 @@ updates:
     # Every weekday
     schedule:
       interval: 'daily'
+    ignore:
+      - dependency-name: "django"
+      - dependency-name: "rcssmin"
