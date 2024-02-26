@@ -366,7 +366,21 @@ MAP_ENGINE_ZOOM_LEVELS = {}
 
 MAP_ENGINE_IMAGES = [
     setup.MapImage("wind", "images/icons/map_wind.png"),
+    setup.MapImage("pv", "images/icons/map_pv.png"),
+    setup.MapImage("hydro", "images/icons/map_hydro.png"),
+    setup.MapImage("biomass", "images/icons/map_biomass.png"),
+    setup.MapImage("combustion", "images/icons/map_combustion.png"),
+    setup.MapImage("gsgk", "images/icons/map_gsgk.png"),
+    setup.MapImage("storage", "images/icons/map_battery.png"),
+    setup.MapImage("wind_plus", "images/icons/map_wind_plus.png"),
+    setup.MapImage("pv_plus", "images/icons/map_pv_plus.png"),
+    setup.MapImage("hydro_plus", "images/icons/map_hydro_plus.png"),
+    setup.MapImage("biomass_plus", "images/icons/map_biomass_plus.png"),
+    setup.MapImage("combustion_plus", "images/icons/map_combustion_plus.png"),
+    setup.MapImage("gsgk_plus", "images/icons/map_gsgk_plus.png"),
+    setup.MapImage("storage_plus", "images/icons/map_battery_plus.png"),
 ]
+
 MAP_ENGINE_API_MVTS = {
     "municipality": [
         setup.MVTAPI("municipality", "explorer", "Municipality"),
@@ -396,15 +410,16 @@ MAP_ENGINE_API_MVTS = {
         setup.MVTAPI("water", "explorer", "Water"),
     ],
 }
+
 MAP_ENGINE_API_CLUSTERS = [
-    setup.ClusterAPI("wind", "explorer", "WindTurbine", properties=["id"]),
-    setup.ClusterAPI("pvroof", "explorer", "PVroof", properties=["id"]),
-    setup.ClusterAPI("pvground", "explorer", "PVground", properties=["id"]),
-    setup.ClusterAPI("hydro", "explorer", "Hydro", properties=["id"]),
-    setup.ClusterAPI("biomass", "explorer", "Biomass", properties=["id"]),
-    setup.ClusterAPI("combustion", "explorer", "Combustion", properties=["id"]),
-    setup.ClusterAPI("gsgk", "explorer", "GSGK", properties=["id"]),
-    setup.ClusterAPI("storage", "explorer", "Storage", properties=["id"]),
+    setup.ClusterAPI("wind", "explorer", "WindTurbine", properties=["id", "unit_count"]),
+    setup.ClusterAPI("pvroof", "explorer", "PVroof", properties=["id", "unit_count"]),
+    setup.ClusterAPI("pvground", "explorer", "PVground", properties=["id", "unit_count"]),
+    setup.ClusterAPI("hydro", "explorer", "Hydro", properties=["id", "unit_count"]),
+    setup.ClusterAPI("biomass", "explorer", "Biomass", properties=["id", "unit_count"]),
+    setup.ClusterAPI("combustion", "explorer", "Combustion", properties=["id", "unit_count"]),
+    setup.ClusterAPI("gsgk", "explorer", "GSGK", properties=["id", "unit_count"]),
+    setup.ClusterAPI("storage", "explorer", "Storage", properties=["id", "unit_count"]),
 ]
 
 MAP_ENGINE_CHOROPLETHS = []
