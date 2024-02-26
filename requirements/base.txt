@@ -29,7 +29,7 @@ django-distill>=2.6,<3.0
 geojson>=2.5.0,<3.0
 django-geojson>=3.1.0,<4.0
 django-libsass==0.9
-pandas==2.2.0
+pandas==2.2.1
 
 django-filter~=23.3
 djangorestframework-gis~=1.0
