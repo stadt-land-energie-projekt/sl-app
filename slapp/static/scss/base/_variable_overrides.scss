@@ -1,0 +1,525 @@
+// Include any default variable overrides here (though functions won't be available).
+
+// Variables
+//
+// Variables should follow the `$component-state-property-size` formula for
+// consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+
+// Color system
+
+// scss-docs-start gray-color-variables
+$gray-100: #F4F6F7;
+$gray-200: #E3E8EB;
+$gray-300: #BECAD0;
+$gray-400: #99ACB5;
+$gray-500: #758E9A;
+$gray-600: #576D78;
+$gray-700: #3C4B53;
+$gray-800: #222A2E;
+$gray-900: #070809;
+// scss-docs-end gray-color-variables
+
+// fusv-disable
+$purple-100: #FEF8FF;
+$purple-200: #FBEBFF;
+$purple-300: #EEC0FA;
+$purple-400: #DD92EF;
+$purple-500: #CF6BE8;
+$purple-600: #B83FD7;
+$purple-700: #9920B7;
+$purple-800: #700E88;
+$purple-900: #49065A;
+
+$red-100: #FFF6F8;
+$red-200: #FFEBED;
+$red-300: #FAC7CD;
+$red-400: #F09EA9;
+$red-500: #E5707F;
+$red-600: #CD4759;
+$red-700: #AB2134;
+$red-800: #860E1E;
+$red-900: #640B17;
+
+$yellow-100: #FFFDF5;
+$yellow-200: #FFFBEA;
+$yellow-300: #FBEEAE;
+$yellow-400: #F9E171;
+$yellow-500: #F8D637;
+$yellow-600: #F0C808;
+$yellow-700: #D0AE07;
+$yellow-800: #947B02;
+$yellow-900: #5F4F03;
+
+$green-100: #F6FFFC;
+$green-200: #EBFFF9;
+$green-300: #BDF8E5;
+$green-400: #73DDBC;
+$green-500: #4AC29D;
+$green-600: #21A179;
+$green-700: #13825F;
+$green-800: #09684A;
+$green-900: #06543B;
+
+$cyan-100: #F6FCFF;
+$cyan-200: #E9F6FE;
+$cyan-300: #BAE1F6;
+$cyan-400: #8BC8EA;
+$cyan-500: #67B7E3;
+$cyan-600: #3FA0D7;
+$cyan-700: #2080B6;
+$cyan-800: #0D547C;
+$cyan-900: #074061;
+// scss-docs-start gray-colors-map
+// scss-docs-end gray-colors-map
+// fusv-enable
+
+// scss-docs-start color-variables
+$blue: #002E50;
+$black: #292929;
+$cyan: #2348C3;
+// scss-docs-end color-variables
+
+// scss-docs-start colors-map
+// scss-docs-end colors-map
+
+// scss-docs-start theme-color-variables
+// scss-docs-end theme-color-variables
+
+// scss-docs-start theme-colors-map
+// scss-docs-end theme-colors-map
+
+// scss-docs-start theme-colors-rgb
+// scss-docs-end theme-colors-rgb
+
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+
+// Customize the light and dark text colors for use in our color contrast function.
+
+// fusv-disable
+// fusv-enable
+
+// Characters which are escaped by the escape-svg function
+
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+
+// Prefix for :root CSS variables
+
+// Gradient
+//
+// The gradient which is added to components if `$enable-gradients` is `true`
+// This gradient is also added to elements with `.bg-gradient`
+// scss-docs-start variable-gradient
+// scss-docs-end variable-gradient
+
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+// scss-docs-start spacer-variables-maps
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * .5,  // 0.5rem
+  2: $spacer,       // 1rem
+  3: $spacer * 1.5, // 1.5rem
+  4: $spacer * 2,   // 2rem
+  5: $spacer * 4,   // 4rem
+);
+// scss-docs-end spacer-variables-maps
+
+// Position
+//
+// Define the edge positioning anchors of the position utilities.
+
+// scss-docs-start position-map
+// scss-docs-end position-map
+
+// Body
+//
+// Settings for the `<body>` element.
+$body-color: $blue;
+// Utilities maps
+//
+// Extends the default `$theme-colors` maps to help create our utilities.
+
+// Come v6, we'll de-dupe these variables. Until then, for backward compatibility, we keep them to reassign.
+// scss-docs-start utilities-colors
+// scss-docs-end utilities-colors
+
+// scss-docs-start utilities-text-colors
+
+// scss-docs-end utilities-text-colors
+
+// scss-docs-start utilities-bg-colors
+// scss-docs-end utilities-bg-colors
+
+// Links
+//
+// Style anchor elements.
+$link-color: #0060AF;
+$link-decoration: none;
+
+// Paragraphs
+//
+// Style p element.
+
+
+// Grid breakpoints
+//
+// Define the minimum dimensions at which your layout will change,
+// adapting to different screen sizes, for use in media queries.
+
+// scss-docs-start grid-breakpoints
+// scss-docs-end grid-breakpoints
+
+
+// Grid containers
+//
+// Define the maximum width of `.container` for different screen sizes.
+
+// scss-docs-start container-max-widths
+// scss-docs-end container-max-widths
+
+
+// Grid columns
+//
+// Set the number of columns and specify the width of the gutters.
+
+// Container padding
+$container-padding-x: 2rem;
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+// scss-docs-start border-variables
+$border-widths: (
+  1: 1px,
+  2: 2px,
+  3: 3px,
+  4: 4px,
+  5: 5px
+);
+$custom-border-widths: (
+  6: 8px,
+  7: 12px,
+  8: 16px
+);
+$border-widths: map-merge($border-widths, $custom-border-widths);
+
+$border-color: $gray-200;
+// scss-docs-end border-variables
+
+// scss-docs-start border-radius-variables
+// scss-docs-end border-radius-variables
+
+// scss-docs-start box-shadow-variables
+$box-shadow:                  0 .5rem 1rem rgba($blue, .15);
+$box-shadow-sm:               0 .125rem .25rem rgba($blue, .075);
+$box-shadow-lg:               0 1rem 3rem rgba($blue, .175);
+$box-shadow-inset:            inset 0 1px 2px rgba($blue, .075);
+// scss-docs-end box-shadow-variables
+
+// scss-docs-start caret-variables
+// scss-docs-end caret-variables
+
+// scss-docs-start collapse-transition
+// scss-docs-end collapse-transition
+
+// stylelint-disable function-disallowed-list
+// scss-docs-start aspect-ratios
+// scss-docs-end aspect-ratios
+// stylelint-enable function-disallowed-list
+
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+
+// scss-docs-start font-variables
+// stylelint-disable value-keyword-case
+$font-family-sans-serif: Roboto, sans-serif;
+$font-family-monospace: "Roboto Mono", monospace;
+// stylelint-enable value-keyword-case
+
+// $font-size-root affects the value of `rem`, which is used for as well font sizes, paddings, and margins
+// $font-size-base affects the font size of the body text
+$font-size-base:              1rem;
+
+$h1-font-size:                $font-size-base * 2;
+$h2-font-size:                $font-size-base * 1.5;
+$h3-font-size:                $font-size-base * 1.25;
+$h4-font-size:                $font-size-base * 1.25;
+$h5-font-size:                $font-size-base;
+$h6-font-size:                $font-size-base;
+// scss-docs-end font-variables
+
+// scss-docs-start font-sizes
+$font-sizes: (
+  1: $h1-font-size,
+  2: $h2-font-size,
+  3: $h3-font-size,
+  4: $h4-font-size,
+  5: $h5-font-size,
+  6: $h6-font-size
+);
+
+$custom-fs: (
+  "7": 0.875rem,
+  "8": 0.75rem
+);
+
+$font-sizes: map-merge($font-sizes, $custom-fs);
+// scss-docs-end font-sizes
+
+// scss-docs-start headings-variables
+// scss-docs-end headings-variables
+
+// scss-docs-start display-headings
+// scss-docs-end display-headings
+
+// scss-docs-start type-variables
+$text-muted:                  rgba(0, 46, 80, 0.5) !default;
+// scss-docs-end type-variables
+
+
+// Tables
+//
+// Customizes the `.table` component with basic values, each used across all table variations.
+
+// scss-docs-start table-variables
+// scss-docs-end table-variables
+
+// scss-docs-start table-loop
+// scss-docs-end table-loop
+
+
+// Buttons + Forms
+//
+// Shared variables that are reassigned to `$input-` and `$btn-` specific variables.
+
+// scss-docs-start input-btn-variables
+// scss-docs-end input-btn-variables
+
+
+// Buttons
+//
+// For each of Bootstrap's buttons, define text, background, and border color.
+
+// scss-docs-start btn-variables
+$btn-font-weight: 400;
+
+// Allows for customizing button radius independently from global border radius
+$btn-border-radius: 100px;
+$btn-border-radius-sm: 100px;
+$btn-border-radius-lg: 100px;
+// scss-docs-end btn-variables
+
+
+// Forms
+
+// scss-docs-start form-text-variables
+// scss-docs-end form-text-variables
+
+// scss-docs-start form-label-variables
+// scss-docs-end form-label-variables
+
+// scss-docs-start form-input-variables
+// scss-docs-end form-input-variables
+
+// scss-docs-start form-check-variables
+// scss-docs-end form-check-variables
+
+// scss-docs-start form-switch-variables
+// scss-docs-end form-switch-variables
+
+// scss-docs-start input-group-variables
+// scss-docs-end input-group-variables
+
+// scss-docs-start form-select-variables
+// scss-docs-end form-select-variables
+
+// scss-docs-start form-range-variables
+// scss-docs-end form-range-variables
+
+// scss-docs-start form-file-variables
+// scss-docs-end form-file-variables
+
+// scss-docs-start form-floating-variables
+// scss-docs-end form-floating-variables
+
+// Form validation
+
+// scss-docs-start form-feedback-variables
+// scss-docs-end form-feedback-variables
+
+// scss-docs-start form-validation-states
+// scss-docs-end form-validation-states
+
+// Z-index master list
+//
+// Warning: Avoid customizing these values. They're used for a bird's eye view
+// of components dependent on the z-axis and are designed to all work together.
+
+// scss-docs-start zindex-stack
+$zindex-modal: 1210;
+$zindex-modal-backdrop: 1190;
+// scss-docs-end zindex-stack
+
+
+// Navs
+
+// scss-docs-start nav-variables
+// scss-docs-end nav-variables
+
+
+// Navbar
+
+// scss-docs-start navbar-variables
+$navbar-nav-link-padding-x: 1rem;
+// Compute the navbar-brand padding-y so the navbar-brand will have the same height as navbar-text and nav-link
+// scss-docs-end navbar-variables
+
+// scss-docs-start navbar-theme-variables
+$navbar-light-color:                $blue;
+$navbar-light-hover-color:          rgba($blue, .7);
+$navbar-light-active-color:         rgba($blue, .9);
+$navbar-light-disabled-color:       rgba($blue, .3);
+$navbar-light-toggler-icon-bg:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#{$navbar-light-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+$navbar-light-toggler-border-color: none;
+// scss-docs-end navbar-theme-variables
+
+
+// Dropdowns
+//
+// Dropdown menu container and contents.
+
+// scss-docs-start dropdown-variables
+// scss-docs-end dropdown-variables
+
+// scss-docs-start dropdown-dark-variables
+// scss-docs-end dropdown-dark-variables
+
+
+// Pagination
+
+// scss-docs-start pagination-variables
+// scss-docs-end pagination-variables
+
+
+// Placeholders
+
+// scss-docs-start placeholders
+// scss-docs-end placeholders
+
+// Cards
+
+// scss-docs-start card-variables
+// scss-docs-end card-variables
+
+// Accordion
+
+// scss-docs-start accordion-variables
+// scss-docs-end accordion-variables
+
+// Tooltips
+
+// scss-docs-start tooltip-variables
+// scss-docs-end tooltip-variables
+
+// Form tooltips must come after regular tooltips
+// scss-docs-start tooltip-feedback-variables
+// scss-docs-end tooltip-feedback-variables
+
+
+// Popovers
+
+// scss-docs-start popover-variables
+// scss-docs-end popover-variables
+
+
+// Toasts
+
+// scss-docs-start toast-variables
+// scss-docs-end toast-variables
+
+
+// Badges
+
+// scss-docs-start badge-variables
+// scss-docs-end badge-variables
+
+
+// Modals
+
+// scss-docs-start modal-variables
+// scss-docs-end modal-variables
+
+
+// Alerts
+//
+// Define alert colors, border radius, and padding.
+
+// scss-docs-start alert-variables
+// scss-docs-end alert-variables
+
+
+// Progress bars
+
+// scss-docs-start progress-variables
+// scss-docs-end progress-variables
+
+
+// List group
+
+// scss-docs-start list-group-variables
+// scss-docs-end list-group-variables
+
+
+// Image thumbnails
+
+// scss-docs-start thumbnail-variables
+// scss-docs-end thumbnail-variables
+
+
+// Figures
+
+// scss-docs-start figure-variables
+// scss-docs-end figure-variables
+
+
+// Breadcrumbs
+
+// scss-docs-start breadcrumb-variables
+// scss-docs-end breadcrumb-variables
+
+// Carousel
+
+// scss-docs-start carousel-variables
+// scss-docs-end carousel-variables
+
+
+// Spinners
+
+// scss-docs-start spinner-variables
+// scss-docs-end spinner-variables
+
+
+// Close
+
+// scss-docs-start close-variables
+// scss-docs-end close-variables
+
+
+// Offcanvas
+
+// scss-docs-start offcanvas-variables
+$offcanvas-border-width: 0;
+$offcanvas-transition-duration: 0;
+// scss-docs-end offcanvas-variables
+
+// Code

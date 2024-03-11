@@ -1,0 +1,96 @@
+// Padding
+$padding-large: 1.5rem;
+$padding-normal: 1rem;
+$padding-small: 0.5rem;
+
+// Buttons
+$button-border-radius: 8px;
+
+// COLORS
+$c-color-gray: #CAD3DB;
+$c-color-yellow: rgb(250, 174, 29);
+$gray-3: rgb(98, 98, 98);
+
+$c-color-biomass: #99D8C9;
+$c-color-conventional: #A6BDDB;
+$c-color-pvground: #FA9FB5;
+$c-color-pvroof: #FEC44F;
+
+$windlight: #67B7E3;
+$winddark: #273f73;
+$pvlight: #F8D637;
+$pvdark: #c19800;
+
+// TYPOGRAPHY
+$c-letter-spacing: 0.03rem;
+$font-size-xlarge: 1.953rem; // 31.25px
+$font-size-large: 1.563rem; // 25px
+$font-size-medium: 1.25rem; // 20px
+$font-size-normal: 1rem; // 16px
+$font-size-small: .875rem; // 14px
+$font-size-xsmall: .75rem; // 12px
+
+$letter-spacing-small: 0.01rem;
+$letter-spacing-normal: 0.03rem;
+$letter-spacing-large: 0.06rem;
+
+// LEFT PANEL
+$panel-width-sm: 22rem;
+$panel-width: 26rem;
+$panel-side-padding: 1.5rem;
+$panel-results-nav-button-padding: 0.5rem;
+
+// Media-breaks
+$small-screen: 576px;
+$medium-screen: 768px;
+$large-screen: 992px;
+$xlarge-screen: 1200px;
+$xxlarge-screen: 1400px;
+
+// TOP-NAV
+$top-nav-height: 3.375rem;
+
+// WIZARD
+$wizard-height: 3.75rem;
+
+// STEPS
+$steps-height: 3rem;
+$steps-numbers-size: 1.5rem;
+
+// FOOTER
+$footer-height: 1.75rem;
+
+// MAP
+$map-height: calc(100vh - #{$top-nav-height} - #{$wizard-height} - #{$footer-height});
+$map-padding-x-small: 2rem;
+$map-layers-btn-size: 3rem;
+$map-items-padding: 1rem;
+$map-layers-box-legend-color-size: 0.875rem;
+$map-layers-box-height: 62vh;
+$map-layers-box-width: 18rem;
+$map-layers-box-z-index: 200;
+$map-legend-box-height: 8.5rem;
+$map-legend-box-padding-bottom: 2rem;
+
+// Map controls
+$map-control-position: absolute;
+$map-control-img-size: 3rem;
+$map-control-text-height: 1rem;
+$map-control-total-height: calc((#{$padding-small} * 2) + #{$map-control-img-size} + #{$map-control-text-height});
+$map-control-position-top: $map-items-padding;
+$map-control-position-right: 1rem;
+$map-control-position-left: 1rem;
+$map-control-z-index: 9;
+$map-control-bg-color: rgba(255, 255, 255, 1);
+
+// POPUP
+$popup-width: 28rem;
+
+// ICONS
+$info-icon-size: 1rem;
+$info-icon-margin-left: 0.25rem;
+$icon-margin-right: 0.25rem;
+
+// ANIMATIONS
+$animation-transition: transform 0.3s ease;
+$animation-transform: translateX(4px);
