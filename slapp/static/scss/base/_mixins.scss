@@ -1,0 +1,106 @@
+// Flex
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+@mixin flex-row-justify-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+@mixin flex-row-space-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+@mixin flex-row-flex-start {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-column-align-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@mixin flex-column-justify-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@mixin flex-column-align-justify-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+// Translate
+@mixin translateY($translateY-value) {
+  transform: translateY($translateY-value);
+  -webkit-transform: translateY($translateY-value);
+  -moz-transform: translateY($translateY-value);
+  -ms-transform: translateY($translateY-value);
+  -o-transform: translateY($translateY-value);
+}
+
+@mixin translateX($translateX-value) {
+  transform: translateX($translateX-value);
+  -webkit-transform: translateX($translateX-value);
+  -moz-transform: translateX($translateX-value);
+  -ms-transform: translateX($translateX-value);
+  -o-transform: translateX($translateX-value);
+}
+
+// User select
+@mixin user-select-none {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  pointer-events: none;
+}
+
+// UL
+@mixin ul-horizontal {
+  @extend .list-unstyled;
+	@extend .mb-0;
+  @extend .ps-0;
+}
+
+// Info icon
+@mixin info-icon {
+  padding-left: 0.35rem;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+// User select
+@mixin user-select-none {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+// Map controls and legends
+@mixin map-control-legend {
+  position: $map-control-position;
+  padding: $padding-small;
+  border-radius: $button-border-radius;
+  background-color: $map-control-bg-color;
+  box-shadow: $box-shadow;
+  z-index: $map-control-z-index;
+  @include user-select-none;
+}
