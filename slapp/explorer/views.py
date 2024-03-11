@@ -18,6 +18,7 @@ from django.templatetags.l10n import localize
 from django.views.generic import TemplateView
 from django_mapengine import views
 
+from . import forms, map_config
 from .models import Municipality
 
 MAX_MUNICIPALITY_COUNT = 3
@@ -27,7 +28,12 @@ class MapGLView(TemplateView, views.MapEngineMixin):
     """Single view for the map."""
 
     template_name = "pages/map.html"
-    extra_context = {}
+    extra_context = {
+        "area_switches": {
+            category: [forms.StaticLayerForm(layer) for layer in layers]
+            for category, layers in map_config.LEGEND.items()
+        },
+    }
 
 
 def municipalities_details(ids: list[int]) -> list[Municipality]:
