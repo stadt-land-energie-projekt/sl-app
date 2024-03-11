@@ -31,5 +31,5 @@ django-geojson>=3.1.0,<4.0
 django-libsass==0.9
 pandas==2.2.1
 
-django-filter~=23.5
+django-filter~=24.1
 djangorestframework-gis~=1.0
