@@ -201,16 +201,17 @@ def convert_tsa_periods_to_sequences(tsa_periods, tsa_date_range,
         # Subset the DataFrame based on original columns
         df_subset = df[columns]
         # Write to CSV
-        df_subset.to_csv(pathlib.Path(path, file_name), index=True)
+        df_subset.to_csv(pathlib.Path(path, file_name), encoding="utf-8",
+                         sep=";", index=True, index_label="timeindex")
 
     return df
 
 
-def reconvert_tsa_periods_to_full_periods(
-    tsa_parameters_dir="tsam_parameters",
-    timeindex=pd.date_range(start="2019-01-01 00:00:00",
-                            end="2019-12-31 23:00:00", freq="h"),
-    path=sequences_path,
+def resample_tsa_sequences_to_original_sequences(
+    origin=sequences_original_path,
+    goal=sequences_path,
+    tsa_parameters_dir=tsam_path,
+    path=sequences_path / "sequences_resampled",
 ):
     try:
         os.path.exists(tsa_parameters_dir)
@@ -220,9 +221,6 @@ def reconvert_tsa_periods_to_full_periods(
     if not os.path.exists(path):
         os.makedirs(path)
 
-    tsa_periods = pd.read_csv(
-        pathlib.Path(tsa_parameters_dir, "tsa_periods.csv"), encoding="utf8",
-        sep=";")
     tsa_parameters = pd.read_csv(
         pathlib.Path(tsa_parameters_dir, "tsa_parameters.csv"),
         encoding="utf8",
@@ -230,25 +228,36 @@ def reconvert_tsa_periods_to_full_periods(
         usecols=["order"],
         converters={"order": literal_eval},
     )
+
     tsa_cluster_order = tsa_parameters.iloc[0, 0]
 
     df = pd.DataFrame()
 
-    for item in tsa_cluster_order:
-        periods_new = tsa_periods[item * 24: (item + 1) * 24]
-        df = pd.concat([df, periods_new])
+    for file_name in goal.iterdir():
+        if file_name.is_file() and file_name.suffix in ".csv":
+            dfs = []
 
-    df["timeindex"] = timeindex
-    df.set_index("timeindex", inplace=True)
-    df.drop(["typ_period", "hpperiod"], inplace=True, axis=1)
+            df = pd.read_csv(file_name, encoding='utf-8',
+                             sep=';', parse_dates=True,
+                             index_col='timeindex')
 
-    for series_name, series in df.items():
-        # delete the characters "ABW-" from csv-name
-        file_name = series_name[4:]
-        csv_name = file_name.removesuffix("-profile") + "_profile.csv"
-        series.to_csv(pathlib.Path(path, csv_name), index_label=["timeindex"],
-                      encoding="utf-8", sep=";")
+            timeindex_original = pd.read_csv(
+                pathlib.Path(origin, file_name.name),
+                encoding="utf8",
+                sep=";",
+                usecols=[0],
+                index_col=[0])
 
+            for item in tsa_cluster_order:
+                df_subset = df[item * 24: (item + 1) * 24]
+                dfs.append(df_subset)
+
+            df = pd.concat(dfs, axis=0)
+            df["timeindex"] = timeindex_original.index
+            df.set_index("timeindex", inplace=True)
+
+            df.to_csv(pathlib.Path(path, file_name.name), encoding="utf-8",
+                      sep=";", index=True)
     return df
 
 
@@ -291,15 +300,10 @@ def copy_elements_data(origin=elements_original_path, goal=elements_path):
 
 if __name__ == "__main__":
     sequences, sequence_dict = crawl_sequences_data()
-    # sequences.drop("ABW-efficiency-profile", axis=1).plot()
-    # matplotlib.pyplot.show()
-    # sequences.to_csv(scenario_name_origin+"_sequences.csv", encoding="utf-8",
-    #          #sep=";")
     aggregation = run_tsam(sequences, typical_periods=40)
     periods, parameters, timeindex = prepare_oemof_parameters(aggregation)
-    dataframe = convert_tsa_periods_to_sequences(periods, timeindex,
-                                                 sequence_dict)
+    convert_tsa_periods_to_sequences(periods, timeindex, sequence_dict)
     create_oemof_periods_csv(periods)
     copy_tsa_parameter(parameters)
     copy_elements_data()
-    # reconvert_tsa_periods_to_full_periods()
+    # resample_tsa_sequences_to_original_sequences()
