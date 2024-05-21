@@ -13,10 +13,12 @@ SCENARIO_TARGET = "scenario_2045_tsam"
 
 sequences_original_path = SCENARIO_FOLDER / SCENARIO_ORIGINAL / "data" / "sequences"
 datapackage_path = SCENARIO_FOLDER / SCENARIO_ORIGINAL
+elements_original_path = SCENARIO_FOLDER / SCENARIO_ORIGINAL / "data" / "elements"
 
 periods_path = SCENARIO_FOLDER / SCENARIO_TARGET / "data" / "periods"
 sequences_path = SCENARIO_FOLDER / SCENARIO_TARGET / "data" / "sequences"
 tsam_path = SCENARIO_FOLDER / SCENARIO_TARGET / "data" / "tsam"
+elements_path= SCENARIO_FOLDER/SCENARIO_TARGET/ "data" / "elements"
 
 
 def crawl_oemof_tabular_datapackage(path=datapackage_path):
@@ -36,26 +38,37 @@ def crawl_oemof_tabular_datapackage(path=datapackage_path):
         oemof-tabular datapackage
 
     """
-    df = pd.DataFrame()
+
+    # Dictionary to keep track of columns from each file
+    file_columns = {}
+
+    # List to store dataframes
+    dfs = []
+
     package = Package(path)
+
     for resource in package.resources:
         if "profile" in resource.name:
             resource.read()
-            df_sequence = pd.read_csv(
-                resource.raw_iter(),
+            file_name=resource.raw_iter()
+            df = pd.read_csv(
+                file_name,
                 delimiter=";",
                 encoding="utf-8",
                 index_col="timeindex",
                 parse_dates=True,
             )
-            df = pd.concat([df, df_sequence], axis=1)
+            file_columns[
+                file_name] = df.columns.tolist()
+            dfs.append(df)
 
-    return df
+    df = pd.concat(dfs, axis=1)
+
+    return df, file_columns
 
 
 def crawl_sequences_data(path=sequences_original_path):
-    """
-    The function crawls the sequences csv-files of oemof.tabular
+    """ The function crawls the sequences csv-files of oemof.tabular
     data/sequences path and merges them into one single DataFrame
 
     Parameters
@@ -68,15 +81,23 @@ def crawl_sequences_data(path=sequences_original_path):
     df (pd.DataFrame):
         DataFrame that contains all sequence data specified in the
         oemof-tabular datapackage
-
     """
-    df = pd.DataFrame()
+    # Dictionary to keep track of columns from each file
+    file_columns = {}
 
-    for f in path.iterdir():
-        if f.is_file() and f.suffix in ".csv":
-            file = pd.read_csv(f, parse_dates=True, encoding="utf8", sep=";", index_col="timeindex")
-            df = pd.concat([df, file], axis=1)
-    return df
+    # List to store dataframes
+    dfs = []
+
+    for file_name in path.iterdir():
+        if file_name.is_file() and file_name.suffix in ".csv":
+            df = pd.read_csv(file_name, encoding='utf8',
+                             sep=';', parse_dates=True, index_col='timeindex')
+            file_columns[file_name.name] = df.columns.tolist()
+            dfs.append(df)
+
+    df = pd.concat(dfs, axis=1)
+
+    return df, file_columns
 
 
 def run_tsam(df, typical_periods=40, hours_per_period=24):
@@ -106,7 +127,7 @@ def run_tsam(df, typical_periods=40, hours_per_period=24):
         and values as a result of executing the time series aggregation
 
     """
-    aggregation = tsam.TimeSeriesAggregation(
+    tsa_aggregation = tsam.TimeSeriesAggregation(
         df,
         noTypicalPeriods=typical_periods,
         hoursPerPeriod=hours_per_period,
@@ -117,10 +138,10 @@ def run_tsam(df, typical_periods=40, hours_per_period=24):
         representationMethod="durationRepresentation",
     )
 
-    return aggregation
+    return tsa_aggregation
 
 
-def prepare_oemof_parameters(aggregation, directory="tsam_parameters"):
+def prepare_oemof_parameters(tsa_aggregation, directory="tsam_parameters"):
     """
     Function takes aggregation object and derives tsa_parameters, tsa_periods,
     tsa_timeindex and saves return values as .csv files in results_path
@@ -144,12 +165,6 @@ def prepare_oemof_parameters(aggregation, directory="tsam_parameters"):
         os.makedirs(directory)
 
     tsa_periods = aggregation.createTypicalPeriods()
-    tsa_periods.to_csv(
-        pathlib.Path(directory, "tsa_periods.csv"),
-        encoding="utf-8",
-        sep=";",
-        index_label=["typ_period", "hpperiod"],
-    )
 
     tsa_parameters = {
         "period": 1,
@@ -158,7 +173,6 @@ def prepare_oemof_parameters(aggregation, directory="tsam_parameters"):
     }
 
     tsa_parameters = pd.DataFrame(tsa_parameters)
-    tsa_parameters.to_csv(pathlib.Path(directory, "tsa_parameters.csv"), index=False, encoding="utf-8", sep=";")
 
     tsa_date_range = pd.date_range(
         aggregation.timeIndex[0],
@@ -166,43 +180,26 @@ def prepare_oemof_parameters(aggregation, directory="tsam_parameters"):
         freq="h",
     ).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    tsa_timeindex = pd.DataFrame(index=tsa_date_range)
-    tsa_timeindex.to_csv(
-        pathlib.Path(directory, "tsa_timeindex.csv"),
-        index_label="timeindex",
-        encoding="utf-8",
-        sep=";",
-    )
-
-    return tsa_periods, tsa_parameters, tsa_timeindex
+    return tsa_periods, tsa_parameters, tsa_date_range
 
 
-def convert_tsa_periods_to_sequences(tsa_parameters_dir="tsam_parameters", path=sequences_path):
-    try:
-        os.path.exists(tsa_parameters_dir)
-    except NameError:
-        print("Directory does not exist:", tsa_parameters_dir)
+def convert_tsa_periods_to_sequences(tsa_periods, tsa_date_range,
+                                     file_columns,
+                                     path=sequences_path):
 
     if not os.path.exists(path):
         os.makedirs(path)
 
-    timeindex = pd.read_csv(
-        pathlib.Path(tsa_parameters_dir, "tsa_timeindex.csv"),
-        encoding="utf8",
-        sep=";",
-        parse_dates=True,
-    )
-
-    df = pd.read_csv(pathlib.Path(tsa_parameters_dir, "tsa_periods.csv"), encoding="utf8", sep=";")
-    df["timeindex"] = timeindex
+    df = tsa_periods
+    df["timeindex"] = tsa_date_range
     df.set_index("timeindex", inplace=True)
-    df.drop(["typ_period", "hpperiod"], inplace=True, axis=1)
 
-    for series_name, series in df.items():
-        # delete the characters "ABW-" from csv-name
-        file_name = series_name[4:]
-        csv_name = file_name.removesuffix("-profile") + "_profile.csv"
-        series.to_csv(pathlib.Path(path, csv_name), index_label=["timeindex"], encoding="utf-8", sep=";")
+    for file_name, columns in file_columns.items():
+        # Subset the DataFrame based on original columns
+        df_subset = df[columns]
+        # Write to CSV
+        df_subset.to_csv(pathlib.Path(path,file_name),index=True)
+
     return df
 
 
@@ -239,6 +236,7 @@ def reconvert_tsa_periods_to_full_periods(
     df.set_index("timeindex", inplace=True)
     df.drop(["typ_period", "hpperiod"], inplace=True, axis=1)
 
+
     for series_name, series in df.items():
         # delete the characters "ABW-" from csv-name
         file_name = series_name[4:]
@@ -249,63 +247,54 @@ def reconvert_tsa_periods_to_full_periods(
 
 
 def create_oemof_periods_csv(
-    tsa_parameters_dir="tsam_parameters",
+    tsa_periods,
     no_of_periods=1,
     timeincrement=1,
     path=periods_path,
 ):
-    try:
-        os.path.exists(tsa_parameters_dir)
-    except NameError:
-        print("Directory does not exist:", tsa_parameters_dir)
 
     if not os.path.exists(path):
         os.makedirs(path)
 
-    df = pd.read_csv(pathlib.Path(tsa_parameters_dir, "tsa_timeindex.csv"), sep=";", encoding="utf-8")
+    df = tsa_periods
 
     df["periods"] = no_of_periods - 1
     df["timeincrement"] = timeincrement
 
-    df.to_csv(pathlib.Path(path, "periods.csv"), index=False, encoding="utf-8", sep=";")
+    df.to_csv(pathlib.Path(path, "periods.csv"), index=False,
+              encoding="utf-8", sep=";")
     return df
 
 
-def copy_tsa_parameter(tsa_parameters_dir="tsam_parameters", path=tsam_path):
+def copy_tsa_parameter(tsa_parameters, path=tsam_path):
     if not os.path.exists(path):
         os.makedirs(path)
 
-    try:
-        os.path.exists(tsa_parameters_dir)
-    except NameError:
-        print("Directory does not exist:", tsa_parameters_dir)
-
-    df = pd.read_csv(pathlib.Path(tsa_parameters_dir, "tsa_parameters.csv"), sep=";", encoding="utf-8")
-
-    df.to_csv(pathlib.Path(path, "tsa_parameters.csv"), index=False, encoding="utf-8", sep=";")
+    df = tsa_parameters
+    df.to_csv(pathlib.Path(path, "tsa_parameters.csv"), index=False,
+              encoding="utf-8", sep=";")
 
     return df
 
 
-def copy_elements_data(origin=SCENARIO_ORIGINAL, goal=SCENARIO_TARGET):
+def copy_elements_data(origin=elements_original_path, goal=elements_path):
     try:
-        shutil.copytree(pathlib.Path(origin, "data", "elements"), pathlib.Path(goal, "data", "elements"))
+        shutil.copytree(origin, goal)
     except Exception as e:
         print("Fehler beim Kopieren des Ordners", e)
 
 
 if __name__ == "__main__":
-    sequences = crawl_sequences_data()
+    sequences, sequence_dict = crawl_sequences_data()
     # sequences.drop("ABW-efficiency-profile", axis=1).plot()
     # matplotlib.pyplot.show()
     # sequences.to_csv(scenario_name_origin+"_sequences.csv", encoding="utf-8",
     #          #sep=";")
-    df_sum = sequences.sum()
     aggregation = run_tsam(sequences, typical_periods=40)
-    oemof_tsa_parameters = prepare_oemof_parameters(aggregation)
-    convert_tsa_periods_to_sequences()
-    create_oemof_periods_csv()
-    copy_tsa_parameter()
+    periods, parameters, timeindex= prepare_oemof_parameters(aggregation)
+    dataframe= convert_tsa_periods_to_sequences(periods,timeindex,sequence_dict)
+    create_oemof_periods_csv(periods)
+    copy_tsa_parameter(parameters)
     copy_elements_data()
     # copy_data_datapackage_to_scenario_goal()
     # reconvert_tsa_periods_to_full_periods()
