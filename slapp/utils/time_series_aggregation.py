@@ -11,14 +11,17 @@ SCENARIO_FOLDER = pathlib.Path(__file__).parent.parent / "data" / "oemof"
 SCENARIO_ORIGINAL = "scenario_2045"
 SCENARIO_TARGET = "scenario_2045_tsam"
 
-sequences_original_path = SCENARIO_FOLDER / SCENARIO_ORIGINAL / "data" / "sequences"
-datapackage_path = SCENARIO_FOLDER / SCENARIO_ORIGINAL
-elements_original_path = SCENARIO_FOLDER / SCENARIO_ORIGINAL / "data" / "elements"
+sequences_original_path = \
+    SCENARIO_FOLDER / SCENARIO_ORIGINAL / "data" / "sequences"
+datapackage_path = \
+    SCENARIO_FOLDER / SCENARIO_ORIGINAL
+elements_original_path = \
+    SCENARIO_FOLDER / SCENARIO_ORIGINAL / "data" / "elements"
 
 periods_path = SCENARIO_FOLDER / SCENARIO_TARGET / "data" / "periods"
 sequences_path = SCENARIO_FOLDER / SCENARIO_TARGET / "data" / "sequences"
 tsam_path = SCENARIO_FOLDER / SCENARIO_TARGET / "data" / "tsam"
-elements_path= SCENARIO_FOLDER/SCENARIO_TARGET/ "data" / "elements"
+elements_path = SCENARIO_FOLDER / SCENARIO_TARGET / "data" / "elements"
 
 
 def crawl_oemof_tabular_datapackage(path=datapackage_path):
@@ -50,7 +53,7 @@ def crawl_oemof_tabular_datapackage(path=datapackage_path):
     for resource in package.resources:
         if "profile" in resource.name:
             resource.read()
-            file_name=resource.raw_iter()
+            file_name = resource.raw_iter()
             df = pd.read_csv(
                 file_name,
                 delimiter=";",
@@ -164,20 +167,21 @@ def prepare_oemof_parameters(tsa_aggregation, directory="tsam_parameters"):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    tsa_periods = aggregation.createTypicalPeriods()
+    tsa_periods = tsa_aggregation.createTypicalPeriods()
 
     tsa_parameters = {
         "period": 1,
-        "timesteps_per_period": aggregation.hoursPerPeriod,
-        "order": [aggregation.clusterOrder.tolist()],
+        "timesteps_per_period": tsa_aggregation.hoursPerPeriod,
+        "order": [tsa_aggregation.clusterOrder.tolist()],
     }
 
     tsa_parameters = pd.DataFrame(tsa_parameters)
 
     tsa_date_range = pd.date_range(
-        aggregation.timeIndex[0],
-        periods=aggregation.noTypicalPeriods * aggregation.hoursPerPeriod,
-        freq="h",
+        tsa_aggregation.timeIndex[0],
+        periods=tsa_aggregation.noTypicalPeriods
+        * tsa_aggregation.hoursPerPeriod,
+        freq="h"
     ).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     return tsa_periods, tsa_parameters, tsa_date_range
@@ -186,7 +190,6 @@ def prepare_oemof_parameters(tsa_aggregation, directory="tsam_parameters"):
 def convert_tsa_periods_to_sequences(tsa_periods, tsa_date_range,
                                      file_columns,
                                      path=sequences_path):
-
     if not os.path.exists(path):
         os.makedirs(path)
 
@@ -198,14 +201,15 @@ def convert_tsa_periods_to_sequences(tsa_periods, tsa_date_range,
         # Subset the DataFrame based on original columns
         df_subset = df[columns]
         # Write to CSV
-        df_subset.to_csv(pathlib.Path(path,file_name),index=True)
+        df_subset.to_csv(pathlib.Path(path, file_name), index=True)
 
     return df
 
 
 def reconvert_tsa_periods_to_full_periods(
     tsa_parameters_dir="tsam_parameters",
-    timeindex=pd.date_range(start="2019-01-01 00:00:00", end="2019-12-31 23:00:00", freq="h"),
+    timeindex=pd.date_range(start="2019-01-01 00:00:00",
+                            end="2019-12-31 23:00:00", freq="h"),
     path=sequences_path,
 ):
     try:
@@ -216,7 +220,9 @@ def reconvert_tsa_periods_to_full_periods(
     if not os.path.exists(path):
         os.makedirs(path)
 
-    tsa_periods = pd.read_csv(pathlib.Path(tsa_parameters_dir, "tsa_periods.csv"), encoding="utf8", sep=";")
+    tsa_periods = pd.read_csv(
+        pathlib.Path(tsa_parameters_dir, "tsa_periods.csv"), encoding="utf8",
+        sep=";")
     tsa_parameters = pd.read_csv(
         pathlib.Path(tsa_parameters_dir, "tsa_parameters.csv"),
         encoding="utf8",
@@ -229,19 +235,19 @@ def reconvert_tsa_periods_to_full_periods(
     df = pd.DataFrame()
 
     for item in tsa_cluster_order:
-        periods_new = tsa_periods[item * 24 : (item + 1) * 24]
+        periods_new = tsa_periods[item * 24: (item + 1) * 24]
         df = pd.concat([df, periods_new])
 
     df["timeindex"] = timeindex
     df.set_index("timeindex", inplace=True)
     df.drop(["typ_period", "hpperiod"], inplace=True, axis=1)
 
-
     for series_name, series in df.items():
         # delete the characters "ABW-" from csv-name
         file_name = series_name[4:]
         csv_name = file_name.removesuffix("-profile") + "_profile.csv"
-        series.to_csv(pathlib.Path(path, csv_name), index_label=["timeindex"], encoding="utf-8", sep=";")
+        series.to_csv(pathlib.Path(path, csv_name), index_label=["timeindex"],
+                      encoding="utf-8", sep=";")
 
     return df
 
@@ -252,7 +258,6 @@ def create_oemof_periods_csv(
     timeincrement=1,
     path=periods_path,
 ):
-
     if not os.path.exists(path):
         os.makedirs(path)
 
@@ -291,15 +296,10 @@ if __name__ == "__main__":
     # sequences.to_csv(scenario_name_origin+"_sequences.csv", encoding="utf-8",
     #          #sep=";")
     aggregation = run_tsam(sequences, typical_periods=40)
-    periods, parameters, timeindex= prepare_oemof_parameters(aggregation)
-    dataframe= convert_tsa_periods_to_sequences(periods,timeindex,sequence_dict)
+    periods, parameters, timeindex = prepare_oemof_parameters(aggregation)
+    dataframe = convert_tsa_periods_to_sequences(periods, timeindex,
+                                                 sequence_dict)
     create_oemof_periods_csv(periods)
     copy_tsa_parameter(parameters)
     copy_elements_data()
-    # copy_data_datapackage_to_scenario_goal()
     # reconvert_tsa_periods_to_full_periods()
-    # tsa_periods=pd.read_csv(pathlib.Path(tsam_path,'tsa_parameters.csv'), encoding="utf-8", sep=";")
-    # tsa_periods["order"][0]=list(range(0,365))
-    # tsa_periods.to_csv(pathlib.Path(tsam_path, 'tsa_parameters.csv'),
-    # encoding="utf-8", sep=";", index=False)
-    print("done")
