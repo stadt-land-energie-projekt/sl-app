@@ -1,0 +1,9 @@
+{
+    "s_w_1": {
+        "extra_classes": "js-slider",
+        "max": 1.0,
+        "min": 0,
+        "from": 0.12,
+        "step": 0.01
+      }
+}

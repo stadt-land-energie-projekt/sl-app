@@ -46,7 +46,8 @@
               </div>
               <!-- PV -->
               <div class="h-270px table-cell">
-                <fieldset class="mb-3">
+                <fieldset class="mb-3">     
+                  <input type="range" class="js-range-slider" name="my_range" value="" data-min="{{ config.s_w_1.min }}" data-max="{{ config.s_w_1.max }}" data-from="{{ config.s_w_1.from }}" data-step="{{ config.s_w_1.step }}"/>
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
@@ -241,4 +242,22 @@
       <i>Je nach Anzahl der Gemeinden dauert eine Modellierung & Optimierung mehrere Minuten.</i>
     {% endif %}
   </div>
+
+  <script>
+    $(document).ready(function(){     
+      var $slider = $('.js-range-slider');
+        $slider.ionRangeSlider({
+            type: 'single',
+            min: $slider.data('min'),
+            max: $slider.data('max'),
+            from: $slider.data('from'),
+            step: $slider.data('step')
+        });
+
+        // Example usage of onFinish callback
+        $slider.on('finish', function(event, data) {
+            console.log("Finished!", data);
+        });
+    });
+  </script>
 {% endblock content %}
