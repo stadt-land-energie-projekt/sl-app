@@ -103,13 +103,13 @@
       {% endif %}
     </div>
 
-    <header class="bg-secondary p-1">
+    <header class="bg-info p-1">
         <div class="container">
             <div class="row">
                 <p class="mb-0">Ausgewählte Region(en):</p>
                 {% for item in municipalities %}
                 <div class="col">
-                    <span class="badge badge-info">{{ item }}</span>
+                    <span class="badge badge-secondary">{{ item }}</span>
                 </div>
                 {% empty %}
                     <p>Noch nichts ausgewählt.</p>
