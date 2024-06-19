@@ -19,6 +19,8 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
 from django_mapengine import views
 
+import json
+
 from .models import Municipality
 
 MAX_MUNICIPALITY_COUNT = 3
@@ -188,12 +190,16 @@ def optimization_parameters(request: HttpRequest) -> HttpResponse:
     active_tab = "step_5_parameters"
     sidepanel = True
 
+    with open('slapp/static/config/parameters_slider.json', 'r') as f:
+        sliders_config = json.load(f)
+
     context = {
         "municipalities": municipalities,
         "next_url": next_url,
         "prev_url": prev_url,
         "active_tab": active_tab,
         "has_sidepanel": sidepanel,
+        "sliders_config": sliders_config,
     }
     return render(request, "pages/parameters_variation.html", context)
 
