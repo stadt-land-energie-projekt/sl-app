@@ -46,7 +46,7 @@
               </div>
               <!-- PV -->
               <div class="h-270px table-cell">
-                <fieldset class="mb-3">     
+                <fieldset class="mb-3">
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
@@ -61,14 +61,14 @@
                            name="pv-{{ municipality.id }}-selection"
                            id="pv-{{ municipality.id }}-MW" />
                     <!-- This is the additional input field right next to the second radio button -->
-                    <input type="range" 
-                    id="pv-{{ municipality.id }}-MW"
-                    class="js-range-slider" 
-                    value="" 
-                    data-min="{{ sliders.s_w_1.min }}" 
-                    data-max="{{ sliders.s_w_1.max }}" 
-                    data-from="{{ sliders.s_w_1.from }}" 
-                    data-step="{{ sliders.s_w_1.step }}"/>
+                    <input type="text"
+                           id="pv-{{ municipality.id }}-MW"
+                           class="js-range-slider"
+                           value=""
+                           data-min="{{ sliders_config.s_w_1.min|stringformat:'s' }}"
+                           data-max="{{ sliders_config.s_w_1.max|stringformat:'s' }}"
+                           data-from="{{ sliders_config.s_w_1.from|stringformat:'s' }}"
+                           data-step="{{ sliders_config.s_w_1.step|stringformat:'s' }}" />
                     <label class="form-check-label d-inline-block" for="maxOutputRadio">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
@@ -245,26 +245,14 @@
       <i>Je nach Anzahl der Gemeinden dauert eine Modellierung & Optimierung mehrere Minuten.</i>
     {% endif %}
   </div>
-  <script id="slider-config" type="application/json">
-    {{ sliders_config|json_script:"slider_config" }}
-  </script>
   <script>
-    $(document).ready(function(){     
-      var sliderConfig = JSON.parse(document.getElementById('slider-config').textContent);
-
-      var $slider = $('.js-range-slider');
-      $slider.ionRangeSlider({
-        type: 'single',
-        min: sliderConfig.s_w_1.min,
-        max: sliderConfig.s_w_1.max,
-        from: sliderConfig.s_w_1.from,
-        step: sliderConfig.s_w_1.step
+    $(document).ready(function() {
+      $('.js-range-slider').ionRangeSlider({
+        onChange: function(data) {
+          // Called every time handle position is changed
+          console.log(data.from);
+        },
       });
-
-        // Example usage of onFinish callback
-        $slider.on('finish', function(event, data) {
-            console.log("Finished!", data);
-        });
     });
   </script>
 {% endblock content %}
