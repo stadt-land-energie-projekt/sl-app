@@ -53,6 +53,7 @@
   {% include 'django_mapengine/map_json.html' %}
   {% compress js %}
     {% include 'django_mapengine/map_js.html' %}
+    <script src="{% static 'js/map.js' %}"></script>
   {% endcompress %}
 {% endblock inline_javascript %}
 {% block css %}
