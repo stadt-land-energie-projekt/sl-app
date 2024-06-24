@@ -48,42 +48,15 @@
               <div class="h-270px table-cell">
                 <fieldset class="mb-3">
                   <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="pv-{{ municipality.id }}-selection"
-                           id="pv-{{ municipality.id }}-noLimitRadio"
-                           checked />
-                    keine Obergrenze angeben
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="pv-{{ municipality.id }}-selection"
-                           id="pv-{{ municipality.id }}-MW" />
-                    <!-- This is the additional input field right next to the second radio button -->
-                    <input type="text"
-                           id="pv-{{ municipality.id }}-MW"
-                           class="js-range-slider"
-                           value=""
-                           data-min="{{ sliders_config.s_w_1.min|stringformat:'s' }}"
-                           data-max="{{ sliders_config.s_w_1.max|stringformat:'s' }}"
-                           data-from="{{ sliders_config.s_w_1.from|stringformat:'s' }}"
-                           data-step="{{ sliders_config.s_w_1.step|stringformat:'s' }}" />
+                    <!-- This is the input slider -->
                     <span>{{ sliders_form.1_pv }}</span>
-                    <label class="form-check-label d-inline-block" for="maxOutputRadio">
+                    <label class="form-check-label d-inline-block">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="pv-{{ municipality.id }}-selection"
-                           id="pv-{{ municipality.id }}-area" />
-                    <!-- This is the additional input field right next to the second radio button -->
-                    <input type="text"
-                           id="maxOutputValue"
-                           class="form-control d-inline-block w-auto form-control-sm"
-                           value="0,27" />
+                    <!-- This is the input slider -->
+                    <span>{{ sliders_form.1_pv }}</span>
                     <label class="form-check-label d-inline-block"
                            for="pv-{{ municipality.id }}-area">
                       km² max. Flächenverbrauch <i>(1,73 km² ausgewiesen, davon derzeit 0,27 km² belegt)</i>
@@ -95,37 +68,15 @@
               <div class="h-270px table-cell">
                 <fieldset class="mb-3">
                   <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="wind-{{ municipality.id }}-selection"
-                           id="wind-{{ municipality.id }}-noLimitRadio"
-                           checked />
-                    keine Obergrenze angeben
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="wind-{{ municipality.id }}-selection"
-                           id="wind-{{ municipality.id }}-MW" />
-                    <!-- This is the additional input field right next to the second radio button -->
-                    <input type="text"
-                           id="wind-{{ municipality.id }}-MW"
-                           class="form-control d-inline-block w-auto form-control-sm"
-                           value="0,12" />
+                    <!-- This is the input slider -->
+                    <span>{{ sliders_form.1_wind }}</span>
                     <label class="form-check-label d-inline-block" for="maxOutputRadio">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="wind-{{ municipality.id }}-selection"
-                           id="wind-{{ municipality.id }}-area" />
-                    <!-- This is the additional input field right next to the second radio button -->
-                    <input type="text"
-                           id="maxOutputValue"
-                           class="form-control d-inline-block w-auto form-control-sm"
-                           value="0,27" />
+                    <!-- This is the input slider -->
+                    {{ sliders_form.1_wind }}
                     <label class="form-check-label d-inline-block"
                            for="pv-{{ municipality.id }}-area">
                       km² max. Flächenverbrauch <i>(1,73 km² ausgewiesen, davon derzeit 0,27 km² belegt)</i>
@@ -137,23 +88,8 @@
               <div class="h-155px table-cell">
                 <fieldset class="mb-3">
                   <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="hydro-{{ municipality.id }}-selection"
-                           id="hydro-{{ municipality.id }}-noLimitRadio"
-                           checked />
-                    keine Obergrenze angeben
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="hydro-{{ municipality.id }}-selection"
-                           id="hydro-{{ municipality.id }}-MW" />
-                    <!-- This is the additional input field right next to the second radio button -->
-                    <input type="text"
-                           id="hydro-{{ municipality.id }}-MW"
-                           class="form-control d-inline-block w-auto form-control-sm"
-                           value="0,12" />
+                    <!-- This is the input slider -->
+                    {{ sliders_form.1_hydro }}
                     <label class="form-check-label d-inline-block" for="maxOutputRadio">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>

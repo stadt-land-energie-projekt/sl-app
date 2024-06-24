@@ -1,22 +1,8 @@
 """Module containing django forms."""
-from django.forms import FloatField, Form, TextInput, renderers
-from django.utils.safestring import mark_safe
+from django.forms import FloatField, Form, TextInput
 
 
-class TemplateForm(Form):  # noqa: D101
-    template_name = None
-    extra_content = {}
-
-    def __str__(self) -> str:  # noqa: D105
-        if self.template_name:
-            renderer = renderers.get_default_renderer()
-            return mark_safe(renderer.render(self.template_name, {"form": self, **self.extra_content}))  # noqa: S308
-        return super().__str__()
-
-
-class ParametersSliderForm(TemplateForm):  # noqa: D101
-    template_name = "forms/layer.html"
-
+class ParametersSliderForm(Form):  # noqa: D101
     def __init__(self, parameters, **kwargs) -> None:  # noqa: D107, ANN001
         super().__init__(**kwargs)
         self.fields = {item["name"]: item["field"] for item in self.generate_fields(parameters)}
