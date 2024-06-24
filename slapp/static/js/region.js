@@ -31,7 +31,7 @@ function selectRegion(region_id, region_name) {
     col.appendChild(span);
     col.appendChild(input);
     document.getElementById("selected_regions").getElementsByClassName("row")[0].appendChild(col);
-    // TODO: Add FeatureState "selected" to region
+    selectRegionInMap(region_id, true);
 }
 
 function deselectRegion(region_id) {
@@ -40,6 +40,7 @@ function deselectRegion(region_id) {
     const matchingRegionNodes = Array.from(regionNodes).filter(regionNode => parseInt(regionNode.value) === region_id);
     if (matchingRegionNodes.length > 0) {
         matchingRegionNodes[0].parentNode.remove();
+        selectRegionInMap(region_id, false);
     }
     // Add "No region selected" info if last region gets deselected
     if (getSelectedRegions().length === 0) {
@@ -47,5 +48,17 @@ function deselectRegion(region_id) {
         paragraph.innerHTML = "Keine Region ausgewählt.";
         document.getElementById("selected_regions").getElementsByClassName("row")[0].appendChild(paragraph);
     }
-    // TODO: Remove FeatureState "selected" from region
+}
+
+function selectRegionInMap(region_id, selected) {
+    map.setFeatureState(
+        {
+            source: "municipality",
+            sourceLayer: "municipality",
+            id: region_id
+        },
+        {
+            selected: selected
+        }
+    );
 }
