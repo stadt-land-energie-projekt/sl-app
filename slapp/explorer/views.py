@@ -13,14 +13,15 @@ from django.http import HttpResponse
 if TYPE_CHECKING:
     from django.http.request import HttpRequest
 
+import json
+
 from django.shortcuts import render
 from django.templatetags.l10n import localize
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
 from django_mapengine import views
 
-import json
-
+from .forms import ParametersSliderForm
 from .models import Municipality
 
 MAX_MUNICIPALITY_COUNT = 3
