@@ -1,9 +1,94 @@
 {
-    "s_w_1": {
-        "extra_classes": "js-slider",
-        "max": 1.0,
-        "min": 0,
-        "from": 0.12,
-        "step": 0.01
-      }
+  "1": {
+    "pv": {
+      "class": "js-range-slider",
+      "max": 0.95,
+      "min": 0,
+      "from": 0.12,
+      "step": 0.01
+    },
+    "wind": {
+      "class": "js-range-slider",
+      "max": 1.1,
+      "min": 0,
+      "from": 0.1,
+      "step": 0.01
+    },
+    "hydro": {
+      "class": "js-range-slider",
+      "max": 0.8,
+      "min": 0,
+      "from": 0.18,
+      "step": 0.01
+    }
+  },
+  "2": {
+    "pv": {
+      "class": "js-range-slider",
+      "max": 1.2,
+      "min": 0,
+      "from": 0.08,
+      "step": 0.01
+    },
+    "wind": {
+      "class": "js-range-slider",
+      "max": 0.85,
+      "min": 0,
+      "from": 0.16,
+      "step": 0.01
+    },
+    "hydro": {
+      "class": "js-range-slider",
+      "max": 1.05,
+      "min": 0,
+      "from": 0.11,
+      "step": 0.01
+    }
+  },
+  "3": {
+    "pv": {
+      "class": "js-range-slider",
+      "max": 0.98,
+      "min": 0,
+      "from": 0.09,
+      "step": 0.01
+    },
+    "wind": {
+      "class": "js-range-slider",
+      "max": 1.15,
+      "min": 0,
+      "from": 0.15,
+      "step": 0.01
+    },
+    "hydro": {
+      "class": "js-range-slider",
+      "max": 0.92,
+      "min": 0,
+      "from": 0.13,
+      "step": 0.01
+    }
+  },
+  "4": {
+    "pv": {
+      "class": "js-range-slider",
+      "max": 1.0,
+      "min": 0,
+      "from": 0.12,
+      "step": 0.01
+    },
+    "wind": {
+      "class": "js-range-slider",
+      "max": 1.0,
+      "min": 0,
+      "from": 0.12,
+      "step": 0.01
+    },
+    "hydro": {
+      "class": "js-range-slider",
+      "max": 1.0,
+      "min": 0,
+      "from": 0.12,
+      "step": 0.01
+    }
+  }
 }
