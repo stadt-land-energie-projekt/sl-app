@@ -14,6 +14,10 @@ function toggleRegion(region_id, region_name) {
 }
 
 function selectRegion(region_id, region_name) {
+    // Remove "No region selected" info if first region gets selected
+    if (getSelectedRegions().length === 0) {
+        document.getElementById("selected_regions").getElementsByTagName("p")[1].remove();
+    }
     // Add region to banner
     const col = document.createElement("div");
     col.className = "col";
@@ -27,7 +31,6 @@ function selectRegion(region_id, region_name) {
     col.appendChild(span);
     col.appendChild(input);
     document.getElementById("selected_regions").getElementsByClassName("row")[0].appendChild(col);
-    // TODO: Remove "Keine Region ausgewählt." if first region is added
     // TODO: Add FeatureState "selected" to region
 }
 
@@ -38,6 +41,11 @@ function deselectRegion(region_id) {
     if (matchingRegionNodes.length > 0) {
         matchingRegionNodes[0].parentNode.remove();
     }
-    // TODO: Add "Keine Region ausgewählt." if last region is removed
+    // Add "No region selected" info if last region gets deselected
+    if (getSelectedRegions().length === 0) {
+        const paragraph = document.createElement("p");
+        paragraph.innerHTML = "Keine Region ausgewählt.";
+        document.getElementById("selected_regions").getElementsByClassName("row")[0].appendChild(paragraph);
+    }
     // TODO: Remove FeatureState "selected" from region
 }
