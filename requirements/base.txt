@@ -24,7 +24,7 @@ djangorestframework==3.14.0  # https://github.com/encode/django-rest-framework
 django-cors-headers==4.3.0  # https://github.com/adamchainz/django-cors-headers
 # DRF-spectacular for api documentation
 drf-spectacular==0.27.1  # https://github.com/tfranzel/drf-spectacular
-django-mapengine==1.8.2  # django-mapengine
+django-mapengine==2.0.1  # django-mapengine
 django-distill>=2.6,<4.0
 geojson>=2.5.0,<4.0
 django-geojson>=3.1.0,<4.0
