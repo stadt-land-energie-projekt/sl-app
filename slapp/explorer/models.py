@@ -8,21 +8,27 @@ from .managers import LabelMVTManager, RegionMVTManager, StaticMVTManager
 
 
 class Region(models.Model):
-    """Base class for all regions - works as connector to other models."""
+    """Model for region level region."""
 
-    class LayerType(models.TextChoices):
-        """Region layer types."""
+    geom = models.MultiPolygonField(srid=4326)
+    name = models.CharField(max_length=50, unique=True)
+    area = models.FloatField()
 
-        COUNTRY = "country", _("Country")
-        STATE = "state", _("State")
-        DISTRICT = "district", _("District")
-        MUNICIPALITY = "municipality", _("Municipality")
+    objects = models.Manager()
+    vector_tiles = RegionMVTManager(columns=["id", "name", "bbox"])
+    label_tiles = LabelMVTManager(geo_col="geom_label", columns=["id", "name"])
 
-    layer_type = models.CharField(max_length=12, choices=LayerType.choices, null=False)
+    data_file = "bkg_vg_250_regions"
+    layer = "bkg_vg_250_regions"
+    mapping = {"id": "id", "geom": "MULTIPOLYGON", "name": "name", "area": "area_km2"}
 
     class Meta:  # noqa: D106
         verbose_name = _("Region")
         verbose_name_plural = _("Regions")
+
+    def __str__(self) -> str:
+        """Return string representation of model."""
+        return self.name
 
 
 class Municipality(models.Model):
@@ -32,15 +38,15 @@ class Municipality(models.Model):
     name = models.CharField(max_length=50, unique=True)
     area = models.FloatField()
 
-    region = models.OneToOneField("Region", on_delete=models.DO_NOTHING, null=True)
+    region = models.ForeignKey(Region, on_delete=models.DO_NOTHING, null=True)
 
     objects = models.Manager()
     vector_tiles = RegionMVTManager(columns=["id", "name", "bbox"])
     label_tiles = LabelMVTManager(geo_col="geom_label", columns=["id", "name"])
 
-    data_file = "bkg_vg250_muns_region"
-    layer = "vg250_gem"
-    mapping = {"id": "id", "geom": "MULTIPOLYGON", "name": "name", "area": "area_km2"}
+    data_file = "bkg_vg_250_muns"
+    layer = "bkg_vg_250_muns"
+    mapping = {"id": "id", "geom": "MULTIPOLYGON", "name": "name", "area": "area_km2", "region": {"id": "region_id"}}
 
     class Meta:  # noqa: D106
         verbose_name = _("Municipality")

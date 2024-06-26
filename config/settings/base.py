@@ -356,7 +356,15 @@ SPECTACULAR_SETTINGS = {
 MAP_ENGINE_CENTER_AT_STARTUP = [10.407237624103573, 51.22757621251938]
 MAP_ENGINE_ZOOM_AT_STARTUP = 5.546712433728557
 MAP_ENGINE_MAX_BOUNDS: [[-2.54, 46.35], [23.93, 55.87]]
-MAP_ENGINE_LAYERS_AT_STARTUP = ["municipality", "municipalityline", "municipalitylabel", "wind"]
+MAP_ENGINE_LAYERS_AT_STARTUP = [
+    "region",
+    "regionlabel",
+    "municipality",
+    "municipalitylabel",
+    "wind",
+    "wind_cluster",
+    "wind_cluster_count",
+]
 
 MAP_ENGINE_STYLES_FOLDER = "slapp/static/styles/"
 MAP_ENGINE_MIN_ZOOM = 2
@@ -379,6 +387,11 @@ MAP_ENGINE_IMAGES = [
 ]
 
 MAP_ENGINE_API_MVTS = {
+    "region": [
+        setup.MVTAPI("region", "explorer", "Region", style="region-fill"),
+        setup.MVTAPI("regionline", "explorer", "Region", style="region-line"),
+        setup.MVTAPI("regionlabel", "explorer", "Region", "label_tiles", style="region-label"),
+    ],
     "municipality": [
         setup.MVTAPI("municipality", "explorer", "Municipality", style="region-fill"),
         setup.MVTAPI("municipalityline", "explorer", "Municipality", style="region-line"),
