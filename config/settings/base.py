@@ -358,8 +358,10 @@ MAP_ENGINE_ZOOM_AT_STARTUP = 5.546712433728557
 MAP_ENGINE_MAX_BOUNDS: [[-2.54, 46.35], [23.93, 55.87]]
 MAP_ENGINE_LAYERS_AT_STARTUP = [
     "region",
+    "regionline",
     "regionlabel",
     "municipality",
+    "municipalityline",
     "municipalitylabel",
     "wind",
     "wind_cluster",
@@ -388,14 +390,14 @@ MAP_ENGINE_IMAGES = [
 
 MAP_ENGINE_API_MVTS = {
     "region": [
-        setup.MVTAPI("region", "explorer", "Region", style="region-fill"),
-        setup.MVTAPI("regionline", "explorer", "Region", style="region-line"),
-        setup.MVTAPI("regionlabel", "explorer", "Region", "label_tiles", style="region-label"),
+        setup.MVTAPI("region", "explorer", "Region", style="region-fill", maxzoom=8),
+        setup.MVTAPI("regionline", "explorer", "Region", style="region-line", maxzoom=8),
+        setup.MVTAPI("regionlabel", "explorer", "Region", "label_tiles", style="region-label", maxzoom=8),
     ],
     "municipality": [
-        setup.MVTAPI("municipality", "explorer", "Municipality", style="region-fill"),
-        setup.MVTAPI("municipalityline", "explorer", "Municipality", style="region-line"),
-        setup.MVTAPI("municipalitylabel", "explorer", "Municipality", "label_tiles", style="region-label"),
+        setup.MVTAPI("municipality", "explorer", "Municipality", style="region-fill", minzoom=8),
+        setup.MVTAPI("municipalityline", "explorer", "Municipality", style="region-line", minzoom=8),
+        setup.MVTAPI("municipalitylabel", "explorer", "Municipality", "label_tiles", style="region-label", minzoom=8),
     ],
     "static": [
         setup.MVTAPI("soil_quality_low", "explorer", "SoilQualityLow"),
