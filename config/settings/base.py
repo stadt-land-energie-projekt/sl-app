@@ -357,15 +357,13 @@ MAP_ENGINE_CENTER_AT_STARTUP = [10.407237624103573, 51.22757621251938]
 MAP_ENGINE_ZOOM_AT_STARTUP = 5.546712433728557
 MAP_ENGINE_MAX_BOUNDS: [[-2.54, 46.35], [23.93, 55.87]]
 MAP_ENGINE_LAYERS_AT_STARTUP = [
+    "wms",
     "region",
     "regionline",
     "regionlabel",
     "municipality",
     "municipalityline",
     "municipalitylabel",
-    "wind",
-    "wind_cluster",
-    "wind_cluster_count",
 ]
 
 MAP_ENGINE_STYLES_FOLDER = "slapp/static/styles/"
@@ -387,6 +385,23 @@ MAP_ENGINE_IMAGES = [
     setup.MapImage("combustion_plus", "images/icons/map_combustion_plus.png"),
     setup.MapImage("gsgk_plus", "images/icons/map_gsgk_plus.png"),
     setup.MapImage("storage_plus", "images/icons/map_battery_plus.png"),
+]
+
+MAP_ENGINE_SOURCES = [
+    setup.MapSource(
+        name="wms",
+        type="raster",
+        tiles=[
+            "https://img.nj.gov/imagerywms/Natural2015"
+            "?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&"
+            "transparent=true&width=256&height=256&layers=Natural2015",
+        ],
+        kwargs={"tileSize": 256},
+    ),
+]
+
+MAP_ENGINE_LAYERS = [
+    setup.MapLayer(id="wms", source="wms", style={"type": "raster"}),
 ]
 
 MAP_ENGINE_API_MVTS = {
