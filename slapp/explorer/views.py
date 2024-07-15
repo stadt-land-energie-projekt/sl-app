@@ -178,21 +178,24 @@ def choose_esm_mode(request: HttpRequest) -> HttpResponse:
 def optimization_parameters(request: HttpRequest) -> HttpResponse:
     """Render parameters page for given municipality IDs."""
     ids = request.GET.getlist("id")
+    mun_forms = {}
+
     if ids:
         if len(ids) > MAX_MUNICIPALITY_COUNT:
             ids = ids[:MAX_MUNICIPALITY_COUNT]
             messages.add_message(request, messages.WARNING, "Es können maximal 3 Gemeinden ausgewählt werden.")
         municipalities = Municipality.objects.filter(id__in=ids)
-    else:
-        municipalities = None
+        with open("slapp/static/config/parameters_slider.json") as f:  # noqa: PTH123
+            sliders_config = json.load(f)
+        for mun in municipalities:
+            parameters = sliders_config[str(mun.id)]
+            form_instance = ParametersSliderForm(parameters=parameters)
+            mun_forms[mun.name] = form_instance
 
     next_url = reverse("explorer:results_variation")
     prev_url = reverse("explorer:esm_mode")
     active_tab = "step_5_parameters"
     sidepanel = True
-
-    with open('slapp/static/config/parameters_slider.json', 'r') as f:
-        sliders_config = json.load(f)
 
     context = {
         "municipalities": municipalities,
@@ -201,8 +204,14 @@ def optimization_parameters(request: HttpRequest) -> HttpResponse:
         "active_tab": active_tab,
         "has_sidepanel": sidepanel,
         "sliders_config": sliders_config,
+        "mun_forms": mun_forms,
     }
-    return render(request, "pages/parameters_variation.html", context)
+
+    return render(
+        request,
+        "pages/parameters.html",
+        context,
+    )
 
 
 def optimization_results(request: HttpRequest) -> HttpResponse:

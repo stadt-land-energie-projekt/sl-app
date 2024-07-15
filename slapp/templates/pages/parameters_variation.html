@@ -12,7 +12,24 @@
     <div class="row">
       <h2>Parameter für die Energiesystemoptimieung festlegen</h2>
     </div>
-    {% if municipalities %}
+    <div class="mt-5">
+      <div class="row mt-4">
+        <div class="col-4">
+          <form autocomplete="off">
+            <input type="text"
+                   hx-post="{% url 'explorer:search-municipality' %}"
+                   hx-target='#results'
+                   hx-trigger="keyup changed delay:500ms"
+                   hx-vals='{"param_string": "{{ request.get_full_path }}"}'
+                   name="search"
+                   class="form-control mr-2"
+                   placeholder="Gemeinden suchen & hinzufügen" />
+          </form>
+          <div id="results"></div>
+        </div>
+      </div>
+    </div>
+    {% if mun_forms %}
       <div class="row mt-4 g-0" id="municipality-results">
         <div class="col-3">
           <div class="rounded-0text-start">
@@ -26,10 +43,23 @@
             <div class="h-155px table-cell">Speicherkapazität</div>
           </div>
         </div>
-        {% for municipality in municipalities %}
+        {% for municipality, form in mun_forms.items %}
           <div class="col-3">
             <div class="rounded-0 h-100px text-start">
-              <div class="h-55px  table-cell fw-bold bg-secondary text-white">{{ municipality.name }}</div>
+              <div class="h-55px  table-cell fw-bold bg-secondary text-white">
+                {{ municipality }}
+                <a class="icon-link text-white"
+                   href="{% url 'explorer:parameters' %}?  {% for municipality_ids in municipalities %}{% if municipality_ids.id != municipality.id %}id={{ municipality_ids.id }}&{% endif %}{% endfor %}">
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       width="16"
+                       height="16"
+                       fill="currentColor"
+                       class="bi bi-x-circle-fill"
+                       viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+                  </svg>
+                </a>
+              </div>
               <div class="h-55px table-cell">
                 <input type="number"
                        id="{{ municipality.id }}-coverage"
@@ -49,14 +79,14 @@
                 <fieldset class="mb-3">
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    <span>{{ sliders_form.1_pv }}</span>
+                    <span>{{ form.pv }}</span>
                     <label class="form-check-label d-inline-block">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
                   </div>
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    <span>{{ sliders_form.1_pv }}</span>
+                    <span>{{ form.pv }}</span>
                     <label class="form-check-label d-inline-block"
                            for="pv-{{ municipality.id }}-area">
                       km² max. Flächenverbrauch <i>(1,73 km² ausgewiesen, davon derzeit 0,27 km² belegt)</i>
@@ -69,14 +99,14 @@
                 <fieldset class="mb-3">
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    <span>{{ sliders_form.1_wind }}</span>
+                    <span>{{ form.wind }}</span>
                     <label class="form-check-label d-inline-block" for="maxOutputRadio">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
                   </div>
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    {{ sliders_form.1_wind }}
+                    {{ form.wind }}
                     <label class="form-check-label d-inline-block"
                            for="pv-{{ municipality.id }}-area">
                       km² max. Flächenverbrauch <i>(1,73 km² ausgewiesen, davon derzeit 0,27 km² belegt)</i>
@@ -89,7 +119,7 @@
                 <fieldset class="mb-3">
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    {{ sliders_form.1_hydro }}
+                    {{ form.hydro }}
                     <label class="form-check-label d-inline-block" for="maxOutputRadio">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>

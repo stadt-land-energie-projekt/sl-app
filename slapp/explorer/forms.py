@@ -29,11 +29,9 @@ class ParametersSliderForm(Form):  # noqa: D101
         return attrs
 
     def generate_fields(self, parameters: dict) -> dict:  # noqa: D102
-        for mun, param_set in parameters.items():
-            for name, item in param_set.items():
-                field_name = f"{mun}_{name}"
-                field = FloatField(
-                    widget=TextInput(attrs=self.get_field_attrs(field_name, parameters=item)),
-                    required=item.get("required", True),
-                )
-                yield {"name": field_name, "field": field}
+        for name, item in parameters.items():
+            field = FloatField(
+                widget=TextInput(attrs=self.get_field_attrs(name, parameters=item)),
+                required=item.get("required", True),
+            )
+            yield {"name": name, "field": field}
