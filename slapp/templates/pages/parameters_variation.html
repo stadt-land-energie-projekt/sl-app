@@ -79,14 +79,15 @@
                 <fieldset class="mb-3">
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    <span>{{ mun_context.form.pv }}</span>
-                    <label class="form-check-label d-inline-block">
+                    <span id="pv-{{ mun_context.id }}-maxOutput">{{ mun_context.form.pv }}</span>
+                    <label class="form-check-label d-inline-block"
+                           for="pv-{{ mun_context.id }}-maxOutput">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
                   </div>
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    <span>{{ slider.pv }}</span>
+                    <span id="pv-{{ mun_context.id }}-area">{{ mun_context.form.pv }}</span>
                     <label class="form-check-label d-inline-block"
                            for="pv-{{ mun_context.id }}-area">
                       km² max. Flächenverbrauch <i>(1,73 km² ausgewiesen, davon derzeit 0,27 km² belegt)</i>
@@ -99,16 +100,17 @@
                 <fieldset class="mb-3">
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    <span>{{ mun_context.form.wind }}</span>
-                    <label class="form-check-label d-inline-block" for="maxOutputRadio">
+                    <span id="wind-{{ mun_context.id }}-maxOutput">{{ mun_context.form.wind }}</span>
+                    <label class="form-check-label d-inline-block"
+                           for="wind-{{ mun_context.id }}-maxOutput">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
                   </div>
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    {{ slider.wind }}
+                    <span id="wind-{{ mun_context.id }}-area">{{ mun_context.form.wind }}</span>
                     <label class="form-check-label d-inline-block"
-                           for="pv-{{ mun_context.id }}-area">
+                           for="wind-{{ mun_context.id }}-area">
                       km² max. Flächenverbrauch <i>(1,73 km² ausgewiesen, davon derzeit 0,27 km² belegt)</i>
                     </label>
                   </div>
@@ -119,8 +121,9 @@
                 <fieldset class="mb-3">
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    {{ mun_context.form.hydro }}
-                    <label class="form-check-label d-inline-block" for="maxOutputRadio">
+                    <span id="hydro-{{ mun_context.id }}-maxOutput">{{ mun_context.form.hydro }}</span>
+                    <label class="form-check-label d-inline-block"
+                           for="hydro-{{ mun_context.id }}-maxOutput">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
                   </div>
