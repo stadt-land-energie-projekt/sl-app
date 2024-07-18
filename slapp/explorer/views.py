@@ -190,7 +190,10 @@ def optimization_parameters(request: HttpRequest) -> HttpResponse:
         for mun in municipalities:
             parameters = sliders_config[str(mun.id)]
             form_instance = ParametersSliderForm(parameters=parameters)
-            mun_forms[mun.name] = form_instance
+            mun_forms[mun.name] = {
+                "id": mun.id,
+                "form": form_instance,
+            }
 
     next_url = reverse("explorer:results_variation")
     prev_url = reverse("explorer:esm_mode")

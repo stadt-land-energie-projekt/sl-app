@@ -43,13 +43,13 @@
             <div class="h-155px table-cell">Speicherkapazität</div>
           </div>
         </div>
-        {% for municipality, form in mun_forms.items %}
+        {% for municipality, mun_context in mun_forms.items %}
           <div class="col-3">
             <div class="rounded-0 h-100px text-start">
               <div class="h-55px  table-cell fw-bold bg-secondary text-white">
                 {{ municipality }}
                 <a class="icon-link text-white"
-                   href="{% url 'explorer:parameters' %}?  {% for municipality_ids in municipalities %}{% if municipality_ids.id != municipality.id %}id={{ municipality_ids.id }}&{% endif %}{% endfor %}">
+                   href="{% url 'explorer:parameters' %}?  {% for mun_name, context_id_check in mun_forms.items %}{% if context_id_check.id != mun_context.id %}id={{ context_id_check.id }}&{% endif %}{% endfor %}">
                   <svg xmlns="http://www.w3.org/2000/svg"
                        width="16"
                        height="16"
@@ -62,14 +62,14 @@
               </div>
               <div class="h-55px table-cell">
                 <input type="number"
-                       id="{{ municipality.id }}-coverage"
+                       id="{{ mun_context.id }}-coverage"
                        class="form-control form-control-sm"
                        aria-describedby="inputgoal"
                        value="75" />
               </div>
               <div class="h-55px table-cell">
                 <input type="number"
-                       id="{{ municipality.id }}-energy-need"
+                       id="{{ mun_context.id }}-energy-need"
                        class="form-control form-control-sm"
                        aria-describedby="inputgoal"
                        value="75" />
@@ -79,16 +79,16 @@
                 <fieldset class="mb-3">
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    <span>{{ form.pv }}</span>
+                    <span>{{ mun_context.form.pv }}</span>
                     <label class="form-check-label d-inline-block">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
                   </div>
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    <span>{{ form.pv }}</span>
+                    <span>{{ slider.pv }}</span>
                     <label class="form-check-label d-inline-block"
-                           for="pv-{{ municipality.id }}-area">
+                           for="pv-{{ mun_context.id }}-area">
                       km² max. Flächenverbrauch <i>(1,73 km² ausgewiesen, davon derzeit 0,27 km² belegt)</i>
                     </label>
                   </div>
@@ -99,16 +99,16 @@
                 <fieldset class="mb-3">
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    <span>{{ form.wind }}</span>
+                    <span>{{ mun_context.form.wind }}</span>
                     <label class="form-check-label d-inline-block" for="maxOutputRadio">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
                   </div>
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    {{ form.wind }}
+                    {{ slider.wind }}
                     <label class="form-check-label d-inline-block"
-                           for="pv-{{ municipality.id }}-area">
+                           for="pv-{{ mun_context.id }}-area">
                       km² max. Flächenverbrauch <i>(1,73 km² ausgewiesen, davon derzeit 0,27 km² belegt)</i>
                     </label>
                   </div>
@@ -119,7 +119,7 @@
                 <fieldset class="mb-3">
                   <div class="form-check">
                     <!-- This is the input slider -->
-                    {{ form.hydro }}
+                    {{ mun_context.form.hydro }}
                     <label class="form-check-label d-inline-block" for="maxOutputRadio">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
@@ -132,19 +132,19 @@
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
-                           name="biomass-{{ municipality.id }}-selection"
-                           id="biomass-{{ municipality.id }}-noLimitRadio"
+                           name="biomass-{{ mun_context.id }}-selection"
+                           id="biomass-{{ mun_context.id }}-noLimitRadio"
                            checked />
                     keine Obergrenze angeben
                   </div>
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
-                           name="biomass-{{ municipality.id }}-selection"
-                           id="biomass-{{ municipality.id }}-MW" />
+                           name="biomass-{{ mun_context.id }}-selection"
+                           id="biomass-{{ mun_context.id }}-MW" />
                     <!-- This is the additional input field right next to the second radio button -->
                     <input type="text"
-                           id="biomass-{{ municipality.id }}-MW"
+                           id="biomass-{{ mun_context.id }}-MW"
                            class="form-control d-inline-block w-auto form-control-sm"
                            value="0,12" />
                     <label class="form-check-label d-inline-block" for="maxOutputRadio">
@@ -159,19 +159,19 @@
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
-                           name="battery-{{ municipality.id }}-selection"
-                           id="battery-{{ municipality.id }}-noLimitRadio"
+                           name="battery-{{ mun_context.id }}-selection"
+                           id="battery-{{ mun_context.id }}-noLimitRadio"
                            checked />
                     keine Obergrenze angeben
                   </div>
                   <div class="form-check">
                     <input class="form-check-input"
                            type="radio"
-                           name="battery-{{ municipality.id }}-selection"
-                           id="battery-{{ municipality.id }}-MW" />
+                           name="battery-{{ mun_context.id }}-selection"
+                           id="battery-{{ mun_context.id }}-MW" />
                     <!-- This is the additional input field right next to the second radio button -->
                     <input type="text"
-                           id="battery-{{ municipality.id }}-MW"
+                           id="battery-{{ mun_context.id }}-MW"
                            class="form-control d-inline-block w-auto form-control-sm"
                            value="0,12" />
                     <label class="form-check-label d-inline-block" for="maxOutputRadio">
@@ -210,6 +210,13 @@
       </div>
       <br />
       <i>Je nach Anzahl der Gemeinden dauert eine Modellierung & Optimierung mehrere Minuten.</i>
+      <div class="mb-3">
+        <a class="btn btn-primary"
+           href="{% url 'explorer:results' %}?{% for municipality, mun_context in mun_forms.items %}id={{ mun_context.id }}&{% endfor %}"
+           role="button">Systemoptimierung starten</a>
+      </div>
+    {% else %}
+      <div class="mt-3">Fügen Sie zunächst Gemeinden für die Optimierung hinzu.</div>
     {% endif %}
   </div>
   <script>
