@@ -21,6 +21,9 @@
       <!-- Your stuff: Third-party CSS libraries go here -->
       <!-- This file stores project-specific CSS -->
       {% compress css %}
+        <link rel="stylesheet"
+              type="text/x-scss"
+              href="{% static 'scss/app.scss' %}" />
         <link href="{% static 'css/project.css' %}" rel="stylesheet" />
         <link href="{% static 'vendors/bootstrap/scss/bootstrap.scss' %}"
               rel="stylesheet"
@@ -89,6 +92,66 @@
         </div>
       </nav>
     </div>
+    <section class="wizard">
+      <div class="wizard__wrap">
+        <div class="wizard__back">
+          <button type="button" id="menu_previous_btn" hidden>
+            <svg width="16"
+                 height="16"
+                 version="1.1"
+                 fill="currentColor"
+                 viewBox="0 0 16.933 16.933"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="m10.794 16.748 1.4961-1.4961-6.7832-6.7832 6.7832-6.7832-1.4961-1.4961-8.2793 8.2793z" />
+            </svg>
+            <span>Zurück</span>
+          </button>
+        </div>
+        <div class="wizard__main">
+          <ul class="wizard__list nav nav-tabs" role="tablist">
+            <li id="step_1_start"
+                class="wizard__list-item active"
+                role="presentation">
+              <span class="wizard__list-number">1</span>
+              <span class="wizard__list-text">Start</span>
+            </li>
+            <li id="step_2_today" class="wizard__list-item" role="presentation">
+              <span class="wizard__list-number">2</span>
+              <span class="wizard__list-text">Situation heute</span>
+            </li>
+            <li id="step_3_details" class="wizard__list-item" role="presentation">
+              <span class="wizard__list-number">3</span>
+              <span class="wizard__list-text">Detailansicht/Vergleiche Gemeinden</span>
+            </li>
+            <li id="step_4_mode" class="wizard__list-item" role="presentation">
+              <span class="wizard__list-number">4</span>
+              <span class="wizard__list-text">Auswahl ESM Modus</span>
+            </li>
+            <li id="step_5_parameters" class="wizard__list-item" role="presentation">
+              <span class="wizard__list-number">5</span>
+              <span class="wizard__list-text">ESM Konfiguration</span>
+            </li>
+            <li id="step_6_results" class="wizard__list-item" role="presentation">
+              <span class="wizard__list-number">6</span>
+              <span class="wizard__list-text">Ergebnisse</span>
+            </li>
+          </ul>
+        </div>
+        <div class="wizard__next">
+          <button type="button" id="menu_next_btn" class="button button--secondary">
+            <span>Weiter</span>
+            <svg width="16"
+                 height="16"
+                 version="1.1"
+                 fill="currentColor"
+                 viewBox="0 0 16.933 16.933"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="m6.1387 0.1875-1.4961 1.4961 6.7832 6.7832-6.7832 6.7832 1.4961 1.4961 8.2793-8.2793z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
     <div class="container">
       {% if messages %}
         {% for message in messages %}

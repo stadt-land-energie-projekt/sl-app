@@ -1,0 +1,114 @@
+.wizard {
+    @extend .w-100;
+    @extend .position-relative;
+    height: 3.75rem;
+    box-shadow: $box-shadow-sm;
+    z-index: 1000;
+
+    &__wrap {
+      @extend .container-fluid;
+      @extend .d-flex;
+      @extend .flex-row;
+      @extend .justify-content-between;
+    }
+
+    &__back,
+    &__next {
+      @extend .d-flex;
+      padding: 0.675rem 0;
+      width: 3rem;
+
+      span {
+        display: none;
+      }
+
+      @include media-breakpoint-up(md) {
+        width: 8rem;
+
+        span {
+          display: inline-block;
+        }
+      }
+    }
+
+    &__back button {
+      @extend .btn;
+      @extend .btn-outline-info;
+    }
+
+    &__next {
+      @extend .justify-content-end;
+    }
+
+    &__main {
+      flex: 1;
+    }
+
+    &__list {
+      @extend .d-flex;
+      @extend .justify-content-between;
+      @extend .p-0;
+      @extend .m-0;
+      @extend .border-0;
+      list-style: none;
+
+      &-item {
+        @extend .d-flex;
+        @extend .flex-column;
+        @extend .align-items-center;
+        @extend .position-relative;
+        @extend .py-1;
+        @extend .px-0;
+        flex-grow: 1;
+
+        .wizard__list-number {
+          @extend .d-block;
+          @extend .rounded-circle;
+          @extend .text-center;
+          @extend .bg-white;
+          width: 1.5rem;
+          height: 1.5rem;
+          border: 1px solid $gray-600;
+          font-size: .875rem; // 14px
+          z-index: 2000;
+        }
+
+        .wizard__list-text {
+          display: none;
+        }
+
+        &.active {
+          @extend .text-primary;
+          @extend .fw-bold;
+
+          .wizard__list-number {
+            @extend .bg-primary;
+            @extend .text-white;
+            @extend .border-primary;
+            @extend .fw-bold;
+          }
+        }
+      }
+    }
+
+    @include media-breakpoint-up(md) {
+      .wizard__list {
+        .wizard__list-item {
+          .wizard__list-text {
+            display: block;
+            font-size: .875rem; // 14px
+          }
+
+          &:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 34%;
+            right: 0;
+            transform: translate(51%, -50%);
+            width: 100%;
+            border-top: 4px solid $gray-200;
+          }
+        }
+      }
+    }
+  }

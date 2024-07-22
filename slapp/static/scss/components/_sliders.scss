@@ -1,0 +1,40 @@
+@mixin settings-details-slider($slider-main-color) {
+    &__label:before {
+      content: "";
+      display: inline-block;
+      width: 1.25rem;
+      height: 1.25rem;
+      min-width: 1.25rem;
+      background-size: cover;
+      margin-right: 0.5rem;
+    }
+
+    .irs.irs--flat .irs-bar, .irs.irs--flat .irs-handle > i:first-child, .irs.irs--flat .irs-single {
+      background-color: $slider-main-color;
+      border-color: $slider-main-color;
+    }
+
+    .irs.irs--flat .irs-single:before {
+      border-top-color: $slider-main-color;
+    }
+  }
+
+  .showcase__mark {
+    @extend .d-block;
+    @extend .position-absolute;
+    @extend .text-primary;
+    @extend .fw-bold;
+    top: 2.5rem;
+
+    &:before {
+      content: '';
+      @extend .position-absolute;
+      @extend .bg-primary;
+      top: -1.3rem;
+      width: 0.25rem;
+      height: 1.3rem;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+    }
+  }
