@@ -109,9 +109,15 @@
       </div>
     </div>
     <div class="mb-3 mt-3">
-      <a class="btn btn-primary"
-         href="{% url 'explorer:robustness' %}?{% for municipality_ids in municipalities %}id={{ municipality_ids.id }}&{% endfor %}"
-         role="button">Zur Robustheitsberechnung</a>
+      <div class="wizard__next">
+        <button hx-post="{% url 'explorer:robustness' %}"
+                hx-target="body"
+                type="submit"
+                id="menu_next_btn"
+                class="btn btn-primary">
+          <span>Zur Robustheitsberechnung</span>
+        </button>
+      </div>
     </div>
   </div>
 {% endblock content %}

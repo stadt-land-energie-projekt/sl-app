@@ -31,10 +31,19 @@
         <p>
           Außerdem können Sie eine <strong>kostenminimierende Energiesystemoptimierung</strong> für eine oder mehrere Gemeinden durchrechnen lassen.
         </p>
-      </div>
-      <div class="col-9">
-        <div id="legend" class="legend"></div>
-        <div id="map"></div>
+        <div class="wizard__next">
+          <button hx-post="{% url 'explorer:details' %}"
+                  hx-target="body"
+                  type="submit"
+                  id="menu_next_btn"
+                  class="btn btn-primary">
+            <span>Weiter</span>
+          </button>
+        </div>
+        <div class="col-9">
+          <div id="legend" class="legend"></div>
+          <div id="map"></div>
+        </div>
       </div>
     </div>
   </div>
