@@ -118,6 +118,11 @@ def details_csv(request: HttpRequest) -> HttpResponse:
     return response
 
 
+def choose_esm_mode(request: HttpRequest) -> HttpResponse:
+    """Render page for choosing esm mode (robust or variation)."""
+    return render(request, "pages/esm_mode.html")
+
+
 def optimization_parameters(request: HttpRequest) -> HttpResponse:
     """Render parameters page for given municipality IDs."""
     ids = request.GET.getlist("id")
