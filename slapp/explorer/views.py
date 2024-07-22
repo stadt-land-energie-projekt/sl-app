@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import csv
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from django.contrib import messages
 from django.db.models import Sum
@@ -28,6 +28,12 @@ class MapGLView(TemplateView, views.MapEngineMixin):
 
     template_name = "pages/map.html"
     extra_context = {}
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        """Adapt mapengine context."""
+        context = super().get_context_data(**kwargs)
+        context["mapengine_store_cold_init"]["fly_to_clicked_feature"] = False
+        return context
 
 
 def municipalities_details(ids: list[int]) -> list[Municipality]:

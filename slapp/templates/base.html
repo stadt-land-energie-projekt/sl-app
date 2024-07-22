@@ -43,6 +43,7 @@
         <!-- HTMX -->
         <script defer src="{% static 'vendors/htmx/js/htmx.js' %}"></script>
         <script src="{% static 'vendors/jquery/js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/region.js' %}"></script>
       {% endcompress %}
     {% endblock javascript %}
   </head>
@@ -165,6 +166,21 @@
         {% endfor %}
       {% endif %}
     </div>
+    <header class="bg-info p-1" id="selected_regions">
+      <div class="container">
+        <div class="row">
+          <p class="mb-0">Ausgewählte Region(en):</p>
+          {% for municipality in municipalities %}
+            <div class="col">
+              <span class="badge badge-secondary">{{ municipality.name }}</span>
+              <input hidden name="region" value="{{ municipality.id }}" />
+            </div>
+          {% empty %}
+            <p>Keine Region ausgewählt.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </header>
     {% block content %}
     {% endblock content %}
     <!-- /container -->
