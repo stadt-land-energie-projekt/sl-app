@@ -16,7 +16,7 @@ pytest-django==4.5.2  # https://github.com/pytest-dev/pytest-django
 
 # Documentation
 # ------------------------------------------------------------------------------
-sphinx==7.2.6  # https://github.com/sphinx-doc/sphinx
+sphinx==8.0.2  # https://github.com/sphinx-doc/sphinx
 sphinx-autobuild==2024.2.4 # https://github.com/GaretJax/sphinx-autobuild
 
 # Code quality
