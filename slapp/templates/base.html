@@ -96,7 +96,11 @@
     <section class="wizard">
       <div class="wizard__wrap">
         <div class="wizard__back">
-          <button type="button" id="menu_previous_btn" hidden>
+          <button hx-post="{% url 'explorer:wizard-previous-step' %}"
+                  hx-target="body"
+                  hx-include="#tab_name"
+                  type="button"
+                  id="menu_previous_btn">
             <svg width="16"
                  height="16"
                  version="1.1"
@@ -136,6 +140,24 @@
               <span class="wizard__list-text">Ergebnisse</span>
             </li>
           </ul>
+        </div>
+        <div class="wizard__next">
+          <button hx-post="{% url 'explorer:wizard-next-step' %}"
+                  hx-target="body"
+                  hx-include="#tab_name"
+                  type="submit"
+                  id="menu_next_btn"
+                  class="btn btn-primary">
+            <span>Weiter</span>
+            <svg width="16"
+                 height="16"
+                 version="1.1"
+                 fill="currentColor"
+                 viewBox="0 0 16.933 16.933"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="m6.1387 0.1875-1.4961 1.4961 6.7832 6.7832-6.7832 6.7832 1.4961 1.4961 8.2793-8.2793z" />
+            </svg>
+          </button>
         </div>
       </div>
     </section>

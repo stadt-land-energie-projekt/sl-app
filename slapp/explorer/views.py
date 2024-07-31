@@ -238,3 +238,50 @@ def robustness(request: HttpRequest) -> HttpResponse:
         messages.add_message(request, messages.WARNING, "Keine Gemeinde(n) ausgewählt.")
 
     return render(request, "pages/robustness.html", {"municipalities": municipalities})
+
+
+menu_tabs = [
+    {1: "home"},
+    {2: "map"},
+    {3: "details"},
+    {4: "esm_mode"},
+    {5: "parameters"},
+    {6: "results"},
+    {7: "robustness"},
+    {8: "home"},
+    {9: "home"},
+]
+
+
+def next_menu_tab(request: HttpRequest) -> HttpResponse:
+    """Render the next page after click in current page."""
+    current_tab = int(request.POST.get("tab_id"))
+    if current_tab != len(menu_tabs):
+        next_tab = current_tab + 1
+
+        for tab_dict in menu_tabs:
+            if next_tab in tab_dict:
+                template_name = tab_dict[next_tab]
+
+        return render(request, f"pages/{template_name}.html")
+
+    messages.add_message(request, messages.WARNING, "Es geht nicht weiter.")
+    template_name = "robustness"
+    return render(request, f"pages/{template_name}.html")
+
+
+def previous_menu_tab(request: HttpRequest) -> HttpResponse:
+    """Render the previous page after click in current page."""
+    current_tab = int(request.POST.get("tab_id"))
+    if current_tab != 1:
+        previous_tab = current_tab + 1
+
+        for tab_dict in menu_tabs:
+            if previous_tab in tab_dict:
+                template_name = tab_dict[previous_tab]
+
+        return render(request, f"pages/{template_name}.html")
+
+    messages.add_message(request, messages.WARNING, "Es geht nicht zurück.")
+    template_name = "home"
+    return render(request, f"pages/{template_name}.html")
