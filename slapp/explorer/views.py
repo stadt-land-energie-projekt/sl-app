@@ -85,7 +85,7 @@ def search_municipality(request: HttpRequest) -> HttpResponse:
     search_text = request.POST.get("search")
     param_string = request.POST.get("param_string")
 
-    first_item = param_string in ["/explorer/details/", "/explorer/parameters/"]
+    first_item = param_string in ["/explorer/details/", "/explorer/parameters_variation/"]
 
     new_param_string = param_string + "?id=" if first_item else param_string + "&id="
 
@@ -140,7 +140,7 @@ def optimization_parameters(request: HttpRequest) -> HttpResponse:
     else:
         municipalities = None
 
-    return render(request, "pages/parameters.html", {"municipalities": municipalities})
+    return render(request, "pages/parameters_variation.html", {"municipalities": municipalities})
 
 
 def optimization_results(request: HttpRequest) -> HttpResponse:
@@ -179,7 +179,12 @@ def optimization_results(request: HttpRequest) -> HttpResponse:
         municipalities = None
         messages.add_message(request, messages.WARNING, "Keine Gemeinde(n) ausgewählt.")
 
-    return render(request, "pages/results.html", {"municipalities": municipalities})
+    return render(request, "pages/results_variation.html", {"municipalities": municipalities})
+
+
+def robustness_parameters(request: HttpRequest) -> HttpResponse:
+    """Render page for robustness parameters."""
+    return render(request, "pages/parameters_robustness.html")
 
 
 def robustness(request: HttpRequest) -> HttpResponse:
@@ -237,7 +242,7 @@ def robustness(request: HttpRequest) -> HttpResponse:
         municipalities = None
         messages.add_message(request, messages.WARNING, "Keine Gemeinde(n) ausgewählt.")
 
-    return render(request, "pages/robustness.html", {"municipalities": municipalities})
+    return render(request, "pages/results_robustness.html", {"municipalities": municipalities})
 
 
 menu_tabs = [
@@ -245,19 +250,20 @@ menu_tabs = [
     {2: "map"},
     {3: "details"},
     {4: "esm_mode"},
-    {5: "parameters"},
-    {6: "results"},
-    {7: "robustness"},
-    {8: "home"},
-    {9: "home"},
+    {5: "parameters_variation"},
+    {6: "results_variation"},
+    {7: "parameters_robustness"},
+    {8: "results_robustness"},
+    {9: "added_value"},
 ]
 
 
 def next_menu_tab(request: HttpRequest) -> HttpResponse:
     """Render the next page after click in current page."""
     current_tab = int(request.POST.get("tab_id"))
+    variation_end = 6
     if current_tab != len(menu_tabs):
-        next_tab = current_tab + 1
+        next_tab = 9 if current_tab == variation_end else current_tab + 1
 
         for tab_dict in menu_tabs:
             if next_tab in tab_dict:
@@ -273,8 +279,9 @@ def next_menu_tab(request: HttpRequest) -> HttpResponse:
 def previous_menu_tab(request: HttpRequest) -> HttpResponse:
     """Render the previous page after click in current page."""
     current_tab = int(request.POST.get("tab_id"))
+    robust_start = 7
     if current_tab != 1:
-        previous_tab = current_tab - 1
+        previous_tab = 4 if current_tab == robust_start else current_tab - 1
 
         for tab_dict in menu_tabs:
             if previous_tab in tab_dict:

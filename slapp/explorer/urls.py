@@ -10,9 +10,10 @@ urlpatterns = [
     path("details/", views.details_list, name="details"),
     path("details/csv/", views.details_csv, name="details-csv"),
     path("esm_mode/", views.choose_esm_mode, name="esm_mode"),
-    path("parameters/", views.optimization_parameters, name="parameters"),
-    path("results", views.optimization_results, name="results"),
-    path("robustness", views.robustness, name="robustness"),
+    path("parameters_variation/", views.optimization_parameters, name="parameters_variation"),
+    path("results_variation/", views.optimization_results, name="results_varation"),
+    path("results_robustness/", views.robustness, name="results_robustness"),
+    path("parameters_robustness/", views.robustness_parameters, name="parameters_robustness"),
 ]
 
 htmx_urlpatterns = [

@@ -4,7 +4,8 @@
 
 {% block content %}
   <div class="container">
-    <h1 mt-3>Energiesystemoptimierung</h1>
+    <input id="tab_name" type="hidden" name="tab_id" value="5" />
+    <h1 mt-3>Energiesystemoptimierung Variation</h1>
     <div class="container text-center border-top border-bottom mt-4 mb-4 pt-2 pb-2">
       <div class="row align-items-start">
         <div class="col">
@@ -54,7 +55,7 @@
               <div class="h-55px  table-cell fw-bold bg-secondary text-white">
                 {{ municipality.name }}
                 <a class="icon-link text-white"
-                   href="{% url 'explorer:parameters' %}?  {% for municipality_ids in municipalities %}{% if municipality_ids.id != municipality.id %}id={{ municipality_ids.id }}&{% endif %}{% endfor %}">
+                   href="{% url 'explorer:parameters_variation' %}?  {% for municipality_ids in municipalities %}{% if municipality_ids.id != municipality.id %}id={{ municipality_ids.id }}&{% endif %}{% endfor %}">
                   <svg xmlns="http://www.w3.org/2000/svg"
                        width="16"
                        height="16"
