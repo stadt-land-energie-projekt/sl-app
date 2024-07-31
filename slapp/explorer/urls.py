@@ -17,8 +17,8 @@ urlpatterns = [
 
 htmx_urlpatterns = [
     path("search-municipality/", views.search_municipality, name="search-municipality"),
-    path("wizard/", views.next_menu_tab, name="wizard-next-step"),
-    path("wizard/", views.previous_menu_tab, name="wizard-previous-step"),
+    path("wizard-next/", views.next_menu_tab, name="wizard-next-step"),
+    path("wizard-previous/", views.previous_menu_tab, name="wizard-previous-step"),
 ]
 
 urlpatterns += htmx_urlpatterns

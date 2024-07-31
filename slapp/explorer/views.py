@@ -274,7 +274,7 @@ def previous_menu_tab(request: HttpRequest) -> HttpResponse:
     """Render the previous page after click in current page."""
     current_tab = int(request.POST.get("tab_id"))
     if current_tab != 1:
-        previous_tab = current_tab + 1
+        previous_tab = current_tab - 1
 
         for tab_dict in menu_tabs:
             if previous_tab in tab_dict:
