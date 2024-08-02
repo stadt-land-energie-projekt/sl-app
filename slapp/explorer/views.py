@@ -13,14 +13,20 @@ from django.http import HttpResponse
 if TYPE_CHECKING:
     from django.http.request import HttpRequest
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.templatetags.l10n import localize
+from django.urls import reverse
 from django.views.generic import TemplateView
 from django_mapengine import views
 
 from .models import Municipality
 
 MAX_MUNICIPALITY_COUNT = 3
+
+
+def start_page(request: HttpRequest) -> HttpResponse:
+    """Render the start / home page."""
+    return render(request, "pages/home.html")
 
 
 class MapGLView(TemplateView, views.MapEngineMixin):
@@ -245,16 +251,21 @@ def robustness(request: HttpRequest) -> HttpResponse:
     return render(request, "pages/results_robustness.html", {"municipalities": municipalities})
 
 
+def added_value(request: HttpRequest) -> HttpResponse:
+    """Render page for information about 'Wertschöpfung'."""
+    return render(request, "pages/added_value.html")
+
+
 menu_tabs = [
-    {1: "home"},
-    {2: "map"},
-    {3: "details"},
-    {4: "esm_mode"},
-    {5: "parameters_variation"},
-    {6: "results_variation"},
-    {7: "parameters_robustness"},
-    {8: "results_robustness"},
-    {9: "added_value"},
+    {1: "explorer:home"},
+    {2: "explorer:map"},
+    {3: "explorer:details"},
+    {4: "explorer:esm_mode"},
+    {5: "explorer:parameters_variation"},
+    {6: "explorer:results_variation"},
+    {7: "explorer:parameters_robustness"},
+    {8: "explorer:results_robustness"},
+    {9: "explorer:added_value"},
 ]
 
 
@@ -267,9 +278,9 @@ def next_menu_tab(request: HttpRequest) -> HttpResponse:
 
         for tab_dict in menu_tabs:
             if next_tab in tab_dict:
-                template_name = tab_dict[next_tab]
+                view_name = tab_dict[next_tab]
 
-        return render(request, f"pages/{template_name}.html")
+        return redirect(reverse(view_name))
 
     messages.add_message(request, messages.WARNING, "Es geht nicht weiter.")
     template_name = "robustness"
@@ -285,9 +296,9 @@ def previous_menu_tab(request: HttpRequest) -> HttpResponse:
 
         for tab_dict in menu_tabs:
             if previous_tab in tab_dict:
-                template_name = tab_dict[previous_tab]
+                view_name = tab_dict[previous_tab]
 
-        return render(request, f"pages/{template_name}.html")
+        return redirect(reverse(view_name))
 
     messages.add_message(request, messages.WARNING, "Es geht nicht zurück.")
     template_name = "home"

@@ -6,6 +6,7 @@ from slapp.explorer import views
 
 app_name = "explorer"
 urlpatterns = [
+    path("start", views.start_page, name="home"),
     path("", views.MapGLView.as_view(), name="map"),
     path("details/", views.details_list, name="details"),
     path("details/csv/", views.details_csv, name="details-csv"),
@@ -14,6 +15,7 @@ urlpatterns = [
     path("results_variation/", views.optimization_results, name="results_varation"),
     path("results_robustness/", views.robustness, name="results_robustness"),
     path("parameters_robustness/", views.robustness_parameters, name="parameters_robustness"),
+    path("added_value/", views.added_value, name="added_value"),
 ]
 
 htmx_urlpatterns = [
