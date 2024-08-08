@@ -4,10 +4,33 @@
 
 {% block content %}
   <div class="container">
-    <input id="tab_name" type="hidden" name="tab_id" value="4" />
+    <input id="tab_name"
+           type="hidden"
+           name="tab_id"
+           value="{{ request.session.current_tab }}" />
     <h1 mt-3>Energiesystemoptimierung</h1>
     <div class="container text-center">
       <h3>Welche Art von Szenario möchten Sie rechnen?</h3>
+    </div>
+    <div class="row">
+      <div class="col">
+        <button hx-post="{% url 'explorer:esm_choice' tab_id=4 %}"
+                hx-target="#tab_name"
+                hx-swap="innerHTML"
+                id="menu_next_btn"
+                class="btn btn-primary">
+          <span>Variation</span>
+        </button>
+      </div>
+      <div class="col">
+        <button hx-post="{% url 'explorer:esm_choice' tab_id=8 %}"
+                hx-target="#tab_name"
+                hx-swap="outerHTML"
+                id="menu_next_btn"
+                class="btn btn-primary">
+          <span>Robust</span>
+        </button>
+      </div>
     </div>
   </div>
 {% endblock content %}

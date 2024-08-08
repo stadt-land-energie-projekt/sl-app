@@ -256,6 +256,7 @@ def added_value(request: HttpRequest) -> HttpResponse:
     return render(request, "pages/added_value.html")
 
 
+# sets the order of the view flow
 menu_tabs = [
     {1: "explorer:home"},
     {2: "explorer:map"},
@@ -263,43 +264,59 @@ menu_tabs = [
     {4: "explorer:esm_mode"},
     {5: "explorer:parameters_variation"},
     {6: "explorer:results_variation"},
-    {7: "explorer:parameters_robustness"},
-    {8: "explorer:results_robustness"},
-    {9: "explorer:added_value"},
+    {7: "explorer:added_value"},
+    {8: "--- placeholder ---"},
+    {9: "explorer:parameters_robustness"},
+    {10: "explorer:results_robustness"},
+    {11: "explorer:added_value"},
 ]
 
 
 def next_menu_tab(request: HttpRequest) -> HttpResponse:
     """Render the next page after click in current page."""
     current_tab = int(request.POST.get("tab_id"))
-    variation_end = 6
-    if current_tab != len(menu_tabs):
-        next_tab = 9 if current_tab == variation_end else current_tab + 1
+    variation_end = 7
+    if current_tab < len(menu_tabs) and current_tab != variation_end:
+        next_tab = current_tab + 1
 
         for tab_dict in menu_tabs:
             if next_tab in tab_dict:
                 view_name = tab_dict[next_tab]
 
+        request.session["current_tab"] = next_tab
         return redirect(reverse(view_name))
 
     messages.add_message(request, messages.WARNING, "Es geht nicht weiter.")
-    template_name = "robustness"
+    template_name = "added_value"
     return render(request, f"pages/{template_name}.html")
 
 
 def previous_menu_tab(request: HttpRequest) -> HttpResponse:
     """Render the previous page after click in current page."""
     current_tab = int(request.POST.get("tab_id"))
-    robust_start = 7
-    if current_tab != 1:
+    robust_start = 9
+    if current_tab > 1:
         previous_tab = 4 if current_tab == robust_start else current_tab - 1
 
         for tab_dict in menu_tabs:
             if previous_tab in tab_dict:
                 view_name = tab_dict[previous_tab]
 
+        request.session["current_tab"] = previous_tab
         return redirect(reverse(view_name))
 
     messages.add_message(request, messages.WARNING, "Es geht nicht zurück.")
     template_name = "home"
     return render(request, f"pages/{template_name}.html")
+
+
+def esm_choice(tab_id: int) -> HttpResponse:
+    """Get wich ESM mode was chosen and changes the tab_id accordingly."""
+    variation_start_id = 4
+    robust_start_id = 8
+    if tab_id == variation_start_id:
+        response = "<input id='tab_name' type='hidden' name='tab_id' value='4' />"
+    if tab_id == robust_start_id:
+        response = "<input id='tab_name' type='hidden' name='tab_id' value='8' />"
+
+    return HttpResponse(response, content_type="text/html")
