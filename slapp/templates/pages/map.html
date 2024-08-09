@@ -15,6 +15,17 @@
         <p class="text-center">
           Auf dieser Karte wird der Ist-Zustand der Energieerzeugung und des Verbrauchs auf Gemeindeebene dargestellt.
         </p>
+        <select id="region_select"
+                name="region_select"
+                class="form-select"
+                aria-label="Select Region"
+                hx-get="{% url 'explorer:load_municipalities' %}"
+                hx-target="#municipality_select"
+                hx-trigger="change">
+          <option value="">Wählen Sie eine Region</option>
+          <option value="1">Region 1</option>
+          <option value="2">Region 2</option>
+        </select>
         <p>
           <strong>Darstellung</strong>
         </p>
@@ -35,15 +46,14 @@
         <p>
           Außerdem können Sie eine <strong>kostenminimierende Energiesystemoptimierung</strong> für eine oder mehrere Gemeinden durchrechnen lassen.
         </p>
-        <div class="wizard__next">
-          <button hx-post="{% url 'explorer:details' %}"
-                  hx-target="body"
-                  type="submit"
-                  id="menu_next_btn"
-                  class="btn btn-primary">
-            <span>Weiter</span>
-          </button>
-        </div>
+        <p>Fügen Sie Gemeinden hinzu, die in den nächsten Schritten analysiert werden</p>
+        <select id="municipality_select"
+                name="municipality_select"
+                class="form-select"
+                aria-label="Default select example"
+                multiple>
+          <option value="">Wählen Sie eine Gemeinde</option>
+        </select>
         <div class="col-9">
           <div id="legend" class="legend"></div>
           <div id="map"></div>

@@ -19,7 +19,7 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 from django_mapengine import views
 
-from .models import Municipality
+from .models import Municipality, Region
 
 MAX_MUNICIPALITY_COUNT = 3
 
@@ -38,6 +38,11 @@ class MapGLView(TemplateView, views.MapEngineMixin):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         """Adapt mapengine context."""
         context = super().get_context_data(**kwargs)
+        regions = Region.objects.all()
+        muns = Municipality.objects.all()
+
+        context["regions"] = regions
+        context["municipalities"] = muns
         context["mapengine_store_cold_init"]["fly_to_clicked_feature"] = False
         return context
 
@@ -84,6 +89,20 @@ def details_list(request: HttpRequest) -> HttpResponse:
         municipalities = None
 
     return render(request, "pages/details.html", {"municipalities": municipalities})
+
+
+def load_municipalities(request: HttpRequest) -> HttpResponse:
+    """Return list of municipalities for chosen region."""
+    region_id = request.GET.get("region_select")
+    if region_id:
+        region = Region.objects.get(id=region_id)
+        muns = Municipality.objects.filter(region=region)
+
+        content = "".join([f'<option value="{mun.id}">{mun.name}</option>' for mun in muns])
+
+    else:
+        content = "<option value=>Wählen Sie eine Gemeinde</option>"
+    return HttpResponse(content, content_type="text/html")
 
 
 def search_municipality(request: HttpRequest) -> HttpResponse:
