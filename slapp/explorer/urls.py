@@ -18,6 +18,12 @@ urlpatterns = [
     path("added_value/", views.added_value, name="added_value"),
 ]
 
-htmx_urlpatterns = []
+htmx_urlpatterns = [
+    path("load-municipalities/", views.load_municipalities, name="load_municipalities"),
+    path("search-municipality/", views.search_municipality, name="search-municipality"),
+    path("wizard-next/", views.next_menu_tab, name="wizard-next-step"),
+    path("wizard-previous/", views.previous_menu_tab, name="wizard-previous-step"),
+    path("esm-choice/<int:tab_id>", views.esm_choice, name="esm_choice"),
+]
 
 urlpatterns += htmx_urlpatterns
