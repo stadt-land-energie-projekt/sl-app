@@ -2,54 +2,68 @@
 
 {% load static compress %}
 
-{% block sidebar_content %}
-  <h4 class="text-center">Karte</h4>
-  <p class="text-center">
-    Auf dieser Karte wird der Ist-Zustand der Energieerzeugung und des Verbrauchs auf Gemeindeebene dargestellt.
-  </p>
-  <select id="region_select"
-          name="region_select"
-          class="form-select"
-          aria-label="Select Region"
-          hx-get="{% url 'explorer:load_municipalities' %}"
-          hx-target="#municipality_select"
-          hx-trigger="change">
-    <option value="">Wählen Sie eine Region</option>
-    <option value="1">Region 1</option>
-    <option value="2">Region 2</option>
-  </select>
-  <p>
-    <strong>Darstellung</strong>
-  </p>
-  <select class="form-select" aria-label="Default select example">
-    <option selected value="1">installierte Leistung EE</option>
-    <option value="2">installierte Leistung Windkraft</option>
-    <option value="3">installierte Leistung PV</option>
-  </select>
-  <p class="mt-4">im Verhältnis zu</p>
-  <select class="form-select" aria-label="Default select example">
-    <option value="1" selected>...</option>
-    <option value="2">Bevölkerung</option>
-    <option value="3">Fläche</option>
-  </select>
-  <p class="mt-5">
-    Um <strong>alle Details</strong> von einer oder mehrerer Gemeinden auf einen Blick zu sehen, gehen Sie zur Detailansicht.
-  </p>
-  <p>
-    Außerdem können Sie eine <strong>kostenminimierende Energiesystemoptimierung</strong> für eine oder mehrere Gemeinden durchrechnen lassen.
-  </p>
-  <p>Fügen Sie Gemeinden hinzu, die in den nächsten Schritten analysiert werden</p>
-  <select id="municipality_select"
-          name="municipality_select"
-          class="form-select"
-          aria-label="Default select example"
-          multiple>
-    <option value="">Wählen Sie eine Gemeinde</option>
-  </select>
-{% endblock sidebar_content %}
 {% block content %}
-  <div id="legend" class="legend"></div>
-  <div id="map"></div>
+  <div class="container-fluid h-100">
+    <input id="tab_name"
+           type="hidden"
+           name="tab_id"
+           value="{{ request.session.current_tab }}" />
+    <div class="row h-100">
+      <div class="col-3 sidebar pt-3 border-end border-2">
+        <!-- Add your content here -->
+        <h4 class="text-center">Karte</h4>
+        <p class="text-center">
+          Auf dieser Karte wird der Ist-Zustand der Energieerzeugung und des Verbrauchs auf Gemeindeebene dargestellt.
+        </p>
+        <select id="region_select"
+                name="region_select"
+                class="form-select"
+                aria-label="Select Region"
+                hx-get="{% url 'explorer:load_municipalities' %}"
+                hx-target="#municipality_select"
+                hx-trigger="change">
+          <option value="">Wählen Sie eine Region</option>
+          <option value="1">Region 1</option>
+          <option value="2">Region 2</option>
+        </select>
+        <p>
+          <strong>Darstellung</strong>
+        </p>
+        <select class="form-select" aria-label="Default select example">
+          <option selected value="1">installierte Leistung EE</option>
+          <option value="2">installierte Leistung Windkraft</option>
+          <option value="3">installierte Leistung PV</option>
+        </select>
+        <p class="mt-4">im Verhältnis zu</p>
+        <select class="form-select" aria-label="Default select example">
+          <option value="1" selected>...</option>
+          <option value="2">Bevölkerung</option>
+          <option value="3">Fläche</option>
+        </select>
+        <p class="mt-5">
+          Um <strong>alle Details</strong> von einer oder mehrerer Gemeinden auf einen Blick zu sehen, gehen Sie zur Detailansicht.
+        </p>
+        <p>
+          Außerdem können Sie eine <strong>kostenminimierende Energiesystemoptimierung</strong> für eine oder mehrere Gemeinden durchrechnen lassen.
+        </p>
+        <p>Fügen Sie Gemeinden hinzu, die in den nächsten Schritten analysiert werden</p>
+        <select id="municipality_select"
+                name="municipality_select"
+                class="form-select"
+                aria-label="Default select example"
+                hx-post="{% url 'explorer:muns_to_banner' %}"
+                hx-target="#selected_municipalities_banner"
+                hx-trigger="change"
+                multiple>
+          <option value="">Wählen Sie eine Gemeinde</option>
+        </select>
+        <div class="col-9">
+          <div id="legend" class="legend"></div>
+          <div id="map"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock content %}
 {% block javascript %}
   {{ block.super }}
