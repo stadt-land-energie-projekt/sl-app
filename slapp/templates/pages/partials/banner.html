@@ -2,7 +2,7 @@
 {% for municipality in municipalities %}
   <div class="col">
     <span class="badge badge-secondary">{{ municipality.name }}</span>
-    <input hidden name="region" value="{{ municipality.id }}" />
+    <input hidden name="selected_mun" value="{{ municipality.id }}" />
   </div>
 {% empty %}
   <p>Keine Region ausgewählt.</p>

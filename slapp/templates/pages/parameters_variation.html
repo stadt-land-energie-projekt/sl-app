@@ -128,33 +128,11 @@
             </div>
           </div>
         {% endfor %}
-        <div class="col-3">
-          <div class="rounded-0text-start">
-            <div class="h-55px table-cell fw-bold bg-secondary text-white">Einordnung</div>
-            <div class="h-55px table-cell">Das sind 5 WEA</div>
-            <div class="h-55px table-cell">placeholder</div>
-            <div class="h-270px table-cell">placeholder</div>
-            <div class="h-270px table-cell">placeholder</div>
-            <div class="h-155px table-cell">placeholder</div>
-            <div class="h-155px table-cell">placeholder</div>
-            <div class="h-155px table-cell">placeholder</div>
-          </div>
-        </div>
-        <div class="col-3">
-          <div class="rounded-0text-start">
-            <div class="h-55px table-cell fw-bold bg-secondary text-white">Mehr Hintergrundinfos</div>
-            <div class="h-55px table-cell">Das Potenzial ergibt sich aus ...</div>
-            <div class="h-55px table-cell">placeholder</div>
-            <div class="h-270px table-cell">placeholder</div>
-            <div class="h-270px table-cell">placeholder</div>
-            <div class="h-155px table-cell">placeholder</div>
-            <div class="h-155px table-cell">placeholder</div>
-            <div class="h-155px table-cell">placeholder</div>
-          </div>
-        </div>
       </div>
       <br />
       <i>Je nach Anzahl der Gemeinden dauert eine Modellierung & Optimierung mehrere Minuten.</i>
+    {% else %}
+      <div class="mt-3">Fügen Sie zunächst Gemeinden für die Optimierung hinzu.</div>
     {% endif %}
   </div>
   <script>
