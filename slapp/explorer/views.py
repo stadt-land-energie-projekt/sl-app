@@ -26,7 +26,9 @@ MAX_MUNICIPALITY_COUNT = 3
 
 def start_page(request: HttpRequest) -> HttpResponse:
     """Render the start / home page."""
-    return render(request, "pages/home.html")
+    ids = request.session.get("municipality_ids", [])
+    muns = Municipality.objects.filter(id__in=ids) if ids else None
+    return render(request, "pages/home.html", {"municipalities": muns})
 
 
 class MapGLView(TemplateView, views.MapEngineMixin):
@@ -39,6 +41,11 @@ class MapGLView(TemplateView, views.MapEngineMixin):
         """Adapt mapengine context."""
         context = super().get_context_data(**kwargs)
         regions = Region.objects.all()
+
+        ids = self.request.session.get("municipality_ids", [])
+        if ids:
+            muns = Municipality.objects.filter(id__in=ids)
+            context["municipalities"] = muns
 
         context["regions"] = regions
         context["mapengine_store_cold_init"]["fly_to_clicked_feature"] = False
@@ -77,7 +84,7 @@ def municipalities_details(ids: list[int]) -> list[Municipality]:
 
 def details_list(request: HttpRequest) -> HttpResponse:
     """Render details page for given municipality IDs."""
-    ids = request.GET.getlist("id")
+    ids = request.session.get("municipality_ids", [])
     if ids:
         if len(ids) > MAX_MUNICIPALITY_COUNT:
             ids = ids[:MAX_MUNICIPALITY_COUNT]
@@ -105,6 +112,10 @@ def load_municipalities(request: HttpRequest) -> HttpResponse:
 def muns_to_banner(request: HttpRequest) -> HttpResponse:
     """Return chosen municipalities for banner."""
     mun_ids = request.POST.getlist("municipality_select")
+
+    # ids for use in other views / templates
+    request.session["municipality_ids"] = mun_ids
+
     muns = Municipality.objects.filter(id__in=mun_ids)
     return render(
         request,
@@ -133,7 +144,7 @@ def search_municipality(request: HttpRequest) -> HttpResponse:
 
 def details_csv(request: HttpRequest) -> HttpResponse:
     """Return details as CSV for given municipalities."""
-    ids = request.GET.getlist("id")
+    ids = request.session.get("municipality_ids", [])
     municipalities = municipalities_details(ids) if ids else None
 
     response = HttpResponse(
@@ -159,12 +170,14 @@ def details_csv(request: HttpRequest) -> HttpResponse:
 
 def choose_esm_mode(request: HttpRequest) -> HttpResponse:
     """Render page for choosing esm mode (robust or variation)."""
-    return render(request, "pages/esm_mode.html")
+    ids = request.session.get("municipality_ids", [])
+    muns = Municipality.objects.filter(id__in=ids) if ids else None
+    return render(request, "pages/esm_mode.html", {"municipalities": muns})
 
 
 def optimization_parameters(request: HttpRequest) -> HttpResponse:
     """Render parameters page for given municipality IDs."""
-    ids = request.GET.getlist("id")
+    ids = request.session.get("municipality_ids", [])
     if ids:
         if len(ids) > MAX_MUNICIPALITY_COUNT:
             ids = ids[:MAX_MUNICIPALITY_COUNT]
@@ -178,7 +191,7 @@ def optimization_parameters(request: HttpRequest) -> HttpResponse:
 
 def optimization_results(request: HttpRequest) -> HttpResponse:
     """Return optimiziation results per municipality."""
-    ids = request.GET.getlist("id")
+    ids = request.session.get("municipality_ids", [])
 
     if ids:
         if len(ids) > MAX_MUNICIPALITY_COUNT:
@@ -217,12 +230,14 @@ def optimization_results(request: HttpRequest) -> HttpResponse:
 
 def robustness_parameters(request: HttpRequest) -> HttpResponse:
     """Render page for robustness parameters."""
-    return render(request, "pages/parameters_robustness.html")
+    ids = request.session.get("municipality_ids", [])
+    muns = Municipality.objects.filter(id__in=ids) if ids else None
+    return render(request, "pages/parameters_robustness.html", {"municipalities": muns})
 
 
 def robustness(request: HttpRequest) -> HttpResponse:
     """Render robustness page."""
-    ids = request.GET.getlist("id")
+    ids = request.session.get("municipality_ids", [])
 
     if ids:
         if len(ids) > MAX_MUNICIPALITY_COUNT:
@@ -280,7 +295,9 @@ def robustness(request: HttpRequest) -> HttpResponse:
 
 def added_value(request: HttpRequest) -> HttpResponse:
     """Render page for information about 'Wertschöpfung'."""
-    return render(request, "pages/added_value.html")
+    ids = request.session.get("municipality_ids", [])
+    muns = Municipality.objects.filter(id__in=ids) if ids else None
+    return render(request, "pages/added_value.html", {"municipalities": muns})
 
 
 # sets the order of the view flow
@@ -337,7 +354,7 @@ def previous_menu_tab(request: HttpRequest) -> HttpResponse:
     return render(request, f"pages/{template_name}.html")
 
 
-def esm_choice(tab_id: int) -> HttpResponse:
+def esm_choice(request: HttpRequest, tab_id: int) -> HttpResponse:  # noqa: ARG001
     """Get wich ESM mode was chosen and changes the tab_id accordingly."""
     variation_start_id = 4
     robust_start_id = 8
