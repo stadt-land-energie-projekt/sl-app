@@ -20,6 +20,7 @@ urlpatterns = [
 
 htmx_urlpatterns = [
     path("load-municipalities/", views.load_municipalities, name="load_municipalities"),
+    path("muns-to-banner/", views.muns_to_banner, name="muns_to_banner"),
     path("search-municipality/", views.search_municipality, name="search-municipality"),
     path("wizard-next/", views.next_menu_tab, name="wizard-next-step"),
     path("wizard-previous/", views.previous_menu_tab, name="wizard-previous-step"),

@@ -39,10 +39,8 @@ class MapGLView(TemplateView, views.MapEngineMixin):
         """Adapt mapengine context."""
         context = super().get_context_data(**kwargs)
         regions = Region.objects.all()
-        muns = Municipality.objects.all()
 
         context["regions"] = regions
-        context["municipalities"] = muns
         context["mapengine_store_cold_init"]["fly_to_clicked_feature"] = False
         return context
 
@@ -97,12 +95,22 @@ def load_municipalities(request: HttpRequest) -> HttpResponse:
     if region_id:
         region = Region.objects.get(id=region_id)
         muns = Municipality.objects.filter(region=region)
-
         content = "".join([f'<option value="{mun.id}">{mun.name}</option>' for mun in muns])
 
     else:
         content = "<option value=>Wählen Sie eine Gemeinde</option>"
     return HttpResponse(content, content_type="text/html")
+
+
+def muns_to_banner(request: HttpRequest) -> HttpResponse:
+    """Return chosen municipalities for banner."""
+    mun_ids = request.POST.getlist("municipality_select")
+    muns = Municipality.objects.filter(id__in=mun_ids)
+    return render(
+        request,
+        "pages/partials/banner.html",
+        {"municipalities": muns},
+    )
 
 
 def search_municipality(request: HttpRequest) -> HttpResponse:

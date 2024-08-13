@@ -51,6 +51,9 @@
                 name="municipality_select"
                 class="form-select"
                 aria-label="Default select example"
+                hx-post="{% url 'explorer:muns_to_banner' %}"
+                hx-target="#selected_municipalities_banner"
+                hx-trigger="change"
                 multiple>
           <option value="">Wählen Sie eine Gemeinde</option>
         </select>
