@@ -1,0 +1,80 @@
+/////////////////////////////////////// SWITCHES ///////////////////////////////////////
+.form-check.form-switch .form-check-input {
+  margin-left: 0;
+
+  &:checked {
+    background-color: $blue;
+    border-color: $blue;
+  }
+
+  &:focus {
+    border-color: $blue;
+  }
+
+  &:not(:checked):focus {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='rgba%28250, 174, 29, 0.25%29'/></svg>");
+  }
+}
+
+.c-switch {
+  .form-check-input {
+    clear: left;
+  }
+
+  .form-switch.form-switch {
+    @extend .mb-1;
+    @extend .ps-0;
+  }
+
+  .form-switch.form-switch .form-check-input {
+    @extend .rounded-pill;
+    height: 1rem;
+    width: calc(1rem + 0.75rem);
+  }
+}
+
+/////////////////////////////////////// SLIDERS ///////////////////////////////////////
+.irs {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.irs.irs--flat {
+  .irs-line {
+    background-color: $gray-200;
+  }
+
+  .irs-from,
+  .irs-to,
+  .irs-bar,
+  .irs-single {
+    background-color: $blue;
+  }
+
+  .irs-bar,
+  .irs-line {
+    height: 8px;
+  }
+
+  .irs-from:before,
+  .irs-to:before,
+  .irs-single:before {
+    border-top-color: $blue;
+  }
+
+  .irs-handle {
+    height: 14px;
+
+    &>i:first-child,
+    &.state_hover>i:first-child,
+    &:hover>i:first-child {
+      background-color: $blue;
+    }
+  }
+}
+
+/////////////////////////////////////// INFO ICON ///////////////////////////////////////
+img.i-icon {
+  margin-left: $info-icon-margin-left;
+  width: $info-icon-size;
+  height: $info-icon-size;
+}
