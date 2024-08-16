@@ -32,5 +32,19 @@
         </button>
       </div>
     </div>
+    <div class="row">
+      <div class="col">
+        <div class="mt-4">
+          <a class="btn btn-primary"
+             href="{% url 'explorer:parameters_variation' %}"
+             role="button">Variation (hardcoded)</a>
+        </div>
+        <div class="mt-4">
+          <a class="btn btn-primary"
+             href="{% url 'explorer:parameters_robustness' %}"
+             role="button">Robust (hardcoded)</a>
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock content %}

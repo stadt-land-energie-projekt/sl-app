@@ -113,15 +113,9 @@
       </div>
     </div>
     <div class="mb-3 mt-3">
-      <div class="wizard__next">
-        <button hx-post="{% url 'explorer:results_robustness' %}"
-                hx-target="body"
-                type="submit"
-                id="menu_next_btn"
-                class="btn btn-primary">
-          <span>Zur Robustheitsberechnung</span>
-        </button>
-      </div>
+      <a class="btn btn-primary"
+         href="{% url 'explorer:added_value' %}"
+         role="button">Weiter</a>
     </div>
   </div>
 {% endblock content %}
