@@ -14,22 +14,18 @@
     </div>
     <div class="row">
       <div class="col">
-        <button hx-post="{% url 'explorer:esm_choice' tab_id=4 %}"
-                hx-target="#tab_name"
-                hx-swap="innerHTML"
-                id="menu_next_btn"
-                class="btn btn-primary">
-          <span>Variation</span>
-        </button>
+        <div class="mt-4">
+          <a class="btn btn-primary"
+             href="{% url 'explorer:esm_mode' robustness=0 %}"
+             role="button">Variation</a>
+        </div>
       </div>
       <div class="col">
-        <button hx-post="{% url 'explorer:esm_choice' tab_id=8 %}"
-                hx-target="#tab_name"
-                hx-swap="outerHTML"
-                id="menu_next_btn"
-                class="btn btn-primary">
-          <span>Robust</span>
-        </button>
+        <div class="mt-4">
+          <a class="btn btn-primary"
+             href="{% url 'explorer:esm_mode' robustness=1 %}"
+             role="button">Robust</a>
+        </div>
       </div>
     </div>
     <div class="row">
