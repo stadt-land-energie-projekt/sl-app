@@ -13,7 +13,7 @@ from django.http import HttpResponse
 if TYPE_CHECKING:
     from django.http.request import HttpRequest
 
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.templatetags.l10n import localize
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
@@ -345,78 +345,6 @@ def added_value(request: HttpRequest) -> HttpResponse:
     context = {
         "next_url": next_url,
         "prev_url": prev_url,
-        "active_tab": active_tab,
-    }
-    return render(request, "pages/added_value.html", context)
-
-
-# sets the order of the view flow
-menu_tabs = [
-    {1: "explorer:home"},
-    {2: "explorer:map"},
-    {3: "explorer:details"},
-    {4: "explorer:esm_mode"},
-    {5: "explorer:parameters_variation"},
-    {6: "explorer:results_variation"},
-    {7: "explorer:added_value"},
-    {8: "--- placeholder ---"},
-    {9: "explorer:parameters_robustness"},
-    {10: "explorer:results_robustness"},
-    {11: "explorer:added_value"},
-]
-
-
-def next_menu_tab(request: HttpRequest) -> HttpResponse:
-    """Render the next page after click in current page."""
-    current_tab = int(request.POST.get("tab_id"))
-    variation_end = 7
-    if current_tab < len(menu_tabs) and current_tab != variation_end:
-        next_tab = current_tab + 1
-
-        for tab_dict in menu_tabs:
-            if next_tab in tab_dict:
-                view_name = tab_dict[next_tab]
-
-        request.session["current_tab"] = next_tab
-        return redirect(reverse(view_name))
-
-    messages.add_message(request, messages.WARNING, "Es geht nicht weiter.")
-    template_name = "added_value"
-    return render(request, f"pages/{template_name}.html")
-
-
-def previous_menu_tab(request: HttpRequest) -> HttpResponse:
-    """Render the previous page after click in current page."""
-    current_tab = int(request.POST.get("tab_id"))
-    robust_start = 9
-    if current_tab > 1:
-        previous_tab = 4 if current_tab == robust_start else current_tab - 1
-
-        for tab_dict in menu_tabs:
-            if previous_tab in tab_dict:
-                view_name = tab_dict[previous_tab]
-
-        request.session["current_tab"] = previous_tab
-        return redirect(reverse(view_name))
-
-    messages.add_message(request, messages.WARNING, "Es geht nicht zurück.")
-    template_name = "home"
-    return render(request, f"pages/{template_name}.html")
-
-
-def esm_choice(request: HttpRequest, tab_id: int) -> HttpResponse:
-    """Get wich ESM mode was chosen and changes the tab_id accordingly."""
-    variation_id = 4
-
-    next_url = (
-        reverse("explorer:parameters_variation")
-        if tab_id == variation_id
-        else reverse("explorer:parameters_robustness")
-    )
-    active_tab = "step_4_mode"
-
-    context = {
-        "next_url": next_url,
         "active_tab": active_tab,
     }
     return render(request, "pages/added_value.html", context)
