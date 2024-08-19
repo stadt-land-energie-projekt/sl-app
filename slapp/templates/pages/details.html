@@ -101,7 +101,7 @@
       <a href="{% url 'explorer:details-csv' %}?{% for municipality_ids in municipalities %}id={{ municipality_ids.id }}&{% endfor %}">Als CSV herunterladen</a>
       <div class="mt-4">
         <a class="btn btn-primary"
-           href="{% url 'explorer:parameters' %}?{% for municipality_ids in municipalities %}id={{ municipality_ids.id }}&{% endfor %}"
+           href="{% url 'explorer:esm_mode' robustness=0 %}"
            role="button">Mit Energiesystemoptimierung für diese
         Gemeinden beginnen</a>
       </div>

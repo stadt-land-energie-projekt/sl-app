@@ -8,54 +8,44 @@
     <div class="container text-center border-top border-bottom mt-4 mb-4 pt-2 pb-2">
       <div class="row align-items-start">
         <div class="col">1. Parameter</div>
-        <div class="col">2. Optimierungsergebnis</div>
         <div class="col">
-          <strong>3. Robustheit</strong>
+          <strong>2. Optimierungsergebnis</strong>
         </div>
+        <div class="col">3. Robustheit</div>
       </div>
     </div>
     <div class="row">
-      <h2>Robustheit berechnen</h2>
+      <h2>Optimierungsergebnis</h2>
     </div>
-    <p>
-      Bei einer Robustheitsoptimierung wird die Systemoptimierung sehr häufig mit leicht modifizierten Parametern (max.
-      +/- 20%) berechnet. Dadurch kann das Ergebnis festgestellt werden, dass am wenigsten anfällig für Änderungen der
-      Ausgangslage ist.
-      <br />
-      Da die Robustheitsoptimierung sehr rechenaufwändig ist und einige Zeit brauchen, müssen Sie sich zunächst
-      registrieren.
-      Sobald das Ergebnis verfügbar ist, kontaktieren wir Sie per E-Mail und Sie erhalten einen Link zum Ergebnis.
-      <br />
-      Es sind maximal 3 Robustheitsoptimierungen pro Tag und Account möglich.
-    </p>
     <div class="row mt-4 g-0" id="municipality-results">
-      <div class="col-2"></div>
+      <div class="col-3"></div>
       {% for municipality in municipalities %}
-        <div class="col-3">
+        <div class="col-2">
           <ul class="list-group rounded-0">
             <li class="list-group-item text-center fw-bold bg-secondary text-white">{{ municipality.name }}</li>
           </ul>
         </div>
       {% endfor %}
+      <div class="col-1">&nbsp;</div>
     </div>
     <div class="row mt-0 g-0" id="municipality-results">
-      <div class="col-2">
-        <ul class="list-group rounded-0 text-truncate">
-          <li class="list-group-item fw-bold bg-secondary text-white">&nbsp;</li>
-          <li class="list-group-item fw-bold text-truncate">erneuerbare Stromerzeugung</li>
-          <li class="list-group-item text-truncate">Freiflächen-PV</li>
-          <li class="list-group-item text-truncate">Dachflächen-PV</li>
-          <li class="list-group-item text-truncate">Windkraft</li>
-          <li class="list-group-item text-truncate">Biomasse</li>
-          <li class="list-group-item text-truncate">Wasserkraft</li>
-          <li class="list-group-item fw-bold text-truncate">Stromspeicher</li>
-          <li class="list-group-item text-truncate">Speicherkapazität</li>
-          <li class="list-group-item fw-bold text-truncate">Wärmegewinnung (KWK)</li>
-          <li class="list-group-item text-truncate">thermische Leistung</li>
-          <li class="list-group-item text-truncate">elektrische Leistung</li>
-          <li class="list-group-item fw-bold text-truncate">Energiebedarf (errechnet)</li>
-          <li class="list-group-item text-truncate">Strombedarf</li>
-          <li class="list-group-item text-truncate">Wärmebedarf</li>
+      <div class="col-3">
+        <ul class="list-group rounded-0">
+          <li class="list-group-item fw-bold bg-secondary text-white text-truncate">&nbsp;</li>
+          <li class="list-group-item fw-bold">erneuerbare Stromerzeugung</li>
+          <li class="list-group-item">Freiflächen-PV</li>
+          <li class="list-group-item">Dachflächen-PV</li>
+          <li class="list-group-item">Windkraft</li>
+          <li class="list-group-item">Biomasse</li>
+          <li class="list-group-item">Wasserkraft</li>
+          <li class="list-group-item fw-bold">Stromspeicher</li>
+          <li class="list-group-item">Speicherkapazität</li>
+          <li class="list-group-item fw-bold">Wärmegewinnung (KWK)</li>
+          <li class="list-group-item">thermische Leistung</li>
+          <li class="list-group-item">elektrische Leistung</li>
+          <li class="list-group-item fw-bold">Energiebedarf (errechnet)</li>
+          <li class="list-group-item">Strombedarf</li>
+          <li class="list-group-item">Wärmebedarf</li>
         </ul>
       </div>
       {% for municipality in municipalities %}
@@ -97,25 +87,6 @@
             <li class="list-group-item fw-bold">&nbsp</li>
           </ul>
         </div>
-        <div class="col-1 text-truncate">
-          <ul class="list-group rounded-0">
-            <li class="list-group-item text-end fw-bold bg-secondary text-white">robust</li>
-            <li class="list-group-item text-end fw-bold">{{ municipality.total_net_robust|intcomma }}</li>
-            <li class="list-group-item text-end">{{ municipality.pvground_net_robust|intcomma }}</li>
-            <li class="list-group-item text-end">{{ municipality.pvroof_net_robust|intcomma }}</li>
-            <li class="list-group-item text-end">{{ municipality.wind_net_robust|intcomma }}</li>
-            <li class="list-group-item text-end">{{ municipality.biomass_net_robust|intcomma }}</li>
-            <li class="list-group-item text-end">{{ municipality.hydro_net_robust|intcomma }}</li>
-            <li class="list-group-item fw-bold">&nbsp</li>
-            <li class="list-group-item text-end">{{ municipality.storage_net_robust|intcomma }}</li>
-            <li class="list-group-item fw-bold">&nbsp</li>
-            <li class="list-group-item text-end">{{ municipality.kwk_th_net_robust|intcomma }}</li>
-            <li class="list-group-item text-end">{{ municipality.kwk_el_net_robust|intcomma }}</li>
-            <li class="list-group-item fw-bold">&nbsp</li>
-            <li class="list-group-item fw-bold">&nbsp</li>
-            <li class="list-group-item fw-bold">&nbsp</li>
-          </ul>
-        </div>
       {% endfor %}
       <div class="col-1">
         <ul class="list-group rounded-0">
@@ -136,6 +107,11 @@
           <li class="list-group-item">kWh</li>
         </ul>
       </div>
+    </div>
+    <div class="mb-3 mt-3">
+      <a class="btn btn-primary"
+         href="{% url 'explorer:added_value' %}"
+         role="button">Weiter</a>
     </div>
   </div>
 {% endblock content %}

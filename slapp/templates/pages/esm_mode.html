@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block content %}
+  <div class="container">
+    <h1 mt-3>Energiesystemoptimierung</h1>
+    <div class="container text-center">
+      <h3>Welche Art von Szenario möchten Sie rechnen?</h3>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="mt-4">
+          <a class="btn btn-primary"
+             href="{% url 'explorer:esm_mode' robustness=0 %}"
+             role="button">Variation</a>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mt-4">
+          <a class="btn btn-primary"
+             href="{% url 'explorer:esm_mode' robustness=1 %}"
+             role="button">Robust</a>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="mt-4">
+          <a class="btn btn-primary"
+             href="{% url 'explorer:parameters_variation' %}"
+             role="button">Variation (hardcoded)</a>
+        </div>
+        <div class="mt-4">
+          <a class="btn btn-primary"
+             href="{% url 'explorer:parameters_robustness' %}"
+             role="button">Robust (hardcoded)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
