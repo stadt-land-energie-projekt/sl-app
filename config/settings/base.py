@@ -363,9 +363,6 @@ MAP_ENGINE_LAYERS_AT_STARTUP = [
     "municipality",
     "municipalityline",
     "municipalitylabel",
-    "wind",
-    "wind_cluster",
-    "wind_cluster_count",
 ]
 
 MAP_ENGINE_STYLES_FOLDER = "slapp/static/styles/"
