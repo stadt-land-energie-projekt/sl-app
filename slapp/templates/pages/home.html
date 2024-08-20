@@ -2,7 +2,6 @@
 
 {% block content %}
   <div class="container">
-    <input id="tab_name" type="hidden" name="tab_id" value="1" />
     <div class="p-5 mb-4 bg-light rounded-3 mt-5">
       <div class="container-fluid py-5">
         <h1 class="display-5">Stadt-Land-Energie Webapp</h1>
@@ -11,6 +10,9 @@
           <br />
           Die Webapp ist noch in einer sehr frühen Phase der Entwicklung und wird sich noch sehr verändern (visuell wie funktionell).
         </p>
+        <div class="mt-4">
+          <a class="btn btn-primary" href="{% url 'explorer:map' %}" role="button">Weiter</a>
+        </div>
       </div>
     </div>
   </div>

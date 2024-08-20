@@ -13,9 +13,9 @@ from django.http import HttpResponse
 if TYPE_CHECKING:
     from django.http.request import HttpRequest
 
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.templatetags.l10n import localize
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
 from django_mapengine import views
 
@@ -28,14 +28,31 @@ def start_page(request: HttpRequest) -> HttpResponse:
     """Render the start / home page."""
     ids = request.session.get("municipality_ids", [])
     muns = Municipality.objects.filter(id__in=ids) if ids else None
-    return render(request, "pages/home.html", {"municipalities": muns})
+    next_url = reverse("explorer:map")
+    prev_url = None
+    active_tab = "step_1_start"
+
+    context = {
+        "municipalities": muns,
+        "next_url": next_url,
+        "prev_url": prev_url,
+        "active_tab": active_tab,
+    }
+    return render(request, "pages/home.html", context)
 
 
 class MapGLView(TemplateView, views.MapEngineMixin):
     """Single view for the map."""
 
     template_name = "pages/map.html"
-    extra_context = {}
+    next_url = reverse_lazy("explorer:details")
+    prev_url = reverse_lazy("explorer:home")
+    active_tab = "step_2_today"
+    extra_context = {
+        "next_url": next_url,
+        "prev_url": prev_url,
+        "active_tab": active_tab,
+    }
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         """Adapt mapengine context."""
@@ -93,7 +110,18 @@ def details_list(request: HttpRequest) -> HttpResponse:
     else:
         municipalities = None
 
-    return render(request, "pages/details.html", {"municipalities": municipalities})
+    next_url = reverse("explorer:esm_mode", args=[0])
+    prev_url = reverse("explorer:map")
+    active_tab = "step_3_details"
+
+    context = {
+        "municipalities": municipalities,
+        "next_url": next_url,
+        "prev_url": prev_url,
+        "active_tab": active_tab,
+    }
+
+    return render(request, "pages/details.html", context)
 
 
 def load_municipalities(request: HttpRequest) -> HttpResponse:
@@ -168,11 +196,24 @@ def details_csv(request: HttpRequest) -> HttpResponse:
     return response
 
 
-def choose_esm_mode(request: HttpRequest) -> HttpResponse:
+def choose_esm_mode(request: HttpRequest, robustness: int) -> HttpResponse:
     """Render page for choosing esm mode (robust or variation)."""
     ids = request.session.get("municipality_ids", [])
     muns = Municipality.objects.filter(id__in=ids) if ids else None
-    return render(request, "pages/esm_mode.html", {"municipalities": muns})
+    next_url = reverse("explorer:parameters_variation")
+    prev_url = reverse("explorer:details")
+    active_tab = "step_4_mode"
+
+    if robustness == 1:
+        next_url = reverse("explorer:parameters_robustness")
+
+    context = {
+        "municipalities": muns,
+        "next_url": next_url,
+        "prev_url": prev_url,
+        "active_tab": active_tab,
+    }
+    return render(request, "pages/esm_mode.html", context)
 
 
 def optimization_parameters(request: HttpRequest) -> HttpResponse:
@@ -186,7 +227,17 @@ def optimization_parameters(request: HttpRequest) -> HttpResponse:
     else:
         municipalities = None
 
-    return render(request, "pages/parameters_variation.html", {"municipalities": municipalities})
+    next_url = reverse("explorer:results_variation")
+    prev_url = reverse("explorer:esm_mode", args=[0])
+    active_tab = "step_5_parameters"
+
+    context = {
+        "municipalities": municipalities,
+        "next_url": next_url,
+        "prev_url": prev_url,
+        "active_tab": active_tab,
+    }
+    return render(request, "pages/parameters_variation.html", context)
 
 
 def optimization_results(request: HttpRequest) -> HttpResponse:
@@ -225,18 +276,40 @@ def optimization_results(request: HttpRequest) -> HttpResponse:
         municipalities = None
         messages.add_message(request, messages.WARNING, "Keine Gemeinde(n) ausgewählt.")
 
-    return render(request, "pages/results_variation.html", {"municipalities": municipalities})
+    next_url = reverse("explorer:added_value")
+    prev_url = reverse("explorer:parameters_variation")
+    active_tab = "step_6_results"
+    request.session["prev_before_added_value"] = "variation"
+
+    context = {
+        "municipalities": municipalities,
+        "next_url": next_url,
+        "prev_url": prev_url,
+        "active_tab": active_tab,
+    }
+
+    return render(request, "pages/results_variation.html", context)
 
 
 def robustness_parameters(request: HttpRequest) -> HttpResponse:
     """Render page for robustness parameters."""
     ids = request.session.get("municipality_ids", [])
     muns = Municipality.objects.filter(id__in=ids) if ids else None
-    return render(request, "pages/parameters_robustness.html", {"municipalities": muns})
+    next_url = reverse("explorer:results_robustness")
+    prev_url = reverse("explorer:esm_mode", args=[1])
+    active_tab = "step_5_parameters"
+
+    context = {
+        "municipalities": muns,
+        "next_url": next_url,
+        "prev_url": prev_url,
+        "active_tab": active_tab,
+    }
+    return render(request, "pages/parameters_robustness.html", context)
 
 
 def robustness(request: HttpRequest) -> HttpResponse:
-    """Render robustness page."""
+    """Render robustness results page."""
     ids = request.session.get("municipality_ids", [])
 
     if ids:
@@ -290,77 +363,36 @@ def robustness(request: HttpRequest) -> HttpResponse:
         municipalities = None
         messages.add_message(request, messages.WARNING, "Keine Gemeinde(n) ausgewählt.")
 
-    return render(request, "pages/results_robustness.html", {"municipalities": municipalities})
+    next_url = reverse("explorer:added_value")
+    prev_url = reverse("explorer:parameters_robustness")
+    active_tab = "step_6_results"
+    request.session["prev_before_added_value"] = "robustness"
+
+    context = {
+        "municipalities": municipalities,
+        "next_url": next_url,
+        "prev_url": prev_url,
+        "active_tab": active_tab,
+    }
+
+    return render(request, "pages/results_robustness.html", context)
 
 
 def added_value(request: HttpRequest) -> HttpResponse:
     """Render page for information about 'Wertschöpfung'."""
     ids = request.session.get("municipality_ids", [])
     muns = Municipality.objects.filter(id__in=ids) if ids else None
-    return render(request, "pages/added_value.html", {"municipalities": muns})
+    next_url = None
+    prev_url = reverse("explorer:results_variation")
+    active_tab = "step_7_added_value"
 
+    if request.session.get("prev_before_added_value") == "robustness":
+        prev_url = reverse("explorer:results_robustness")
 
-# sets the order of the view flow
-menu_tabs = [
-    {1: "explorer:home"},
-    {2: "explorer:map"},
-    {3: "explorer:details"},
-    {4: "explorer:esm_mode"},
-    {5: "explorer:parameters_variation"},
-    {6: "explorer:results_variation"},
-    {7: "explorer:added_value"},
-    {8: "--- placeholder ---"},
-    {9: "explorer:parameters_robustness"},
-    {10: "explorer:results_robustness"},
-    {11: "explorer:added_value"},
-]
-
-
-def next_menu_tab(request: HttpRequest) -> HttpResponse:
-    """Render the next page after click in current page."""
-    current_tab = int(request.POST.get("tab_id"))
-    variation_end = 7
-    if current_tab < len(menu_tabs) and current_tab != variation_end:
-        next_tab = current_tab + 1
-
-        for tab_dict in menu_tabs:
-            if next_tab in tab_dict:
-                view_name = tab_dict[next_tab]
-
-        request.session["current_tab"] = next_tab
-        return redirect(reverse(view_name))
-
-    messages.add_message(request, messages.WARNING, "Es geht nicht weiter.")
-    template_name = "added_value"
-    return render(request, f"pages/{template_name}.html")
-
-
-def previous_menu_tab(request: HttpRequest) -> HttpResponse:
-    """Render the previous page after click in current page."""
-    current_tab = int(request.POST.get("tab_id"))
-    robust_start = 9
-    if current_tab > 1:
-        previous_tab = 4 if current_tab == robust_start else current_tab - 1
-
-        for tab_dict in menu_tabs:
-            if previous_tab in tab_dict:
-                view_name = tab_dict[previous_tab]
-
-        request.session["current_tab"] = previous_tab
-        return redirect(reverse(view_name))
-
-    messages.add_message(request, messages.WARNING, "Es geht nicht zurück.")
-    template_name = "home"
-    return render(request, f"pages/{template_name}.html")
-
-
-def esm_choice(request: HttpRequest, tab_id: int) -> HttpResponse:  # noqa: ARG001
-    """Get wich ESM mode was chosen and changes the tab_id accordingly."""
-    variation_start_id = 4
-    robust_start_id = 8
-    if tab_id == variation_start_id:
-        response = "<input id='tab_name' type='hidden' name='tab_id' value='4' />"
-    if tab_id == robust_start_id:
-        response = "<input id='tab_name' type='hidden' name='tab_id' value='8' />"
-
-    return HttpResponse(response, content_type="text/html")
+    context = {
+        "municipalities": muns,
+        "next_url": next_url,
+        "prev_url": prev_url,
+        "active_tab": active_tab,
+    }
+    return render(request, "pages/added_value.html", context)

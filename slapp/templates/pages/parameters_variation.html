@@ -4,10 +4,6 @@
 
 {% block content %}
   <div class="container">
-    <input id="tab_name"
-           type="hidden"
-           name="tab_id"
-           value="{{ request.session.current_tab }}" />
     <h1 mt-3>Energiesystemoptimierung Variation</h1>
     <div class="container text-center border-top border-bottom mt-4 mb-4 pt-2 pb-2">
       <div class="row align-items-start">
@@ -254,6 +250,11 @@
       </div>
       <br />
       <i>Je nach Anzahl der Gemeinden dauert eine Modellierung & Optimierung mehrere Minuten.</i>
+      <div class="mb-3">
+        <a class="btn btn-primary"
+           href="{% url 'explorer:results_variation' %}"
+           role="button">Weiter</a>
+      </div>
     {% else %}
       <div class="mt-3">Fügen Sie zunächst Gemeinden für die Optimierung hinzu.</div>
     {% endif %}

@@ -61,7 +61,7 @@
                   aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <a class="navbar-brand" href="{% url 'home' %}">Stadt-Land-Energie</a>
+          <a class="navbar-brand" href="{% url 'explorer:home' %}">Stadt-Land-Energie</a>
           <div class="collapse navbar-collapse d-flex justify-content-end"
                id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
@@ -87,72 +87,102 @@
     <section class="wizard">
       <div class="wizard__wrap">
         <div class="wizard__back">
-          <button hx-post="{% url 'explorer:wizard-previous-step' %}"
-                  hx-target="body"
-                  hx-include="#tab_name"
-                  type="button"
-                  id="menu_previous_btn">
-            <svg width="16"
-                 height="16"
-                 version="1.1"
-                 fill="currentColor"
-                 viewBox="0 0 16.933 16.933"
-                 xmlns="http://www.w3.org/2000/svg">
-              <path d="m10.794 16.748 1.4961-1.4961-6.7832-6.7832 6.7832-6.7832-1.4961-1.4961-8.2793 8.2793z" />
-            </svg>
-            <span>Zurück</span>
-          </button>
+          {% if prev_url != None %}
+            <a class="btn btn-primary" href="{{ prev_url }}" role="button">Zurück
+              <svg width="16"
+                   height="16"
+                   version="1.1"
+                   fill="currentColor"
+                   viewBox="0 0 16.933 16.933"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path d="m10.794 16.748 1.4961-1.4961-6.7832-6.7832 6.7832-6.7832-1.4961-1.4961-8.2793 8.2793z" />
+              </svg>
+            </a>
+          {% else %}
+            <a class="btn btn-primary btn-disabled" href="" role="button">
+              Zurück
+              <svg width="16"
+                   height="16"
+                   version="1.1"
+                   fill="currentColor"
+                   viewBox="0 0 16.933 16.933"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path d="m10.794 16.748 1.4961-1.4961-6.7832-6.7832 6.7832-6.7832-1.4961-1.4961-8.2793 8.2793z" />
+              </svg>
+            </a>
+          {% endif %}
         </div>
         <div class="wizard__main">
           <ul class="wizard__list nav nav-tabs" role="tablist">
-            <li id="step_1_start" class="wizard__list-item" role="presentation">
-              <!-- the class inside takes the "active" -->
+            <li id="step_1_start"
+                class="wizard__list-item {% if active_tab == 'step_1_start' %}active{% endif %}"
+                role="presentation">
               <span class="wizard__list-number">1</span>
               <span class="wizard__list-text">Start</span>
             </li>
-            <li id="step_2_today" class="wizard__list-item" role="presentation">
+            <li id="step_2_today"
+                class="wizard__list-item {% if active_tab == 'step_2_today' %}active{% endif %}"
+                role="presentation">
               <span class="wizard__list-number">2</span>
               <span class="wizard__list-text">Situation heute</span>
             </li>
-            <li id="step_3_details" class="wizard__list-item" role="presentation">
+            <li id="step_3_details"
+                class="wizard__list-item {% if active_tab == 'step_3_details' %}active{% endif %}"
+                role="presentation">
               <span class="wizard__list-number">3</span>
               <span class="wizard__list-text">Detailansicht</span>
             </li>
-            <li id="step_4_mode" class="wizard__list-item" role="presentation">
+            <li id="step_4_mode"
+                class="wizard__list-item {% if active_tab == 'step_4_mode' %}active{% endif %}"
+                role="presentation">
               <span class="wizard__list-number">4</span>
               <span class="wizard__list-text">Auswahl ESM Modus</span>
             </li>
-            <li id="step_5_parameters" class="wizard__list-item" role="presentation">
+            <li id="step_5_parameters"
+                class="wizard__list-item {% if active_tab == 'step_5_parameters' %}active{% endif %}"
+                role="presentation">
               <span class="wizard__list-number">5</span>
               <span class="wizard__list-text">ESM Konfiguration</span>
             </li>
-            <li id="step_6_results" class="wizard__list-item" role="presentation">
+            <li id="step_6_results"
+                class="wizard__list-item {% if active_tab == 'step_6_results' %}active{% endif %}"
+                role="presentation">
               <span class="wizard__list-number">6</span>
               <span class="wizard__list-text">Ergebnisse</span>
             </li>
-            <li id="step_7_added_value" class="wizard__list-item" role="presentation">
+            <li id="step_7_added_value"
+                class="wizard__list-item {% if active_tab == 'step_7_added_value' %}active{% endif %}"
+                role="presentation">
               <span class="wizard__list-number">7</span>
               <span class="wizard__list-text">Wertschöpfung</span>
             </li>
           </ul>
         </div>
         <div class="wizard__next">
-          <button hx-post="{% url 'explorer:wizard-next-step' %}"
-                  hx-target="body"
-                  hx-include="#tab_name"
-                  type="submit"
-                  id="menu_next_btn"
-                  class="btn btn-primary">
-            <span>Weiter</span>
-            <svg width="16"
-                 height="16"
-                 version="1.1"
-                 fill="currentColor"
-                 viewBox="0 0 16.933 16.933"
-                 xmlns="http://www.w3.org/2000/svg">
-              <path d="m6.1387 0.1875-1.4961 1.4961 6.7832 6.7832-6.7832 6.7832 1.4961 1.4961 8.2793-8.2793z" />
-            </svg>
-          </button>
+          {% if next_url != None %}
+            <a class="btn btn-primary" href="{{ next_url }}" role="button">Weiter
+              <svg width="16"
+                   height="16"
+                   version="1.1"
+                   fill="currentColor"
+                   viewBox="0 0 16.933 16.933"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path d="m6.1387 0.1875-1.4961 1.4961 6.7832 6.7832-6.7832 6.7832 1.4961 1.4961 8.2793-8.2793z" />
+              </svg>
+            </a>
+          {% else %}
+            <a class="btn btn-primary btn-disabled" href="" role="button">
+              Weiter
+              <svg width="16"
+                   height="16"
+                   version="1.1"
+                   fill="currentColor"
+                   viewBox="0 0 16.933 16.933"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path d="m6.1387 0.1875-1.4961 1.4961 6.7832 6.7832-6.7832 6.7832 1.4961 1.4961 8.2793-8.2793z" />
+              </svg>
+            </a>
+          {% endif %}
         </div>
       </div>
     </section>
