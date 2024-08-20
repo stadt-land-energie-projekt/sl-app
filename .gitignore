@@ -175,10 +175,6 @@ typings/
 
 .idea/
 
-# User-specific stuff:
-.idea/
-
-
 ### Windows template
 # Windows thumbnail cache files
 Thumbs.db

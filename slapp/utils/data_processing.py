@@ -13,7 +13,7 @@ from config.settings.base import GEODATA_DIR
 from slapp.explorer import models
 from slapp.utils.ogr_layer_mapping import RelatedModelLayerMapping
 
-REGIONS = [models.Municipality]
+REGIONS = [models.Region, models.Municipality]
 
 MODELS = [
     # Clusters
@@ -72,8 +72,6 @@ def load_regions(regions: list[Model] | None = None, *, verbose: bool = True) ->
             data_path = pathlib.Path(GEODATA_DIR) / region.data_folder / f"{region.data_file}.gpkg"
         else:
             data_path = pathlib.Path(GEODATA_DIR) / f"{region.data_file}.gpkg"
-        region_model = models.Region(layer_type=region.__name__.lower())
-        region_model.save()
         instance = RelatedModelLayerMapping(
             model=region,
             data=data_path,
@@ -81,7 +79,6 @@ def load_regions(regions: list[Model] | None = None, *, verbose: bool = True) ->
             layer=region.layer,
             transform=4326,
         )
-        instance.region = region_model
         instance.save(strict=True, verbose=verbose)
 
 
