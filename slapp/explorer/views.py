@@ -45,10 +45,12 @@ class MapGLView(TemplateView, views.MapEngineMixin):
     """Single view for the map."""
 
     template_name = "pages/map.html"
+    regions = Region.objects.all()
     next_url = reverse_lazy("explorer:details")
     prev_url = reverse_lazy("explorer:home")
     active_tab = "step_2_today"
     extra_context = {
+        "regions": regions,
         "next_url": next_url,
         "prev_url": prev_url,
         "active_tab": active_tab,
@@ -57,14 +59,12 @@ class MapGLView(TemplateView, views.MapEngineMixin):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         """Adapt mapengine context."""
         context = super().get_context_data(**kwargs)
-        regions = Region.objects.all()
 
         ids = self.request.session.get("municipality_ids", [])
         if ids:
             muns = Municipality.objects.filter(id__in=ids)
             context["municipalities"] = muns
 
-        context["regions"] = regions
         context["mapengine_store_cold_init"]["fly_to_clicked_feature"] = False
         return context
 
