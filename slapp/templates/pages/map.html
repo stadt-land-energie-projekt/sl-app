@@ -23,8 +23,7 @@
                 hx-target="#municipality_select"
                 hx-trigger="change">
           <option value="">Wählen Sie eine Region</option>
-          <option value="1">Region 1</option>
-          <option value="2">Region 2</option>
+          {% for region in regions %}<option value="{{ region.id }}">{{ region.name }}</option>{% endfor %}
         </select>
         <p>
           <strong>Darstellung</strong>
