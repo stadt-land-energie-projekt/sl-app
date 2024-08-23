@@ -98,9 +98,9 @@ POSTGRES_USER=
 POSTGRES_PASSWORD=
 STARTUP_COMMAND=/start
 CELERY_BROKER_URL=redis://
-TILING_SERVICE_TOKEN=
-TILING_SERVICE_STYLE_ID=
-USE_DISTILLED_MVTS=
+MAP_ENGINE_TILING_SERVICE_TOKEN=
+MAP_ENGINE_TILING_SERVICE_STYLE_ID=
+MAP_ENGINE_USE_DISTILLED_MVTS=
 
 ### To upload new data, its is probably the easiest to make them work locally, create a backup and use that backup on the target postgres/gis:
 
