@@ -20,6 +20,7 @@
                 hx-trigger="change">
           <option value="">Wählen Sie eine Region</option>
           {% for region in regions %}<option value="{{ region.id }}">{{ region.name }}</option>{% endfor %}
+          {% csrf_token %}
         </select>
         <p>
           <strong>Darstellung</strong>
@@ -48,7 +49,7 @@
                 aria-label="Default select example"
                 hx-post="{% url 'explorer:muns_to_banner' %}"
                 hx-target="#selected_municipalities_banner"
-                hx-trigger="change"
+                hx-trigger="change, resetRegion"
                 multiple>
           <option value="">Wählen Sie eine Gemeinde</option>
         </select>
@@ -59,12 +60,14 @@
       </div>
     </div>
   </div>
+  {% include 'pages/partials/region_change_confirmation.html' %}
 {% endblock content %}
 {% block javascript %}
   {{ block.super }}
   {% compress js %}
     <script src="{% static 'vendors/maplibre/js/maplibre-gl.js' %}"></script>
     <script src="{% static 'vendors/pubsub/js/pubsub.js' %}"></script>
+    <script src="{% static 'js/region.js' %}"></script>
   {% endcompress %}
 {% endblock javascript %}
 {% block inline_javascript %}
