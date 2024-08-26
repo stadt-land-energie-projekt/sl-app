@@ -62,3 +62,33 @@ function selectRegionInMap(region_id, selected) {
         }
     );
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const regionSelect = document.getElementById('region_select');
+    if (regionSelect) {
+        regionSelect.addEventListener('change', function (event) {
+            const selectedMunicipalities = document.getElementById('municipality_select').selectedOptions;
+            const municipalitySelected = selectedMunicipalities.length > 0;
+
+            if (municipalitySelected) {
+                $('#region_change_confirmation').modal('show');
+
+            }
+        });
+    }
+
+    document.getElementById('confirm_region_change_btn').addEventListener('click', function () {
+
+        fetch(`/explorer/load-municipalities/?region=?${regionSelect}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        }).then(function () {
+            $('#region_change_confirmation').modal('hide');
+            deselectRegion(regionSelect);
+        }).then(function(){
+            htmx.trigger("#municipality_select", "resetRegion")
+        });
+    });
+});

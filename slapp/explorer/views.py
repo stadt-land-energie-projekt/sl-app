@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any
 from django.contrib import messages
 from django.db.models import Sum
 from django.db.models.functions import Round
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 if TYPE_CHECKING:
     from django.http.request import HttpRequest
@@ -136,12 +136,18 @@ def details_list(request: HttpRequest) -> HttpResponse:
 def load_municipalities(request: HttpRequest) -> HttpResponse:
     """Return list of municipalities for chosen region."""
     region_id = request.GET.get("region_select")
+
+    # Post request when municipalities get reset
+    if request.method == "POST":
+        request.session.pop("municipality_ids", None)
+        return JsonResponse({"status": "success"})
+
     if region_id:
         region = Region.objects.get(id=region_id)
         muns = Municipality.objects.filter(region=region)
         content = "".join([f'<option value="{mun.id}">{mun.name}</option>' for mun in muns])
-
     else:
+        messages.add_message(request, messages.WARNING, "Es wurde noch keine Gemeinde ausgewählt.")
         content = "<option value=>Wählen Sie eine Gemeinde</option>"
     return HttpResponse(content, content_type="text/html")
 
