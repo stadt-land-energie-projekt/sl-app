@@ -65,21 +65,24 @@ function selectMunicipalityInMap(municipality_id, selected) {
 
 document.addEventListener('DOMContentLoaded', function () {
     const regionSelect = document.getElementById('region_select');
+
     if (regionSelect) {
-        regionSelect.addEventListener('change', function (event) {
+        regionSelect.addEventListener('change', function () {
             const selectedMunicipalities = document.getElementById('municipality_select').selectedOptions;
             const municipalitySelected = selectedMunicipalities.length > 0;
 
             if (municipalitySelected) {
                 $('#region_change_confirmation').modal('show');
 
+            } else {
+                this.setAttribute('data-previous-region-id', regionSelect.value);
             }
         });
     }
 
     document.getElementById('confirm_region_change_btn').addEventListener('click', function () {
-
-        fetch(`/explorer/load-municipalities/?region=?${regionSelect}`, {
+        const regionID = regionSelect.value
+        fetch(`/explorer/load-municipalities/?region_select=${regionID}`, {
             method: 'POST',
             headers: {
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
@@ -87,8 +90,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }).then(function () {
             $('#region_change_confirmation').modal('hide');
             deselectMunicipality(regionSelect);
-        }).then(function(){
-            htmx.trigger("#municipality_select", "resetRegion")
         });
+            this.setAttribute('data-previous-region-id', regionID);
+            htmx.trigger("#municipality_select", "resetRegion")
+    });
+
+    document.getElementById('abort_region_change_btn').addEventListener('click', function () {
+        const prevRegionSelect = regionSelect.getAttribute('data-previous-region-id');
+        $('#region_change_confirmation').modal('hide');
+        regionSelect.value = prevRegionSelect;
+        htmx.trigger("#region_select", "resetRegion")
     });
 });

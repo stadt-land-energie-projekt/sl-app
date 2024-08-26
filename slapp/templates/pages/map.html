@@ -17,7 +17,7 @@
                 aria-label="Select Region"
                 hx-get="{% url 'explorer:load_municipalities' %}"
                 hx-target="#municipality_select"
-                hx-trigger="change">
+                hx-trigger="change, resetRegion">
           <option value="">Wählen Sie eine Region</option>
           {% for region in regions %}<option value="{{ region.id }}">{{ region.name }}</option>{% endfor %}
           {% csrf_token %}
