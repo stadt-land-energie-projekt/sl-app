@@ -43,7 +43,7 @@
         <!-- HTMX -->
         <script defer src="{% static 'vendors/htmx/js/htmx.js' %}"></script>
         <script src="{% static 'vendors/jquery/js/jquery.min.js' %}"></script>
-        <script src="{% static 'js/region.js' %}"></script>
+        <script src="{% static 'js/municipality.js' %}"></script>
       {% endcompress %}
     {% endblock javascript %}
   </head>
@@ -199,7 +199,7 @@
         {% endfor %}
       {% endif %}
     </div>
-    <header class="bg-info p-1" id="selected_regions">
+    <header class="bg-info p-1" id="selected_municipalities">
       <div class="container">
         <div class="row" id="selected_municipalities_banner">{% include 'pages/partials/banner.html' %}</div>
       </div>
