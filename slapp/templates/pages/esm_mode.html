@@ -8,33 +8,95 @@
     <div class="container text-center">
       <h3>Welche Art von Szenario möchten Sie rechnen?</h3>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="mt-4">
-          <a class="btn btn-primary"
-             href="{% url 'explorer:esm_mode' robustness=0 %}"
-             role="button">Variation</a>
-        </div>
-      </div>
-      <div class="col">
-        <div class="mt-4">
-          <a class="btn btn-primary"
-             href="{% url 'explorer:esm_mode' robustness=1 %}"
-             role="button">Robust</a>
-        </div>
-      </div>
+    <div class="form-check">
+      <input class="form-check-input"
+             type="radio"
+             name="esm_choice_radio"
+             id="choice_variation"
+             value="0" />
+      <label class="form-check-label" for="choice_variation">Variation</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input"
+             type="radio"
+             name="esm_choice_radio"
+             id="choice_robustness"
+             value="1" />
+      <label class="form-check-label" for="choice_robustness">Robustheit</label>
     </div>
     <div class="row">
       <div class="col">
-        <div class="mt-4">
-          <a class="btn btn-primary"
-             href="{% url 'explorer:parameters_variation' %}"
-             role="button">Variation (hardcoded)</a>
+        <div class="container-fluid py-5">
+          <p class="col-md-8 fs-5">
+            <strong>Variation Erneuerbare Energie</strong>
+            <br />
+            Wofür eignet sich dieses Szenario?
+            <br />
+            <ul>
+              <li>Sie wollen individuelle Ergebnisse für Ihre Gemeinde</li>
+              <li>Sie wollen individuelle Ergebnisse für 2 oder mehr Gemeinden, die miteinander vernetzt sind</li>
+              <li>Sie wollen viel selbst einstellen</li>
+              <li>Sie wollen herausfinden, wieviel EE in einer oder mehreren Gemeinden möglich ist</li>
+            </ul>
+            Was ist fest vorgegeben?
+            <br />
+            <ul>
+              <li>Komponenten des Energiesystems, z.B. Wärmeerzeuger</li>
+            </ul>
+            Was können Sie selbst einstellen?
+            <br />
+            <ul>
+              <li>Kapazitäten Erneuerbare</li>
+            </ul>
+            Was wird hier optimiert?
+            <br />
+            <ul>
+              <li>Der Betrieb, also der Einsatz aller von Ihnen eingestellten Komponenten für jede Stunde des Jahres</li>
+            </ul>
+          </p>
+          <div class="mt-4">
+            <a class="btn btn-primary"
+               href="{% url 'explorer:esm_mode' robustness=0 %}"
+               role="button">Variation</a>
+          </div>
         </div>
-        <div class="mt-4">
-          <a class="btn btn-primary"
-             href="{% url 'explorer:parameters_robustness' %}"
-             role="button">Robust (hardcoded)</a>
+      </div>
+      <div class="col">
+        <div class="container-fluid py-5">
+          <p class="col-md-8 fs-5">
+            <strong>Szenario: Robust</strong>
+            <br />
+            Wofür eignet sich dieses Szenario?
+            <br />
+            <ul>
+              <li>Sie wollen optimierte Ergebnisse für Ihre Gemeinde</li>
+              <li>Sie wollen optimierte Ergebnisse für 2 oder mehr Gemeinden, die miteinander vernetzt sind</li>
+              <li>Sie wollen ein schnelles Ergebnis mit wenigen eigenen Einstellungen</li>
+              <li>Sie wollen herausfinden, was der optimale EE-Mix in einer oder mehreren Gemeinden möglich ist</li>
+            </ul>
+            Was ist fest vorgegeben?
+            <br />
+            <ul>
+              <li>Alles, da die Ergebnisse vorbereitet sind</li>
+            </ul>
+            Was können Sie selbst einstellen?
+            <br />
+            <ul>
+              <li>Nichts</li>
+            </ul>
+            Was wird hier optimiert?
+            <br />
+            <ul>
+              <li>
+                Hier haben wir für Sie bereits den optimalen Kraftwerkspark sowie Einsatz bestimmt und für Sie ausgerechnet, wie robust die Ergebnisse sind...
+              </li>
+            </ul>
+          </p>
+          <div class="mt-4">
+            <a class="btn btn-primary"
+               href="{% url 'explorer:esm_mode' robustness=1 %}"
+               role="button">Robust</a>
+          </div>
         </div>
       </div>
     </div>
