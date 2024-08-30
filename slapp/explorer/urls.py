@@ -18,8 +18,6 @@ urlpatterns = [
     path("added_value/", views.added_value, name="added_value"),
 ]
 
-htmx_urlpatterns = [
-    path("search-municipality/", views.search_municipality, name="search-municipality"),
-]
+htmx_urlpatterns = []
 
 urlpatterns += htmx_urlpatterns

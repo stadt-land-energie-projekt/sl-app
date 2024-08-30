@@ -113,24 +113,6 @@ def details_list(request: HttpRequest) -> HttpResponse:
     return render(request, "pages/details.html", context)
 
 
-def search_municipality(request: HttpRequest) -> HttpResponse:
-    """Return list of municipalities for given search text."""
-    search_text = request.POST.get("search")
-    param_string = request.POST.get("param_string")
-
-    first_item = param_string in ["/explorer/details/", "/explorer/parameters_variation/"]
-
-    new_param_string = param_string + "?id=" if first_item else param_string + "&id="
-
-    # look up all municipalities that contain the text
-    results = Municipality.objects.filter(name__icontains=search_text)
-    return render(
-        request,
-        "pages/partials/search-results.html",
-        {"results": results, "new_param_string": new_param_string},
-    )
-
-
 def details_csv(request: HttpRequest) -> HttpResponse:
     """Return details as CSV for given municipalities."""
     ids = request.GET.getlist("id")

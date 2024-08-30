@@ -5,21 +5,6 @@
 {% block content %}
   <div class="container">
     <h1 class="mt-4">Detailansicht</h1>
-    <div class="row mt-4">
-      <div class="col-4">
-        <form autocomplete="off">
-          <input type="text"
-                 hx-post="{% url 'explorer:search-municipality' %}"
-                 hx-target='#results'
-                 hx-trigger="keyup changed delay:500ms"
-                 hx-vals='{"param_string": "{{ request.get_full_path }}"}'
-                 name="search"
-                 class="form-control mr-2"
-                 placeholder="Gemeinden suchen & hinzufügen" />
-        </form>
-        <div id="results"></div>
-      </div>
-    </div>
     {% if municipalities %}
       <div class="row mt-4 g-0" id="municipality-results">
         <div class="col-3">
@@ -99,14 +84,6 @@
         </div>
       </div>
       <a href="{% url 'explorer:details-csv' %}?{% for municipality_ids in municipalities %}id={{ municipality_ids.id }}&{% endfor %}">Als CSV herunterladen</a>
-      <div class="mt-4">
-        <a class="btn btn-primary"
-           href="{% url 'explorer:esm_mode' robustness=0 %}"
-           role="button">Mit Energiesystemoptimierung für diese
-        Gemeinden beginnen</a>
-      </div>
-    {% else %}
-      <div class="mt-3">Fügen Sie zunächst Gemeinden für die Optimierung hinzu.</div>
     {% endif %}
   </div>
 {% endblock content %}
