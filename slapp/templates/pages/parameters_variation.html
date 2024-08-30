@@ -46,20 +46,7 @@
         {% for municipality, mun_context in mun_forms.items %}
           <div class="col-3">
             <div class="rounded-0 h-100px text-start">
-              <div class="h-55px  table-cell fw-bold bg-secondary text-white">
-                {{ municipality }}
-                <a class="icon-link text-white"
-                   href="{% url 'explorer:parameters' %}?  {% for mun_name, context_id_check in mun_forms.items %}{% if context_id_check.id != mun_context.id %}id={{ context_id_check.id }}&{% endif %}{% endfor %}">
-                  <svg xmlns="http://www.w3.org/2000/svg"
-                       width="16"
-                       height="16"
-                       fill="currentColor"
-                       class="bi bi-x-circle-fill"
-                       viewBox="0 0 16 16">
-                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
-                  </svg>
-                </a>
-              </div>
+              <div class="h-55px  table-cell fw-bold bg-secondary text-white">{{ municipality }}</div>
               <div class="h-55px table-cell">
                 <input type="number"
                        id="{{ mun_context.id }}-coverage"
@@ -213,13 +200,6 @@
       </div>
       <br />
       <i>Je nach Anzahl der Gemeinden dauert eine Modellierung & Optimierung mehrere Minuten.</i>
-      <div class="mb-3">
-        <a class="btn btn-primary"
-           href="{% url 'explorer:results' %}?{% for municipality, mun_context in mun_forms.items %}id={{ mun_context.id }}&{% endfor %}"
-           role="button">Systemoptimierung starten</a>
-      </div>
-    {% else %}
-      <div class="mt-3">Fügen Sie zunächst Gemeinden für die Optimierung hinzu.</div>
     {% endif %}
   </div>
   <script>
