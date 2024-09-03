@@ -8,22 +8,28 @@
     <div class="container text-center">
       <h3>Welche Art von Szenario möchten Sie rechnen?</h3>
     </div>
-    <div class="form-check">
-      <input class="form-check-input"
-             type="radio"
-             name="esm_choice_radio"
-             id="choice_variation"
-             value="0" />
-      <label class="form-check-label" for="choice_variation">Variation</label>
-    </div>
-    <div class="form-check">
-      <input class="form-check-input"
-             type="radio"
-             name="esm_choice_radio"
-             id="choice_robustness"
-             value="1" />
-      <label class="form-check-label" for="choice_robustness">Robustheit</label>
-    </div>
+    <form hx-get="{% url 'explorer:esm_mode' %}"
+          hx-target=".wizard__next"
+          hx-trigger="change"
+          hx-swap="innerHTML"
+          hx-vals="{'robustness': document.querySelector('input[name=esm_choice_radio]:checked').value }">
+      <div class="form-check">
+        <input class="form-check-input"
+               type="radio"
+               name="esm_choice_radio"
+               id="choice_variation"
+               value="1" />
+        <label class="form-check-label" for="choice_variation">Variation</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input"
+               type="radio"
+               name="esm_choice_radio"
+               id="choice_robustness"
+               value="2" />
+        <label class="form-check-label" for="choice_robustness">Robustheit</label>
+      </div>
+    </form>
     <div class="row">
       <div class="col">
         <div class="container-fluid py-5">
@@ -54,11 +60,6 @@
               <li>Der Betrieb, also der Einsatz aller von Ihnen eingestellten Komponenten für jede Stunde des Jahres</li>
             </ul>
           </p>
-          <div class="mt-4">
-            <a class="btn btn-primary"
-               href="{% url 'explorer:esm_mode' robustness=0 %}"
-               role="button">Variation</a>
-          </div>
         </div>
       </div>
       <div class="col">
@@ -92,11 +93,6 @@
               </li>
             </ul>
           </p>
-          <div class="mt-4">
-            <a class="btn btn-primary"
-               href="{% url 'explorer:esm_mode' robustness=1 %}"
-               role="button">Robust</a>
-          </div>
         </div>
       </div>
     </div>

@@ -99,7 +99,7 @@ def details_list(request: HttpRequest) -> HttpResponse:
     else:
         municipalities = None
 
-    next_url = reverse("explorer:esm_mode", args=[0])
+    next_url = reverse("explorer:esm_mode")
     prev_url = reverse("explorer:map")
     active_tab = "step_3_details"
 
@@ -139,21 +139,29 @@ def details_csv(request: HttpRequest) -> HttpResponse:
     return response
 
 
-def choose_esm_mode(request: HttpRequest, robustness: int) -> HttpResponse:
+def choose_esm_mode(request: HttpRequest) -> HttpResponse:
     """Render page for choosing esm mode (robust or variation)."""
-    next_url = reverse("explorer:parameters_variation")
+    next_url = None
     prev_url = reverse("explorer:details")
     active_tab = "step_4_mode"
+    render_template = "pages/esm_mode.html"
+    radio_button_value = int(request.GET.get("esm_choice_radio", 0))
+    variation_chosen = 1
+    robustness_chosen = 2
 
-    if robustness == 1:
+    if radio_button_value == variation_chosen:
+        next_url = reverse("explorer:parameters_variation")
+        render_template = "pages/partials/next_wizard.html"
+    if radio_button_value == robustness_chosen:
         next_url = reverse("explorer:parameters_robustness")
+        render_template = "pages/partials/next_wizard.html"
 
     context = {
         "next_url": next_url,
         "prev_url": prev_url,
         "active_tab": active_tab,
     }
-    return render(request, "pages/esm_mode.html", context)
+    return render(request, render_template, context)
 
 
 def optimization_parameters(request: HttpRequest) -> HttpResponse:
@@ -168,7 +176,7 @@ def optimization_parameters(request: HttpRequest) -> HttpResponse:
         municipalities = None
 
     next_url = reverse("explorer:results_variation")
-    prev_url = reverse("explorer:esm_mode", args=[0])
+    prev_url = reverse("explorer:esm_mode")
     active_tab = "step_5_parameters"
 
     context = {
@@ -234,7 +242,7 @@ def optimization_results(request: HttpRequest) -> HttpResponse:
 def robustness_parameters(request: HttpRequest) -> HttpResponse:
     """Render page for robustness parameters."""
     next_url = reverse("explorer:results_robustness")
-    prev_url = reverse("explorer:esm_mode", args=[1])
+    prev_url = reverse("explorer:esm_mode")
     active_tab = "step_5_parameters"
 
     context = {
