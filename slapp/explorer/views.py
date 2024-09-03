@@ -173,7 +173,7 @@ def optimization_parameters(request: HttpRequest) -> HttpResponse:
             messages.add_message(request, messages.WARNING, "Es können maximal 3 Gemeinden ausgewählt werden.")
         municipalities = Municipality.objects.filter(id__in=ids)
     else:
-        municipalities = Municipality.objects.filter(id__in=[1])
+        municipalities = None
 
     next_url = reverse("explorer:results_variation")
     prev_url = reverse("explorer:esm_mode")
