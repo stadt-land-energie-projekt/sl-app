@@ -120,24 +120,10 @@
               <div class="h-155px table-cell">
                 <fieldset class="mb-3">
                   <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="biomass-{{ mun_context.id }}-selection"
-                           id="biomass-{{ mun_context.id }}-noLimitRadio"
-                           checked />
-                    keine Obergrenze angeben
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="biomass-{{ mun_context.id }}-selection"
-                           id="biomass-{{ mun_context.id }}-MW" />
-                    <!-- This is the additional input field right next to the second radio button -->
-                    <input type="text"
-                           id="biomass-{{ mun_context.id }}-MW"
-                           class="form-control d-inline-block w-auto form-control-sm"
-                           value="0,12" />
-                    <label class="form-check-label d-inline-block" for="maxOutputRadio">
+                    <!-- This is the input slider -->
+                    <span id="biomass-{{ mun_context.id }}-maxOutput">{{ mun_context.form.biomass }}</span>
+                    <label class="form-check-label d-inline-block"
+                           for="biomass-{{ mun_context.id }}-maxOutput">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
                   </div>
@@ -147,24 +133,10 @@
               <div class="h-155px table-cell">
                 <fieldset class="mb-3">
                   <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="battery-{{ mun_context.id }}-selection"
-                           id="battery-{{ mun_context.id }}-noLimitRadio"
-                           checked />
-                    keine Obergrenze angeben
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="battery-{{ mun_context.id }}-selection"
-                           id="battery-{{ mun_context.id }}-MW" />
-                    <!-- This is the additional input field right next to the second radio button -->
-                    <input type="text"
-                           id="battery-{{ mun_context.id }}-MW"
-                           class="form-control d-inline-block w-auto form-control-sm"
-                           value="0,12" />
-                    <label class="form-check-label d-inline-block" for="maxOutputRadio">
+                    <!-- This is the input slider -->
+                    <span id="storage-{{ mun_context.id }}-maxOutput">{{ mun_context.form.storage }}</span>
+                    <label class="form-check-label d-inline-block"
+                           for="storage-{{ mun_context.id }}-maxOutput">
                       MW max. Gesamtleistung <i>(aktuell: 0,12 MW)</i>
                     </label>
                   </div>

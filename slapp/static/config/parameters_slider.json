@@ -20,6 +20,20 @@
       "min": 0,
       "from": 0.18,
       "step": 0.01
+    },
+    "biomass": {
+      "class": "js-range-slider",
+      "max": 1.08,
+      "min": 0,
+      "from": 0.2,
+      "step": 0.01
+    },
+    "storage": {
+      "class": "js-range-slider",
+      "max": 0.85,
+      "min": 0,
+      "from": 0.15,
+      "step": 0.01
     }
   },
   "2": {
@@ -42,6 +56,20 @@
       "max": 1.05,
       "min": 0,
       "from": 0.11,
+      "step": 0.01
+    },
+    "biomass": {
+      "class": "js-range-slider",
+      "max": 1.0,
+      "min": 0,
+      "from": 0.22,
+      "step": 0.01
+    },
+    "storage": {
+      "class": "js-range-slider",
+      "max": 0.95,
+      "min": 0,
+      "from": 0.12,
       "step": 0.01
     }
   },
@@ -66,6 +94,20 @@
       "min": 0,
       "from": 0.13,
       "step": 0.01
+    },
+    "biomass": {
+      "class": "js-range-slider",
+      "max": 0.88,
+      "min": 0,
+      "from": 0.14,
+      "step": 0.01
+    },
+    "storage": {
+      "class": "js-range-slider",
+      "max": 0.82,
+      "min": 0,
+      "from": 0.1,
+      "step": 0.01
     }
   },
   "4": {
@@ -88,6 +130,20 @@
       "max": 1.0,
       "min": 0,
       "from": 0.12,
+      "step": 0.01
+    },
+    "biomass": {
+      "class": "js-range-slider",
+      "max": 1.15,
+      "min": 0,
+      "from": 0.19,
+      "step": 0.01
+    },
+    "storage": {
+      "class": "js-range-slider",
+      "max": 1.05,
+      "min": 0,
+      "from": 0.18,
       "step": 0.01
     }
   }
