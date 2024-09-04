@@ -215,16 +215,21 @@
       </div>
     </header>
     <div class="container-fluid h-100">
-      <div class="row h-100">
-        <div class="col-3 sidebar pt-3 border-end border-2">
-          {% block sidebar_content %}
-          {% endblock sidebar_content %}
+      {% if has_sidepanel %}
+        <div class="row h-100">
+          <div class="col-3 sidebar pt-3 border-end border-2">
+            {% block sidebar_content %}
+            {% endblock sidebar_content %}
+          </div>
+          <div class="col-9">
+            {% block content %}
+            {% endblock content %}
+          </div>
         </div>
-        <div class="col-9">
-          {% block content %}
-          {% endblock content %}
-        </div>
-      </div>
+      {% else %}
+        {% block content_no_sidebar %}
+        {% endblock content_no_sidebar %}
+      {% endif %}
     </div>
     <!-- /container -->
     {% block modal %}
