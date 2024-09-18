@@ -29,11 +29,13 @@ def start_page(request: HttpRequest) -> HttpResponse:
     next_url = reverse("explorer:map")
     prev_url = None
     active_tab = "step_1_start"
+    sidepanel = False
 
     context = {
         "next_url": next_url,
         "prev_url": prev_url,
         "active_tab": active_tab,
+        "has_sidepanel": sidepanel,
     }
     return render(request, "pages/home.html", context)
 
@@ -45,10 +47,12 @@ class MapGLView(TemplateView, views.MapEngineMixin):
     next_url = reverse_lazy("explorer:details")
     prev_url = reverse_lazy("explorer:home")
     active_tab = "step_2_today"
+    sidepanel = True
     extra_context = {
         "next_url": next_url,
         "prev_url": prev_url,
         "active_tab": active_tab,
+        "has_sidepanel": sidepanel,
     }
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
@@ -99,36 +103,20 @@ def details_list(request: HttpRequest) -> HttpResponse:
     else:
         municipalities = None
 
-    next_url = reverse("explorer:esm_mode", args=[0])
+    next_url = reverse("explorer:esm_mode")
     prev_url = reverse("explorer:map")
     active_tab = "step_3_details"
+    sidepanel = True
 
     context = {
         "municipalities": municipalities,
         "next_url": next_url,
         "prev_url": prev_url,
         "active_tab": active_tab,
+        "has_sidepanel": sidepanel,
     }
 
     return render(request, "pages/details.html", context)
-
-
-def search_municipality(request: HttpRequest) -> HttpResponse:
-    """Return list of municipalities for given search text."""
-    search_text = request.POST.get("search")
-    param_string = request.POST.get("param_string")
-
-    first_item = param_string in ["/explorer/details/", "/explorer/parameters_variation/"]
-
-    new_param_string = param_string + "?id=" if first_item else param_string + "&id="
-
-    # look up all municipalities that contain the text
-    results = Municipality.objects.filter(name__icontains=search_text)
-    return render(
-        request,
-        "pages/partials/search-results.html",
-        {"results": results, "new_param_string": new_param_string},
-    )
 
 
 def details_csv(request: HttpRequest) -> HttpResponse:
@@ -157,21 +145,31 @@ def details_csv(request: HttpRequest) -> HttpResponse:
     return response
 
 
-def choose_esm_mode(request: HttpRequest, robustness: int) -> HttpResponse:
+def choose_esm_mode(request: HttpRequest) -> HttpResponse:
     """Render page for choosing esm mode (robust or variation)."""
-    next_url = reverse("explorer:parameters_variation")
+    next_url = None
     prev_url = reverse("explorer:details")
     active_tab = "step_4_mode"
+    sidepanel = True
+    render_template = "pages/esm_mode.html"
+    radio_button_value = int(request.GET.get("esm_choice_radio", 0))
+    variation_chosen = 1
+    robustness_chosen = 2
 
-    if robustness == 1:
+    if radio_button_value == variation_chosen:
+        next_url = reverse("explorer:parameters_variation")
+        render_template = "pages/partials/next_wizard.html"
+    if radio_button_value == robustness_chosen:
         next_url = reverse("explorer:parameters_robustness")
+        render_template = "pages/partials/next_wizard.html"
 
     context = {
         "next_url": next_url,
         "prev_url": prev_url,
         "active_tab": active_tab,
+        "has_sidepanel": sidepanel,
     }
-    return render(request, "pages/esm_mode.html", context)
+    return render(request, render_template, context)
 
 
 def optimization_parameters(request: HttpRequest) -> HttpResponse:
@@ -186,14 +184,16 @@ def optimization_parameters(request: HttpRequest) -> HttpResponse:
         municipalities = None
 
     next_url = reverse("explorer:results_variation")
-    prev_url = reverse("explorer:esm_mode", args=[0])
+    prev_url = reverse("explorer:esm_mode")
     active_tab = "step_5_parameters"
+    sidepanel = True
 
     context = {
         "municipalities": municipalities,
         "next_url": next_url,
         "prev_url": prev_url,
         "active_tab": active_tab,
+        "has_sidepanel": sidepanel,
     }
     return render(request, "pages/parameters_variation.html", context)
 
@@ -237,6 +237,7 @@ def optimization_results(request: HttpRequest) -> HttpResponse:
     next_url = reverse("explorer:added_value")
     prev_url = reverse("explorer:parameters_variation")
     active_tab = "step_6_results"
+    sidepanel = True
     request.session["prev_before_added_value"] = "variation"
 
     context = {
@@ -244,6 +245,7 @@ def optimization_results(request: HttpRequest) -> HttpResponse:
         "next_url": next_url,
         "prev_url": prev_url,
         "active_tab": active_tab,
+        "has_sidepanel": sidepanel,
     }
 
     return render(request, "pages/results_variation.html", context)
@@ -252,13 +254,15 @@ def optimization_results(request: HttpRequest) -> HttpResponse:
 def robustness_parameters(request: HttpRequest) -> HttpResponse:
     """Render page for robustness parameters."""
     next_url = reverse("explorer:results_robustness")
-    prev_url = reverse("explorer:esm_mode", args=[1])
+    prev_url = reverse("explorer:esm_mode")
     active_tab = "step_5_parameters"
+    sidepanel = True
 
     context = {
         "next_url": next_url,
         "prev_url": prev_url,
         "active_tab": active_tab,
+        "has_sidepanel": sidepanel,
     }
     return render(request, "pages/parameters_robustness.html", context)
 
@@ -321,6 +325,7 @@ def robustness(request: HttpRequest) -> HttpResponse:
     next_url = reverse("explorer:added_value")
     prev_url = reverse("explorer:parameters_robustness")
     active_tab = "step_6_results"
+    sidepanel = True
     request.session["prev_before_added_value"] = "robustness"
 
     context = {
@@ -328,6 +333,7 @@ def robustness(request: HttpRequest) -> HttpResponse:
         "next_url": next_url,
         "prev_url": prev_url,
         "active_tab": active_tab,
+        "has_sidepanel": sidepanel,
     }
 
     return render(request, "pages/results_robustness.html", context)
@@ -338,6 +344,7 @@ def added_value(request: HttpRequest) -> HttpResponse:
     next_url = None
     prev_url = reverse("explorer:results_variation")
     active_tab = "step_7_added_value"
+    sidepanel = True
 
     if request.session.get("prev_before_added_value") == "robustness":
         prev_url = reverse("explorer:results_robustness")
@@ -346,5 +353,6 @@ def added_value(request: HttpRequest) -> HttpResponse:
         "next_url": next_url,
         "prev_url": prev_url,
         "active_tab": active_tab,
+        "has_sidepanel": sidepanel,
     }
     return render(request, "pages/added_value.html", context)

@@ -1,0 +1,14 @@
+.navbar {
+
+    &__wrap {
+        @extend .container-fluid;
+        @extend .w-100;
+        @extend .position-fixed;
+        @extend .bg-white;
+        top: 0px;
+        height: 3.75rem;
+        box-shadow: $box-shadow-sm;
+        z-index: 1000;
+    }
+
+}

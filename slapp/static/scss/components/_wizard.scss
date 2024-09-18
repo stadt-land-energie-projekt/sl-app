@@ -1,15 +1,19 @@
 .wizard {
-    @extend .w-100;
-    @extend .position-relative;
-    height: 3.75rem;
-    box-shadow: $box-shadow-sm;
-    z-index: 1000;
+    padding-top: 7.5rem;
 
     &__wrap {
       @extend .container-fluid;
       @extend .d-flex;
       @extend .flex-row;
       @extend .justify-content-between;
+      @extend .bg-white;
+      @extend .position-fixed;
+      @extend .w-100;
+
+    height: 3.75rem;
+    box-shadow: $box-shadow-sm;
+    z-index: 1000;
+    top: 56px;
     }
 
     &__back,

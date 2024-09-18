@@ -51,7 +51,7 @@
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <div class="mb-1">
       <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <div class="container-fluid">
+        <div class="navbar__wrap">
           <button class="navbar-toggler navbar-toggler-right"
                   type="button"
                   data-bs-toggle="collapse"
@@ -214,8 +214,23 @@
         </div>
       </div>
     </header>
-    {% block content %}
-    {% endblock content %}
+    <div class="container-fluid h-100">
+      {% if has_sidepanel %}
+        <div class="row h-100">
+          <div class="col-3 sidebar pt-3 border-end border-2">
+            {% block sidebar_content %}
+            {% endblock sidebar_content %}
+          </div>
+          <div class="col-9">
+            {% block content %}
+            {% endblock content %}
+          </div>
+        </div>
+      {% else %}
+        {% block content_no_sidebar %}
+        {% endblock content_no_sidebar %}
+      {% endif %}
+    </div>
     <!-- /container -->
     {% block modal %}
     {% endblock modal %}
