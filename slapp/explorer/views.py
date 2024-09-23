@@ -179,6 +179,8 @@ def optimization_parameters(request: HttpRequest) -> HttpResponse:
     """Render parameters page for given municipality IDs."""
     ids = request.GET.getlist("id")
     mun_forms = {}
+    municipalities = None
+    sliders_config = {}
 
     if ids:
         if len(ids) > MAX_MUNICIPALITY_COUNT:
@@ -212,7 +214,7 @@ def optimization_parameters(request: HttpRequest) -> HttpResponse:
 
     return render(
         request,
-        "pages/parameters.html",
+        "pages/parameters_variation.html",
         context,
     )
 

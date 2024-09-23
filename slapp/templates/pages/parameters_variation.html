@@ -12,23 +12,6 @@
     <div class="row">
       <h2>Parameter für die Energiesystemoptimieung festlegen</h2>
     </div>
-    <div class="mt-5">
-      <div class="row mt-4">
-        <div class="col-4">
-          <form autocomplete="off">
-            <input type="text"
-                   hx-post="{% url 'explorer:search-municipality' %}"
-                   hx-target='#results'
-                   hx-trigger="keyup changed delay:500ms"
-                   hx-vals='{"param_string": "{{ request.get_full_path }}"}'
-                   name="search"
-                   class="form-control mr-2"
-                   placeholder="Gemeinden suchen & hinzufügen" />
-          </form>
-          <div id="results"></div>
-        </div>
-      </div>
-    </div>
     {% if mun_forms %}
       <div class="row mt-4 g-0" id="municipality-results">
         <div class="col-3">
