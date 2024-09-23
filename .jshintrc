@@ -39,7 +39,8 @@
     "clearChart": false,
     "hidePotentialLayers": false,
     "URLSearchParams": false,
-    "preResultCharts": false
+    "preResultCharts": false,
+    "htmx": false
   },
   "strict": "implied"
 }

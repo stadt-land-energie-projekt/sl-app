@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     document.getElementById('confirm_region_change_btn').addEventListener('click', function () {
-        const regionID = regionSelect.value
+        const regionID = regionSelect.value;
         fetch(`/explorer/load-municipalities/?region_select=${regionID}`, {
             method: 'POST',
             headers: {
@@ -92,13 +92,13 @@ document.addEventListener('DOMContentLoaded', function () {
             deselectMunicipality(regionSelect);
         });
             this.setAttribute('data-previous-region-id', regionID);
-            htmx.trigger("#municipality_select", "resetRegion")
+            htmx.trigger("#municipality_select", "resetRegion");
     });
 
     document.getElementById('abort_region_change_btn').addEventListener('click', function () {
         const prevRegionSelect = regionSelect.getAttribute('data-previous-region-id');
         $('#region_change_confirmation').modal('hide');
         regionSelect.value = prevRegionSelect;
-        htmx.trigger("#region_select", "resetRegion")
+        htmx.trigger("#region_select", "resetRegion");
     });
 });
