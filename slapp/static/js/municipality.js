@@ -13,7 +13,7 @@ function toggleMunicipality(municipality_id, municipality_name) {
     }
 }
 
-function selectMunicipalitypality(municipality_id, municipality_name) {
+function selectMunicipality(municipality_id, municipality_name) {
     // Remove "No municipality selected" info if first municipality gets selected
     if (getSelectedMunicipalities().length === 0) {
         document.getElementById("selected_municipalities").getElementsByTagName("p")[1].remove();
