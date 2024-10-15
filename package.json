@@ -2,6 +2,7 @@
   "dependencies": {
     "bootstrap": "^5.3.2",
     "echarts": "^5.4.3",
+    "fomantic-ui": "^2.9.3",
     "htmx.org": "^1.9.10",
     "ion-rangeslider": "^2.3.1",
     "jquery": "^3.7.1",

@@ -25,9 +25,8 @@
               type="text/x-scss"
               href="{% static 'scss/app.scss' %}" />
         <link href="{% static 'css/project.css' %}" rel="stylesheet" />
-        <link href="{% static 'vendors/bootstrap/scss/bootstrap.scss' %}"
-              rel="stylesheet"
-              type="text/x-scss" />
+        <link href="{% static 'vendors/fomantic-ui/semantic.min.css' %}"
+              rel="stylesheet" />
         <link href="{% static 'vendors/ionrangeslider/css/ion.rangeSlider.min.css' %}"
               rel="stylesheet" />
       {% endcompress %}
@@ -38,15 +37,15 @@
     {% block javascript %}
       <!-- Your stuff: Third-party javascript libraries go here -->
       <!-- place project specific Javascript in this file -->
+      <script src="{% static 'vendors/jquery/js/jquery.min.js' %}"></script>
+      <script type="text/javascript" src="{% static "vendors/fomantic-ui/semantic.min.js" %}"></script>
       {% compress js %}
-        <script src="{% static 'vendors/bootstrap/js/bootstrap.min.js' %}"></script>
         <script defer src="{% static 'js/project.js' %}"></script>
         <script defer src="{% static 'vendors/matomo/matomo.js' %}"></script>
         <script defer
                 src="{% static 'vendors/ionrangeslider/js/ion.rangeSlider.min.js' %}"></script>
         <!-- HTMX -->
         <script defer src="{% static 'vendors/htmx/js/htmx.js' %}"></script>
-        <script src="{% static 'vendors/jquery/js/jquery.min.js' %}"></script>
         <script src="{% static 'js/municipality.js' %}"></script>
       {% endcompress %}
     {% endblock javascript %}
