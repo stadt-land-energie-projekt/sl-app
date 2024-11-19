@@ -322,7 +322,7 @@ def optimization_results(request: HttpRequest) -> HttpResponse:
         municipalities = None
         messages.add_message(request, messages.WARNING, "Keine Gemeinde(n) ausgewählt.")
 
-    next_url = reverse("explorer:added_value")
+    next_url = reverse("kommWertTool:added_value")
     prev_url = reverse("explorer:parameters_variation")
     active_tab = "step_6_results"
     sidepanel = True
@@ -414,7 +414,7 @@ def robustness(request: HttpRequest) -> HttpResponse:
         municipalities = None
         messages.add_message(request, messages.WARNING, "Keine Gemeinde(n) ausgewählt.")
 
-    next_url = reverse("explorer:added_value")
+    next_url = reverse("kommWertTool:added_value")
     prev_url = reverse("explorer:parameters_robustness")
     active_tab = "step_6_results"
     sidepanel = True
@@ -462,11 +462,11 @@ menu_tabs = [
     {4: "explorer:esm_mode"},
     {5: "explorer:parameters_variation"},
     {6: "explorer:results_variation"},
-    {7: "explorer:added_value"},
+    {7: "kommWertTool:added_value"},
     {8: "--- placeholder ---"},
     {9: "explorer:parameters_robustness"},
     {10: "explorer:results_robustness"},
-    {11: "explorer:added_value"},
+    {11: "kommWertTool:added_value"},
 ]
 
 

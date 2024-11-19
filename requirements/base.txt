@@ -33,3 +33,10 @@ pandas==2.2.1
 
 django-filter~=23.5
 djangorestframework-gis~=1.0
+
+# ADDED VALUE REQUIREMENTS
+gunicorn
+python-dotenv
+matplotlib
+pandas
+numpy

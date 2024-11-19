@@ -1,0 +1,55 @@
+{
+    "legend": {
+        "top": "0",
+        "data": [
+            "WEA",
+            "FF-PV",
+            "APV"
+        ]
+    },
+    "xAxis": {
+        "type": "category",
+        "data": [
+            "EEG Einnahmen"
+        ]
+    },
+    "yAxis": {
+        "type": "value",
+        "name": "Einnahmen in Euro",
+        "axisLabel": {
+            "formatter": "{value}"
+        }
+    },
+    "series": [
+        {
+            "name": "WEA",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#FF5C5C"
+            },
+            "data": [
+                204000.0
+            ]
+        },
+        {
+            "name": "FF-PV",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#409EFF"
+            },
+            "data": [
+                89999.99999999996
+            ]
+        },
+        {
+            "name": "APV",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#67C23A"
+            },
+            "data": [
+                43217.999999999985
+            ]
+        }
+    ]
+}

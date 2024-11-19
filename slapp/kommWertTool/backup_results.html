@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block sidebar_content %}
+  <h4 class="text-center">Ergebnisse Ihrer Wertschöpfung</h4>
+  <p class="text-center">Dies ist ein Tool zur Berechnung der direkten kommunalen Wertschöpfung durch Windenergie-,
+        Freiflächen-Photovoltaik und Agri-Photovoltaik-Anlagen in brandenburgischen Gemeinden. Es liefert eine
+        Einschätzung des Wertschöpfungspotenzials basierend auf den eingegebenen Daten. Der Rechner ermittelt die
+        möglichen Einnahmen durch die EEG-Beteiligung, den Wind- und Solar-Euro sowie Pachteinnahmen. Es ist wichtig zu
+        beachten, dass die tatsächliche Wertschöpfung deutlich höher ausfallen kann, wenn lokale Unternehmen einbezogen
+        werden, Bürger-Beteiligungen erfolgen und induzierte Effekte berücksichtigt werden. Dieses Tool bietet Kommunen
+        die Möglichkeit, die direkten wirtschaftlichen Vorteile des Ausbaus erneuerbarer Energien abzuschätzen und
+        fundierte Entscheidungen für eine nachhaltige Entwicklung zu treffen.</p>
+{% endblock sidebar_content %}
+{% block content %}
+<div class="container mt-1">
+    <h1>Ergebnisse Ihrer Wertschöpfungsrechnung</h1>
+    <hr>
+    <h2 class="rowHeader">Jährliche Einnahmen</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <img alt="EEG Beteiligung Einnahmen"
+                 src="{% url 'kommWertTool:sendplot' plot_komm_wert_eeg_einnahmen %}?v={{ time_instance }}"/>
+        </div>
+        <div class="col-md-6 m-auto">
+            <h3 class="smallHeadline">EEG-Beteiligung</h3>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>WEA</th>
+                    <th>FF-PV</th>
+                    <th>APV</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ results.wind_eeg_yearly }} €</td>
+                    <td>{{ results.pv_eeg_yearly }} €</td>
+                    <td>{{ results.apv_eeg_yearly }} €</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr>
+ {% if results.choosen_mun != "0,00" %}
+    <div class="row">
+        <div class="col-md-6">
+            <img alt="Wind Solar Euro Einnahmen"
+                 src="{% url 'kommWertTool:sendplot' plot_einnahmen_wind_solar_euro %}?v={{ time_instance }}"/>
+        </div>
+        <div class="col-md-6 m-auto">
+            <h3 class="smallHeadline">Wind- & Solar-Euro</h3>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>WEA</th>
+                    <th>FF-PV</th>
+                    <th>APV</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ results.wind_sr_bb_yearly }} €</td>
+                    <td>{{ results.pv_sr_bb_yearly }} €</td>
+                    <td>{{ results.apv_sr_bb_yearly }} €</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+    {% if results.wea_pachteinnahmen != "0,00" or results.pv_pachteinnahmen != "0,00" or results.apv_pachteinnahmen != "0,00" or results.wea_pacht_est != "0,00" or results.pv_pacht_est != "0,00" or results.apv_pacht_est != "0,00" or results.wea_pacht_gewst != "0,00" or results.pv_pacht_gewst != "0,00" or results.apv_pacht_gewst != "0,00" %}
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <img alt="Pachterlöse Einnahmen"
+                     src="{% url 'kommWertTool:sendplot' plot_komm_wert_jaehrliche_pachteinnahmen %}?v={{ time_instance }}"/>
+            </div>
+            <div class="col-md-6 m-auto">
+                <h3 class="smallHeadline">Einnahmen durch Pachterlöse</h3>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>WEA</th>
+                        <th>FF-PV</th>
+                        <th>APV</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Pachteinnahmen</td>
+                        <td>{{ results.wea_pachteinnahmen }} €</td>
+                        <td>{{ results.pv_pachteinnahmen }} €</td>
+                        <td>{{ results.apv_pachteinnahmen }} €</td>
+                    </tr>
+                    <tr>
+                        <td>Komm. ESt.-Anteil</td>
+                        <td>{{ results.wea_pacht_est }} €</td>
+                        <td>{{ results.pv_pacht_est }} €</td>
+                        <td>{{ results.apv_pacht_est }} €</td>
+                    </tr>
+                    <tr>
+                        <td>Komm. GewSt.-Anteil</td>
+                        <td>{{ results.wea_pacht_gewst }} €</td>
+                        <td>{{ results.pv_pacht_gewst }} €</td>
+                        <td>{{ results.apv_pacht_gewst }} €</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr>
+    {% else %}
+        <div class="alert alert-dark mt-4 mb-4" role="alert">
+            <i class="fas fa-info-circle" data-placement="left"></i>
+            Keine Einnahmen durch Pachterlöse vorhanden, da keine Angaben gemacht wurden. Entsprechend wird von
+            Landes-/Bundeseigentum ausgegangen.
+        </div>
+    {% endif %}
+    <h2 class="rowHeader">Gewerbesteuereinnahmen durch Anlagengewinne</h2>
+    <div class="row">
+        {% if results.gesamt_gewerbesteuer_3 != "0,00" %}
+            <div class="col-md-6">
+                <img alt="Gewerbesteuer Wind Einnahmen"
+                     src="{% url 'kommWertTool:sendplot' plot_gewerbesteuer_wind %}?v={{ time_instance }}"/>
+            </div>
+        {% endif %}
+        {% if results.gesamt_gewerbesteuer_1 != "0,00" %}
+            <div class="col-md-6">
+                <img alt="Gewerbesteuer FF-PV Einnahmen"
+                     src="{% url 'kommWertTool:sendplot' plot_gewerbesteuer_ff_pv %}?v={{ time_instance }}"/>
+            </div>
+        {% endif %}
+        {% if results.gesamt_gewerbesteuer_2 != "0,00" %}
+            <div class="col-md-6">
+                <img alt="Gewerbesteuer Agri-PV Einnahmen"
+                     src="{% url 'kommWertTool:sendplot' plot_gewerbesteuer_agri_pv %}?v={{ time_instance }}"/>
+            </div>
+        {% endif %}
+        <div class="col-md-6 m-auto">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>WEA</th>
+                    <th>FF-PV</th>
+                    <th>APV</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Max. jährl. GewSt.</td>
+                    <td>{{ results.max_steuer_3 }} €</td>
+                    <td>{{ results.max_steuer_1 }} €</td>
+                    <td>{{ results.max_steuer_2 }} €</td>
+                </tr>
+                <tr>
+                    <td>Einnahmen über 25 Jahre</td>
+                    <td>{{ results.gesamt_gewerbesteuer_3 }} €</td>
+                    <td>{{ results.gesamt_gewerbesteuer_1 }} €</td>
+                    <td>{{ results.gesamt_gewerbesteuer_2 }} €</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <h2 class="rowHeader">Gesamteinnahmen über 25 Jahre</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <img alt="Gewerbesteuer Wind Einnahmen"
+                 src="{% url 'kommWertTool:sendplot' plot_file_gesamteinnahmen %}?v={{ time_instance }}"/>
+        </div>
+
+        <div class="col-md-6 m-auto">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>WEA</th>
+                    <th>FF-PV</th>
+                    <th>APV</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ results.sum_wea }} €</td>
+                    <td>{{ results.sum_ff_pv }} €</td>
+                    <td>{{ results.sum_agri_pv }} €</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</div>
+{% endblock content %}

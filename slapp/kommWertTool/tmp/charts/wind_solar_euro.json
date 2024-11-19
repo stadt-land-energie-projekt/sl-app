@@ -1,0 +1,55 @@
+{
+    "legend": {
+        "top": "0",
+        "data": [
+            "WEA",
+            "FF-PV",
+            "APV"
+        ]
+    },
+    "xAxis": {
+        "type": "category",
+        "data": [
+            "Wind-/Solar-Euro"
+        ]
+    },
+    "yAxis": {
+        "type": "value",
+        "name": "Einnahmen in Euro",
+        "axisLabel": {
+            "formatter": "{value}"
+        }
+    },
+    "series": [
+        {
+            "name": "WEA",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#FF5C5C"
+            },
+            "data": [
+                200000.0
+            ]
+        },
+        {
+            "name": "FF-PV",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#409EFF"
+            },
+            "data": [
+                90000.0
+            ]
+        },
+        {
+            "name": "APV",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#67C23A"
+            },
+            "data": [
+                49000.0
+            ]
+        }
+    ]
+}

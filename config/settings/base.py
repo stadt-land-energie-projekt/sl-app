@@ -85,6 +85,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "slapp.users",
     "slapp.explorer",
+    "slapp.kommWertTool"
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

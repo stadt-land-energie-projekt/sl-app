@@ -1,42 +1,13 @@
-/* These styles are generated from project.scss. */
-
-.alert-debug {
-  color: black;
-  background-color: white;
-  border-color: #d6e9c6;
+.addedValue .loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
 }
 
-.alert-error {
-  color: #b94a48;
-  background-color: #f2dede;
-  border-color: #eed3d7;
-}
-
-.h-55px {
-  height: 55px;
-}
-
-.h-155px {
-  height: 155px;
-}
-
-.h-270px {
-  height: 270px;
-}
-
-.table-row {
-      display: flex;
-      align-items: stretch; /* Ensure all children have the same height */
-      margin-bottom: 10px; /* Adjust as needed */
-    }
-
-.table-cell {
-      flex: 1;
-      border: 1px solid #ddd;
-      padding: 10px;
-    }
-
-#map {
-  width: 100%;
-  height: 100%
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

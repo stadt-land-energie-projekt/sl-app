@@ -1,0 +1,173 @@
+{
+    "legend": {
+        "top": "0",
+        "bottom": "50%",
+        "padding": [
+            5,
+            10,
+            15,
+            10
+        ],
+        "data": [
+            "GewSt.-Einnahmen Anlagengewinne",
+            "EEG-Beteiligung",
+            "Wind-/Solar-Euro",
+            "Direkte Pachteinnahmen",
+            "GewSt.-Einnahmen Pacht",
+            "ESt.-Einnahmen Pacht",
+            "Gesamteinnahmen WEA",
+            "Gesamteinnahmen FF-PV",
+            "Gesamteinnahmen APV"
+        ]
+    },
+    "xAxis": {
+        "type": "category",
+        "data": [
+            "WEA",
+            "FF-PV",
+            "APV",
+            "Gesamt WEA",
+            "Gesamt FF-PV",
+            "Gesamt APV"
+        ]
+    },
+    "yAxis": [
+        {
+            "type": "value",
+            "name": "Einnahmen in Euro",
+            "axisLabel": {
+                "formatter": "{value}"
+            }
+        },
+        {
+            "type": "value",
+            "name": "Gesamteinnahmen in Euro",
+            "axisLabel": {
+                "formatter": "{value}"
+            },
+            "position": "right"
+        }
+    ],
+    "series": [
+        {
+            "name": "GewSt.-Einnahmen Anlagengewinne",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#bbdeea"
+            },
+            "data": [
+                4483919.969658352,
+                1491692.432283984,
+                758617.0382984277
+            ]
+        },
+        {
+            "name": "EEG-Beteiligung",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#a7649c"
+            },
+            "data": [
+                4720652.675337417,
+                2109435.4487869665,
+                1012950.9025075015
+            ]
+        },
+        {
+            "name": "Wind-/Solar-Euro",
+            "itemStyle": {
+                "color": "#FF9900"
+            },
+            "type": "bar",
+            "data": [
+                5000000.0,
+                2250000.0,
+                1225000.0
+            ]
+        },
+        {
+            "name": "Direkte Pachteinnahmen",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#AFAFAF"
+            },
+            "data": [
+                0.0,
+                0.0,
+                363125.0
+            ]
+        },
+        {
+            "name": "GewSt.-Einnahmen Pacht",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#FDDA0D"
+            },
+            "data": [
+                571200,
+                120500,
+                129625
+            ]
+        },
+        {
+            "name": "ESt.-Einnahmen Pacht",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#3d3d3d"
+            },
+            "data": [
+                186897.37499999997,
+                44530.875,
+                0.0
+            ]
+        },
+        {
+            "name": "Gesamteinnahmen WEA",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#FF5C5C"
+            },
+            "data": [
+                0,
+                0,
+                0,
+                14962670.01999577,
+                0,
+                0
+            ],
+            "yAxisIndex": 1
+        },
+        {
+            "name": "Gesamteinnahmen FF-PV",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#409EFF"
+            },
+            "data": [
+                0,
+                0,
+                0,
+                0,
+                6016158.756070951,
+                0
+            ],
+            "yAxisIndex": 1
+        },
+        {
+            "name": "Gesamteinnahmen APV",
+            "type": "bar",
+            "itemStyle": {
+                "color": "#67C23A"
+            },
+            "data": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                3489317.9408059292
+            ],
+            "yAxisIndex": 1
+        }
+    ]
+}
