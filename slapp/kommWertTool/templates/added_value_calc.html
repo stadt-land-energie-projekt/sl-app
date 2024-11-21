@@ -37,13 +37,13 @@
                                 <div class="col-md-6">
                                            <label for="choosen_mun" class="mb-2">
       <b>Ich möchte für folgende Gemeinde die Wertschöpfung berechnen:</b>
-                                           </label>
+                                    </label>
     <select class="form-select" id="choosen_mun" name="choosen_mun">
       <option>Bitte wählen:</option>
 
       {% for municipality in municipalities %}
 
-      <option value="{{ municipality.id }}" data-name="{{ municipality.name }}" data-wind-net-robust="{{ municipality.wind_net_robust }}" data-pv-net-robust="{{ municipality.pvground_net_robust }}">{{ municipality.name }}</option>
+      <option value="{{ municipality.id }}" data-name="{{ municipality.name }}">{{ municipality.name }}</option>
       {% endfor %}
     </select>              </div></div>
                                     <div class="row mt-2">
@@ -133,8 +133,8 @@
                                         <i class="fas fa-info-circle" data-placement="right" data-toggle="tooltip"
                                            title="Geben Sie die Leistung in MW an, für die Sie die Wertschöpfung berechnen möchten. Alternativ wird die installierbare Leistung anhand der Potenzialfläche ermittelt."></i>
                                     </label>
-                                    <input class="form-control" disabled id="wea_p_max" name="wea_p_max" type="number" value="{{ municipality.wind_net_robust|intcomma }}">
-                                </div>
+                                          <input class="form-control" disabled id="wea_p_max" name="wea_p_max" type="number">
+                            </div>
 
                             </div>
 
@@ -150,6 +150,7 @@
                                 </div>
                             </div>
                             <div id="flaecheneigentuemer-container-wea">
+
                                 <div class="row mt-3" id="flaecheneigentuemer-wea-1">
                                     <div class="col-md-6">
                                         <label for="wea_area_ownertype1">Flächeneigentum:
@@ -179,13 +180,13 @@
                             <button class="btn btn-danger mt-3 btn-sm" id="removeLastBtn-wea" style="display:none;"
                                     type="button">- Weniger Flächeneigentümer
                             </button>
-
+                            <hr>
                             <div class="row mt-3">
                                 <div class="col-md-6">
                                     <label for="rotor_diameter">Rotordurchmesser:</label>
                                     <i class="fas fa-info-circle" data-placement="right" data-toggle="tooltip"
                                        title="Insofern nur die Potenzialfläche bekannt ist, wird unter anderem anhand des Rotordurchmessers die maximale Anzahl an WEA berechnet."></i>
-                                    <input class="form-control-range" id="rotor_diameter" max="200" min="100"
+                                    <input class="form-control-range w-100" id="rotor_diameter" max="200" min="100"
                                            name="rotor_diameter"
                                            oninput="this.nextElementSibling.value = this.value" type="range"
                                            value="130">
@@ -195,14 +196,15 @@
                                     <label for="system_output">Anlagenleistung:</label>
                                     <i class="fas fa-info-circle" data-placement="right" data-toggle="tooltip"
                                        title="Bitte geben Sie die Anlagenleistung in MW an, insofern bekannt."></i>
-                                    <input class="form-control-range" id="system_output" max="8" min="2"
+                                    <input class="form-control-range w-100" id="system_output" max="8" min="2"
                                            name="system_output"
                                            oninput="this.nextElementSibling.value = this.value" type="range"
                                            value="4">
                                     <output>4</output>
                                 </div>
 
-                            </div>
+                            </div>                            <hr>
+
                             <div class="row mt-3">
                                 <div class="col-md-6">
                                     <label for="wea_eeg_share">

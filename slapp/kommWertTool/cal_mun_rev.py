@@ -377,9 +377,9 @@ def main(form_data):
     choosen_mun = int(form_data.get('choosen_mun', 0))
     # standard levy rate if None is given
     if mun_key_value == 0:
-        sz_ghm = 0.3
+        mun_key_value = 0.3
     else:
-        sz_ghm = mun_key_value * 100
+        mun_key_value = mun_key_value * 100
 
     # standard mun value key if None is given
     if levy_rate == 0:
@@ -506,7 +506,7 @@ def main(form_data):
     est_income = calc_tax_income(year_income) # calculates income tax of average annual income
 
     def process_area(free_amount, max_area, ownertype, area_share, area_costs, average_business_income, tax_assesment_amount,
-                     levy_rate, gewerbesteuer_income, year_income, est_income, ekst_bb, sz_ghm):
+                     levy_rate, gewerbesteuer_income, year_income, est_income, ekst_bb, mun_key_value):
         area_share = area_share / 100  # Convert to decimal if percentage is given
         if ownertype == 'Gewerbliches Eigentum':
             area_gewst = int(((((max_area * area_costs * area_share) + average_business_income - free_amount)
@@ -521,7 +521,7 @@ def main(form_data):
             for income in [area_income_max]:  # List for comprehension
                 taxes = calc_tax_income(income)
                 taxes_list.append(taxes - est_income)
-            lease_est_income = taxes_list[0] * ekst_bb * sz_ghm
+            lease_est_income = taxes_list[0] * ekst_bb * mun_key_value
             area_gewst_total = 0
             area_income = 0
         elif ownertype == 'Gemeindeeigentum':
@@ -547,7 +547,7 @@ def main(form_data):
                 free_amount, apvh_area_max, apvh_ownertype['ownertype'], apvh_ownertype['area_share'], apv_area_costs,
                 average_business_income, tax_assesment_amount, levy_rate, gewerbesteuer_income, year_income, est_income,
                 ekst_bb,
-                sz_ghm
+                mun_key_value
             )
             area_income, area_gewst_total, lease_est_income = process_area(*ownertype_input_apvh)
             apvh_area_income += area_income
@@ -562,7 +562,7 @@ def main(form_data):
                 free_amount, apvv_area_max, apvv_ownertype['ownertype'], apvv_ownertype['area_share'], apv_area_costs,
                 average_business_income, tax_assesment_amount, levy_rate, gewerbesteuer_income, year_income, est_income,
                 ekst_bb,
-                sz_ghm
+                mun_key_value
             )
             area_income, area_gewst_total, lease_est_income = process_area(*ownertype_input_apvv)
             apvv_area_income += area_income
@@ -577,7 +577,7 @@ def main(form_data):
                 free_amount, ffpv_area_max, pv_ownertype['ownertype'], pv_ownertype['area_share'], pv_area_costs,
                 average_business_income, tax_assesment_amount, levy_rate, gewerbesteuer_income, year_income, est_income,
                 ekst_bb,
-                sz_ghm
+                mun_key_value
             )
             area_income, area_gewst_total, lease_est_income = process_area(*ownertype_input_pv)
             pv_area_income += area_income
@@ -592,7 +592,7 @@ def main(form_data):
                 0, wea_p_max, wea_ownertype['ownertype'], wea_ownertype['area_share'], wea_area_costs,
                 average_business_income, tax_assesment_amount, levy_rate, gewerbesteuer_income_wea, year_income, est_income,
                 ekst_bb,
-                sz_ghm
+                mun_key_value
             )
             area_income, area_gewst_total, lease_est_income = process_area(*ownertype_input_wea)
             wea_area_income += area_income
@@ -706,10 +706,7 @@ def main(form_data):
             if annual_income > 0:
                 accumulated_income += annual_income
 
-            if year <= 2:
-                annual_profit = annual_income - annual_costs - annual_depreciation
-            else:
-                annual_profit = annual_income - annual_costs - annual_depreciation
+            annual_profit = annual_income - annual_costs - annual_depreciation
 
             accumulated_annual_profits += annual_profit
 
@@ -739,8 +736,7 @@ def main(form_data):
 
             if adjusted_profit > 0:
                 trade_tax_total_value = ((adjusted_profit * 0.9) - free_amount) * tax_assesment_amount * levy_rate
-                trade_tax_value = trade_tax_total_value - (
-                        (((adjusted_profit * 0.9) - free_amount) * tax_assesment_amount) * 0.35)
+                trade_tax_value = trade_tax_total_value - ((((adjusted_profit * 0.9) - free_amount) * tax_assesment_amount) * 0.35)
             else:
                 trade_tax_total_value = 0
                 trade_tax_value = 0
