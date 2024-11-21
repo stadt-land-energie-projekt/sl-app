@@ -29,7 +29,7 @@
             "data": [
                 0,
                 0,
-                14525.0
+                0
             ],
             "itemStyle": {
                 "color": "#AFAFAF"
@@ -39,8 +39,8 @@
             "name": "Komm. ESt-Anteil",
             "type": "bar",
             "data": [
-                7475.894999999999,
-                1781.235,
+                0,
+                0,
                 0
             ],
             "itemStyle": {
@@ -51,9 +51,9 @@
             "name": "Komm. GewSt-Anteil",
             "type": "bar",
             "data": [
-                22848,
-                4820,
-                5185
+                0,
+                0,
+                0
             ],
             "itemStyle": {
                 "color": "#FDDA0D"

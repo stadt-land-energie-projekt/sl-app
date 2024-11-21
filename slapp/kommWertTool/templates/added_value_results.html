@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load humanize %}
 {% load static %}
-
 {% block sidebar_content %}
   <h4 class="text-center">Ergebnisse Ihrer Wertschöpfung</h4>
   <p class="text-center">Dies ist ein Tool zur Berechnung der direkten kommunalen Wertschöpfung durch Windenergie-,
@@ -14,10 +13,10 @@
 {% endblock sidebar_content %}
 {% block content %}
 <div class="container mt-1 addedValue" id="charts">
-
+{{ results|json_script:"results-data" }}
     <div class="row mt-5">
         <div class="col-md-6">
-  <div id="eeg_eeg_beteiligung_loader" class="loader"></div>
+  <div id="eeg_beteiligung_loader" class="loader"></div>
 <div id="eeg_beteiligung_chart" style="width: 100%;  height: 400px;"></div>
         </div>
         <div class="col-md-6 m-auto">
@@ -101,6 +100,12 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
   </div>
         </div>
     </div>
+    {% else %}
+        <div class="alert alert-dark mt-4 mb-4" role="alert">
+            <i class="fas fa-info-circle" data-placement="left"></i>
+            Keine Einnahmen durch Pachterlöse vorhanden, da keine Angaben gemacht wurden. Entsprechend wird von
+            Landes-/Bundeseigentum ausgegangen.
+        </div>
     {% endif %}
     {% if results.wea_pachteinnahmen != "0,00" or results.pv_pachteinnahmen != "0,00" or results.apv_pachteinnahmen != "0,00" or results.wea_pacht_est != "0,00" or results.pv_pacht_est != "0,00" or results.apv_pacht_est != "0,00" or results.wea_pacht_gewst != "0,00" or results.pv_pacht_gewst != "0,00" or results.apv_pacht_gewst != "0,00" %}
         <hr>
@@ -227,7 +232,7 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
     <h2 class="rowHeader">Gesamteinnahmen über 25 Jahre</h2>
     <div class="row">
         <div class="col-md-12">
-   <div id="gesamteinnahme_loader" class="loader">  </div>
+   <div id="gesamteinnahmen_loader" class="loader">  </div>
 <div id="gesamteinnahmen_chart" style="width: 100%; height: 500px;"></div></div>
         </div>
 
@@ -255,89 +260,114 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
 </div>
 {% endblock content %}
 {% block inline_javascript %}
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
 
         var expandableSections = document.querySelectorAll('.expandable-text');
 
-  expandableSections.forEach(function(section) {
-    var btn = section.querySelector('.expand-btn');
-    var collapsible = section.querySelector('.collapse');
+        expandableSections.forEach(function(section) {
+            var btn = section.querySelector('.expand-btn');
+            var collapsible = section.querySelector('.collapse');
 
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      if (collapsible.style.display === 'none' || collapsible.style.display === '') {
-        collapsible.style.display = 'inline';
-        btn.textContent = '- Weniger anzeigen';
-      } else {
-        collapsible.style.display = 'none';
-        btn.textContent = '+ Mehr anzeigen';
-      }
-    });
-  });
-
-
-        const chartTypes = [
-            { id: "eeg_beteiligung", loaderId: "eeg_eeg_beteiligung_loader" },
-            { id: "wind_solar_euro", loaderId: "wind_solar_euro_loader" },
-            { id: "pachteinnahmen", loaderId: "pachteinnahmen_loader" },
-            { id: "gewerbesteuer_wind", loaderId: "gewerbesteuer_wind_loader" },
-            { id: "gewerbesteuer_ff_pv", loaderId: "gewerbesteuer_ff_pv_loader" },
-            { id: "gewerbesteuer_agri_pv", loaderId: "gewerbesteuer_agri_pv_loader" },
-            { id: "gesamteinnahmen", loaderId: "gesamteinnahme_loader" }
-        ];
-
-        chartTypes.forEach(({ id, loaderId }) => {
-            fetch(`/kommWertTool/chart_data/${id}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    if (response.status === 202) {
-                        return null;
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && data.status !== "loading") {
-                        renderChart(id + "_chart", id, data);
-                        document.getElementById(loaderId).style.display = 'none';
-                    } else {
-                        setTimeout(() => loadChart(id, loaderId), 1000);
-                    }
-                })
-                .catch(error => {
-                    console.error(`Fehler beim Abrufen der Diagrammdaten für ${id}:`, error);
-                    document.getElementById(loaderId).textContent = 'Fehler beim Laden der Daten';
-                });
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (collapsible.style.display === 'none' || collapsible.style.display === '') {
+                    collapsible.style.display = 'inline';
+                    btn.textContent = '- Weniger anzeigen';
+                } else {
+                    collapsible.style.display = 'none';
+                    btn.textContent = '+ Mehr anzeigen';
+                }
+            });
         });
 
-function renderChart(chartDivId, chartType, chartData) {
+        const resultsElement = document.getElementById('results-data');
+        const results = JSON.parse(resultsElement.textContent);
+        console.log(results)
+
+
+        const chartTypes = [{
+                id: "eeg_beteiligung",
+                dataKey: "echart_eeg"
+            },
+            {
+                id: "wind_solar_euro",
+                dataKey: "echart_wind_solar_euro"
+            },
+            {
+                id: "pachteinnahmen",
+                dataKey: "echart_pachteinnahmen"
+            },
+            {
+                id: "gewerbesteuer_wind",
+                dataKey: "echart_gewerbesteuer_wind"
+            },
+            {
+                id: "gewerbesteuer_ff_pv",
+                dataKey: "echart_gewerbesteuer_ff_pv"
+            },
+            {
+                id: "gewerbesteuer_agri_pv",
+                dataKey: "echart_gewerbesteuer_agri_pv"
+            },
+            {
+                id: "gesamteinnahmen",
+                dataKey: "echart_gesamteinnahmen"
+            }
+        ];
+
+       chartTypes.forEach(({ id, dataKey }) => {
+              const chartData = Array.isArray(results[dataKey]) ? results[dataKey][0] : results[dataKey];
+              const chartElement = document.getElementById(id + "_chart");
+
+              // Überprüfen Sie, ob das Chart-Element existiert
+              if (!chartElement) {
+                  console.warn(`Element mit ID '${id}_chart' wurde nicht gefunden. Das Diagramm wird nicht gerendert.`);
+                  return; // Beenden Sie die Schleife für dieses Chart
+              }
+
+              if (chartData) {
+                  renderChart(id + "_chart", id, chartData);
+                  const loader = document.getElementById(id + "_loader");
+                  if (loader) {
+                      loader.style.display = 'none'; // Verstecken des Loaders
+                  }
+              } else {
+                  console.error(`Keine Daten für Chart ${id} gefunden`);
+              }
+          });
+
+      function renderChart(chartDivId, chartType, chartData) {
     const chartElement = document.getElementById(chartDivId);
+
     if (!chartElement) {
         console.error(`Element mit ID ${chartDivId} nicht gefunden`);
-        return;
+        return; // Beenden Sie die Funktion, wenn das Element nicht existiert
     }
+
     const chart = echarts.init(chartElement);
 
+    // Überprüfen Sie das Chart-Datenformat
     if (!chartData || typeof chartData !== 'object') {
         console.error(`Ungültige Daten für Chart ${chartType}:`, chartData);
-        return;
+        return; // Beenden Sie die Funktion bei ungültigen Daten
     }
 
+    // Formatierungsfunktion für Zahlen
     function formatNumber(value) {
         if (typeof value !== 'number') {
             return 'N/A';
         }
         if (value >= 1000000) {
-            return (value / 1000000).toFixed(1).replace('.', ',') + ' Mio. €'; // Millionen
+            return (value / 1000000).toFixed(1).replace('.', ',') + ' Mio. €';
         } else if (value >= 1000) {
-            return (value / 1000).toFixed(1).replace('.', ',') + ' T€'; // Tausend
+            return (value / 1000).toFixed(1).replace('.', ',') + ' T€';
         } else {
-            return value.toFixed(1).replace('.', ',') + ' €'; // Einzelwert
+            return value.toFixed(1).replace('.', ',') + ' €';
         }
     }
 
+    // Überprüfen auf sekundäre Y-Achse
     const hasSecondYAxis = Array.isArray(chartData.series) && chartData.series.some(series => series.yAxisIndex === 1);
 
     const option = {
@@ -356,30 +386,18 @@ function renderChart(chartDivId, chartType, chartData) {
             {
                 type: 'value',
                 name: Array.isArray(chartData.yAxis) ? chartData.yAxis[0]?.name : chartData.yAxis?.name || '',
-                axisLabel: {
-                    formatter: function(value) {
-                        return formatNumber(value);
-                    }
-                }
+                axisLabel: { formatter: formatNumber }
             },
             {
                 type: 'value',
                 name: Array.isArray(chartData.yAxis) ? chartData.yAxis[1]?.name : '',
-                axisLabel: {
-                    formatter: function(value) {
-                        return formatNumber(value);
-                    }
-                },
+                axisLabel: { formatter: formatNumber },
                 position: 'right'
             }
         ] : {
             type: 'value',
             name: chartData.yAxis?.name || '',
-            axisLabel: {
-                formatter: function(value) {
-                    return formatNumber(value);
-                }
-            }
+            axisLabel: { formatter: formatNumber }
         },
         series: Array.isArray(chartData.series) ? chartData.series.map(series => ({
             ...series,
@@ -387,16 +405,17 @@ function renderChart(chartDivId, chartType, chartData) {
         })) : [],
         tooltip: {
             trigger: 'item',
-            formatter: function(params) {
-                return params.seriesName + ': ' + formatNumber(params.value);
+            formatter(params) {
+                return `${params.seriesName}: ${formatNumber(params.value)}`;
             }
         }
     };
 
+    // Diagrammoptionen anwenden
     chart.setOption(option);
 }
 
 
-});
-</script>
+    });
+  </script>
 {% endblock inline_javascript %}
