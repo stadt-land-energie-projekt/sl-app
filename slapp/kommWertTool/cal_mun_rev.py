@@ -14,7 +14,23 @@ logger = logging.getLogger(__name__)
 CURRENT_DIR = Path(__file__).resolve().parent
 SEQUENCES_DIR = CURRENT_DIR / 'data/sequences'
 
-# ----------- COLORS ----------- #
+# ----------- GLOBAL PARAMETERS ----------- #
+
+# eeg and wind- and solar euro parameters
+eeg_participation = 2 # €/MWh
+bb_euro_mw_wind = 5000 # €/MW
+bb_euro_mw_pv = 2000 # €/MW
+# taxes
+ekst = 0.24 # 24% income tax
+ekst_bb = 0.15 # 15% municipal share
+year_income = 59094 # average annual income in BB in €
+free_amount = 24500 # tax-free amount for partner companies
+tax_assesment_amount = 0.035 # fix for DE (Steuermessbetrag)
+average_business_income = 220000 # annual income of businesses
+# area costs per ha
+pv_area_costs = 3000 # €/ha
+apv_area_costs = 830 # €/ha
+wea_area_costs = 16000 # € / MW
 COLORS = {
     'grey': '#AFAFAF',
     'yellow': '#FDDA0D',
@@ -27,10 +43,9 @@ COLORS = {
     'green_darker': '#a7649c'
 }
 
-# ----------- COLORS ----------- #
+# ----------- CREATE CHARTS ----------- #
 def create_echarts_data_pachteinnahmen(area_costs_yearly, area_est_yearly, area_gewst_yearly):
     echarts_data = {
-
         "legend": {
             "top": "0",
             "data": ["Direkte Pachteinnahmen", "Komm. ESt-Anteil", "Komm. GewSt-Anteil"]
@@ -101,7 +116,7 @@ def create_echarts_data_eeg(wind_eeg_yearly, pv_eeg_yearly, apv_eeg_yearly):
                     "color": COLORS['green']}, "data": [apv_eeg_yearly]}   # Wert als Liste
         ]
     }
-    return(echarts_data, f"eeg_beteiligung.json")
+    return(echarts_data, f"eeg_participation.json")
 
 
 def create_echarts_data_gewerbesteuer(data, years, filename, title, color):
@@ -121,7 +136,7 @@ def create_echarts_data_gewerbesteuer(data, years, filename, title, color):
         },
         "yAxis": {
             "type": "value",
-            "name": "Gewerbesteuer in Euro",
+            "name": "Gewerbesteuer",
             "axisLabel": {
                 "formatter": "{value}".replace(",", ".")
             }
@@ -165,21 +180,18 @@ def create_echarts_data_srbb(wind_sr_bb_yearly, pv_sr_bb_yearly, apv_sr_bb_yearl
         ]
     }
     return(echarts_data_sr, f"wind_solar_euro.json")
-def create_echarts_data_gesamteinnahmen(gewerbesteuer_anlagen, eeg_einnahmen, sr_bb_einnahmen,
+def create_echarts_data_gesamteinnahmen(trade_tax_plant, eeg_income, sr_bb_income,
                                         area_costs_total, area_gewst_total, area_est_total, sum_wea_plot, sum_agri_pv_plot, sum_ff_pv_plot):
     legend_data = []
     series_data = []
-
-    # Hilfsfunktion zum Hinzufügen von Daten
     def add_series(name, data, yAxisIndex=0):
         if any(value > 0 for value in data):
             legend_data.append(name)
             series_data.append({"name": name, "type": "bar", "data": data, "yAxisIndex": yAxisIndex})
 
-    # Fügen Sie die Serien hinzu
-    add_series("GewSt.-Einnahmen Anlagengewinne", gewerbesteuer_anlagen)
-    add_series("EEG-Beteiligung", eeg_einnahmen)
-    add_series("Wind-/Solar-Euro", sr_bb_einnahmen)
+    add_series("GewSt.-Einnahmen Anlagengewinne", trade_tax_plant)
+    add_series("EEG-Beteiligung", eeg_income)
+    add_series("Wind-/Solar-Euro", sr_bb_income)
     add_series("Direkte Pachteinnahmen", area_costs_total)
     add_series("GewSt.-Einnahmen Pacht", area_gewst_total)
     add_series("ESt.-Einnahmen Pacht", area_est_total)
@@ -202,14 +214,14 @@ def create_echarts_data_gesamteinnahmen(gewerbesteuer_anlagen, eeg_einnahmen, sr
         "yAxis": [
             {
                 "type": "value",
-                "name": "Einnahmen in Euro",
+                "name": "Einnahmen",
                 "axisLabel": {
                     "formatter": "{value}".replace(",", ".")
                 }
             },
             {
                 "type": "value",
-                "name": "Gesamteinnahmen in Euro",
+                "name": "Gesamteinnahmen",
                 "axisLabel": {
                     "formatter": "{value}".replace(",", ".")
                 },
@@ -217,9 +229,9 @@ def create_echarts_data_gesamteinnahmen(gewerbesteuer_anlagen, eeg_einnahmen, sr
             }
         ],
         "series": [
-            {"name": "GewSt.-Einnahmen Anlagengewinne", "type": "bar", "itemStyle": {"color": COLORS['blue_lighter']}, "data": gewerbesteuer_anlagen},
-            {"name": "EEG-Beteiligung", "type": "bar", "itemStyle": {"color": COLORS['green_darker']}, "data": eeg_einnahmen},
-            {"name": "Wind-/Solar-Euro", "itemStyle": {"color": COLORS['orange']}, "type": "bar", "data": sr_bb_einnahmen},
+            {"name": "GewSt.-Einnahmen Anlagengewinne", "type": "bar", "itemStyle": {"color": COLORS['blue_lighter']}, "data": trade_tax_plant},
+            {"name": "EEG-Beteiligung", "type": "bar", "itemStyle": {"color": COLORS['green_darker']}, "data": eeg_income},
+            {"name": "Wind-/Solar-Euro", "itemStyle": {"color": COLORS['orange']}, "type": "bar", "data": sr_bb_income},
             {"name": "Direkte Pachteinnahmen", "type": "bar", "itemStyle": {"color": COLORS['grey']}, "data": area_costs_total},
             {"name": "GewSt.-Einnahmen Pacht", "type": "bar", "itemStyle": {"color": COLORS['yellow']}, "data": area_gewst_total},
             {"name": "ESt.-Einnahmen Pacht", "type": "bar", "itemStyle": {"color": COLORS['light_grey']}, "data": area_est_total},
@@ -230,60 +242,29 @@ def create_echarts_data_gesamteinnahmen(gewerbesteuer_anlagen, eeg_einnahmen, sr
     }
     return(echarts_data, f"gesamteinnahmen.json")
 
-
-# eeg and wind- and solar euro parameters
-eeg_beteiligung = 2 # €/MWh
-bb_euro_mw_wind = 5000 # €/MW
-bb_euro_mw_pv = 2000 # €/MW
-# taxes
-ekst = 0.24 # 24% income tax
-ekst_bb = 0.15 # 15% municipal share
-year_income = 59094 # average annual income in BB in €
-freibetrag = 24500 # tax-free amount for partner companies
-steuermessbetrag = 0.035 # fix for DE
-income_betriebe_bb = 220000 # annual income of businesses
-# area costs per ha
-pv_area_costs = 3000 # €/ha
-apv_area_costs = 830 # €/ha
-wea_area_costs = 16000 # € / MW
-# colors
-htw_green = '#76B900'
-htw_green_darker = '#8FC264'
-htw_blue = '#0082D1'
-htw_blue_lighter = '#6BB8E6'
-htw_orange = '#FF5F00'
-htw_orange_lighter = '#FF9900'
-htw_grey = '#AFAFAF'
-htw_yellow = '#FDDA0D'
-htw_light_grey = '#3d3d3d'
-
 def main(form_data):
     results = {}  # Define results dictionary before the try block to ensure accessibility in case of an error
 
     def process_form_data(form_data):
         data = {}
         try:
-            # Verarbeiten der Formulardaten
+            # Processing the form data
             for key, value in form_data.items():
-
-                # Überprüfen auf Dictionary
+                # Check for dictionary
                 if isinstance(value, dict):
                     print(f"Skipping dictionary for key: {key}")
-                    continue  # Überspringen oder spezifische Logik hier hinzufügen
-
-                # Hier können Sie spezifische Schlüssel angeben
-                if key in []:  # Beispiel: ['wea_eeg_share']
+                    continue
+                if key in []:
                     value = float(value) / 100
                 else:
                     try:
                         value = float(value)
                     except ValueError:
                         print(f"Value for key '{key}' is not convertible to float.")
-                        continue  # Überspringen bei Fehler
-
+                        continue
                 data[key] = value
 
-            # Verarbeitung der Flächeneigentümer basierend auf den Eingaben
+            # Processing of area owners based on the entries
             area_ownertype = {
                 'wea': [],
                 'apvv': [],
@@ -341,7 +322,7 @@ def main(form_data):
 
                 counter += 1
 
-            # Standardwerte für Flächeneigentümer hinzufügen
+            # Add default values for area owners
             default_ownertype = {
                 'ownertype': 'Landes-/Bundeseigentum',
                 'area_share': 0
@@ -356,10 +337,9 @@ def main(form_data):
             if not area_ownertype['pv']:
                 area_ownertype['pv'].append(default_ownertype)
 
-            # Sicherstellen, dass die Listen gleich lang sind
+            # Ensure that the lists are the same length
             max_length = max(len(area_ownertype['wea']), len(area_ownertype['apvv']),
                              len(area_ownertype['apvh']), len(area_ownertype['pv']))
-
             def extend_list(lst):
                 while len(lst) < max_length:
                     lst.append({'ownertype': 'N/A', 'area_share': 0})
@@ -376,6 +356,7 @@ def main(form_data):
             sys.exit(1)
 
         return data
+
     ffpv_area_max = int(form_data.get('ffpv_area_max', 0))
     apvv_area_max = int(form_data.get('apvv_area_max', 0))
     apvh_area_max = int(form_data.get('apvh_area_max', 0))
@@ -402,9 +383,9 @@ def main(form_data):
 
     # standard mun value key if None is given
     if levy_rate == 0:
-        hebesatz = 4.35
+        levy_rate = 4.35
     else:
-        hebesatz = levy_rate / 100
+        levy_rate = levy_rate / 100
 
     # if no area for eeg or wind-euro is given, set to 100%
     if wea_eeg_share == 0:
@@ -498,7 +479,6 @@ def main(form_data):
     agri_pv_ver_profile = pd.read_csv(SEQUENCES_DIR / 'agri-pv_ver_ground_profile.csv', header=0, delimiter=';')
     ff_pv_profile = pd.read_csv(SEQUENCES_DIR / 'solar-pv_ground_profile.csv', delimiter=';')
 
-
     '''
     MUN INCOME FROM LEASES
     '''
@@ -520,89 +500,89 @@ def main(form_data):
 
         return taxes
 
-    gewerbesteuer_income = (income_betriebe_bb - freibetrag) * steuermessbetrag * hebesatz
-    gewerbesteuer_income_wea = (income_betriebe_bb) * steuermessbetrag * hebesatz
+    gewerbesteuer_income = (average_business_income - free_amount) * tax_assesment_amount * levy_rate
+    gewerbesteuer_income_wea = (average_business_income) * tax_assesment_amount * levy_rate # no free-amount due to GmbH
 
-    est_income = calc_tax_income(year_income)
+    est_income = calc_tax_income(year_income) # calculates income tax of average annual income
 
-    def process_area(freibetrag, max_area, ownertype, area_share, area_costs, income_betriebe_bb, steuermessbetrag,
-                     hebesatz, gewerbesteuer_income, year_income, est_income, ekst_bb, sz_ghm):
+    def process_area(free_amount, max_area, ownertype, area_share, area_costs, average_business_income, tax_assesment_amount,
+                     levy_rate, gewerbesteuer_income, year_income, est_income, ekst_bb, sz_ghm):
         area_share = area_share / 100  # Convert to decimal if percentage is given
         if ownertype == 'Gewerbliches Eigentum':
-            area_gewst = int(((((max_area * area_costs * area_share) + income_betriebe_bb - freibetrag)
-                               * steuermessbetrag * hebesatz) - gewerbesteuer_income))
+            area_gewst = int(((((max_area * area_costs * area_share) + average_business_income - free_amount)
+                               * tax_assesment_amount * levy_rate) - gewerbesteuer_income))
             area_gewst_total = area_gewst - int(
-                (((max_area * area_share * area_costs) * steuermessbetrag / hebesatz) * 0.35))
+                (((max_area * area_share * area_costs) * tax_assesment_amount / levy_rate) * 0.35))
             area_income = 0
-            ghm_est_income = 0
+            lease_est_income = 0
         elif ownertype == 'Privateigentum':
             area_income_max = area_costs * (max_area * area_share) + year_income
             taxes_list = []
             for income in [area_income_max]:  # List for comprehension
                 taxes = calc_tax_income(income)
                 taxes_list.append(taxes - est_income)
-            ghm_est_income = taxes_list[0] * ekst_bb * sz_ghm
+            lease_est_income = taxes_list[0] * ekst_bb * sz_ghm
             area_gewst_total = 0
             area_income = 0
         elif ownertype == 'Gemeindeeigentum':
             area_income = area_costs * max_area * area_share
             area_gewst_total = 0
-            ghm_est_income = 0
+            lease_est_income = 0
         else:
             area_income = 0
             area_gewst_total = 0
-            ghm_est_income = 0
-        return area_income, area_gewst_total, ghm_est_income
+            lease_est_income = 0
+        return area_income, area_gewst_total, lease_est_income
 
     # Variables to accumulate the results
-    apvh_area_income = apvh_area_gewst_total = ghm_est_income_apvh = 0
-    apvv_area_income = apvv_area_gewst_total = ghm_est_income_apvv = 0
-    pv_area_income = pv_area_gewst_total = ghm_est_income_pv = 0
-    wea_area_income = wea_area_gewst_total = ghm_est_income_wea = 0
+    apvh_area_income = apvh_area_gewst_total = lease_est_income_apvh = 0
+    apvv_area_income = apvv_area_gewst_total = lease_est_income_apvv = 0
+    pv_area_income = lease_trade_tax_pv = lease_est_income_pv = 0
+    wea_area_income = lease_trade_tax_wea = lease_est_income_wea = 0
 
     # Processing each ownertype for each category
     if 'apvh' in area_ownertype:
         for apvh_ownertype in area_ownertype['apvh']:
             ownertype_input_apvh = (
-                freibetrag, apvh_area_max, apvh_ownertype['ownertype'], apvh_ownertype['area_share'], apv_area_costs,
-                income_betriebe_bb, steuermessbetrag, hebesatz, gewerbesteuer_income, year_income, est_income,
+                free_amount, apvh_area_max, apvh_ownertype['ownertype'], apvh_ownertype['area_share'], apv_area_costs,
+                average_business_income, tax_assesment_amount, levy_rate, gewerbesteuer_income, year_income, est_income,
                 ekst_bb,
                 sz_ghm
             )
-            area_income, area_gewst_total, ghm_est_income = process_area(*ownertype_input_apvh)
+            area_income, area_gewst_total, lease_est_income = process_area(*ownertype_input_apvh)
             apvh_area_income += area_income
             apvh_area_gewst_total += area_gewst_total
-            ghm_est_income_apvh += ghm_est_income
+            lease_est_income_apvh += lease_est_income
         else:
             # Handle the case when 'apvh' key is not present
             print("The key 'apvh' is not present in area_ownertype")
     if 'apvv' in area_ownertype:
         for apvv_ownertype in area_ownertype['apvv']:
             ownertype_input_apvv = (
-                freibetrag, apvv_area_max, apvv_ownertype['ownertype'], apvv_ownertype['area_share'], apv_area_costs,
-                income_betriebe_bb, steuermessbetrag, hebesatz, gewerbesteuer_income, year_income, est_income,
+                free_amount, apvv_area_max, apvv_ownertype['ownertype'], apvv_ownertype['area_share'], apv_area_costs,
+                average_business_income, tax_assesment_amount, levy_rate, gewerbesteuer_income, year_income, est_income,
                 ekst_bb,
                 sz_ghm
             )
-            area_income, area_gewst_total, ghm_est_income = process_area(*ownertype_input_apvv)
+            area_income, area_gewst_total, lease_est_income = process_area(*ownertype_input_apvv)
             apvv_area_income += area_income
             apvv_area_gewst_total += area_gewst_total
-            ghm_est_income_apvv += ghm_est_income
+            lease_est_income_apvv += lease_est_income
         else:
             # Handle the case when 'apvh' key is not present
             print("The key 'apvv' is not present in area_ownertype")
     if 'pv' in area_ownertype:
         for pv_ownertype in area_ownertype['pv']:
             ownertype_input_pv = (
-                freibetrag, ffpv_area_max, pv_ownertype['ownertype'], pv_ownertype['area_share'], pv_area_costs,
-                income_betriebe_bb, steuermessbetrag, hebesatz, gewerbesteuer_income, year_income, est_income,
+                free_amount, ffpv_area_max, pv_ownertype['ownertype'], pv_ownertype['area_share'], pv_area_costs,
+                average_business_income, tax_assesment_amount, levy_rate, gewerbesteuer_income, year_income, est_income,
                 ekst_bb,
                 sz_ghm
             )
-            area_income, area_gewst_total, ghm_est_income = process_area(*ownertype_input_pv)
+            area_income, area_gewst_total, lease_est_income = process_area(*ownertype_input_pv)
             pv_area_income += area_income
-            pv_area_gewst_total += area_gewst_total
-            ghm_est_income_pv += ghm_est_income
+            lease_trade_tax_pv += area_gewst_total
+            lease_est_income_pv += lease_est_income
         else:
             # Handle the case when 'apvh' key is not present
             print("The key 'pv' is not present in area_ownertype")
@@ -610,28 +590,28 @@ def main(form_data):
         for wea_ownertype in area_ownertype['wea']:
             ownertype_input_wea = (
                 0, wea_p_max, wea_ownertype['ownertype'], wea_ownertype['area_share'], wea_area_costs,
-                income_betriebe_bb, steuermessbetrag, hebesatz, gewerbesteuer_income_wea, year_income, est_income,
+                average_business_income, tax_assesment_amount, levy_rate, gewerbesteuer_income_wea, year_income, est_income,
                 ekst_bb,
                 sz_ghm
             )
-            area_income, area_gewst_total, ghm_est_income = process_area(*ownertype_input_wea)
+            area_income, area_gewst_total, lease_est_income = process_area(*ownertype_input_wea)
             wea_area_income += area_income
-            wea_area_gewst_total += area_gewst_total
-            ghm_est_income_wea += ghm_est_income
+            lease_trade_tax_wea += area_gewst_total
+            lease_est_income_wea += lease_est_income
         else:
             # Handle the case when 'apvh' key is not present
             print("The key 'wea' is not present in area_ownertype")
     area_costs_yearly = [wea_area_income, pv_area_income, apvh_area_income + apvv_area_income]
-    area_gewst_yearly = [wea_area_gewst_total, pv_area_gewst_total, apvh_area_gewst_total + apvv_area_gewst_total]
-    area_est_yearly = [ghm_est_income_wea, ghm_est_income_pv, ghm_est_income_apvh + ghm_est_income_apvv]
+    area_gewst_yearly = [lease_trade_tax_wea, lease_trade_tax_pv, apvh_area_gewst_total + apvv_area_gewst_total]
+    area_est_yearly = [lease_est_income_wea, lease_est_income_pv, lease_est_income_apvh + lease_est_income_apvv]
 
     '''
     EEG participation
     '''
-    wind_eeg_yearly = ((np.array(wind_profile['GHM-wind-onshore-profile']) * wea_p_max) * eeg_beteiligung).sum() * wea_eeg_share
-    pv_eeg_yearly = ((ff_pv_profile['GHM-solar-pv_ground-profile'] * pv_p_max) * eeg_beteiligung).sum()
+    wind_eeg_yearly = ((np.array(wind_profile['GHM-wind-onshore-profile']) * wea_p_max) * eeg_participation).sum() * wea_eeg_share
+    pv_eeg_yearly = ((ff_pv_profile['GHM-solar-pv_ground-profile'] * pv_p_max) * eeg_participation).sum()
     apv_eeg_yearly = (((agri_pv_ver_profile['GHM-agri-pv_ver_ground-profile'] * apv_ver_p_max) + (
-                agri_pv_hor_profile['GHM-agri-pv_hor_ground-profile'] * apv_hor_p_max)) * eeg_beteiligung).sum()
+                agri_pv_hor_profile['GHM-agri-pv_hor_ground-profile'] * apv_hor_p_max)) * eeg_participation).sum()
 
 
     # performance degradation
@@ -660,86 +640,84 @@ def main(form_data):
     pv_sr_bb_yearly = pv_p_max * bb_euro_mw_pv
     apv_sr_bb_yearly = (apv_ver_p_max + apv_hor_p_max) * bb_euro_mw_pv
 
-
     '''
      INVESTMENT COSTS
      '''
-
-    def calculate_profit_year(title, eeg_anteil_gemeinde, investitionskosten, fremdkapitalanteil, zinshoehe,
-                              tilgungsdauer, jaehrliche_betriebskosten_ersten_10_jahre,
-                              jaehrliche_betriebskosten_ab_11_jahr, erzeugte_energiemenge, preis_pro_mengeneinheit,
-                              steuermessbetrag, hebesatz, freibetrag, tilgungsfreie_jahre, jaehrliche_abschreibung,
-                              abschreibungs_dauer, degradation, initial_loss_carryforward=0):
+    def calculate_profit_year(title, eeg_share_mun, investment_costs, debt_capital_share, interest_rate,
+                              repayment_period, annual_opex_first_10,
+                              annual_opex_after_10, energy_generated, price_per_amount,
+                              tax_assesment_amount, levy_rate, free_amount, redemption_free_years, annual_depreciation,
+                              depreciation_duration, degradation, initial_loss_carryforward=0):
         # Initiale Calculation
-        fremdkapital = investitionskosten * fremdkapitalanteil
+        debt_capital = investment_costs * debt_capital_share
 
-        if tilgungsfreie_jahre == 1:
-            zinsen_jahr_1 = fremdkapital * zinshoehe
-            restschuld = fremdkapital
-            jaehrliche_tilgung = restschuld / (tilgungsdauer - 2)
+        if redemption_free_years == 1:
+            interest_year_1 = debt_capital * interest_rate
+            remaining_debt = debt_capital
+            annual_repayment = remaining_debt / (repayment_period - 2)
 
         else:
-            restschuld = fremdkapital
-            jaehrliche_tilgung = restschuld / tilgungsdauer
+            remaining_debt = debt_capital
+            annual_repayment = remaining_debt / repayment_period
 
-        kumulierte_kosten = 0
-        kumulierte_einnahmen = 0
-        kumulierte_jahresgewinne = 0
-        jahr = 0
-        jahresgewinne = []
-        gewerbesteuer_tot = []
-        gewerbesteuer = []
-        gewinn_start_jahr = None
+        accumulated_costs = 0
+        accumulated_income = 0
+        accumulated_annual_profits = 0
+        year = 0
+        annual_profits = []
+        trade_tax_total = []
+        trade_tax = []
+        profit_first_year = None
         total_loss_carryforward = initial_loss_carryforward
 
-        for jahr in range(1, 26):  # Year 1 to 25
-            if jahr <= 10:
-                jaehrliche_betriebskosten = jaehrliche_betriebskosten_ersten_10_jahre
+        for year in range(1, 26):  # Year 1 to 25
+            if year <= 10:
+                annual_opex = annual_opex_first_10
             else:
-                jaehrliche_betriebskosten = jaehrliche_betriebskosten_ab_11_jahr
+                annual_opex = annual_opex_after_10
 
-            if jahr > abschreibungs_dauer:
-                jaehrliche_abschreibung = 0
+            if year > depreciation_duration:
+                annual_depreciation = 0
 
-            if jahr == 1:
-                jahresenergieertrag = erzeugte_energiemenge
-                eeg_jahrebetrag = eeg_anteil_gemeinde
+            if year == 1:
+                annual_energy_yield = energy_generated
+                eeg_annual_amount = eeg_share_mun
             else:
-                jahresenergieertrag = erzeugte_energiemenge * ((1 - degradation) ** jahr)
-                eeg_jahrebetrag = eeg_anteil_gemeinde * ((1 - degradation) ** jahr)
+                annual_energy_yield = energy_generated * ((1 - degradation) ** year)
+                eeg_annual_amount = eeg_share_mun * ((1 - degradation) ** year)
 
-            if jahr == 1 and tilgungsfreie_jahre == 1:
-                jaehrliche_zinsen = zinsen_jahr_1
-                tilgung = 0
-                jahreskosten = jaehrliche_betriebskosten + jaehrliche_zinsen + eeg_jahrebetrag
-            elif jahr == 2 and tilgungsfreie_jahre == 1:
-                jaehrliche_zinsen = zinsen_jahr_1
-                tilgung = 0
-                jahreskosten = jaehrliche_betriebskosten + jaehrliche_zinsen + eeg_jahrebetrag
+            if year == 1 and redemption_free_years == 1:
+                annual_interests = interest_year_1
+                repayment = 0
+                annual_costs = annual_opex + annual_interests + eeg_annual_amount
+            elif year == 2 and redemption_free_years == 1:
+                annual_interests = interest_year_1
+                repayment = 0
+                annual_costs = annual_opex + annual_interests + eeg_annual_amount
             else:
-                jaehrliche_zinsen = restschuld * zinshoehe
-                tilgung = min(jaehrliche_tilgung, restschuld)
-                restschuld = max(0, restschuld - tilgung)
-                jahreskosten = jaehrliche_betriebskosten + eeg_jahrebetrag + jaehrliche_zinsen
+                annual_interests = remaining_debt * interest_rate
+                repayment = min(annual_repayment, remaining_debt)
+                remaining_debt = max(0, remaining_debt - repayment)
+                annual_costs = annual_opex + eeg_annual_amount + annual_interests
 
-            kumulierte_kosten += jahreskosten
-            jaehrliche_einnahmen = jahresenergieertrag * preis_pro_mengeneinheit
+            accumulated_costs += annual_costs
+            annual_income = annual_energy_yield * price_per_amount
 
-            if jaehrliche_einnahmen > 0:
-                kumulierte_einnahmen += jaehrliche_einnahmen
+            if annual_income > 0:
+                accumulated_income += annual_income
 
-            if jahr <= 2:
-                jaehrlicher_gewinn = jaehrliche_einnahmen - jahreskosten - jaehrliche_abschreibung
+            if year <= 2:
+                annual_profit = annual_income - annual_costs - annual_depreciation
             else:
-                jaehrlicher_gewinn = jaehrliche_einnahmen - jahreskosten - jaehrliche_abschreibung
+                annual_profit = annual_income - annual_costs - annual_depreciation
 
-            kumulierte_jahresgewinne += jaehrlicher_gewinn
+            accumulated_annual_profits += annual_profit
 
-            if jaehrlicher_gewinn < 0:
-                total_loss_carryforward += -jaehrlicher_gewinn
+            if annual_profit < 0:
+                total_loss_carryforward += -annual_profit
                 adjusted_profit = 0
             else:
-                adjusted_profit = jaehrlicher_gewinn
+                adjusted_profit = annual_profit
 
                 if total_loss_carryforward > 0 and adjusted_profit > 0:
                     # Deduct up to 1 million loss
@@ -757,184 +735,176 @@ def main(form_data):
                         total_loss_carryforward -= extra_loss
                         adjusted_profit -= extra_loss
 
-            jahresgewinne.append((jahr, adjusted_profit))
+            annual_profits.append((year, adjusted_profit))
 
             if adjusted_profit > 0:
-                gewerbesteuer_tot_value = ((adjusted_profit * 0.9) - freibetrag) * steuermessbetrag * hebesatz
-                gewerbesteuer_value = gewerbesteuer_tot_value - (
-                        (((adjusted_profit * 0.9) - freibetrag) * steuermessbetrag) * 0.35)
+                trade_tax_total_value = ((adjusted_profit * 0.9) - free_amount) * tax_assesment_amount * levy_rate
+                trade_tax_value = trade_tax_total_value - (
+                        (((adjusted_profit * 0.9) - free_amount) * tax_assesment_amount) * 0.35)
             else:
-                gewerbesteuer_tot_value = 0
-                gewerbesteuer_value = 0
+                trade_tax_total_value = 0
+                trade_tax_value = 0
 
-            gewerbesteuer_tot.append((jahr, gewerbesteuer_tot_value))
-            gewerbesteuer.append((jahr, gewerbesteuer_value))
+            trade_tax_total.append((year, trade_tax_total_value))
+            trade_tax.append((year, trade_tax_value))
 
-            if jaehrlicher_gewinn > 0 and jahr >= 3:
-                if gewinn_start_jahr is None:
-                    gewinn_start_jahr = jahr
+            if annual_profit > 0 and year >= 3:
+                if profit_first_year is None:
+                    profit_first_year = year
 
         return (
-            gewinn_start_jahr if gewinn_start_jahr is not None else "kein Gewinn"), jahresgewinne, gewerbesteuer, kumulierte_jahresgewinne
+            profit_first_year if profit_first_year is not None else "no profit"), annual_profits, trade_tax, accumulated_annual_profits
 
     def run_scenario(params, results):
 
-        berechnete_mw = params.get("berechnete_mw", 0)
-        genehmigte_anlagen = params.get("genehmigte_anlagen", 0)
-        eeg_beteiligung = params.get("eeg_beteiligung", 0)
+        installed_capacity = params.get("installed_capacity", 0)
+        eeg_participation = params.get("eeg_participation", 0)
         profil = params.get("profil", pd.Series([0]))
-        investitionskosten = params.get("investitionskosten", 0)
-        betriebskosten10 = params.get("betriebskosten10", 0)
-        betriebskosten20 = params.get("betriebskosten20", 0)
+        investment_costs = params.get("investment_costs", 0)
+        opex10 = params.get("opex10", 0)
+        opex20 = params.get("opex20", 0)
         sr_bb_euro = params.get("sr_bb_euro", 0)
-        erzeugte_energiemenge = params.get("erzeugte_energiemenge", 0)
-        preis_pro_mengeneinheit = params.get("preis_pro_mengeneinheit", 0)
-        tilgungsfreie_jahre = params.get("tilgungsfreie_jahre", 0)
+        energy_generated = params.get("energy_generated", 0)
+        price_per_amount = params.get("price_per_amount", 0)
+        redemption_free_years = params.get("redemption_free_years", 0)
         degradation = params.get("degradation", 0)
         title = params.get("title", "Unknown Scenario")
 
-        wind_euro_2026 = berechnete_mw - genehmigte_anlagen if genehmigte_anlagen < berechnete_mw else 0
-        investitionskosten = investitionskosten * berechnete_mw
-        fremdkapitalanteil = params.get("fremdkapitalanteil", 0.8)  # Standard 80%
-        zinshoehe = params.get("zinshoehe", 0.05)  # Standard 5%
-        tilgungsdauer = params.get("tilgungsdauer", 15)
-        freibetrag = params.get("freibetrag", 0)
-        abschreibungs_dauer = params.get("abschreibungs_dauer", 0)
+        investment_costs = investment_costs * installed_capacity
+        debt_capital_share = params.get("debt_capital_share", 0.8)  # Standard 80%
+        interest_rate = params.get("interest_rate", 0.05)  # Standard 5%
+        repayment_period = params.get("repayment_period", 15)
+        free_amount = params.get("free_amount", 0)
+        depreciation_duration = params.get("depreciation_duration", 0)
         if choosen_mun != 0:
-            sr_bb_euro = wind_euro_2026 * sr_bb_euro + ((genehmigte_anlagen / 6) * 10000)
+            sr_bb_euro = installed_capacity * sr_bb_euro
         else:
             sr_bb_euro = 0
-        eeg_anteil_gemeinde = ((profil * berechnete_mw) * eeg_beteiligung).sum()
-        jaehrliche_betriebskosten_ersten_10_jahre = betriebskosten10 * berechnete_mw + sr_bb_euro
-        jaehrliche_betriebskosten_ab_11_jahr = betriebskosten20 * berechnete_mw + sr_bb_euro
-        erzeugte_energiemenge = erzeugte_energiemenge * berechnete_mw
-        preis_pro_mengeneinheit = preis_pro_mengeneinheit  # Preis pro kWh in €
-        tilgungsfreie_jahre = tilgungsfreie_jahre
-        if abschreibungs_dauer != 0:
-            jaehrliche_abschreibung = investitionskosten / abschreibungs_dauer
+        eeg_share_mun = ((profil * installed_capacity) * eeg_participation).sum()
+        annual_opex_first_10 = opex10 * installed_capacity + sr_bb_euro
+        annual_opex_after_10 = opex20 * installed_capacity + sr_bb_euro
+        energy_generated = energy_generated * installed_capacity
+        price_per_amount = price_per_amount  # Preis per kWh in €
+        redemption_free_years = redemption_free_years
+        if depreciation_duration != 0:
+            annual_depreciation = investment_costs / depreciation_duration
         else:
-            jaehrliche_abschreibung = 0
-        profit_year, jahresgewinne, gewerbesteuer, kumulierte_jahresgewinne = calculate_profit_year(title,
-                                                                                                    eeg_anteil_gemeinde,
-                                                                                                    investitionskosten,
-                                                                                                    fremdkapitalanteil,
-                                                                                                    zinshoehe,
-                                                                                                    tilgungsdauer,
-                                                                                                    jaehrliche_betriebskosten_ersten_10_jahre,
-                                                                                                    jaehrliche_betriebskosten_ab_11_jahr,
-                                                                                                    erzeugte_energiemenge,
-                                                                                                    preis_pro_mengeneinheit,
-                                                                                                    steuermessbetrag,
-                                                                                                    hebesatz,
-                                                                                                    freibetrag,
-                                                                                                    tilgungsfreie_jahre,
-                                                                                                    jaehrliche_abschreibung,
-                                                                                                    abschreibungs_dauer,
+            annual_depreciation = 0
+        profit_year, annual_profits, trade_tax, accumulated_annual_profits = calculate_profit_year(title,
+                                                                                                    eeg_share_mun,
+                                                                                                    investment_costs,
+                                                                                                    debt_capital_share,
+                                                                                                    interest_rate,
+                                                                                                    repayment_period,
+                                                                                                    annual_opex_first_10,
+                                                                                                    annual_opex_after_10,
+                                                                                                    energy_generated,
+                                                                                                    price_per_amount,
+                                                                                                    tax_assesment_amount,
+                                                                                                    levy_rate,
+                                                                                                    free_amount,
+                                                                                                    redemption_free_years,
+                                                                                                    annual_depreciation,
+                                                                                                    depreciation_duration,
                                                                                                     degradation)
 
         # Saving the trade tax in the result dictionary
-        results[params["name"]] = gewerbesteuer
+        results[params["name"]] = trade_tax
 
     # Save trade tax results for different scenarios
-    gewerbesteuer_results = {}
+    trade_tax_results = {}
 
     # Defining scenarios
-    szenarien = [  # Wind 100%
-        {"berechnete_mw": wea_p_max, "erzeugte_energiemenge": 2550000,
-         "preis_pro_mengeneinheit": 0.0828, "eeg_beteiligung": 2,
+    scenarios = [  # Wind 100%
+        {"installed_capacity": wea_p_max, "energy_generated": 2550000,
+         "price_per_amount": 0.0828, "eeg_participation": 2,
          "profil": wind_profile['GHM-wind-onshore-profile'], "sr_bb_euro": 5000,
-         "investitionskosten": wea_invest_cost,
-         "betriebskosten10": 44000, "betriebskosten20": 53000, "fremdkapitalanteil": 0.8, "zinshoehe": 0.05,
-         "tilgungsdauer": 15, "title": "Gewerbesteuer der WEA",
-         "filename": "komm-wert-gwst-anlagenbetreibende-wind100.png", "bar_color": htw_orange, "freibetrag": 0, "tilgungsfreie_jahre": 1,
-         "name": 'Wind100', "abschreibungs_dauer": 16, "degradation": 0.006},  # FF-PV 100%
-        {"berechnete_mw": pv_p_max, "genehmigte_anlagen": 0, "erzeugte_energiemenge": 1000000,
-         "preis_pro_mengeneinheit": 0.073, "eeg_beteiligung": 2,
-         "profil": ff_pv_profile['GHM-solar-pv_ground-profile'], "sr_bb_euro": 2000, "investitionskosten": ffpv_invest_costs,
-         "betriebskosten10": 14300, "betriebskosten20": 14300, "fremdkapitalanteil": 0.8, "zinshoehe": 0.03,
-         "tilgungsdauer": 15, "title": "Gewerbesteuer der FF-PV",
-         "filename": "komm-wert-gwst-anlagenbetreibende-ff-pv-100.png", "bar_color": htw_green, "freibetrag": 24500,
-         "tilgungsfreie_jahre": 1, "name": 'FFPV100', "abschreibungs_dauer": 20, "degradation": 0.005},
+         "investment_costs": wea_invest_cost,
+         "opex10": 44000, "opex20": 53000, "debt_capital_share": 0.8, "interest_rate": 0.05,
+         "repayment_period": 15, "title": "Gewerbesteuer der WEA",
+         "filename": "komm-wert-gwst-anlagenbetreibende-wind100.png", "bar_color": COLORS['orange'], "free_amount": 0, "redemption_free_years": 1,
+         "name": 'Wind100', "depreciation_duration": 16, "degradation": 0.006},  # FF-PV 100%
+        {"installed_capacity": pv_p_max, "energy_generated": 1000000,
+         "price_per_amount": 0.073, "eeg_participation": 2,
+         "profil": ff_pv_profile['GHM-solar-pv_ground-profile'], "sr_bb_euro": 2000, "investment_costs": ffpv_invest_costs,
+         "opex10": 14300, "opex20": 14300, "debt_capital_share": 0.8, "interest_rate": 0.03,
+         "repayment_period": 15, "title": "Gewerbesteuer der FF-PV",
+         "filename": "komm-wert-gwst-anlagenbetreibende-ff-pv-100.png", "bar_color": COLORS['green'], "free_amount": 24500,
+         "redemption_free_years": 1, "name": 'FFPV100', "depreciation_duration": 20, "degradation": 0.005},
         # Agri-PV hor. 100%
-        {"berechnete_mw": apv_hor_p_max, "genehmigte_anlagen": 0, "erzeugte_energiemenge": apvh_invest_costs,
-         "preis_pro_mengeneinheit": 0.088, "eeg_beteiligung": 2,
+        {"installed_capacity": apv_hor_p_max, "energy_generated": apvh_invest_costs,
+         "price_per_amount": 0.088, "eeg_participation": 2,
          "profil": agri_pv_hor_profile['GHM-agri-pv_hor_ground-profile'], "sr_bb_euro": 2000,
-         "investitionskosten": 945000, "betriebskosten10": 12870, "betriebskosten20": 12870,
-         "fremdkapitalanteil": 0.8, "zinshoehe": 0.03, "tilgungsdauer": 15,
+         "investment_costs": 945000, "opex10": 12870, "opex20": 12870,
+         "debt_capital_share": 0.8, "interest_rate": 0.03, "repayment_period": 15,
          "title": "Max. Gewerbesteuer der Agri-PV-Anlagen (hor.)",
-         "filename": "komm-wert-gwst-anlagenbetreibende-agri-pv-hor-1.png", "bar_color": htw_blue, "freibetrag": 24500,
-         "tilgungsfreie_jahre": 1, "name": 'APVH100', "abschreibungs_dauer": 20, "degradation": 0.005},
+         "filename": "komm-wert-gwst-anlagenbetreibende-agri-pv-hor-1.png", "bar_color": COLORS['blue'], "free_amount": 24500,
+         "redemption_free_years": 1, "name": 'APVH100', "depreciation_duration": 20, "degradation": 0.005},
         # Agri-PV ver. 100%
-        {"berechnete_mw": apv_ver_p_max, "genehmigte_anlagen": 0, "erzeugte_energiemenge": apvv_invest_costs,
-         "preis_pro_mengeneinheit": 0.088, "eeg_beteiligung": 2,
+        {"installed_capacity": apv_ver_p_max, "energy_generated": apvv_invest_costs,
+         "price_per_amount": 0.088, "eeg_participation": 2,
          "profil": agri_pv_ver_profile['GHM-agri-pv_ver_ground-profile'], "sr_bb_euro": 2000,
-         "investitionskosten": 831000, "betriebskosten10": 11440, "betriebskosten20": 11440,
-         "fremdkapitalanteil": 0.8, "zinshoehe": 0.03, "tilgungsdauer": 15,
+         "investment_costs": 831000, "opex10": 11440, "opex20": 11440,
+         "debt_capital_share": 0.8, "interest_rate": 0.03, "repayment_period": 15,
          "title": "Max. Gewerbesteuer der Agri-PV-Anlagen (ver.)",
-         "filename": "komm-wert-gwst-anlagenbetreibende-agri-pv-ver-1.png", "bar_color": htw_blue, "freibetrag": 24500,
-         "tilgungsfreie_jahre": 1, "name": 'APVV100', "abschreibungs_dauer": 20, "degradation": 0.005},
+         "filename": "komm-wert-gwst-anlagenbetreibende-agri-pv-ver-1.png", "bar_color": COLORS['blue'], "free_amount": 24500,
+         "redemption_free_years": 1, "name": 'APVV100', "depreciation_duration": 20, "degradation": 0.005},
     ]
-    for szenario in szenarien:
-        run_scenario(szenario, gewerbesteuer_results)
+    for scenario in scenarios:
+        run_scenario(scenario, trade_tax_results)
 
-    szenariennamen_fuer_summe_1 = ["FFPV100"]
-    szenariennamen_fuer_summe_2 = ["APVV100", "APVH100"]
-    szenariennamen_fuer_summe_3 = ["Wind100"]
+    scenario_name_for_sum_1 = ["FFPV100"]
+    scenario_name_for_sum_2 = ["APVV100", "APVH100"]
+    scenario_name_for_sum_3 = ["Wind100"]
 
     # finding maximum annual trade tax
-    def max_annual_sum(gewerbesteuer_results, szenariennamen_fuer_summe):
-        summierte_steuern = [0] * 25
+    def max_annual_sum(trade_tax_results, scenario_name_for_sum):
+        tax_sum = [0] * 25
 
         # Sum up the trade tax per year across the specific scenarios
         for jahr in range(1, 26):
-            for szenarioname in szenariennamen_fuer_summe:
-                for j, steuer in gewerbesteuer_results[szenarioname]:
+            for scenarioname in scenario_name_for_sum:
+                for j, steuer in trade_tax_results[scenarioname]:
                     if j == jahr:
-                        summierte_steuern[jahr - 1] += steuer
+                        tax_sum[jahr - 1] += steuer
 
         # Find the maximum value of the total trade tax per year
-        max_steuer = max(summierte_steuern)
-        return max_steuer
+        max_tax = max(tax_sum)
+        return max_tax
 
-    max_steuer_1 = max_annual_sum(gewerbesteuer_results, szenariennamen_fuer_summe_1)
-    max_steuer_2 = max_annual_sum(gewerbesteuer_results, szenariennamen_fuer_summe_2)
-    max_steuer_3 = max_annual_sum(gewerbesteuer_results, szenariennamen_fuer_summe_3)
+    max_tax_1 = max_annual_sum(trade_tax_results, scenario_name_for_sum_1)
+    max_tax_2 = max_annual_sum(trade_tax_results, scenario_name_for_sum_2)
+    max_tax_3 = max_annual_sum(trade_tax_results, scenario_name_for_sum_3)
 
     # total trade tax over 25 years
-    gesamt_gewerbesteuer_1 = sum(
-        sum(jahressteuer for jahr, jahressteuer in gewerbesteuer_results[szenarioname] if jahressteuer > 0) for
-        szenarioname in szenariennamen_fuer_summe_1)
+    total_trade_tax_1 = sum(
+        sum(jahressteuer for jahr, jahressteuer in trade_tax_results[scenarioname] if jahressteuer > 0) for
+        scenarioname in scenario_name_for_sum_1)
 
-    gesamt_gewerbesteuer_2 = sum(
-        sum(jahressteuer for jahr, jahressteuer in gewerbesteuer_results[szenarioname] if jahressteuer > 0) for
-        szenarioname in szenariennamen_fuer_summe_2)
-    gesamt_gewerbesteuer_3 = sum(
-        sum(jahressteuer for jahr, jahressteuer in gewerbesteuer_results[szenarioname] if jahressteuer > 0) for
-        szenarioname in szenariennamen_fuer_summe_3)
+    total_trade_tax_2 = sum(
+        sum(jahressteuer for jahr, jahressteuer in trade_tax_results[scenarioname] if jahressteuer > 0) for
+        scenarioname in scenario_name_for_sum_2)
+    total_trade_tax_3 = sum(
+        sum(jahressteuer for jahr, jahressteuer in trade_tax_results[scenarioname] if jahressteuer > 0) for
+        scenarioname in scenario_name_for_sum_3)
 
-    try:
+    # Create echarts for trade tax
+    echart_trade_tax_pv = create_echarts_data_gewerbesteuer(trade_tax_results['FFPV100'], 25,
+                                      "gewerbesteuer_ff_pv.json",
+                                      "FF-PV", COLORS['blue'])
 
-        # FF-PV
-        echart_gewerbesteuer_ff_pv = create_echarts_data_gewerbesteuer(gewerbesteuer_results['FFPV100'], 25,
-                                          "gewerbesteuer_ff_pv.json",
-                                          "FF-PV", COLORS['blue'])
+    echart_trade_tax_wind = create_echarts_data_gewerbesteuer(trade_tax_results['Wind100'], 25,
+                                      "gewerbesteuer_wind.json",
+                                      "WEA", COLORS['red'])
 
-        # WEA
-        echart_gewerbesteuer_wind = create_echarts_data_gewerbesteuer(gewerbesteuer_results['Wind100'], 25,
-                                          "gewerbesteuer_wind.json",
-                                          "WEA", COLORS['red'])
-        # APV
-        apv_combined = []
-        for year in range(1, 26):
-            apv_value = sum(gewerbesteuer_results[name][year - 1][1] for name in szenariennamen_fuer_summe_2)
-            apv_combined.append((year, apv_value))
+    apv_combined = []
+    for year in range(1, 26):
+        apv_value = sum(trade_tax_results[name][year - 1][1] for name in scenario_name_for_sum_2)
+        apv_combined.append((year, apv_value))
 
-        echart_gewerbesteuer_agri_pv = create_echarts_data_gewerbesteuer(apv_combined, 25,
-                                          "gewerbesteuer_agri_pv.json",
-                                          "APV", COLORS['green'])
-
-    except Exception as e:
-        logger.error(f"Fehler beim Erstellen der Gewerbesteuer-Charts: {str(e)}")
+    echart_trade_tax_apv = create_echarts_data_gewerbesteuer(apv_combined, 25,
+                                      "gewerbesteuer_agri_pv.json",
+                                      "APV", COLORS['green'])
 
     '''
     ALL MUN INCOME FOR 25 YEARS
@@ -948,36 +918,36 @@ def main(form_data):
                                                                                     iterations)
 
     years = 25
-    gewerbesteuer_anlagen = [gesamt_gewerbesteuer_3, gesamt_gewerbesteuer_1,
-                             gesamt_gewerbesteuer_2]
-    eeg_einnahmen = [wind_eeg_degradation_result, pv_eeg_degradation_result, apv_eeg_degradation_result]
-    sr_bb_einnahmen = [wind_sr_bb_yearly * years, pv_sr_bb_yearly * years, apv_sr_bb_yearly * years]
+    trade_tax_plant = [total_trade_tax_3, total_trade_tax_1,
+                             total_trade_tax_2]
+    eeg_income = [wind_eeg_degradation_result, pv_eeg_degradation_result, apv_eeg_degradation_result]
+    sr_bb_income = [wind_sr_bb_yearly * years, pv_sr_bb_yearly * years, apv_sr_bb_yearly * years]
 
     area_costs_total = np.array(area_costs_yearly) * years
     area_gewst_total = np.array(area_gewst_yearly) * years
     area_est_total = np.array(area_est_yearly) * years
 
-    sum_wea = gesamt_gewerbesteuer_3 + wind_eeg_degradation_result + wind_sr_bb_yearly * years + area_costs_total[0] + area_gewst_total[0] + area_est_total[0]
-    sum_ff_pv = gesamt_gewerbesteuer_1 + pv_eeg_degradation_result + pv_sr_bb_yearly * years  + area_costs_total[1] + area_gewst_total[1] + area_est_total[1]
-    sum_agri_pv = gesamt_gewerbesteuer_2 + apv_eeg_degradation_result + apv_sr_bb_yearly * years + area_costs_total[2] + area_gewst_total[2] + area_est_total[2]
+    sum_wea = total_trade_tax_3 + wind_eeg_degradation_result + wind_sr_bb_yearly * years + area_costs_total[0] + area_gewst_total[0] + area_est_total[0]
+    sum_ff_pv = total_trade_tax_1 + pv_eeg_degradation_result + pv_sr_bb_yearly * years  + area_costs_total[1] + area_gewst_total[1] + area_est_total[1]
+    sum_agri_pv = total_trade_tax_2 + apv_eeg_degradation_result + apv_sr_bb_yearly * years + area_costs_total[2] + area_gewst_total[2] + area_est_total[2]
     sum_wea_plot = [0, 0, 0, sum_wea, 0, 0]
     sum_agri_pv_plot = [0, 0, 0, 0, 0, sum_agri_pv]
     sum_ff_pv_plot = [0, 0, 0, 0, sum_ff_pv, 0]
-    echart_pachteinnahmen = create_echarts_data_pachteinnahmen(area_costs_yearly, area_est_yearly, area_gewst_yearly)
+    echart_area_lease_income = create_echarts_data_pachteinnahmen(area_costs_yearly, area_est_yearly, area_gewst_yearly)
     echart_eeg = create_echarts_data_eeg(wind_eeg_yearly, pv_eeg_yearly, apv_eeg_yearly)
     echart_srbb = create_echarts_data_srbb(wind_sr_bb_yearly, pv_sr_bb_yearly, apv_sr_bb_yearly)
 
-    echart_gesamteinnahmen = create_echarts_data_gesamteinnahmen(gewerbesteuer_anlagen, eeg_einnahmen, sr_bb_einnahmen,
+    echart_total_income = create_echarts_data_gesamteinnahmen(trade_tax_plant, eeg_income, sr_bb_income,
                                         area_costs_total.tolist(), area_gewst_total.tolist(),
                                         area_est_total.tolist(), sum_wea_plot, sum_agri_pv_plot, sum_ff_pv_plot)
 
-    # correct format for values diplayed on added_value_results.html
+    # correct format for values displayed on added_value_results.html
     def format_numbers(value):
         return f"{value:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
 
     apv_area_income = apvh_area_income + apvv_area_income
-    apv_pacht_est = ghm_est_income_apvh + ghm_est_income_apvv
-    apv_pacht_gewst = apvh_area_gewst_total + apvv_area_gewst_total
+    lease_est_income_apv = lease_est_income_apvh + lease_est_income_apvv
+    lease_trade_tax_apv = apvh_area_gewst_total + apvv_area_gewst_total
 
     wind_eeg_yearly = format_numbers(wind_eeg_yearly)
     pv_eeg_yearly = format_numbers(pv_eeg_yearly)
@@ -988,18 +958,18 @@ def main(form_data):
     wea_area_income = format_numbers(wea_area_income)
     pv_area_income = format_numbers(pv_area_income)
     apv_area_income = format_numbers(apv_area_income)
-    ghm_est_income_wea = format_numbers(ghm_est_income_wea)
-    ghm_est_income_pv = format_numbers(ghm_est_income_pv)
-    apv_pacht_est = format_numbers(apv_pacht_est)
-    wea_area_gewst_total = format_numbers(wea_area_gewst_total)
-    pv_area_gewst_total = format_numbers(pv_area_gewst_total)
-    apv_pacht_gewst = format_numbers(apv_pacht_gewst)
-    gesamt_gewerbesteuer_1 = format_numbers(gesamt_gewerbesteuer_1)
-    gesamt_gewerbesteuer_2 = format_numbers(gesamt_gewerbesteuer_2)
-    gesamt_gewerbesteuer_3 = format_numbers(gesamt_gewerbesteuer_3)
-    max_steuer_1 = format_numbers(max_steuer_1)
-    max_steuer_2 = format_numbers(max_steuer_2)
-    max_steuer_3 = format_numbers(max_steuer_3)
+    lease_est_income_wea = format_numbers(lease_est_income_wea)
+    lease_est_income_pv = format_numbers(lease_est_income_pv)
+    lease_est_income_apv = format_numbers(lease_est_income_apv)
+    lease_trade_tax_wea = format_numbers(lease_trade_tax_wea)
+    lease_trade_tax_pv = format_numbers(lease_trade_tax_pv)
+    lease_trade_tax_apv = format_numbers(lease_trade_tax_apv)
+    total_trade_tax_1 = format_numbers(total_trade_tax_1)
+    total_trade_tax_2 = format_numbers(total_trade_tax_2)
+    total_trade_tax_3 = format_numbers(total_trade_tax_3)
+    max_tax_1 = format_numbers(max_tax_1)
+    max_tax_2 = format_numbers(max_tax_2)
+    max_tax_3 = format_numbers(max_tax_3)
     sum_wea = format_numbers(sum_wea)
     sum_ff_pv = format_numbers(sum_ff_pv)
     sum_agri_pv = format_numbers(sum_agri_pv)
@@ -1012,32 +982,32 @@ def main(form_data):
                   "wind_sr_bb_yearly":  wind_sr_bb_yearly,
                     "pv_sr_bb_yearly": pv_sr_bb_yearly,
                     "apv_sr_bb_yearly": apv_sr_bb_yearly,
-                    "gesamt_gewerbesteuer_1": gesamt_gewerbesteuer_1,
-                    "gesamt_gewerbesteuer_2": gesamt_gewerbesteuer_2,
-                    "gesamt_gewerbesteuer_3": gesamt_gewerbesteuer_3,
-                    'wea_pachteinnahmen': wea_area_income,
-                    'pv_pachteinnahmen': pv_area_income,
-                    'apv_pachteinnahmen': apv_area_income,
-                    'wea_pacht_est':ghm_est_income_wea,
-                    'pv_pacht_est':ghm_est_income_pv,
-                    'apv_pacht_est': apv_pacht_est,
-                    'wea_pacht_gewst': wea_area_gewst_total,
-                    'pv_pacht_gewst': pv_area_gewst_total,
-                    'apv_pacht_gewst': apv_pacht_gewst,
-                    'max_steuer_1': max_steuer_1,
-                    'max_steuer_2': max_steuer_2,
-                    'max_steuer_3': max_steuer_3,
+                    "total_trade_tax_1": total_trade_tax_1,
+                    "total_trade_tax_2": total_trade_tax_2,
+                    "total_trade_tax_3": total_trade_tax_3,
+                    'wea_area_income': wea_area_income,
+                    'pv_area_income': pv_area_income,
+                    'apv_area_income': apv_area_income,
+                    'lease_est_income_wea':lease_est_income_wea,
+                    'lease_est_income_pv':lease_est_income_pv,
+                    'lease_est_income_apv': lease_est_income_apv,
+                    'lease_trade_tax_wea': lease_trade_tax_wea,
+                    'lease_trade_tax_pv': lease_trade_tax_pv,
+                    'lease_trade_tax_apv': lease_trade_tax_apv,
+                    'max_tax_1': max_tax_1,
+                    'max_tax_2': max_tax_2,
+                    'max_tax_3': max_tax_3,
                     'sum_wea': sum_wea,
                     'sum_ff_pv': sum_ff_pv,
                     'sum_agri_pv': sum_agri_pv,
                     'choosen_mun': choosen_mun,
-                    'echart_pachteinnahmen': echart_pachteinnahmen,
+                    'echart_area_lease_income': echart_area_lease_income,
                     'echart_eeg': echart_eeg,
                     'echart_wind_solar_euro': echart_srbb,
-                    'echart_gewerbesteuer_wind': echart_gewerbesteuer_wind,
-                    'echart_gewerbesteuer_ff_pv': echart_gewerbesteuer_ff_pv,
-                    'echart_gewerbesteuer_agri_pv': echart_gewerbesteuer_agri_pv,
-                    'echart_gesamteinnahmen': echart_gesamteinnahmen,
+                    'echart_trade_tax_wind': echart_trade_tax_wind,
+                    'echart_trade_tax_pv': echart_trade_tax_pv,
+                    'echart_trade_tax_apv': echart_trade_tax_apv,
+                    'echart_total_income': echart_total_income,
 
                     })
 

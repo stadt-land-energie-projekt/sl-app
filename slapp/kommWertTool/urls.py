@@ -10,6 +10,5 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 urlpatterns = [
     path('', views.index, name='index'),
     path('added_value_results/', views.submit, name='submit'),
-    #path('plots/<str:filename>/', views.send_plot, name='sendplot'),
     path("added_value/", views.index, name="added_value"),
 ]

@@ -1,13 +1,5 @@
-import os
-import csv
-import subprocess
-import json
-import logging
 from pathlib import Path
-from time import sleep, time
-from shutil import rmtree
 from django.urls import reverse
-from slapp.kommWertTool.cal_mun_rev import main
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods

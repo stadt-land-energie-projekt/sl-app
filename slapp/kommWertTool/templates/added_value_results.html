@@ -16,8 +16,8 @@
 {{ results|json_script:"results-data" }}
     <div class="row mt-5">
         <div class="col-md-6">
-  <div id="eeg_beteiligung_loader" class="loader"></div>
-<div id="eeg_beteiligung_chart" style="width: 100%;  height: 400px;"></div>
+  <div id="eeg_participation_loader" class="loader"></div>
+<div id="eeg_participation_chart" style="width: 100%;  height: 400px;"></div>
         </div>
         <div class="col-md-6 m-auto">
             <h3 class="smallHeadline">EEG-Beteiligung (jährlich)</h3>
@@ -100,19 +100,13 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
   </div>
         </div>
     </div>
-    {% else %}
-        <div class="alert alert-dark mt-4 mb-4" role="alert">
-            <i class="fas fa-info-circle" data-placement="left"></i>
-            Keine Einnahmen durch Pachterlöse vorhanden, da keine Angaben gemacht wurden. Entsprechend wird von
-            Landes-/Bundeseigentum ausgegangen.
-        </div>
     {% endif %}
-    {% if results.wea_pachteinnahmen != "0,00" or results.pv_pachteinnahmen != "0,00" or results.apv_pachteinnahmen != "0,00" or results.wea_pacht_est != "0,00" or results.pv_pacht_est != "0,00" or results.apv_pacht_est != "0,00" or results.wea_pacht_gewst != "0,00" or results.pv_pacht_gewst != "0,00" or results.apv_pacht_gewst != "0,00" %}
+    {% if results.wea_area_lease_income != "0,00" or results.pv_area_lease_income != "0,00" or results.apv_area_lease_income != "0,00" or results.wea_pacht_est != "0,00" or results.pv_pacht_est != "0,00" or results.apv_pacht_est != "0,00" or results.wea_pacht_gewst != "0,00" or results.pv_pacht_gewst != "0,00" or results.apv_pacht_gewst != "0,00" %}
         <hr>
         <div class="row">
             <div class="col-md-6">
- <div id="pachteinnahmen_loader" class="loader">  </div>
-<div id="pachteinnahmen_chart" style="width: 100%;  height: 400px;"></div>
+ <div id="area_lease_income_loader" class="loader">  </div>
+<div id="area_lease_income_chart" style="width: 100%;  height: 400px;"></div>
             </div>
             <div class="col-md-6 m-auto">
                 <h3 class="smallHeadline">Einnahmen durch Pachterlöse</h3>
@@ -129,21 +123,21 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
                     <tbody>
                     <tr>
                         <td>Pachteinnahmen</td>
-                        <td>{{ results.wea_pachteinnahmen }} €</td>
-                        <td>{{ results.pv_pachteinnahmen }} €</td>
-                        <td>{{ results.apv_pachteinnahmen }} €</td>
+                        <td>{{ results.wea_area_income }} €</td>
+                        <td>{{ results.pv_area_income }} €</td>
+                        <td>{{ results.apv_area_income }} €</td>
                     </tr>
                     <tr>
                         <td>Komm. ESt.-Anteil</td>
-                        <td>{{ results.wea_pacht_est }} €</td>
-                        <td>{{ results.pv_pacht_est }} €</td>
-                        <td>{{ results.apv_pacht_est }} €</td>
+                        <td>{{ results.lease_est_income_wea }} €</td>
+                        <td>{{ results.lease_est_income_pv }} €</td>
+                        <td>{{ results.lease_est_income_apv }} €</td>
                     </tr>
                     <tr>
                         <td>Komm. GewSt.-Anteil</td>
-                        <td>{{ results.wea_pacht_gewst }} €</td>
-                        <td>{{ results.pv_pacht_gewst }} €</td>
-                        <td>{{ results.apv_pacht_gewst }} €</td>
+                        <td>{{ results.lease_trade_tax_wea }} €</td>
+                        <td>{{ results.lease_trade_tax_pv }} €</td>
+                        <td>{{ results.lease_trade_tax_apv }} €</td>
                     </tr>
                     </tbody>
                 </table>
@@ -185,20 +179,20 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
     <div class="row">
         {% if results.gesamt_gewerbesteuer_3 != "0,00" %}
             <div class="col-md-6">
-<div id="gewerbesteuer_wind_loader" class="loader">  </div>
-<div id="gewerbesteuer_wind_chart" style="width: 100%; height: 400px;"></div>
+<div id="trade_tax_wind_loader" class="loader">  </div>
+<div id="trade_tax_wind_chart" style="width: 100%; height: 400px;"></div>
             </div>
         {% endif %}
         {% if results.gesamt_gewerbesteuer_1 != "0,00" %}
             <div class="col-md-6">
-<div id="gewerbesteuer_ff_pv_loader" class="loader">  </div>
-<div id="gewerbesteuer_ff_pv_chart" style="width: 100%; height: 400px;"></div></div>
+<div id="trade_tax_pv_loader" class="loader">  </div>
+<div id="trade_tax_pv_chart" style="width: 100%; height: 400px;"></div></div>
 
         {% endif %}
         {% if results.gesamt_gewerbesteuer_2 != "0,00" %}
             <div class="col-md-6">
-    <div id="gewerbesteuer_agri_pv_loader" class="loader">  </div>
-<div id="gewerbesteuer_agri_pv_chart" style="width: 100%; height: 400px;"></div></div>
+    <div id="trade_tax_apv_loader" class="loader">  </div>
+<div id="trade_tax_apv_chart" style="width: 100%; height: 400px;"></div></div>
 
         {% endif %}
         <div class="col-md-6 m-auto">
@@ -214,15 +208,15 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
                 <tbody>
                 <tr>
                     <td>Max. jährl. GewSt.</td>
-                    <td>{{ results.max_steuer_3 }} €</td>
-                    <td>{{ results.max_steuer_1 }} €</td>
-                    <td>{{ results.max_steuer_2 }} €</td>
+                    <td>{{ results.max_tax_3 }} €</td>
+                    <td>{{ results.max_tax_1 }} €</td>
+                    <td>{{ results.max_tax_2 }} €</td>
                 </tr>
                 <tr>
                     <td>Einnahmen über 25 Jahre</td>
-                    <td>{{ results.gesamt_gewerbesteuer_3 }} €</td>
-                    <td>{{ results.gesamt_gewerbesteuer_1 }} €</td>
-                    <td>{{ results.gesamt_gewerbesteuer_2 }} €</td>
+                    <td>{{ results.total_trade_tax_3 }} €</td>
+                    <td>{{ results.total_trade_tax_1 }} €</td>
+                    <td>{{ results.total_trade_tax_2 }} €</td>
                 </tr>
                 </tbody>
             </table>
@@ -232,8 +226,8 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
     <h2 class="rowHeader">Gesamteinnahmen über 25 Jahre</h2>
     <div class="row">
         <div class="col-md-12">
-   <div id="gesamteinnahmen_loader" class="loader">  </div>
-<div id="gesamteinnahmen_chart" style="width: 100%; height: 500px;"></div></div>
+   <div id="total_income_loader" class="loader">  </div>
+<div id="total_income_chart" style="width: 100%; height: 500px;"></div></div>
         </div>
 
         <div class="col-md-6 m-auto">
@@ -287,7 +281,7 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
 
 
         const chartTypes = [{
-                id: "eeg_beteiligung",
+                id: "eeg_participation",
                 dataKey: "echart_eeg"
             },
             {
@@ -295,24 +289,24 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
                 dataKey: "echart_wind_solar_euro"
             },
             {
-                id: "pachteinnahmen",
-                dataKey: "echart_pachteinnahmen"
+                id: "area_lease_income",
+                dataKey: "echart_area_lease_income"
             },
             {
-                id: "gewerbesteuer_wind",
-                dataKey: "echart_gewerbesteuer_wind"
+                id: "trade_tax_wind",
+                dataKey: "echart_trade_tax_wind"
             },
             {
-                id: "gewerbesteuer_ff_pv",
-                dataKey: "echart_gewerbesteuer_ff_pv"
+                id: "trade_tax_pv",
+                dataKey: "echart_trade_tax_pv"
             },
             {
-                id: "gewerbesteuer_agri_pv",
-                dataKey: "echart_gewerbesteuer_agri_pv"
+                id: "trade_tax_apv",
+                dataKey: "echart_trade_tax_apv"
             },
             {
-                id: "gesamteinnahmen",
-                dataKey: "echart_gesamteinnahmen"
+                id: "total_income",
+                dataKey: "echart_total_income"
             }
         ];
 
