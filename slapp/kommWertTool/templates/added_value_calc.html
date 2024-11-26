@@ -45,7 +45,28 @@
 
       <option value="{{ municipality.id }}" data-name="{{ municipality.name }}">{{ municipality.name }}</option>
       {% endfor %}
-    </select>              </div></div>
+      <option value="own_county" data-name="own_county">Eigener Landkreis</option>
+    </select>
+
+  </div>
+    <div id="check_county" class="col-md-6">
+           <p>
+      <b>In welchem Bundesland befindet sich der Landkreis:</b>
+                                    </p>
+  <div class="row">    <div class="col-md-6">
+      <input class="form-check-input" id="check_county_bb" name="check_county" data-name="check_county_bb" value="check_county_bb" type="radio">
+    <label class="form-check-label" for="check_county_bb">
+        Brandenburg
+    </label>
+</div>
+      <div class="col-md-6">
+    <input class="form-check-input" id="check_county_sh" data-name="check_county_sh" value="check_county_sh" name="check_county" type="radio">
+    <label class="form-check-label" for="check_county_sh">
+       Schleswig-Holstein
+    </label></div>
+</div></div>
+
+                              </div>
                                     <div class="row mt-2">
 <div class="col-md-6">               <label for="levy_rate">
                                         Hebesatz der Gemeinde (<i>optional</i>):
@@ -671,50 +692,73 @@ checkboxes.forEach(item => {
         toggleRemoveButton('apvv');
         toggleRemoveButton('apvh');
     });
+
 document.addEventListener('DOMContentLoaded', function() {
-  const dropdown = document.getElementById('choosen_mun');
-  const inputField = document.getElementById('levy_rate');
+    // Adds levy rate of the chosen municipality to the input field
+    const selectElement = document.getElementById('choosen_mun');
+    const inputField = document.getElementById('levy_rate');
+    const valueMap = {
+        '0': 450,
+        '4': 300,
+        '5': 350,
+        '6': 300,
+        '7': 320,
+        'own_county': ''
+    };
 
-  // Objekt zur Zuordnung von Dropdown-Werten zu spezifischen Zahlen
-  const valueMap = {
-    '0': 450,
-     '4': 300,
-    '5': 350,
-    '6': 300,
-    '7': 320
-  };
+    // Event Listener für das Dropdown-Menü
+    selectElement.addEventListener('change', function() {
+        const selectedValue = this.value;
+        if (selectedValue in valueMap) {
+            inputField.value = valueMap[selectedValue];
+        } else {
+            inputField.value = '';
+        }
 
-  dropdown.addEventListener('change', function() {
-    const selectedValue = this.value;
-    if (selectedValue in valueMap) {
-      inputField.value = valueMap[selectedValue];
-    } else {
-      inputField.value = ''; // Leert das Feld, wenn keine gültige Option ausgewählt ist
+        // Überprüfen der Sichtbarkeit nach Auswahländerung
+        checkMunicipality();
+    });
+
+    // Hides wind/solar-euro if municipality is not in BB + displays county selection when own_county is chosen
+    function checkMunicipality() {
+        var windEuroShareDiv = document.querySelector('.col-md-6 label[for="wind_euro_share"]').parentElement;
+        var countyCheckDiv = document.getElementById('check_county');
+
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var municipalityName = selectedOption.getAttribute('data-name');
+
+        var selectedRadio = document.querySelector('input[name="check_county"]:checked');
+        var countyName = selectedRadio ? selectedRadio.getAttribute('data-name') : null;
+
+        if (municipalityName === 'Kiel') {
+            windEuroShareDiv.style.display = 'none';
+            countyCheckDiv.style.display = 'none';
+        } else if (municipalityName === 'own_county') {
+            countyCheckDiv.style.display = 'block';
+            if (countyName === 'check_county_sh') {
+                windEuroShareDiv.style.display = 'none';
+            } else {
+                windEuroShareDiv.style.display = 'block';
+            }
+        } else {
+            windEuroShareDiv.style.display = 'block';
+            countyCheckDiv.style.display = 'none';
+        }
     }
-  });
 
-      // Hide Wind-Euro if mun is not in BB
-var selectElement = document.getElementById('choosen_mun');
-  var windEuroShareDiv = document.querySelector('.col-md-6 label[for="wind_euro_share"]').parentElement;
+    // Event Listener für Radiobuttons
+    document.querySelectorAll('input[name="check_county"]').forEach(function(radio) {
+        radio.addEventListener('change', checkMunicipality);
+    });
 
-  function checkMunicipality() {
-    var selectedOption = selectElement.options[selectElement.selectedIndex];
-    var municipalityName = selectedOption.getAttribute('data-name');
+    // Überprüfen des ausgewählten Elements beim Laden der Seite
+    checkMunicipality();
+var selectedRadio = document.querySelector('input[name="check_county"]:checked');
+var countyName = selectedRadio ? selectedRadio.value : null; // Hier wird der Wert abgerufen
+console.log("Selected County Name:", countyName); // Debugging-Ausgabe
 
-    if (municipalityName === 'Kiel') {
-      windEuroShareDiv.style.display = 'none';
-    } else {
-      windEuroShareDiv.style.display = 'block';
-    }
-  }
 
-  // Überprüfen des ausgewählten Elements beim Laden der Seite
-  checkMunicipality();
-
-  // Überprüfen des ausgewählten Elements bei Änderungen
-  selectElement.addEventListener('change', checkMunicipality);
 });
-
 
 </script>
 {% endblock inline_javascript %}

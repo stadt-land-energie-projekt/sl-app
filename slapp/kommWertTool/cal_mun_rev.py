@@ -180,7 +180,7 @@ def create_echarts_data_srbb(wind_sr_bb_yearly, pv_sr_bb_yearly, apv_sr_bb_yearl
         ]
     }
     return(echarts_data_sr, f"wind_solar_euro.json")
-def create_echarts_data_gesamteinnahmen(trade_tax_plant, eeg_income, sr_bb_income,
+def create_echarts_data_total_mun_income(trade_tax_plant, eeg_income, sr_bb_income,
                                         area_costs_total, area_gewst_total, area_est_total, sum_wea_plot, sum_agri_pv_plot, sum_ff_pv_plot):
     legend_data = []
     series_data = []
@@ -217,7 +217,8 @@ def create_echarts_data_gesamteinnahmen(trade_tax_plant, eeg_income, sr_bb_incom
                 "name": "Einnahmen",
                 "axisLabel": {
                     "formatter": "{value}".replace(",", ".")
-                }
+                },
+                "splitNumber": 5
             },
             {
                 "type": "value",
@@ -225,7 +226,8 @@ def create_echarts_data_gesamteinnahmen(trade_tax_plant, eeg_income, sr_bb_incom
                 "axisLabel": {
                     "formatter": "{value}".replace(",", ".")
                 },
-                "position": "right"
+                "position": "right",
+                "splitNumber": 5
             }
         ],
         "series": [
@@ -374,7 +376,8 @@ def main(form_data):
     mun_key_value = int(form_data.get('mun_key_value', 0.003))
     apvv_mw_ha = 0.35
     apvh_mw_ha = 0.65
-    choosen_mun = int(form_data.get('choosen_mun', 0))
+    choosen_mun = form_data.get('choosen_mun', 0)
+    check_county = form_data.get('check_county', 'check_county_bb')
     # standard levy rate if None is given
     if mun_key_value == 0:
         mun_key_value = 0.3
@@ -933,7 +936,7 @@ def main(form_data):
     echart_eeg = create_echarts_data_eeg(wind_eeg_yearly, pv_eeg_yearly, apv_eeg_yearly)
     echart_srbb = create_echarts_data_srbb(wind_sr_bb_yearly, pv_sr_bb_yearly, apv_sr_bb_yearly)
 
-    echart_total_income = create_echarts_data_gesamteinnahmen(trade_tax_plant, eeg_income, sr_bb_income,
+    echart_total_income = create_echarts_data_total_mun_income(trade_tax_plant, eeg_income, sr_bb_income,
                                         area_costs_total.tolist(), area_gewst_total.tolist(),
                                         area_est_total.tolist(), sum_wea_plot, sum_agri_pv_plot, sum_ff_pv_plot)
 
@@ -969,7 +972,6 @@ def main(form_data):
     sum_wea = format_numbers(sum_wea)
     sum_ff_pv = format_numbers(sum_ff_pv)
     sum_agri_pv = format_numbers(sum_agri_pv)
-    choosen_mun = format_numbers(choosen_mun)
 
 
     results.update({"wind_eeg_yearly": wind_eeg_yearly,
@@ -997,6 +999,7 @@ def main(form_data):
                     'sum_ff_pv': sum_ff_pv,
                     'sum_agri_pv': sum_agri_pv,
                     'choosen_mun': choosen_mun,
+                    'check_county':check_county,
                     'echart_area_lease_income': echart_area_lease_income,
                     'echart_eeg': echart_eeg,
                     'echart_wind_solar_euro': echart_srbb,
@@ -1025,6 +1028,7 @@ if __name__ == "__main__":
         'apv_hor_p_max': '600',
         'area_ownertype': {},
         'levy_rate': '435',
-        'choosen_mun': '1'
+        'choosen_mun': '1',
+        'check_county': 'check_county_bb'
     }
     main(form_data)

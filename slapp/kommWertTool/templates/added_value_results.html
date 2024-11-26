@@ -55,8 +55,8 @@
   </div>
         </div>
     </div>
-    <hr>
- {% if results.choosen_mun != "0,00" %}
+ {% if results.choosen_mun != "0" and results.check_county != "check_county_sh" %}
+       <hr>
     <div class="row">
         <div class="col-md-6 d-flex align-items-center">
               <div id="wind_solar_euro_loader" class="loader">  </div>
@@ -64,7 +64,7 @@
         </div>
         <div class="col-md-6">
             <h3 class="smallHeadline">Wind- & Solar-Euro (jährlich)</h3>
-          <p>Um die Akzeptanz von WEA und PV-Anlagen zu steigern, hat der Landtag Brandenburg zwei
+          <p>{{ results.choosen_mun }} {{ results.check_county }} Um die Akzeptanz von WEA und PV-Anlagen zu steigern, hat der Landtag Brandenburg zwei
 Sonderregelungen verabschiedet. Ab 2025 müssen Betreibende von FF-PV- und APV-Anlagen 2.000,00 Euro
 pro MW und Jahr an die jeweilige Standortgemeinde zahlen. Ab 2026 zahlen Anlagenbetreibende von WEA 5.000,00 Euro
           pro installierten MW. Beteiligt werden alle Gemeinden, die sich in einem
@@ -103,7 +103,7 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
     {% if results.wea_area_income != "0,00" or results.pv_area_income != "0,00" or results.apv_area_income != "0,00" or results.lease_est_income_wea != "0,00" or results.lease_est_income_pv != "0,00" or results.lease_est_income_apv != "0,00" or results.lease_trade_tax_wea != "0,00" or results.lease_trade_tax_pv != "0,00" or results.lease_trade_tax_apv != "0,00" %}
         <hr>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 d-flex align-items-center">
  <div id="area_lease_income_loader" class="loader">  </div>
 <div id="area_lease_income_chart" style="width: 100%;  height: 400px;"></div>
             </div>
@@ -400,19 +400,21 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
             {
                 type: 'value',
                 name: Array.isArray(chartData.yAxis) ? chartData.yAxis[0]?.name : chartData.yAxis?.name || '',
-                axisLabel: { formatter: formatNumber }
+                axisLabel: { formatter: formatNumber },
             },
             {
                 type: 'value',
                 name: Array.isArray(chartData.yAxis) ? chartData.yAxis[1]?.name : '',
                 axisLabel: { formatter: formatNumber },
-                position: 'right'
-            }
-        ] : {
-            type: 'value',
-            name: chartData.yAxis?.name || '',
-            axisLabel: { formatter: formatNumber }
-        },
+                position: 'right',
+      }
+        ] : [
+            {
+                type: 'value',
+                name: chartData.yAxis?.name || '',
+                axisLabel: { formatter: formatNumber },
+  }
+        ],
         series: Array.isArray(chartData.series) ? chartData.series.map(series => ({
             ...series,
             data: Array.isArray(series.data) ? series.data.map(value => parseFloat(value) || 0) : []
