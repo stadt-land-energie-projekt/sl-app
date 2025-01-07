@@ -40,6 +40,11 @@ average_business_income = gewst['average_business_income'] # annual income of bu
 pv_area_costs = ffpv['area_costs'] # €/ha
 apv_area_costs = apv_general['area_costs'] # €/ha
 wea_area_costs = wind['area_costs'] # € / MW
+# invest costs per mw
+wea_invest_cost = wind['invest_cost'] # €/ha
+ffpv_invest_costs = ffpv['invest_cost'] # €/ha
+apvh_invest_costs = apvh['invest_cost'] # €/ha
+apvv_invest_costs = apvv['invest_cost'] # €/ha
 
 current_year = datetime.now().year
 
@@ -186,8 +191,10 @@ def create_echarts_data_total_mun_income(trade_tax_plant, eeg_income, sr_bb_inco
     series_data = []
     def add_series(name, data, yAxisIndex=0):
         if any(value > 0 for value in data):
-            legend_data.append(name)
             series_data.append({"name": name, "type": "bar", "data": data, "yAxisIndex": yAxisIndex})
+        if yAxisIndex == 0:
+            legend_data.append(name)
+
 
     add_series("GewSt.-Einnahmen Anlagengewinne", trade_tax_plant)
     add_series("EEG-Beteiligung", eeg_income)
@@ -440,42 +447,6 @@ def main(form_data):
     else:
         apvh_area_max = apvh_area_max
 
-    # invest costs for tec depending on power of tec
-    if system_output < 4:
-        wea_invest_cost = 1786000
-    elif system_output < 5:
-        wea_invest_cost = 1671000
-    elif system_output < 6:
-        wea_invest_cost = 1641000
-    else:
-        wea_invest_cost = 1651000
-
-    if pv_p_max == 1:
-        ffpv_invest_costs = 840000
-    elif pv_p_max < 2:
-        ffpv_invest_costs = 800000
-    elif pv_p_max < 5:
-        ffpv_invest_costs = 770000
-    else:
-        ffpv_invest_costs = 750000
-
-    if apv_ver_p_max == 1:
-        apvv_invest_costs = 840000*1.108
-    elif apv_ver_p_max < 2:
-        apvv_invest_costs = 800000*1.108
-    elif apv_ver_p_max < 5:
-        apvv_invest_costs = 770000*1.108
-    else:
-        apvv_invest_costs = 750000*1.108
-
-    if apv_hor_p_max == 1:
-        apvh_invest_costs = 840000*1.26
-    elif apv_hor_p_max < 2:
-        apvh_invest_costs = 800000*1.26
-    elif apv_hor_p_max < 5:
-        apvh_invest_costs = 770000*1.26
-    else:
-        apvh_invest_costs = 750000*1.26
 
     '''
     MUN INCOME FROM LEASES
@@ -912,7 +883,11 @@ def main(form_data):
     trade_tax_plant = [total_trade_tax_3, total_trade_tax_1,
                              total_trade_tax_2]
     eeg_income = [wind_eeg_degradation_result, pv_eeg_degradation_result, apv_eeg_degradation_result]
-    sr_bb_income = [wind_sr_bb_yearly * years, pv_sr_bb_yearly * years, apv_sr_bb_yearly * years]
+    # only show wind-/solar-euro for muns in brandenburg
+    if choosen_mun != "0" and check_county != "check_county_sh":
+        sr_bb_income = [wind_sr_bb_yearly * years, pv_sr_bb_yearly * years, apv_sr_bb_yearly * years]
+    else:
+        sr_bb_income = [0, 0, 0]
 
     area_costs_total = np.array(area_costs_yearly) * years
     area_gewst_total = np.array(area_gewst_yearly) * years
