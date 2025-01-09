@@ -730,19 +730,28 @@ document.addEventListener('DOMContentLoaded', function() {
         var selectedRadio = document.querySelector('input[name="check_county"]:checked');
         var countyName = selectedRadio ? selectedRadio.getAttribute('data-name') : null;
 
+        function resetRadioButtons() {
+            const radioButtons = document.querySelectorAll('#check_county input[type="radio"]');
+            radioButtons.forEach(button => {
+                button.checked = false;
+            });
+        }
+
         if (municipalityName === 'Kiel') {
             windEuroShareDiv.style.display = 'none';
             countyCheckDiv.style.display = 'none';
+            resetRadioButtons();
         } else if (municipalityName === 'own_county') {
             countyCheckDiv.style.display = 'block';
-            if (countyName === 'check_county_sh') {
-                windEuroShareDiv.style.display = 'none';
-            } else {
+            if (countyName === 'check_county_bb') {
                 windEuroShareDiv.style.display = 'block';
+            } else {
+                windEuroShareDiv.style.display = 'none';
             }
         } else {
             windEuroShareDiv.style.display = 'block';
             countyCheckDiv.style.display = 'none';
+            resetRadioButtons();
         }
     }
 

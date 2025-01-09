@@ -192,7 +192,7 @@ def create_echarts_data_total_mun_income(trade_tax_plant, eeg_income, sr_bb_inco
     def add_series(name, data, yAxisIndex=0):
         if any(value > 0 for value in data):
             series_data.append({"name": name, "type": "bar", "data": data, "yAxisIndex": yAxisIndex})
-        if yAxisIndex == 0:
+        if yAxisIndex == 0 and any(value > 0 for value in data):
             legend_data.append(name)
 
 
