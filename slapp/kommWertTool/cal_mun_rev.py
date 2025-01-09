@@ -257,21 +257,6 @@ def main(form_data):
     def process_form_data(form_data):
         data = {}
         try:
-            # Processing the form data
-            for key, value in form_data.items():
-                # Check for dictionary
-                if isinstance(value, dict):
-                    print(f"Skipping dictionary for key: {key}")
-                    continue
-                if key in []:
-                    value = float(value) / 100
-                else:
-                    try:
-                        value = float(value)
-                    except ValueError:
-                        print(f"Value for key '{key}' is not convertible to float.")
-                        continue
-                data[key] = value
 
             # Processing of area owners based on the entries
             area_ownertype = {
@@ -521,9 +506,7 @@ def main(form_data):
             apvh_area_income += area_income
             apvh_area_gewst_total += area_gewst_total
             lease_est_income_apvh += lease_est_income
-        else:
-            # Handle the case when 'apvh' key is not present
-            print("The key 'apvh' is not present in area_ownertype")
+
     if 'apvv' in area_ownertype:
         for apvv_ownertype in area_ownertype['apvv']:
             ownertype_input_apvv = (
@@ -535,9 +518,7 @@ def main(form_data):
             apvv_area_income += area_income
             apvv_area_gewst_total += area_gewst_total
             lease_est_income_apvv += lease_est_income
-        else:
-            # Handle the case when 'apvh' key is not present
-            print("The key 'apvv' is not present in area_ownertype")
+
     if 'pv' in area_ownertype:
         for pv_ownertype in area_ownertype['pv']:
             ownertype_input_pv = (
@@ -549,9 +530,7 @@ def main(form_data):
             pv_area_income += area_income
             lease_trade_tax_pv += area_gewst_total
             lease_est_income_pv += lease_est_income
-        else:
-            # Handle the case when 'apvh' key is not present
-            print("The key 'pv' is not present in area_ownertype")
+
     if 'wea' in area_ownertype:
         for wea_ownertype in area_ownertype['wea']:
             ownertype_input_wea = (
@@ -564,9 +543,7 @@ def main(form_data):
             wea_area_income += area_income
             lease_trade_tax_wea += area_gewst_total
             lease_est_income_wea += lease_est_income
-        else:
-            # Handle the case when 'apvh' key is not present
-            print("The key 'wea' is not present in area_ownertype")
+
     area_costs_yearly = [wea_area_income, pv_area_income, apvh_area_income + apvv_area_income]
     area_gewst_yearly = [lease_trade_tax_wea, lease_trade_tax_pv, apvh_area_gewst_total + apvv_area_gewst_total]
     area_est_yearly = [lease_est_income_wea, lease_est_income_pv, lease_est_income_apvh + lease_est_income_apvv]
