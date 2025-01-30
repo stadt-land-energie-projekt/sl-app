@@ -14,248 +14,259 @@ logger = logging.getLogger(__name__)
 
 CURRENT_DIR = Path(__file__).resolve().parent
 
-# ----------- GLOBAL PARAMETERS ----------- #
-with open(CURRENT_DIR / 'underlying-data-added-value-calc.json', 'r') as file:
-    underlying_data = json.load(file)
-
-# access to underlying data
-wind = underlying_data['wind']
-apvh = underlying_data['apvh']
-apvv = underlying_data['apvv']
-apv_general = underlying_data['apv_general']
-ffpv = underlying_data['ff-pv']
-colors = underlying_data['colors']
-ekst = underlying_data['ekst']
-gewst = underlying_data['gewst']
-eeg_participation = underlying_data['eeg_participation']
-bb_euro_mw = underlying_data['bb_euro_mw']
-electricity_price = underlying_data['average_electricity_price']
-property_tax_a = underlying_data['property_tax_a']
-
-# taxes
-mun_ekst_share = ekst['mun_ekst_share']
-annual_income = ekst['annual_income'] # average annual income in DE in €
-tax_assesment_amount = gewst['tax_assesment_amount'] # fix for DE (Steuermessbetrag)
-average_business_income = gewst['average_business_income'] # annual income of businesses
-# area costs per ha
-pv_area_costs = ffpv['area_costs'] # €/ha
-apv_area_costs = apv_general['area_costs'] # €/ha
-wea_area_costs = wind['area_costs'] # € / MW
-# invest costs per mw
-wea_invest_cost = wind['invest_cost'] # €/ha
-ffpv_invest_costs = ffpv['invest_cost'] # €/ha
-apvh_invest_costs = apvh['invest_cost'] # €/ha
-apvv_invest_costs = apvv['invest_cost'] # €/ha
-apvv_mw_ha = apvv['mw_ha']
-apvh_mw_ha = apvh['mw_ha']
-current_year = datetime.now().year
-
-# ----------- CREATE CHARTS ----------- #
-def create_echarts_data_pachteinnahmen(area_costs_yearly, area_est_yearly, area_gewst_yearly):
-    echarts_data = {
-        "legend": {
-            "top": "0",
-            "data": ["Direkte Pachteinnahmen", "Komm. ESt-Anteil", "Komm. GewSt-Anteil"]
-        },
-        "xAxis": {
-            "type": "category",
-            "data": ["WEA", "FF-PV", "APV"],
-        },
-        "yAxis": {
-            "type": "value",
-            "name": "Einnahmen in Euro",
-            "axisLabel": {
-                "formatter": "{value}".replace(",", ".")
-            }
-        },
-        "series": [
-            {
-                "name": "Direkte Pachteinnahmen",
-                "type": "bar",
-                "data": area_costs_yearly,
-                "itemStyle": {
-                    "color": colors['grey']  # Beispiel: grün
-                }
-            },
-            {
-                "name": "Komm. ESt-Anteil",
-                "type": "bar",
-                "data": area_est_yearly,
-                "itemStyle": {
-                    "color": colors['light_grey']  # Beispiel: blau
-                }
-            },
-            {
-                "name": "Komm. GewSt-Anteil",
-                "type": "bar",
-                "data": area_gewst_yearly,
-                "itemStyle": {
-                    "color": colors['yellow']  # Beispiel: orange
-                }
-            }
-        ]
-    }
-    return(echarts_data, f"pachteinnahmen.json")
-
-def create_echarts_data_eeg(wind_eeg_yearly, pv_eeg_yearly, apv_eeg_yearly):
-    echarts_data = {
-        "legend": {
-            "top": "0",
-            "data": ["WEA", "FF-PV", "APV"]
-        },
-        "xAxis": {
-            "type": "category",
-            "data": ["EEG Einnahmen"],
-        },
-        "yAxis": {
-            "type": "value",
-            "name": "Einnahmen in Euro",
-            "axisLabel": {
-                "formatter": "{value}".replace(",", ".")
-            }
-        },
-        "series": [
-            {"name": "WEA", "type": "bar", "itemStyle": {
-                    "color": colors['red']}, "data": [wind_eeg_yearly]},  # Wert als Liste
-            {"name": "FF-PV", "type": "bar", "itemStyle": {
-                    "color": colors['blue']}, "data": [pv_eeg_yearly]},  # Wert als Liste
-            {"name": "APV", "type": "bar", "itemStyle": {
-                    "color": colors['green']}, "data": [apv_eeg_yearly]}   # Wert als Liste
-        ]
-    }
-    return(echarts_data, f"eeg_participation.json")
-
-
-def create_echarts_data_gewerbesteuer(data, years, filename, title, color):
-    if not isinstance(data, list):
-        raise TypeError(f"Erwarteter Typ für 'data' ist list, erhalten: {type(data)}")
-    adjusted_data = [(item[0], max(item[1], 0)) for item in data]
-
-    echarts_data = {
-        "legend": {
-            "top": "0",
-            "data": [title]
-        },
-        "xAxis": {
-            "type": "category",
-            "name": "Jahre",
-            "data": list(range(1, years + 1))
-        },
-        "yAxis": {
-            "type": "value",
-            "name": "Gewerbesteuer",
-            "axisLabel": {
-                "formatter": "{value}".replace(",", ".")
-            }
-        },
-        "series": [{
-            "name": title,
-            "type": "bar",
-            "data": [item[1] for item in adjusted_data if item[0] <= years],
-            "itemStyle": {
-                "color": color
-            }
-        }]
-    }
-
-    return(echarts_data, filename)
-
-def create_echarts_data_srbb(wind_sr_bb_yearly, pv_sr_bb_yearly, apv_sr_bb_yearly):
-    echarts_data_sr = {
-        "legend": {
-            "top": "0",
-            "data": ["WEA", "FF-PV", "APV"]
-        },
-        "xAxis": {
-            "type": "category",
-            "data": ["Wind-/Solar-Euro"],
-        },
-        "yAxis": {
-            "type": "value",
-            "name": "Einnahmen in Euro",
-            "axisLabel": {
-                "formatter": "{value}".replace(",", ".")
-            }
-        },
-        "series": [
-            {"name": "WEA", "type": "bar", "itemStyle": {
-                    "color": colors['red']}, "data": [wind_sr_bb_yearly]},  # Wert als Liste
-            {"name": "FF-PV", "type": "bar", "itemStyle": {
-                    "color": colors['blue']}, "data": [pv_sr_bb_yearly]},  # Wert als Liste
-            {"name": "APV", "type": "bar", "itemStyle": {
-                    "color": colors['green']}, "data": [apv_sr_bb_yearly]}   # Wert als Liste
-        ]
-    }
-    return(echarts_data_sr, f"wind_solar_euro.json")
-def create_echarts_data_total_mun_income(trade_tax_plant, eeg_income, sr_bb_income,
-                                        area_costs_total, area_gewst_total, area_est_total, sum_wea_plot, sum_agri_pv_plot, sum_ff_pv_plot, property_tax):
-    legend_data = []
-    series_data = []
-    def add_series(name, data, yAxisIndex=0):
-        if any(value > 0 for value in data):
-            series_data.append({"name": name, "type": "bar", "data": data, "yAxisIndex": yAxisIndex})
-        if yAxisIndex == 0 and any(value > 0 for value in data):
-            legend_data.append(name)
-
-
-    add_series("GewSt.-Einnahmen Anlagengewinne", trade_tax_plant)
-    add_series("EEG-Beteiligung", eeg_income)
-    add_series("Wind-/Solar-Euro", sr_bb_income)
-    add_series("Direkte Pachteinnahmen", area_costs_total)
-    add_series("GewSt.-Einnahmen Pacht", area_gewst_total)
-    add_series("ESt.-Einnahmen Pacht", area_est_total)
-    add_series("Grundsteuer A", property_tax)
-    add_series("Gesamteinnahmen WEA", sum_wea_plot, 1)
-    add_series("Gesamteinnahmen FF-PV", sum_ff_pv_plot, 1)
-    add_series("Gesamteinnahmen APV", sum_agri_pv_plot, 1)
-    echarts_data = {
-
-        "legend": {
-            "top": "0",
-            "bottom": "50%",
-            "padding": [5, 10, 15, 10],  # [top, right, bottom, left]
-            "data": legend_data
-        },
-        "xAxis": {
-            "type": "category",
-            "data": ["WEA", "FF-PV", "APV", "Gesamt WEA", "Gesamt FF-PV", "Gesamt APV"],
-        },
-        "yAxis": [
-            {
-                "type": "value",
-                "name": "Einnahmen",
-                "axisLabel": {
-                    "formatter": "{value}".replace(",", ".")
-                },
-                "splitNumber": 5
-            },
-            {
-                "type": "value",
-                "name": "Gesamteinnahmen",
-                "axisLabel": {
-                    "formatter": "{value}".replace(",", ".")
-                },
-                "position": "right",
-                "splitNumber": 5
-            }
-        ],
-        "series": [
-            {"name": "GewSt.-Einnahmen Anlagengewinne", "type": "bar", "itemStyle": {"color": colors['blue_lighter']}, "data": trade_tax_plant},
-            {"name": "EEG-Beteiligung", "type": "bar", "itemStyle": {"color": colors['green_darker']}, "data": eeg_income},
-            {"name": "Wind-/Solar-Euro", "itemStyle": {"color": colors['orange']}, "type": "bar", "data": sr_bb_income},
-            {"name": "Direkte Pachteinnahmen", "type": "bar", "itemStyle": {"color": colors['grey']}, "data": area_costs_total},
-            {"name": "GewSt.-Einnahmen Pacht", "type": "bar", "itemStyle": {"color": colors['yellow']}, "data": area_gewst_total},
-            {"name": "ESt.-Einnahmen Pacht", "type": "bar", "itemStyle": {"color": colors['light_grey']}, "data": area_est_total},
-            {"name": "Grundsteuer A", "type": "bar", "itemStyle": {"color": colors['light_green']}, "data": property_tax},
-            {"name": "Gesamteinnahmen WEA", "type": "bar", "itemStyle": {"color": colors['red']}, "data": sum_wea_plot, "yAxisIndex": 1},
-            {"name": "Gesamteinnahmen FF-PV", "type": "bar", "itemStyle": {"color": colors['blue']}, "data": sum_ff_pv_plot, "yAxisIndex": 1},
-            {"name": "Gesamteinnahmen APV", "type": "bar", "itemStyle": {"color": colors['green']}, "data": sum_agri_pv_plot, "yAxisIndex": 1},
-        ],
-    }
-    return(echarts_data, f"gesamteinnahmen.json")
 
 def main(form_data):
     results = {}  # Define results dictionary before the try block to ensure accessibility in case of an error
+    # ----------- GLOBAL PARAMETERS ----------- #
+    with open(CURRENT_DIR / 'underlying-data-added-value-calc.json', 'r') as file:
+        underlying_data = json.load(file)
+
+    # access to underlying data
+    wind = underlying_data['wind']
+    apvh = underlying_data['apvh']
+    apvv = underlying_data['apvv']
+    apv_general = underlying_data['apv_general']
+    ffpv = underlying_data['ff-pv']
+    colors = underlying_data['colors']
+    ekst = underlying_data['ekst']
+    gewst = underlying_data['gewst']
+    eeg_participation = underlying_data['eeg_participation']
+    bb_euro_mw = underlying_data['bb_euro_mw']
+    electricity_price = underlying_data['average_electricity_price']
+    property_tax_a = underlying_data['property_tax_a']
+
+    # taxes
+    mun_ekst_share = ekst['mun_ekst_share']
+    annual_income = ekst['annual_income']  # average annual income in DE in €
+    tax_assesment_amount = gewst['tax_assesment_amount']  # fix for DE (Steuermessbetrag)
+    average_business_income = gewst['average_business_income']  # annual income of businesses
+    # area costs per ha
+    pv_area_costs = ffpv['area_costs']  # €/ha
+    apv_area_costs = apv_general['area_costs']  # €/ha
+    wea_area_costs = wind['area_costs']  # € / MW
+    # invest costs per mw
+    wea_invest_cost = wind['invest_cost']  # €/ha
+    ffpv_invest_costs = ffpv['invest_cost']  # €/ha
+    apvh_invest_costs = apvh['invest_cost']  # €/ha
+    apvv_invest_costs = apvv['invest_cost']  # €/ha
+    apvv_mw_ha = apvv['mw_ha']
+    apvh_mw_ha = apvh['mw_ha']
+    current_year = datetime.now().year
+
+    # ----------- CREATE CHARTS ----------- #
+    def create_echarts_data_pachteinnahmen(area_costs_yearly, area_est_yearly, area_gewst_yearly):
+        echarts_data = {
+            "legend": {
+                "top": "0",
+                "data": ["Direkte Pachteinnahmen", "Komm. ESt-Anteil", "Komm. GewSt-Anteil"]
+            },
+            "xAxis": {
+                "type": "category",
+                "data": ["WEA", "FF-PV", "APV"],
+            },
+            "yAxis": {
+                "type": "value",
+                "name": "Einnahmen in Euro",
+                "axisLabel": {
+                    "formatter": "{value}".replace(",", ".")
+                }
+            },
+            "series": [
+                {
+                    "name": "Direkte Pachteinnahmen",
+                    "type": "bar",
+                    "data": area_costs_yearly,
+                    "itemStyle": {
+                        "color": colors['grey']  # Beispiel: grün
+                    }
+                },
+                {
+                    "name": "Komm. ESt-Anteil",
+                    "type": "bar",
+                    "data": area_est_yearly,
+                    "itemStyle": {
+                        "color": colors['light_grey']  # Beispiel: blau
+                    }
+                },
+                {
+                    "name": "Komm. GewSt-Anteil",
+                    "type": "bar",
+                    "data": area_gewst_yearly,
+                    "itemStyle": {
+                        "color": colors['yellow']  # Beispiel: orange
+                    }
+                }
+            ]
+        }
+        return (echarts_data, f"pachteinnahmen.json")
+
+    def create_echarts_data_eeg(wind_eeg_yearly, pv_eeg_yearly, apv_eeg_yearly):
+        echarts_data = {
+            "legend": {
+                "top": "0",
+                "data": ["WEA", "FF-PV", "APV"]
+            },
+            "xAxis": {
+                "type": "category",
+                "data": ["EEG Einnahmen"],
+            },
+            "yAxis": {
+                "type": "value",
+                "name": "Einnahmen in Euro",
+                "axisLabel": {
+                    "formatter": "{value}".replace(",", ".")
+                }
+            },
+            "series": [
+                {"name": "WEA", "type": "bar", "itemStyle": {
+                    "color": colors['red']}, "data": [wind_eeg_yearly]},  # Wert als Liste
+                {"name": "FF-PV", "type": "bar", "itemStyle": {
+                    "color": colors['blue']}, "data": [pv_eeg_yearly]},  # Wert als Liste
+                {"name": "APV", "type": "bar", "itemStyle": {
+                    "color": colors['green']}, "data": [apv_eeg_yearly]}  # Wert als Liste
+            ]
+        }
+        return (echarts_data, f"eeg_participation.json")
+
+    def create_echarts_data_gewerbesteuer(data, years, filename, title, color):
+        if not isinstance(data, list):
+            raise TypeError(f"Erwarteter Typ für 'data' ist list, erhalten: {type(data)}")
+        adjusted_data = [(item[0], max(item[1], 0)) for item in data]
+
+        echarts_data = {
+            "legend": {
+                "top": "0",
+                "data": [title]
+            },
+            "xAxis": {
+                "type": "category",
+                "name": "Jahre",
+                "data": list(range(1, years + 1))
+            },
+            "yAxis": {
+                "type": "value",
+                "name": "Gewerbesteuer",
+                "axisLabel": {
+                    "formatter": "{value}".replace(",", ".")
+                }
+            },
+            "series": [{
+                "name": title,
+                "type": "bar",
+                "data": [item[1] for item in adjusted_data if item[0] <= years],
+                "itemStyle": {
+                    "color": color
+                }
+            }]
+        }
+
+        return (echarts_data, filename)
+
+    def create_echarts_data_srbb(wind_sr_bb_yearly, pv_sr_bb_yearly, apv_sr_bb_yearly):
+        echarts_data_sr = {
+            "legend": {
+                "top": "0",
+                "data": ["WEA", "FF-PV", "APV"]
+            },
+            "xAxis": {
+                "type": "category",
+                "data": ["Wind-/Solar-Euro"],
+            },
+            "yAxis": {
+                "type": "value",
+                "name": "Einnahmen in Euro",
+                "axisLabel": {
+                    "formatter": "{value}".replace(",", ".")
+                }
+            },
+            "series": [
+                {"name": "WEA", "type": "bar", "itemStyle": {
+                    "color": colors['red']}, "data": [wind_sr_bb_yearly]},  # Wert als Liste
+                {"name": "FF-PV", "type": "bar", "itemStyle": {
+                    "color": colors['blue']}, "data": [pv_sr_bb_yearly]},  # Wert als Liste
+                {"name": "APV", "type": "bar", "itemStyle": {
+                    "color": colors['green']}, "data": [apv_sr_bb_yearly]}  # Wert als Liste
+            ]
+        }
+        return (echarts_data_sr, f"wind_solar_euro.json")
+
+    def create_echarts_data_total_mun_income(trade_tax_plant, eeg_income, sr_bb_income,
+                                             area_costs_total, area_gewst_total, area_est_total, sum_wea_plot,
+                                             sum_agri_pv_plot, sum_ff_pv_plot, property_tax):
+        legend_data = []
+        series_data = []
+
+        def add_series(name, data, yAxisIndex=0):
+            if any(value > 0 for value in data):
+                series_data.append({"name": name, "type": "bar", "data": data, "yAxisIndex": yAxisIndex})
+            if yAxisIndex == 0 and any(value > 0 for value in data):
+                legend_data.append(name)
+
+        add_series("GewSt.-Einnahmen Anlagengewinne", trade_tax_plant)
+        add_series("EEG-Beteiligung", eeg_income)
+        add_series("Wind-/Solar-Euro", sr_bb_income)
+        add_series("Direkte Pachteinnahmen", area_costs_total)
+        add_series("GewSt.-Einnahmen Pacht", area_gewst_total)
+        add_series("ESt.-Einnahmen Pacht", area_est_total)
+        add_series("Grundsteuer A", property_tax)
+        add_series("Gesamteinnahmen WEA", sum_wea_plot, 1)
+        add_series("Gesamteinnahmen FF-PV", sum_ff_pv_plot, 1)
+        add_series("Gesamteinnahmen APV", sum_agri_pv_plot, 1)
+        echarts_data = {
+
+            "legend": {
+                "top": "0",
+                "bottom": "50%",
+                "padding": [5, 10, 15, 10],  # [top, right, bottom, left]
+                "data": legend_data
+            },
+            "xAxis": {
+                "type": "category",
+                "data": ["WEA", "FF-PV", "APV", "Gesamt WEA", "Gesamt FF-PV", "Gesamt APV"],
+            },
+            "yAxis": [
+                {
+                    "type": "value",
+                    "name": "Einnahmen",
+                    "axisLabel": {
+                        "formatter": "{value}".replace(",", ".")
+                    },
+                    "splitNumber": 5
+                },
+                {
+                    "type": "value",
+                    "name": "Gesamteinnahmen",
+                    "axisLabel": {
+                        "formatter": "{value}".replace(",", ".")
+                    },
+                    "position": "right",
+                    "splitNumber": 5
+                }
+            ],
+            "series": [
+                {"name": "GewSt.-Einnahmen Anlagengewinne", "type": "bar",
+                 "itemStyle": {"color": colors['blue_lighter']}, "data": trade_tax_plant},
+                {"name": "EEG-Beteiligung", "type": "bar", "itemStyle": {"color": colors['green_darker']},
+                 "data": eeg_income},
+                {"name": "Wind-/Solar-Euro", "itemStyle": {"color": colors['orange']}, "type": "bar",
+                 "data": sr_bb_income},
+                {"name": "Direkte Pachteinnahmen", "type": "bar", "itemStyle": {"color": colors['grey']},
+                 "data": area_costs_total},
+                {"name": "GewSt.-Einnahmen Pacht", "type": "bar", "itemStyle": {"color": colors['yellow']},
+                 "data": area_gewst_total},
+                {"name": "ESt.-Einnahmen Pacht", "type": "bar", "itemStyle": {"color": colors['light_grey']},
+                 "data": area_est_total},
+                {"name": "Grundsteuer A", "type": "bar", "itemStyle": {"color": colors['light_green']},
+                 "data": property_tax},
+                {"name": "Gesamteinnahmen WEA", "type": "bar", "itemStyle": {"color": colors['red']},
+                 "data": sum_wea_plot, "yAxisIndex": 1},
+                {"name": "Gesamteinnahmen FF-PV", "type": "bar", "itemStyle": {"color": colors['blue']},
+                 "data": sum_ff_pv_plot, "yAxisIndex": 1},
+                {"name": "Gesamteinnahmen APV", "type": "bar", "itemStyle": {"color": colors['green']},
+                 "data": sum_agri_pv_plot, "yAxisIndex": 1},
+            ],
+        }
+        return (echarts_data, f"gesamteinnahmen.json")
 
     def process_form_data(form_data):
         data = {}
@@ -413,7 +424,7 @@ def main(form_data):
     # Calculate max. power if only area is given
     if wea_p_max == 0 and wea_area_max != 0:
         A_wea = (np.pi * rotor_diameter * 5 * rotor_diameter * 3)/5
-        N_wea = np.floor((wea_area_max * 10000) / A_wea)
+        N_wea = max(np.floor(wea_p_max / system_output),1)
         wea_p_max = system_output * N_wea
     else:
         wea_p_max = wea_p_max
@@ -433,12 +444,12 @@ def main(form_data):
     # Calculate area if only power is given
     if wea_area_max == 0 and wea_p_max != 0:
         A_wea = (np.pi * rotor_diameter * 5 * rotor_diameter * 3)/5
-        N_wea = np.floor(wea_p_max / system_output)
+        N_wea = max(np.floor(wea_p_max / system_output),1)
         wea_area_max = (A_wea * N_wea) / 10000
     else:
         wea_area_max = wea_area_max
         A_wea = (np.pi * rotor_diameter * 5 * rotor_diameter * 3)/5
-        N_wea = np.floor((wea_area_max * 10000)/A_wea)
+        N_wea = max(np.floor(wea_p_max / system_output),1)
     if ffpv_area_max == 0 and pv_p_max != 0:
         ffpv_area_max = pv_p_max
     else:
@@ -480,9 +491,11 @@ def main(form_data):
     est_income = calc_tax_income(annual_income) # calculates income tax of average annual income
     def round_down_to_hundred(number):
         return np.floor(number / 100) * 100
+
     def process_area(max_area, ownertype, area_share, area_costs, tax_assesment_amount,
                      levy_rate, annual_income, est_income, mun_ekst_share, mun_key_value):
         area_share = area_share / 100  # Convert to decimal if percentage is given
+
         if ownertype == 'Gewerbliches Eigentum':
             area_gewst = int(((max_area * area_costs * area_share)
                                * tax_assesment_amount * levy_rate))
@@ -522,7 +535,7 @@ def main(form_data):
                 ((wea_area_property_tax * property_tax_a['valuation_factor_earnings']) +
                  (grassland_number * wea_area_property_tax * property_tax_a['yield_indicator'])) *
                 property_tax_a['net_earnings_factor']
-            ) * property_tax_a['tax_base'] * levy_rate_a * area_share  # calculates property tax with the higher earnings value
+            ) * property_tax_a['tax_base'] * levy_rate_a  # calculates property tax with the higher earnings value
         return area_income, area_gewst_total, lease_est_income, property_tax_a_tot
 
     # Variables to accumulate the results
@@ -662,11 +675,7 @@ def main(form_data):
                 annual_energy_yield = energy_generated * ((1 - degradation) ** year)
                 eeg_annual_amount = eeg_share_mun * ((1 - degradation) ** year)
 
-            if year == 1 and redemption_free_years == 1:
-                annual_interests = interest_year_1
-                repayment = 0
-                annual_costs = annual_opex + annual_interests + eeg_annual_amount
-            elif year == 2 and redemption_free_years == 1:
+            if year in [1, 2] and redemption_free_years == 1:
                 annual_interests = interest_year_1
                 repayment = 0
                 annual_costs = annual_opex + annual_interests + eeg_annual_amount
@@ -699,7 +708,7 @@ def main(form_data):
                     total_loss_carryforward -= subtracted_loss
 
                     # Deduct 60% of the remaining profit
-                    if total_loss_carryforward > 0 and total_loss_carryforward > (adjusted_profit * 0.6):
+                    if total_loss_carryforward > (adjusted_profit * 0.6):
                         extra_loss = adjusted_profit * 0.6
                         total_loss_carryforward -= extra_loss
                         adjusted_profit *= 0.4
