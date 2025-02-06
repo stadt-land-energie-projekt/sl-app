@@ -518,3 +518,12 @@ def esm_choice(request: HttpRequest, tab_id: int) -> HttpResponse:  # noqa: ARG0
         response = "<input id='tab_name' type='hidden' name='tab_id' value='8' />"
 
     return HttpResponse(response, content_type="text/html")
+
+
+class CaseStudies(TemplateView):
+    template_name = "pages/case_studies.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        return context
