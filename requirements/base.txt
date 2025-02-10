@@ -40,3 +40,4 @@ python-dotenv
 matplotlib
 pandas
 numpy
+django-cotton
