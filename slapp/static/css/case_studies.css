@@ -1,0 +1,146 @@
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* Region-Kasten: hellgraue Border, 10px Round, etc. */
+.region-container {
+  position: relative;
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 20px;
+  margin: 50px;
+  min-width: 300px;    /* damit sie etwas Breite haben */
+  flex: 1 1 300px;     /* responsive mitwachsend */
+  overflow: visible;
+}
+
+/* Titel+Infobox nebeneinander */
+.top-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.top-row h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.info-box {
+  display: inline-block;
+  margin-left: 20px;
+  padding: 4px 8px;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  font-size: 0.9rem;
+  color: #333;
+  background: transparent;
+}
+
+.info-box::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -40px; /* justieren */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  min-width: 200%;
+  max-width: 500%;
+  white-space: normal; /* Erlaubt Zeilenumbruch, sonst bleibt alles in einer Zeile */
+  text-align: center;
+}
+
+.info-box:hover::after {
+  opacity: 1;
+}
+
+/* Absolut positioniertes Bild, oben rechts */
+.region-image {
+  position: absolute;
+  top: -20%;
+  right: -5%;
+  max-height: 33vh; /* oder 200px oder wie du magst */
+  height: auto;
+  width: auto;
+  z-index: -1;
+}
+
+/* Text unten */
+.region-text {
+  margin-top: 20px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* Keyfacts in einer Zeile, falls Platz da ist */
+.keyfacts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  font-size: 32px;
+}
+.keyfacts .fact-item {
+  background-color: #aff4c6;
+  border: 1px solid #aff4c6;
+  border-radius: 5px;
+  margin: 4px;
+  padding: 10px;
+}
+
+.cta-row {
+  display: flex;           /* Aktiviert Flex-Layout */
+  align-items: center;     /* Vertikale Zentrierung innerhalb der Zeile */
+  width: 100%;             /* Volle Breite ausnutzen */
+  margin: 20px 0;          /* Beispiel: 20px Abstand nach oben/unten */
+  box-sizing: border-box;
+}
+
+.cta-row .left-text {
+  flex: 0 0 auto;          /* Bleibt so breit, wie der Text “...” braucht */
+  margin-right: 10px;      /* Kleiner Abstand zum Button-Container, optional */
+  text-align: left;        /* Linksbündig (Standard) */
+}
+
+.cta-row .center-button {
+  flex: 1 1 auto;          /* Nimmt den restlichen Platz in der Zeile ein */
+  text-align: center;      /* Zentriert den Inhalt horizontal */
+}
+
+/* Button */
+.select-button {
+  background-color: #bde3ff;
+  color: black;
+  border: 1px solid #0059b9;
+  border-radius: 6px;
+  font-size: 1.25rem;
+  padding: 8px 16px;
+  cursor: pointer;
+  display: inline-block;
+  width: 55%;
+}
+
+/* :active-Zustand */
+.select-button:active {
+  background-color: #0d99ff;
+  border-width: 5px;
+  border-color: #0059b9;
+  color: white;
+}
+/* Hover-Effekt optional */
+.select-button:hover {
+  opacity: 0.9;
+}
