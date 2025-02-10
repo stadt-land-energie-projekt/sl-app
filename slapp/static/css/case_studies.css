@@ -4,7 +4,6 @@
   width: 100%;
 }
 
-/* Region-Kasten: hellgraue Border, 10px Round, etc. */
 .region-container {
   position: relative;
   border: 1px solid #e3e3e3;
@@ -12,12 +11,11 @@
   box-sizing: border-box;
   padding: 20px;
   margin: 50px;
-  min-width: 300px;    /* damit sie etwas Breite haben */
-  flex: 1 1 300px;     /* responsive mitwachsend */
+  min-width: 300px;
+  flex: 1 1 300px;
   overflow: visible;
 }
 
-/* Titel+Infobox nebeneinander */
 .top-row {
   display: flex;
   align-items: center;
@@ -45,7 +43,7 @@
 .info-box::after {
   content: attr(data-tooltip);
   position: absolute;
-  top: -40px; /* justieren */
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #333;
@@ -58,7 +56,7 @@
   transition: opacity 0.2s;
   min-width: 200%;
   max-width: 500%;
-  white-space: normal; /* Erlaubt Zeilenumbruch, sonst bleibt alles in einer Zeile */
+  white-space: normal;
   text-align: center;
 }
 
@@ -66,81 +64,79 @@
   opacity: 1;
 }
 
-/* Absolut positioniertes Bild, oben rechts */
 .region-image {
   position: absolute;
   top: -20%;
-  right: -5%;
-  max-height: 33vh; /* oder 200px oder wie du magst */
+  right: -8%;
+  max-height: 33vh;
   height: auto;
   width: auto;
   z-index: -1;
 }
 
-/* Text unten */
 .region-text {
   margin-top: 20px;
   font-size: 1rem;
   line-height: 1.4;
 }
 
-/* Keyfacts in einer Zeile, falls Platz da ist */
 .keyfacts {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
   margin-top: 60px;
   margin-bottom: 20px;
-  font-size: 32px;
+  font-size: 26px;
 }
+
 .keyfacts .fact-item {
   background-color: #aff4c6;
   border: 1px solid #aff4c6;
   border-radius: 5px;
   margin: 4px;
-  padding: 10px;
+  padding: 20px;
 }
 
 .cta-row {
-  display: flex;           /* Aktiviert Flex-Layout */
-  align-items: center;     /* Vertikale Zentrierung innerhalb der Zeile */
-  width: 100%;             /* Volle Breite ausnutzen */
-  margin: 20px 0;          /* Beispiel: 20px Abstand nach oben/unten */
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 20px 0;
   box-sizing: border-box;
 }
 
 .cta-row .left-text {
-  flex: 0 0 auto;          /* Bleibt so breit, wie der Text “...” braucht */
-  margin-right: 10px;      /* Kleiner Abstand zum Button-Container, optional */
-  text-align: left;        /* Linksbündig (Standard) */
+  flex: 0 0 auto;
+  margin-right: 10px;
+  text-align: left;
 }
 
 .cta-row .center-button {
-  flex: 1 1 auto;          /* Nimmt den restlichen Platz in der Zeile ein */
-  text-align: center;      /* Zentriert den Inhalt horizontal */
+  flex: 1 1 auto;
+  text-align: center;
 }
 
-/* Button */
 .select-button {
-  background-color: #bde3ff;
-  color: black;
-  border: 1px solid #0059b9;
+  background-color: #0d99ff;
+  border-width: 5px;
+  color: white;
+  border: 5px solid #0059b9;
   border-radius: 6px;
-  font-size: 1.25rem;
-  padding: 8px 16px;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 16px 16px;
   cursor: pointer;
   display: inline-block;
   width: 55%;
+  box-sizing: border-box;
 }
 
-/* :active-Zustand */
 .select-button:active {
-  background-color: #0d99ff;
-  border-width: 5px;
-  border-color: #0059b9;
-  color: white;
+  background-color: #bde3ff;
+  color: black;
+  border: 5px solid #bde3ff;
 }
-/* Hover-Effekt optional */
+
 .select-button:hover {
   opacity: 0.9;
 }
