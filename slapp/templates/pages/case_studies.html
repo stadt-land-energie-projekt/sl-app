@@ -1,10 +1,13 @@
+{% extends "base.html" %}
+
 {% load static %}
 
-{% block content %}
+{% block content_no_sidebar %}
   <div class="flex-container">
     {% for region in regions %}
       <c-regions title="{{ region.title }}" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" keyfact0="{{ region.keyfacts.0 }}" keyfact1="{{ region.keyfacts.1 }}" keyfact2="{{ region.keyfacts.2 }}" keyfact3="{{ region.keyfacts.3 }}">
       </c-regions>
     {% endfor %}
   </div>
-{% endblock content %}
+  <a href="{{ next_url }}" class="btn btn-primary mt-3">Hier geht's zur regionalen Energiewende</a>
+{% endblock content_no_sidebar %}

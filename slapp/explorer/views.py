@@ -32,8 +32,8 @@ def start_page(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         if "go_to_case_studies" in request.POST:
             return redirect("explorer:case_studies")
-        if "go_to_other" in request.POST:
-            return redirect("explorer:other_page")
+        if "go_to_calculator" in request.POST:
+            return redirect("explorer:calculator")
     return render(request, "pages/home.html")
 
 
@@ -548,4 +548,45 @@ class CaseStudies(TemplateView):
         ]
 
         context["regions"] = regions
+        context["next_url"] = reverse("explorer:esys_robust")
+        return context
+
+
+class EsysRobust(TemplateView):
+    """Display the Esys page with energy system and robustness."""
+
+    template_name = "pages/esys_robust.html"
+
+    def get_context_data(self, **kwargs) -> dict:
+        """Manage context data."""
+        context = super().get_context_data(**kwargs)
+
+        context["next_url"] = reverse("explorer:results")
+        return context
+
+
+class Results(TemplateView):
+    """Display the Results page with central results, basic results and sensitivities."""
+
+    template_name = "pages/results.html"
+
+    def get_context_data(self, **kwargs) -> dict:
+        """Manage context data."""
+        context = super().get_context_data(**kwargs)
+
+        context["home_url"] = reverse("explorer:home")
+        context["calculator_url"] = reverse("explorer:calculator")
+        return context
+
+
+class Calculator(TemplateView):
+    """Display the Calculator page with value creation and the calculator."""
+
+    template_name = "pages/calculator.html"
+
+    def get_context_data(self, **kwargs) -> dict:
+        """Manage context data."""
+        context = super().get_context_data(**kwargs)
+
+        context["next_url"] = reverse("explorer:home")
         return context
