@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 import json
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.templatetags.l10n import localize
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
@@ -28,23 +28,13 @@ MAX_MUNICIPALITY_COUNT = 3
 
 
 def start_page(request: HttpRequest) -> HttpResponse:
-    """Render the start / home page."""
-    next_url = reverse("explorer:map")
-    prev_url = None
-    active_tab = "step_1_start"
-    sidepanel = False
-
-    ids = request.session.get("municipality_ids", [])
-    muns = Municipality.objects.filter(id__in=ids) if ids else None
-
-    context = {
-        "next_url": next_url,
-        "prev_url": prev_url,
-        "active_tab": active_tab,
-        "has_sidepanel": sidepanel,
-        "municipalities": muns
-    }
-    return render(request, "pages/home.html", context)
+    """Render the start page and handle form submissions from home.html."""
+    if request.method == "POST":
+        if "go_to_case_studies" in request.POST:
+            return redirect("explorer:case_studies")
+        if "go_to_other" in request.POST:
+            return redirect("explorer:other_page")
+    return render(request, "pages/home.html")
 
 
 class MapGLView(TemplateView, views.MapEngineMixin):
@@ -132,6 +122,7 @@ def details_list(request: HttpRequest) -> HttpResponse:
     }
 
     return render(request, "pages/details.html", context)
+
 
 def load_municipalities(request: HttpRequest) -> HttpResponse:
     """Return list of municipalities for chosen region."""
@@ -237,7 +228,7 @@ def choose_esm_mode(request: HttpRequest) -> HttpResponse:
         "prev_url": prev_url,
         "active_tab": active_tab,
         "has_sidepanel": sidepanel,
-        "municipalities": muns
+        "municipalities": muns,
     }
     return render(request, render_template, context)
 
@@ -354,7 +345,7 @@ def robustness_parameters(request: HttpRequest) -> HttpResponse:
         "prev_url": prev_url,
         "active_tab": active_tab,
         "has_sidepanel": sidepanel,
-        "municipalities": muns
+        "municipalities": muns,
     }
     return render(request, "pages/parameters_robustness.html", context)
 
@@ -449,7 +440,7 @@ def added_value(request: HttpRequest) -> HttpResponse:
         "prev_url": prev_url,
         "active_tab": active_tab,
         "has_sidepanel": sidepanel,
-        "municipalities": muns
+        "municipalities": muns,
     }
     return render(request, "pages/added_value.html", context)
 
@@ -521,9 +512,12 @@ def esm_choice(request: HttpRequest, tab_id: int) -> HttpResponse:  # noqa: ARG0
 
 
 class CaseStudies(TemplateView):
+    """Display the Case Studies page with a list of region data."""
+
     template_name = "pages/case_studies.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
+        """Manage context data."""
         context = super().get_context_data(**kwargs)
 
         regions = [
@@ -533,18 +527,24 @@ class CaseStudies(TemplateView):
                 "img_source": "Oderland-Spree.png",
                 "text": "Text und Key Facts für Oderland-Spree",
                 "keyfacts": [
-                    "keyfact1", "keyfact2","keyfact3","keyfact4"
-                ]
+                    "keyfact1",
+                    "keyfact2",
+                    "keyfact3",
+                    "keyfact4",
+                ],
             },
             {
-                "title":"Region Kiel",
+                "title": "Region Kiel",
                 "info": "Hier steht mehr Info über die Region Kiel",
                 "img_source": "Kiel.png",
                 "text": "Text und Key Facts für Kiel",
                 "keyfacts": [
-                    "keyfact1", "keyfact2", "keyfact3", "keyfact4"
-                ]
-            }
+                    "keyfact1",
+                    "keyfact2",
+                    "keyfact3",
+                    "keyfact4",
+                ],
+            },
         ]
 
         context["regions"] = regions

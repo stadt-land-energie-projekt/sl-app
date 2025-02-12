@@ -42,7 +42,12 @@
               Text für regionale, robuste Energiewendeszenarien Text für regionale, robuste Energiewendeszenarien Text
               für regionale, robuste Energiewendeszenarien
             </p>
-            <button>Hier geht's zur regionalen Energiewende</button>
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" name="go_to_case_studies" class="btn btn-primary">
+                Hier geht's zur regionalen Energiewende
+              </button>
+            </form>
           </div>
           <div class="box">
             <h1>Wertschöpfungsrechner</h1>
@@ -50,7 +55,10 @@
               Text für Wertschöpfungsrechner Text für Wertschöpfungsrechner Text für Wertschöpfungsrechner Text für
               Wertschöpfungsrechner Text für Wertschöpfungsrechner Text für Wertschöpfungsrechner
             </p>
-            <button>Hier geht's zum Rechner</button>
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" name="go_to_calculator" class="btn btn-primary">Hier geht's zum Rechner</button>
+            </form>
           </div>
         </div>
         <div class="box">
