@@ -15,6 +15,7 @@ urlpatterns = [
     path("results_variation/", views.optimization_results, name="results_variation"),
     path("results_robustness/", views.robustness, name="results_robustness"),
     path("parameters_robustness/", views.robustness_parameters, name="parameters_robustness"),
+    path("case_studies/", views.CaseStudies.as_view(), name="case_studies"),
 ]
 
 htmx_urlpatterns = [

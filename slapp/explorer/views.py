@@ -518,3 +518,34 @@ def esm_choice(request: HttpRequest, tab_id: int) -> HttpResponse:  # noqa: ARG0
         response = "<input id='tab_name' type='hidden' name='tab_id' value='8' />"
 
     return HttpResponse(response, content_type="text/html")
+
+
+class CaseStudies(TemplateView):
+    template_name = "pages/case_studies.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        regions = [
+            {
+                "title": "Region Oderland-Spree",
+                "info": "Hier steht mehr Info über die Region Oderland-Spree",
+                "img_source": "Oderland-Spree.png",
+                "text": "Text und Key Facts für Oderland-Spree",
+                "keyfacts": [
+                    "keyfact1", "keyfact2","keyfact3","keyfact4"
+                ]
+            },
+            {
+                "title":"Region Kiel",
+                "info": "Hier steht mehr Info über die Region Kiel",
+                "img_source": "Kiel.png",
+                "text": "Text und Key Facts für Kiel",
+                "keyfacts": [
+                    "keyfact1", "keyfact2", "keyfact3", "keyfact4"
+                ]
+            }
+        ]
+
+        context["regions"] = regions
+        return context

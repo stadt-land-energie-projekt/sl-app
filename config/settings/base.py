@@ -64,6 +64,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",  # Handy template tags
     "django.contrib.admin",
+    "django_cotton",
     "django.forms",
     "django.contrib.gis",
 ]
