@@ -84,8 +84,21 @@
       <div class="container"></div>
     </header>
     <div class="container-fluid mb-2">
-      {% block content_no_sidebar %}
-      {% endblock content_no_sidebar %}
+      {% if has_sidepanel %}
+        <div class="row">
+          <div class="col-3 sidebar pt-3 border-end border-2">
+            {% block sidebar_content %}
+            {% endblock sidebar_content %}
+          </div>
+          <div class="col-9">
+            {% block content %}
+            {% endblock content %}
+          </div>
+        </div>
+      {% else %}
+        {% block content_no_sidebar %}
+        {% endblock content_no_sidebar %}
+      {% endif %}
     </div>
     {% block modal %}
     {% endblock modal %}
