@@ -6,9 +6,12 @@ import csv
 from typing import TYPE_CHECKING, Any
 
 from django.contrib import messages
+from django.contrib.gis.db.models.functions import Envelope
 from django.db.models import Sum
 from django.db.models.functions import Round
 from django.http import HttpResponse, JsonResponse
+
+from . import models
 
 if TYPE_CHECKING:
     from django.http.request import HttpRequest
@@ -511,7 +514,7 @@ def esm_choice(request: HttpRequest, tab_id: int) -> HttpResponse:  # noqa: ARG0
     return HttpResponse(response, content_type="text/html")
 
 
-class CaseStudies(TemplateView):
+class CaseStudies(TemplateView, views.MapEngineMixin):
     """Display the Case Studies page with a list of region data."""
 
     template_name = "pages/case_studies.html"
@@ -520,7 +523,12 @@ class CaseStudies(TemplateView):
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
-        regions = self.get_regions_data()
+        region_bbox = {
+            entry["name"]: entry["bounding_box"]
+            for entry in models.Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
+        }
+
+        regions = self.get_regions_data(region_bbox)
 
         ids = self.request.session.get("municipality_ids", [])
         if ids:
@@ -536,12 +544,12 @@ class CaseStudies(TemplateView):
         context["next_url"] = reverse("explorer:esys_robust")
         return context
 
-    @staticmethod
-    def get_regions_data() -> dict:
+    def get_regions_data(self, region_bbox: dict) -> list:
         """Return the list of dictionaries containing region data."""
         return [
             {
                 "title": "Region Oderland-Spree",
+                "bbox": region_bbox["Oderland-Spree"],
                 "info": "Hier steht mehr Info über die Region Oderland-Spree",
                 "img_source": "Oderland-Spree.png",
                 "text": "Text und Key Facts für Oderland-Spree",
@@ -561,6 +569,7 @@ class CaseStudies(TemplateView):
             },
             {
                 "title": "Region Kiel",
+                "bbox": region_bbox["Kiel"],
                 "info": "Hier steht mehr Info über die Region Kiel",
                 "img_source": "Kiel.png",
                 "text": "Text und Key Facts für Kiel",
