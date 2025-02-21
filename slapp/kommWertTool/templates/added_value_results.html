@@ -3,123 +3,103 @@
 {% load static %}
 {% block sidebar_content %}
   <h4 class="text-center">Ergebnisse Ihrer Wertschöpfung</h4>
-  <p class="text-center">Dies ist ein Tool zur Berechnung der direkten kommunalen Wertschöpfung durch Windenergie-,
-        Freiflächen-Photovoltaik und Agri-Photovoltaik-Anlagen. Es liefert eine Einschätzung des Wertschöpfungspotenzials basierend auf den eingegebenen Daten. Der Rechner ermittelt die
-        möglichen Einnahmen durch die EEG-Beteiligung, durch Pachteinnahmen sowie durch den Wind- und Solar-Euro in brandenburgischen Gemeinden. Es ist wichtig zu
-        beachten, dass die tatsächliche Wertschöpfung deutlich höher ausfallen kann, wenn lokale Unternehmen einbezogen
-        werden, Bürger-Beteiligungen erfolgen und induzierte Effekte berücksichtigt werden. Dieses Tool bietet Kommunen
-        die Möglichkeit, die direkten wirtschaftlichen Vorteile des Ausbaus erneuerbarer Energien abzuschätzen und
-        fundierte Entscheidungen für eine nachhaltige Entwicklung zu treffen.</p>
-{% endblock sidebar_content %}
-{% block content %}
-<div class="container mt-1 addedValue" id="charts">
-{{ results|json_script:"results-data" }}
+<p class="text-center">Dies ist ein Tool zur Berechnung der direkten kommunalen Wertschöpfung durch Windenergie-, Freiflächen-Photovoltaik und Agri-Photovoltaik-Anlagen. Es liefert eine Einschätzung des Wertschöpfungspotenzials basierend auf den eingegebenen Daten. Der Rechner ermittelt die möglichen Einnahmen durch die EEG-Beteiligung, durch Pachteinnahmen sowie durch den Wind- und Solar-Euro in brandenburgischen Gemeinden. Es ist wichtig zu beachten, dass die tatsächliche Wertschöpfung deutlich höher ausfallen kann, wenn lokale Unternehmen einbezogen werden, Bürger-Beteiligungen erfolgen und induzierte Effekte berücksichtigt werden. Dieses Tool bietet Kommunen die Möglichkeit, die direkten wirtschaftlichen Vorteile des Ausbaus erneuerbarer Energien abzuschätzen und fundierte Entscheidungen für eine nachhaltige Entwicklung zu treffen.</p> {% endblock sidebar_content %} {% block content %} <div class="container mt-1 addedValue" id="charts">
+    {{ results|json_script:"results-data" }}
     <div class="row mt-5">
         <div class="col-md-6 d-flex align-items-center">
-  <div id="eeg_participation_loader" class="loader"></div>
-<div id="eeg_participation_chart" style="width: 100%;  height: 400px;"></div>
+            <div id="eeg_participation_loader" class="loader"></div>
+            <div id="eeg_participation_chart" style="width: 100%;  height: 400px;"></div>
         </div>
         <div class="col-md-6">
             <h3 class="smallHeadline">EEG-Beteiligung (jährlich)</h3>
-          <p>Der 2021 eingeführte § 6 im Erneuerbare-Energien-Gesetz (EEG) ermöglicht Kommunen Einnahmen durch EE-Anlagen zu gewinnen und soll
-            somit zur Akzeptanzsteigerung beitragen. Bis zu 0,2 Cent können pro kWh eingespeister Strommenge durch WEA, FF-PV- und APV-Anlagen in die Haushaltskassen der Gemeinden fließen.</p>
-
+            <p>Der 2021 eingeführte § 6 im Erneuerbare-Energien-Gesetz (EEG) ermöglicht Kommunen Einnahmen durch EE-Anlagen zu gewinnen und soll somit zur Akzeptanzsteigerung beitragen. Bis zu 0,2 Cent können pro kWh eingespeister Strommenge durch WEA, FF-PV- und APV-Anlagen in die Haushaltskassen der Gemeinden fließen.</p>
             <table class="table table-bordered">
                 <thead>
-                <tr class="table-info">
-                    <th>WEA</th>
-                    <th>FF-PV</th>
-                    <th>APV</th>
-                </tr>
+                    <tr class="table-info">
+                        <th>WEA</th>
+                        <th>FF-PV</th>
+                        <th>APV</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>{{ results.wind_eeg_yearly }} €</td>
-                    <td>{{ results.pv_eeg_yearly }} €</td>
-                    <td>{{ results.apv_eeg_yearly }} €</td>
-                </tr>
+                    <tr>
+                        <td>{{ results.wind_eeg_yearly }} €</td>
+                        <td>{{ results.pv_eeg_yearly }} €</td>
+                        <td>{{ results.apv_eeg_yearly }} €</td>
+                    </tr>
                 </tbody>
             </table>
-           <div class="expandable-text bg-light p-4 small text-muted">
-             <p class="mb-0"><b>Annahmen:</b></p>
-      <ul class="mb-0">
-             <li>Es findet keine Eigennutzung der erzeugten Strommmenge statt</li>
-        <li>Beteiligung von 0,2 Cent pro kWh</li>
-           </ul>
-
-      <span class="collapse">
-
-             <p>Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.</p>
-      </span>
-    <a class="expand-btn mt-2 d-block" href="#" role="button">+ Mehr anzeigen</a>
-  </div>
+            <div class="expandable-text bg-light p-4 small text-muted">
+                <p class="mb-0"><b>Annahmen:</b></p>
+                <ul class="mb-0">
+                    <li>Es findet keine Eigennutzung der erzeugten Strommmenge statt</li>
+                    <li>Beteiligung von 0,2 Cent pro kWh</li>
+                </ul>
+                <span class="collapse">
+                    <p>Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.</p>
+                </span>
+                <a class="expand-btn mt-2 d-block" href="#" role="button">+ Mehr anzeigen</a>
+            </div>
         </div>
     </div>
- {% if results.choosen_mun != "0" and results.check_county != "check_county_sh" %}
-       <hr>
+    {% if results.choosen_mun != "0" and results.check_county != "check_county_sh" %}
+    <hr>
     <div class="row">
         <div class="col-md-6 d-flex align-items-center">
-              <div id="wind_solar_euro_loader" class="loader">  </div>
-<div id="wind_solar_euro_chart" style="width: 100%;  height: 400px;"></div>
+            <div id="wind_solar_euro_loader" class="loader"> </div>
+            <div id="wind_solar_euro_chart" style="width: 100%;  height: 400px;"></div>
         </div>
         <div class="col-md-6">
             <h3 class="smallHeadline">Wind- & Solar-Euro (jährlich)</h3>
-          <p>Um die Akzeptanz von WEA und PV-Anlagen zu steigern, hat der Landtag Brandenburg zwei
-Sonderregelungen verabschiedet. Ab 2025 müssen Betreibende von FF-PV- und APV-Anlagen 2.000,00 Euro
-pro MW und Jahr an die jeweilige Standortgemeinde zahlen. Ab 2026 zahlen Anlagenbetreibende von WEA 5.000,00 Euro
-          pro installierten MW. Beteiligt werden alle Gemeinden, die sich in einem
-Radius von drei Kilometern um den Standort der WEA befinden.  </p>
+            <p>Um die Akzeptanz von WEA und PV-Anlagen zu steigern, hat der Landtag Brandenburg zwei Sonderregelungen verabschiedet. Ab 2025 müssen Betreibende von FF-PV- und APV-Anlagen 2.000,00 Euro pro MW und Jahr an die jeweilige Standortgemeinde zahlen. Ab 2026 zahlen Anlagenbetreibende von WEA 5.000,00 Euro pro installierten MW. Beteiligt werden alle Gemeinden, die sich in einem Radius von drei Kilometern um den Standort der WEA befinden. </p>
             <table class="table table-bordered">
                 <thead>
-                <tr class="table-info">
-                    <th>WEA</th>
-                    <th>FF-PV</th>
-                    <th>APV</th>
-                </tr>
+                    <tr class="table-info">
+                        <th>WEA</th>
+                        <th>FF-PV</th>
+                        <th>APV</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                  <td>{{ results.wind_sr_bb_yearly }} €</td>
-                  <td>{{ results.pv_sr_bb_yearly }} €</td>
-                  <td>{{ results.apv_sr_bb_yearly }} €</td>
-
-                </tr>
+                    <tr>
+                        <td>{{ results.wind_sr_bb_yearly }} €</td>
+                        <td>{{ results.pv_sr_bb_yearly }} €</td>
+                        <td>{{ results.apv_sr_bb_yearly }} €</td>
+                    </tr>
                 </tbody>
             </table>
-                     <div class="expandable-text bg-light p-4 small text-muted">
-             <p class="mb-0"><b>Annahmen:</b></p>
-      <ul>
-             <li>Die bisher geltende Regelung von 10.000,00 pro WEA wird nicht berücksichtigt. Es wird davon ausgegangen, dass alle WEA erst ab 2026 in Betrieb gehen. </li>
-           </ul>
-
-      <span class="collapse">
-             <p>Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.</p>
-      </span>
-    <a class="expand-btn mt-2 d-block" href="#" role="button">+ Mehr anzeigen</a>
-  </div>
+            <div class="expandable-text bg-light p-4 small text-muted">
+                <p class="mb-0"><b>Annahmen:</b></p>
+                <ul>
+                    <li>Die bisher geltende Regelung von 10.000,00 pro WEA wird nicht berücksichtigt. Es wird davon ausgegangen, dass alle WEA erst ab 2026 in Betrieb gehen. </li>
+                </ul>
+                <span class="collapse">
+                    <p>Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.</p>
+                </span>
+                <a class="expand-btn mt-2 d-block" href="#" role="button">+ Mehr anzeigen</a>
+            </div>
         </div>
     </div>
-    {% endif %}
-    {% if results.wea_area_income != "0,00" or results.pv_area_income != "0,00" or results.apv_area_income != "0,00" or results.lease_est_income_wea != "0,00" or results.lease_est_income_pv != "0,00" or results.lease_est_income_apv != "0,00" or results.lease_trade_tax_wea != "0,00" or results.lease_trade_tax_pv != "0,00" or results.lease_trade_tax_apv != "0,00" %}
-        <hr>
-        <div class="row">
-            <div class="col-md-6 d-flex align-items-center">
- <div id="area_lease_income_loader" class="loader">  </div>
-<div id="area_lease_income_chart" style="width: 100%;  height: 400px;"></div>
-            </div>
-            <div class="col-md-6 m-auto">
-                <h3 class="smallHeadline">Einnahmen durch Pachterlöse</h3>
 
-                <table class="table table-bordered">
-                    <thead>
-                <tr class="table-info">
+    {% endif %} {% if results.wea_area_income != "0,00" or results.pv_area_income != "0,00" or results.apv_area_income != "0,00" or results.lease_est_income_wea != "0,00" or results.lease_est_income_pv != "0,00" or results.lease_est_income_apv != "0,00" or results.lease_trade_tax_wea != "0,00" or results.lease_trade_tax_pv != "0,00" or results.lease_trade_tax_apv != "0,00" %}
+    <hr>
+    <div class="row">
+        <div class="col-md-6 d-flex align-items-center">
+            <div id="area_lease_income_loader" class="loader"> </div>
+            <div id="area_lease_income_chart" style="width: 100%;  height: 400px;"></div>
+        </div>
+        <div class="col-md-6 m-auto">
+            <h3 class="smallHeadline">Einnahmen durch Pachterlöse</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="table-info">
                         <th></th>
                         <th>WEA</th>
                         <th>FF-PV</th>
                         <th>APV</th>
                     </tr>
-                    </thead>
-                    <tbody>
+                </thead>
+                <tbody>
                     <tr>
                         <td>Pachteinnahmen</td>
                         <td>{{ results.wea_area_income }} €</td>
@@ -138,156 +118,164 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
                         <td>{{ results.lease_trade_tax_pv }} €</td>
                         <td>{{ results.lease_trade_tax_apv }} €</td>
                     </tr>
-                    </tbody>
-                </table>
-                     <div class="expandable-text bg-light p-4 small text-muted">
-             <p class="mb-0"><b>Allgemeine Annahmen:</b></p>
-      <ul>
-             <li>Zugrundeliegende Pachtpreise: WEA = 16.000,00 € pro MW; FF-PV = 3.000,00 € pro ha; APV = 830,00 € pro ha</li>
-      </ul>
-
-      <span class="collapse">
-                         <p class="mb-0"><b>Annahmen ESt.-Berechnung:</b></p>
-      <ul>
-             <li>Durchschnittliches DE-weites Brutto-Jahreseinkommen von 59.094,00 €
-               <a href="https://www.destatis.de/DE/Themen/Arbeit/Verdienste/Verdienste-Branche-Berufe/Tabellen/bruttojahresverdienst.html" title="Statistisches Bundesamt" target="_blank"><i class="fas fa-link"></i></a></li>
-            <li>ledige Person</li>
-      </ul>
-
-        <p class="mb-0"><b>Annahmen GewSt.-Berechnung:</b></p>
-      <ul>
-             <li>Kein Steuerfreibetrag aufgrund von Unternehmensform</li>
-        <li>Berücksichtigung der Gewerbesteuerumlage laut Gemeindefinanzreformgesetz <a href="https://www.bundesfinanzministerium.de/Content/DE/Standardartikel/Themen/Oeffentliche_Finanzen/Foederale_Finanzbeziehungen/Kommunalfinanzen/Gemeindefinanzreform/entwicklung-gewerbesteuerumlage.pdf" target="_blank" title="Gewerbesteuerumlage"><i class="fas fa-link"></i></a></li>
-      </ul>
-
-             <p>Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.</p>
-      </span>
-    <a class="expand-btn mt-2 d-block" href="#" role="button">+ Mehr anzeigen</a>
-  </div>
-            </div>
-        </div>
-        <hr>
-    {% else %}
-        <div class="alert alert-dark mt-4 mb-4" role="alert">
-            <i class="fas fa-info-circle" data-placement="left"></i>
-            Keine Einnahmen durch Pachterlöse vorhanden, da keine Angaben gemacht wurden. Entsprechend wird von
-            Landes-/Bundeseigentum der Potenzialflächen ausgegangen.
-        </div>
-    {% endif %}
-    <h2 class="rowHeader">Gewerbesteuereinnahmen durch Anlagengewinne</h2>
-    <div class="row">
-        {% if results.total_trade_tax_3 != "0,00" %}
-            <div class="col-md-6">
-<div id="trade_tax_wind_loader" class="loader">  </div>
-<div id="trade_tax_wind_chart" style="width: 100%; height: 400px;"></div>
-            </div>
-        {% endif %}
-        {% if results.total_trade_tax_1 != "0,00" %}
-            <div class="col-md-6">
-<div id="trade_tax_pv_loader" class="loader">  </div>
-<div id="trade_tax_pv_chart" style="width: 100%; height: 400px;"></div></div>
-
-        {% endif %}
-        {% if results.total_trade_tax_2 != "0,00" %}
-            <div class="col-md-6">
-    <div id="trade_tax_apv_loader" class="loader">  </div>
-<div id="trade_tax_apv_chart" style="width: 100%; height: 400px;"></div></div>
-
-        {% endif %}
-        <div class="col-md-6 m-auto">
-            <table class="table table-bordered">
-                <thead>
-                <tr class="table-info">
-                    <th></th>
-                    <th>WEA</th>
-                    <th>FF-PV</th>
-                    <th>APV</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Max. jährl. GewSt.</td>
-                    <td>{{ results.max_tax_3 }} €</td>
-                    <td>{{ results.max_tax_1 }} €</td>
-                    <td>{{ results.max_tax_2 }} €</td>
-                </tr>
-                <tr>
-                    <td>Einnahmen über 25 Jahre</td>
-                    <td>{{ results.total_trade_tax_3 }} €</td>
-                    <td>{{ results.total_trade_tax_1 }} €</td>
-                    <td>{{ results.total_trade_tax_2 }} €</td>
-                </tr>
                 </tbody>
             </table>
-                  <div class="expandable-text bg-light p-4 small text-muted">
-             <p class="mb-0"><b>Allgemeine Annahmen:</b></p>
-      <ul>
-             <li>Zinssatz in Höhe von 5 %</li>
-        <li>Eigenkapitalanteil von 80 %</li>
-        <li>Tilgungsdauer von 15 Jahren</li>
-      </ul>
-
-      <span class="collapse">
-                         <p class="mb-0"><b>Annahmen WEA:</b></p>
-      <ul>
-             <li>Angenommene Volllaststunden: </li>
-              <li>Jährliche Leistungsdegradation von 0,6 %</li>
-
-      </ul>
-
-        <p class="mb-0"><b>Annahmen FF-PV:</b></p>
-      <ul>
-             <li>Angenommene Volllaststunden: </li>
-              <li>Jährliche Leistungsdegradation von 0,5 %</li>
-      </ul>
-
-             <p>Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.</p>
-      </span>
-    <a class="expand-btn mt-2 d-block" href="#" role="button">+ Mehr anzeigen</a>
-  </div>
+            <div class="expandable-text bg-light p-4 small text-muted">
+                <p class="mb-0"><b>Allgemeine Annahmen:</b></p>
+                <ul>
+                    <li>Zugrundeliegende Pachtpreise: WEA = 16.000,00 € pro MW; FF-PV = 3.000,00 € pro ha; APV = 830,00 € pro ha</li>
+                </ul>
+                <span class="collapse">
+                    <p class="mb-0"><b>Annahmen ESt.-Berechnung:</b></p>
+                    <ul>
+                        <li>Durchschnittliches DE-weites Brutto-Jahreseinkommen von 59.094,00 € <a href="https://www.destatis.de/DE/Themen/Arbeit/Verdienste/Verdienste-Branche-Berufe/Tabellen/bruttojahresverdienst.html" title="Statistisches Bundesamt" target="_blank"><i class="fas fa-link"></i></a></li>
+                        <li>ledige Person</li>
+                    </ul>
+                    <p class="mb-0"><b>Annahmen GewSt.-Berechnung:</b></p>
+                    <ul>
+                        <li>Kein Steuerfreibetrag aufgrund von Unternehmensform</li>
+                        <li>Berücksichtigung der Gewerbesteuerumlage laut Gemeindefinanzreformgesetz <a href="https://www.bundesfinanzministerium.de/Content/DE/Standardartikel/Themen/Oeffentliche_Finanzen/Foederale_Finanzbeziehungen/Kommunalfinanzen/Gemeindefinanzreform/entwicklung-gewerbesteuerumlage.pdf" target="_blank" title="Gewerbesteuerumlage"><i class="fas fa-link"></i></a></li>
+                    </ul>
+                    <p>Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.</p>
+                </span>
+                <a class="expand-btn mt-2 d-block" href="#" role="button">+ Mehr anzeigen</a>
+            </div>
         </div>
     </div>
-<hr>
+    <hr> {% else %} <div class="alert alert-dark mt-4 mb-4" role="alert">
+        <i class="fas fa-info-circle" data-placement="left"></i> Keine Einnahmen durch Pachterlöse vorhanden, da keine Angaben gemacht wurden. Entsprechend wird von Landes-/Bundeseigentum der Potenzialflächen ausgegangen.
+    </div> <hr> {% endif %}
+      {% if results.property_tax_a_wea != "0,00" %}
+      <div class="row">
+        <div class="col-md-12">
+            <h3 class="smallHeadline">Erhöhte Grundsteuer A durch WEA</h3>
+            <p>Der § 238 Abs. 2 BewG wertet WEA-Standorte auf land- und forstwirtschaftlichen Flächen durch einen Zuschlag auf. Die "abgegrenzte Standortfläche der Windenergieanlage" umfasst Turmgrundfläche, Sicherheitsabstände, Fundamente, Zuwegungen und Kranstellflächen.
+              Der Zuschlag errechnet sich aus dieser Fläche und einem festgelegten Bewertungsfaktor. </p>
+          <p>Anhand der zuvor getätigten Angaben wurde eine Anzahl von <b>{{ results.N_wea }} WEA</b> ermittelt. Die daraus entstehenden Mehreinnahmen durch die Grundsteuer A betragen:</p>
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="table-info">
+                        <th>WEA</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ results.property_tax_a_wea }} €</td>
+
+                    </tr>
+                </tbody>
+            </table>
+            <div class="expandable-text bg-light p-4 small text-muted">
+                <p class="mb-0"><b>Annahmen:</b></p>
+                <ul>
+                    <li>Abgrenzende Standortfläche pro WEA beträgt 0,4 ha</li>
+                </ul>
+                <span class="collapse">
+                  <p>Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.</p>
+                </span>
+                <a class="expand-btn mt-2 d-block" href="#" role="button">+ Mehr anzeigen</a>
+            </div>
+        </div>
+    </div>
+     <hr> {% else %} <div class="alert alert-dark mt-4 mb-4" role="alert">
+        <i class="fas fa-info-circle" data-placement="left"></i> Grundsteuer A bleibt unverändert, da die WEA auf gemeindeeigenen Flächen errichtet wurden.
+    </div> <hr> {% endif %}
+
+  <h2 class="rowHeader">Gewerbesteuereinnahmen durch Anlagengewinne</h2>
+    <div class="row"> {% if results.total_trade_tax_3 != "0,00" %} <div class="col-md-6">
+            <div id="trade_tax_wind_loader" class="loader"> </div>
+            <div id="trade_tax_wind_chart" style="width: 100%; height: 400px;"></div>
+        </div> {% endif %} {% if results.total_trade_tax_1 != "0,00" %} <div class="col-md-6">
+            <div id="trade_tax_pv_loader" class="loader"> </div>
+            <div id="trade_tax_pv_chart" style="width: 100%; height: 400px;"></div>
+        </div> {% endif %} {% if results.total_trade_tax_2 != "0,00" %} <div class="col-md-6">
+            <div id="trade_tax_apv_loader" class="loader"> </div>
+            <div id="trade_tax_apv_chart" style="width: 100%; height: 400px;"></div>
+        </div> {% endif %} <div class="col-md-6 m-auto">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="table-info">
+                        <th></th>
+                        <th>WEA</th>
+                        <th>FF-PV</th>
+                        <th>APV</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Max. jährl. GewSt.</td>
+                        <td>{{ results.max_tax_3 }} €</td>
+                        <td>{{ results.max_tax_1 }} €</td>
+                        <td>{{ results.max_tax_2 }} €</td>
+                    </tr>
+                    <tr>
+                        <td>Einnahmen über 25 Jahre</td>
+                        <td>{{ results.total_trade_tax_3 }} €</td>
+                        <td>{{ results.total_trade_tax_1 }} €</td>
+                        <td>{{ results.total_trade_tax_2 }} €</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="expandable-text bg-light p-4 small text-muted">
+                <p class="mb-0"><b>Allgemeine Annahmen:</b></p>
+                <ul>
+                    <li>Zinssatz in Höhe von 5 %</li>
+                    <li>Eigenkapitalanteil von 80 %</li>
+                    <li>Tilgungsdauer von 15 Jahren</li>
+                </ul>
+                <span class="collapse">
+                    <p class="mb-0"><b>Annahmen WEA:</b></p>
+                    <ul>
+                        <li>Angenommene Volllaststunden: </li>
+                        <li>Jährliche Leistungsdegradation von 0,6 %</li>
+                    </ul>
+                    <p class="mb-0"><b>Annahmen FF-PV:</b></p>
+                    <ul>
+                        <li>Angenommene Volllaststunden: </li>
+                        <li>Jährliche Leistungsdegradation von 0,5 %</li>
+                    </ul>
+                    <p>Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.</p>
+                </span>
+                <a class="expand-btn mt-2 d-block" href="#" role="button">+ Mehr anzeigen</a>
+            </div>
+        </div>
+    </div>
+    <hr>
     <h2 class="rowHeader">Gesamteinnahmen über 25 Jahre</h2>
     <div class="row">
         <div class="col-md-12">
-   <div id="total_income_loader" class="loader">  </div>
-<div id="total_income_chart" style="width: 100%; height: 500px;"></div></div>
+            <div id="total_income_loader" class="loader"> </div>
+            <div id="total_income_chart" style="width: 100%; height: 500px;"></div>
         </div>
-
-        <div class="col-md-6 m-auto">
-            <table class="table table-bordered">
-                <thead>
-                 <tr class="table-info">
+    </div>
+    <div class="col-md-6 m-auto">
+        <table class="table table-bordered">
+            <thead>
+                <tr class="table-info">
                     <th>WEA</th>
                     <th>FF-PV</th>
                     <th>APV</th>
                 </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody>
                 <tr>
                     <td>{{ results.sum_wea }} €</td>
                     <td>{{ results.sum_ff_pv }} €</td>
                     <td>{{ results.sum_agri_pv }} €</td>
                 </tr>
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
 </div>
 </div>
 </div>
-{% endblock content %}
-{% block inline_javascript %}
-  <script>
+</div> {% endblock content %} {% block inline_javascript %} <script>
     document.addEventListener("DOMContentLoaded", function() {
-
         var expandableSections = document.querySelectorAll('.expandable-text');
-
         expandableSections.forEach(function(section) {
             var btn = section.querySelector('.expand-btn');
             var collapsible = section.querySelector('.collapse');
-
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 if (collapsible.style.display === 'none' || collapsible.style.display === '') {
@@ -299,144 +287,125 @@ Radius von drei Kilometern um den Standort der WEA befinden.  </p>
                 }
             });
         });
-
         const resultsElement = document.getElementById('results-data');
         const results = JSON.parse(resultsElement.textContent);
         console.log(results)
-
-
         const chartTypes = [{
-                id: "eeg_participation",
-                dataKey: "echart_eeg"
-            },
-            {
-                id: "wind_solar_euro",
-                dataKey: "echart_wind_solar_euro"
-            },
-            {
-                id: "area_lease_income",
-                dataKey: "echart_area_lease_income"
-            },
-            {
-                id: "trade_tax_wind",
-                dataKey: "echart_trade_tax_wind"
-            },
-            {
-                id: "trade_tax_pv",
-                dataKey: "echart_trade_tax_pv"
-            },
-            {
-                id: "trade_tax_apv",
-                dataKey: "echart_trade_tax_apv"
-            },
-            {
-                id: "total_income",
-                dataKey: "echart_total_income"
+            id: "eeg_participation",
+            dataKey: "echart_eeg"
+        }, {
+            id: "wind_solar_euro",
+            dataKey: "echart_wind_solar_euro"
+        }, {
+            id: "area_lease_income",
+            dataKey: "echart_area_lease_income"
+        }, {
+            id: "trade_tax_wind",
+            dataKey: "echart_trade_tax_wind"
+        }, {
+            id: "trade_tax_pv",
+            dataKey: "echart_trade_tax_pv"
+        }, {
+            id: "trade_tax_apv",
+            dataKey: "echart_trade_tax_apv"
+        }, {
+            id: "total_income",
+            dataKey: "echart_total_income"
+        }];
+        chartTypes.forEach(({
+            id,
+            dataKey
+        }) => {
+            const chartData = Array.isArray(results[dataKey]) ? results[dataKey][0] : results[dataKey];
+            const chartElement = document.getElementById(id + "_chart");
+            // Überprüfen Sie, ob das Chart-Element existiert
+            if (!chartElement) {
+                console.warn(`Element mit ID '${id}_chart' wurde nicht gefunden. Das Diagramm wird nicht gerendert.`);
+                return; // Beenden Sie die Schleife für dieses Chart
             }
-        ];
-
-       chartTypes.forEach(({ id, dataKey }) => {
-              const chartData = Array.isArray(results[dataKey]) ? results[dataKey][0] : results[dataKey];
-              const chartElement = document.getElementById(id + "_chart");
-
-              // Überprüfen Sie, ob das Chart-Element existiert
-              if (!chartElement) {
-                  console.warn(`Element mit ID '${id}_chart' wurde nicht gefunden. Das Diagramm wird nicht gerendert.`);
-                  return; // Beenden Sie die Schleife für dieses Chart
-              }
-
-              if (chartData) {
-                  renderChart(id + "_chart", id, chartData);
-                  const loader = document.getElementById(id + "_loader");
-                  if (loader) {
-                      loader.style.display = 'none'; // Verstecken des Loaders
-                  }
-              } else {
-                  console.error(`Keine Daten für Chart ${id} gefunden`);
-              }
-          });
-
-      function renderChart(chartDivId, chartType, chartData) {
-    const chartElement = document.getElementById(chartDivId);
-
-    if (!chartElement) {
-        console.error(`Element mit ID ${chartDivId} nicht gefunden`);
-        return; // Beenden Sie die Funktion, wenn das Element nicht existiert
-    }
-
-    const chart = echarts.init(chartElement);
-
-    // Überprüfen Sie das Chart-Datenformat
-    if (!chartData || typeof chartData !== 'object') {
-        console.error(`Ungültige Daten für Chart ${chartType}:`, chartData);
-        return; // Beenden Sie die Funktion bei ungültigen Daten
-    }
-
-    // Formatierungsfunktion für Zahlen
-    function formatNumber(value) {
-        if (typeof value !== 'number') {
-            return 'N/A';
-        }
-        if (value >= 1000000) {
-            return (value / 1000000).toFixed(1).replace('.', ',') + ' Mio. €';
-        } else if (value >= 1000) {
-            return (value / 1000).toFixed(1).replace('.', ',') + ' T€';
-        } else {
-            return value.toFixed(1).replace('.', ',') + ' €';
-        }
-    }
-
-    // Überprüfen auf sekundäre Y-Achse
-    const hasSecondYAxis = Array.isArray(chartData.series) && chartData.series.some(series => series.yAxisIndex === 1);
-
-    const option = {
-        legend: {
-            data: Array.isArray(chartData.legend?.data) ? chartData.legend.data : [],
-            top: chartData.legend?.top || "auto",
-            bottom: chartData.legend?.bottom || "0",
-            padding: chartData.legend?.padding || [0, 0, 0, 0],
-        },
-        xAxis: {
-            type: 'category',
-            name: Array.isArray(chartData.xAxis) ? chartData.xAxis[0]?.name : chartData.xAxis?.name || '',
-            data: Array.isArray(chartData.xAxis?.data) ? chartData.xAxis.data : []
-        },
-        yAxis: hasSecondYAxis ? [
-            {
-                type: 'value',
-                name: Array.isArray(chartData.yAxis) ? chartData.yAxis[0]?.name : chartData.yAxis?.name || '',
-                axisLabel: { formatter: formatNumber },
-            },
-            {
-                type: 'value',
-                name: Array.isArray(chartData.yAxis) ? chartData.yAxis[1]?.name : '',
-                axisLabel: { formatter: formatNumber },
-                position: 'right',
-      }
-        ] : [
-            {
-                type: 'value',
-                name: chartData.yAxis?.name || '',
-                axisLabel: { formatter: formatNumber },
-  }
-        ],
-        series: Array.isArray(chartData.series) ? chartData.series.map(series => ({
-            ...series,
-            data: Array.isArray(series.data) ? series.data.map(value => parseFloat(value) || 0) : []
-        })) : [],
-        tooltip: {
-            trigger: 'item',
-            formatter(params) {
-                return `${params.seriesName}: ${formatNumber(params.value)}`;
+            if (chartData) {
+                renderChart(id + "_chart", id, chartData);
+                const loader = document.getElementById(id + "_loader");
+                if (loader) {
+                    loader.style.display = 'none'; // Verstecken des Loaders
+                }
+            } else {
+                console.error(`Keine Daten für Chart ${id} gefunden`);
             }
+        });
+
+        function renderChart(chartDivId, chartType, chartData) {
+            const chartElement = document.getElementById(chartDivId);
+            if (!chartElement) {
+                console.error(`Element mit ID ${chartDivId} nicht gefunden`);
+                return; // Beenden Sie die Funktion, wenn das Element nicht existiert
+            }
+            const chart = echarts.init(chartElement);
+            // Überprüfen Sie das Chart-Datenformat
+            if (!chartData || typeof chartData !== 'object') {
+                console.error(`Ungültige Daten für Chart ${chartType}:`, chartData);
+                return; // Beenden Sie die Funktion bei ungültigen Daten
+            }
+            // Formatierungsfunktion für Zahlen
+            function formatNumber(value) {
+                if (typeof value !== 'number') {
+                    return 'N/A';
+                }
+                if (value >= 1000000) {
+                    return (value / 1000000).toFixed(1).replace('.', ',') + ' Mio. €';
+                } else if (value >= 1000) {
+                    return (value / 1000).toFixed(1).replace('.', ',') + ' T€';
+                } else {
+                    return value.toFixed(1).replace('.', ',') + ' €';
+                }
+            }
+            // Überprüfen auf sekundäre Y-Achse
+            const hasSecondYAxis = Array.isArray(chartData.series) && chartData.series.some(series => series.yAxisIndex === 1);
+            const option = {
+                legend: {
+                    data: Array.isArray(chartData.legend?.data) ? chartData.legend.data : [],
+                    top: chartData.legend?.top || "auto",
+                    bottom: chartData.legend?.bottom || "0",
+                    padding: chartData.legend?.padding || [0, 0, 0, 0],
+                },
+                xAxis: {
+                    type: 'category',
+                    name: Array.isArray(chartData.xAxis) ? chartData.xAxis[0]?.name : chartData.xAxis?.name || '',
+                    data: Array.isArray(chartData.xAxis?.data) ? chartData.xAxis.data : []
+                },
+                yAxis: hasSecondYAxis ? [{
+                    type: 'value',
+                    name: Array.isArray(chartData.yAxis) ? chartData.yAxis[0]?.name : chartData.yAxis?.name || '',
+                    axisLabel: {
+                        formatter: formatNumber
+                    },
+                }, {
+                    type: 'value',
+                    name: Array.isArray(chartData.yAxis) ? chartData.yAxis[1]?.name : '',
+                    axisLabel: {
+                        formatter: formatNumber
+                    },
+                    position: 'right',
+                }] : [{
+                    type: 'value',
+                    name: chartData.yAxis?.name || '',
+                    axisLabel: {
+                        formatter: formatNumber
+                    },
+                }],
+                series: Array.isArray(chartData.series) ? chartData.series.map(series => ({
+                    ...series,
+                    data: Array.isArray(series.data) ? series.data.map(value => parseFloat(value) || 0) : []
+                })) : [],
+                tooltip: {
+                    trigger: 'item',
+                    formatter(params) {
+                        return `${params.seriesName}: ${formatNumber(params.value)}`;
+                    }
+                }
+            };
+            // Diagrammoptionen anwenden
+            chart.setOption(option);
         }
-    };
-
-    // Diagrammoptionen anwenden
-    chart.setOption(option);
-}
-
-
     });
-  </script>
-{% endblock inline_javascript %}
+</script> {% endblock inline_javascript %}
