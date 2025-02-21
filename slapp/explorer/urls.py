@@ -28,6 +28,7 @@ htmx_urlpatterns = [
     path("wizard-next/", views.next_menu_tab, name="wizard-next-step"),
     path("wizard-previous/", views.previous_menu_tab, name="wizard-previous-step"),
     path("esm-choice/<int:tab_id>", views.esm_choice, name="esm_choice"),
+    path("chart/all_charts", views.all_charts, name="all_charts"),
 ]
 
 urlpatterns += htmx_urlpatterns

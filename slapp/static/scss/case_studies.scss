@@ -137,6 +137,34 @@
   border: 5px solid #bde3ff;
 }
 
+.select-button.selected {
+  background-color: #bde3ff;
+  color: black;
+  border: 5px solid #bde3ff;
+}
+
 .select-button:hover {
   opacity: 0.9;
 }
+
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(3, 400px);
+  gap: 20px;
+  justify-content: center;
+  margin: 0 auto;
+ }
+
+.chart {
+  width: 400px;
+  height: 300px;
+  border: 1px solid #ccc;
+  margin: 10px;
+  }
+
+#btn_next {
+  display: block;
+  width: 20%;
+  margin: auto;
+  text-align: center;
+  }

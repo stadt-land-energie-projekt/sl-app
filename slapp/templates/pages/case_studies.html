@@ -5,9 +5,35 @@
 {% block content_no_sidebar %}
   <div class="flex-container">
     {% for region in regions %}
-      <c-regions title="{{ region.title }}" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" keyfact0="{{ region.keyfacts.0 }}" keyfact1="{{ region.keyfacts.1 }}" keyfact2="{{ region.keyfacts.2 }}" keyfact3="{{ region.keyfacts.3 }}">
+      <c-regions title="{{ region.title }}" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" :keyfacts="region.keyfacts">
       </c-regions>
     {% endfor %}
   </div>
-  <a href="{{ next_url }}" class="btn btn-primary mt-3">Hier geht's zur regionalen Energiewende</a>
+  <div id="legend" class="legend"></div>
+  <div id="map"></div>
+  <div class="charts-container">
+    <div id="chart-production" class="chart"></div>
+    <div id="chart-tech" class="chart"></div>
+    <div id="chart-another" class="chart"></div>
+    <div id="chart-demand" class="chart"></div>
+    <div id="chart-area" class="chart"></div>
+    <div id="co2-info" class="chart"></div>
+  </div>
+  <div id="table-details" class="container mt-4">
+    <h2>Detailansicht</h2>
+    <div class="form-group">
+      <label for="municipality_select">Gemeinde auswählen</label>
+      <select id="municipality_select"
+              name="municipality_select"
+              multiple
+              class="form-control">
+        <!-- Hier werden später dynamisch die <option>-Tags eingefügt -->
+      </select>
+    </div>
+    {% include "pages/details.html" with municipalities=municipalities %}
+  </div>
+  <a href="{{ next_url }}" class="btn btn-primary mt-3" id="btn_next">Hier geht's zur regionalen Energiewende</a>
 {% endblock content_no_sidebar %}
+{% block inline_javascript %}
+  <script src="{% static 'js/case_studies.js' %}"></script>
+{% endblock inline_javascript %}
