@@ -1,19 +1,32 @@
 function regionSelected(buttonElement, regionTitle) {
-    // 1) Remove 'selected' class from all buttons
     let allButtons = document.querySelectorAll(".select-button");
     allButtons.forEach(btn => {
         btn.classList.remove("selected");
     });
 
-    // 2) Mark the clicked button as selected
     buttonElement.classList.add("selected");
 
-    // 3) Call load_charts with the region title
     load_charts(regionTitle);
+    display_details(regionTitle)
+}
+
+function display_details(regionTitle){
+  const divOs = document.getElementById('table-details-os');
+  const divKiel = document.getElementById('table-details-kiel');
+
+  if (regionTitle === "Region Oderland-Spree") {
+        divOs.style.display = "block";
+        divKiel.style.display = "none";
+    } else if (regionTitle === "Region Kiel") {
+        divOs.style.display = "none";
+        divKiel.style.display = "block";
+    } else {
+        divOs.style.display = "none";
+        divKiel.style.display = "none";
+    }
 }
 
 function load_charts(regionTitle) {
-    // Build the request URL with the region GET parameter
     let url = window.location.origin + "/explorer/chart/all_charts?region=" + encodeURIComponent(regionTitle);
 
     fetch(url, {
@@ -37,8 +50,8 @@ function load_charts(regionTitle) {
 }
 
 function on_load() {
-    load_charts("{{ regions.0.title }}");
-
+    load_charts(window.regionTitle);
+    display_details(window.regionTitle);
     let firstButton = document.querySelector(".select-button");
     if (firstButton) {
       firstButton.classList.add("selected");

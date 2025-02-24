@@ -20,24 +20,20 @@
     <div id="chart-area" class="chart"></div>
     <div id="co2-info" class="chart"></div>
   </div>
-  <div id="table-details" class="container mt-4">
-    <h2>Detailansicht</h2>
-    <div class="form-group">
-      <label for="municipality_select">Gemeinde auswählen</label>
-      <select id="municipality_select"
-              name="municipality_select"
-              multiple
-              class="form-control">
-        <!-- Hier werden später dynamisch die <option>-Tags eingefügt -->
-      </select>
-    </div>
-    {% include "pages/details.html" with municipalities=municipalities %}
+  <div id="table-details-os" class="container mt-4">
+    <h2>Detailansicht Oderland-Spree</h2>
+    {% include "pages/details.html" with municipalities=municipalities_region_os %}
+  </div>
+  <div id="table-details-kiel" class="container mt-4">
+    <h2>Detailansicht Kiel</h2>
+    {% include "pages/details.html" with municipalities=municipalities_region_kiel %}
   </div>
   <a href="{{ next_url }}" class="btn btn-primary mt-3" id="btn_next">Hier geht's zur regionalen Energiewende</a>
 {% endblock content_no_sidebar %}
 {% block javascript %}
   {{ block.super }}
   {% compress js %}
+    <script src="{% static 'js/case_studies.js' %}" defer></script>
     <script src="{% static 'vendors/maplibre/js/maplibre-gl.js' %}"></script>
     <script src="{% static 'vendors/pubsub/js/pubsub.js' %}"></script>
     <script src="{% static 'js/region.js' %}"></script>
@@ -46,6 +42,7 @@
 {% block inline_javascript %}
   <script>
     const eventTopics = {};
+    window.regionTitle = "{{ regions.0.title|escapejs }}";
   </script>
   {% include 'django_mapengine/map_json.html' %}
   {% compress js %}
@@ -59,6 +56,3 @@
           rel='stylesheet' />
   {% endcompress %}
 {% endblock css %}
-{% block inline_javascript %}
-  <script src="{% static 'js/case_studies.js' %}"></script>
-{% endblock inline_javascript %}

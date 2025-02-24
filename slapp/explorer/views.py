@@ -29,6 +29,11 @@ from .models import Municipality, Region
 
 MAX_MUNICIPALITY_COUNT = 3
 
+region_bbox = {
+    entry["name"]: entry["bounding_box"]
+    for entry in models.Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
+}
+
 
 def start_page(request: HttpRequest) -> HttpResponse:
     """Render the start page and handle form submissions from home.html."""
@@ -523,28 +528,33 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
-        region_bbox = {
-            entry["name"]: entry["bounding_box"]
-            for entry in models.Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
-        }
+        try:
+            region_kiel = models.Region.objects.get(name="Kiel")
+            region_os = models.Region.objects.get(name="Oderland-Spree")
+        except models.Region.DoesNotExist:
+            region_kiel = None
+            region_os = None
 
-        regions = self.get_regions_data(region_bbox)
-
-        ids = self.request.session.get("municipality_ids", [])
-        if ids:
-            # Aggregation (genau wie in details_list)
-            if len(ids) > MAX_MUNICIPALITY_COUNT:
-                ids = ids[:MAX_MUNICIPALITY_COUNT]
-                messages.warning(self.request, "Es können maximal 3 Gemeinden ausgewählt werden.")
-            context["municipalities"] = municipalities_details(ids)
+        if region_kiel:
+            ids_kiel = region_kiel.municipality_set.values_list("id", flat=True)
+            context["municipalities_region_kiel"] = municipalities_details(ids_kiel)
         else:
-            context["municipalities"] = None
+            context["municipalities_region_kiel"] = None
+
+        if region_os:
+            ids_os = region_os.municipality_set.values_list("id", flat=True)
+            context["municipalities_region_os"] = municipalities_details(ids_os)
+        else:
+            context["municipalities_region_os"] = None
+
+        regions = self.get_regions_data()
 
         context["regions"] = regions
         context["next_url"] = reverse("explorer:esys_robust")
         return context
 
-    def get_regions_data(self, region_bbox: dict) -> list:
+    @staticmethod
+    def get_regions_data() -> list:
         """Return the list of dictionaries containing region data."""
         return [
             {
@@ -597,8 +607,6 @@ def all_charts(request: HttpRequest) -> HttpResponse:
 
     region_name = request.GET.get("region", "")
 
-    # Example data for two regions (adjust as needed)
-    # You can also retrieve this data from your database
     regions = CaseStudies.get_regions_data()
 
     # Find the region the user selected

@@ -12,7 +12,7 @@
     <span class="left-text">...</span>
     <span class="center-button">
       <button class="select-button"
-              onclick="selectRegion([[{{ bbox.extent.0 | floatformat:"10u" }}, {{ bbox.extent.1 | floatformat:"10u" }}], [{{ bbox.extent.2 | floatformat:"10u" }}, {{ bbox.extent.3 | floatformat:"10u" }}]]);regionSelected(this, '{{ region.title }}')">
+              onclick="regionSelected(this, '{{ region.title }}');selectRegion([[{{ bbox.extent.0 | floatformat:'10u' }}, {{ bbox.extent.1 | floatformat:'10u' }}], [{{ bbox.extent.2 | floatformat:'10u' }}, {{ bbox.extent.3 | floatformat:'10u' }}]]);">
         Auswählen
       </button>
     </span>
