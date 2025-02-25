@@ -3,6 +3,7 @@
 {% load static compress %}
 
 {% block content_no_sidebar %}
+  <div class="header">Kurzintro und Präsentation der Case Studies</div>
   <div class="flex-container">
     {% for region in regions %}
       {{ region.centroid }}
@@ -12,11 +13,28 @@
   </div>
   <div id="legend" class="legend"></div>
   <div id="map"></div>
-  <a href="{{ next_url }}" class="btn btn-primary mt-3">Hier geht's zur regionalen Energiewende</a>
+  <div class="charts-container">
+    <div id="chart-production" class="chart"></div>
+    <div id="chart-tech" class="chart"></div>
+    <div id="chart-another" class="chart"></div>
+    <div id="chart-demand" class="chart"></div>
+    <div id="chart-area" class="chart"></div>
+    <div id="co2-info" class="chart"></div>
+  </div>
+  <div id="table-details-os" class="container mt-4">
+    <h2>Detailansicht Oderland-Spree</h2>
+    {% include "pages/details.html" with municipalities=municipalities_region_os %}
+  </div>
+  <div id="table-details-kiel" class="container mt-4">
+    <h2>Detailansicht Kiel</h2>
+    {% include "pages/details.html" with municipalities=municipalities_region_kiel %}
+  </div>
+  <a href="{{ next_url }}" class="btn btn-primary mt-3" id="btn_next">Hier geht's zur regionalen Energiewende</a>
 {% endblock content_no_sidebar %}
 {% block javascript %}
   {{ block.super }}
   {% compress js %}
+    <script src="{% static 'js/case_studies.js' %}" defer></script>
     <script src="{% static 'vendors/maplibre/js/maplibre-gl.js' %}"></script>
     <script src="{% static 'vendors/pubsub/js/pubsub.js' %}"></script>
     <script src="{% static 'js/region.js' %}"></script>
@@ -25,6 +43,7 @@
 {% block inline_javascript %}
   <script>
     const eventTopics = {};
+    window.regionTitle = "{{ regions.0.title|escapejs }}";
   </script>
   {% include 'django_mapengine/map_json.html' %}
   {% compress js %}

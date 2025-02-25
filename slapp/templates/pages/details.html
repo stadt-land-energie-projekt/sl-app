@@ -1,82 +1,73 @@
-{% extends "base.html" %}
-
 {% load humanize %}
 
-{% block sidebar_content %}
-  <h4 class="text-center">Informationen zu den Details</h4>
-  <p class="text-center">{% lorem %}</p>
-{% endblock sidebar_content %}
-{% block content %}
-  <div class="container">
-    <h1 class="mt-4">Detailansicht</h1>
-    {% if municipalities %}
-      <div class="row mt-4 g-0" id="municipality-results">
-        <div class="col-3">
-          <ul class="list-group rounded-0 text-truncate">
-            <li class="list-group-item fw-bold bg-secondary text-white">Gemeinde</li>
-            <li class="list-group-item">Fläche</li>
-            <li class="list-group-item fw-bold">erneuerbare Stromerzeugung</li>
-            <li class="list-group-item">Freiflächen-PV</li>
-            <li class="list-group-item">Dachflächen-PV</li>
-            <li class="list-group-item">Windkraft</li>
-            <li class="list-group-item">Biomasse</li>
-            <li class="list-group-item">Wasserkraft</li>
-            <li class="list-group-item fw-bold">Stromspeicher</li>
-            <li class="list-group-item">Speicherkapazität</li>
-            <li class="list-group-item fw-bold">Wärmegewinnung (KWK)</li>
-            <li class="list-group-item">thermische Leistung</li>
-            <li class="list-group-item">elektrische Leistung</li>
-            <li class="list-group-item fw-bold">Energiebedarf (errechnet)</li>
-            <li class="list-group-item">Strombedarf</li>
-            <li class="list-group-item">Wärmebedarf</li>
-          </ul>
-        </div>
-        {% for municipality in municipalities %}
-          <div class="col-2 text-truncate">
-            <ul class="list-group rounded-0">
-              <li class="list-group-item text-end fw-bold bg-secondary text-white">{{ municipality.name }}</li>
-              <li class="list-group-item text-end">{{ municipality.area_rounded|intcomma }}</li>
-              <li class="list-group-item text-end fw-bold">{{ municipality.total_net|intcomma }}</li>
-              <li class="list-group-item text-end">{{ municipality.pvground_net|intcomma }}</li>
-              <li class="list-group-item text-end">{{ municipality.pvroof_net|intcomma }}</li>
-              <li class="list-group-item text-end">{{ municipality.wind_net|intcomma }}</li>
-              <li class="list-group-item text-end">{{ municipality.biomass_net|intcomma }}</li>
-              <li class="list-group-item text-end">{{ municipality.hydro_net|intcomma }}</li>
-              <li class="list-group-item fw-bold">&nbsp</li>
-              <li class="list-group-item text-end">{{ municipality.storage_net|intcomma }}</li>
-              <li class="list-group-item fw-bold">&nbsp</li>
-              <li class="list-group-item text-end">{{ municipality.kwk_th_net|intcomma }}</li>
-              <li class="list-group-item text-end">{{ municipality.kwk_el_net|intcomma }}</li>
-              <li class="list-group-item fw-bold">&nbsp</li>
-              <li class="list-group-item fw-bold">&nbsp</li>
-              <li class="list-group-item fw-bold">&nbsp</li>
-            </ul>
-          </div>
-        {% endfor %}
-        <div class="col-1">
-          <ul class="list-group rounded-0">
-            <li class="list-group-item bg-secondary text-white">Einheit</li>
-            <li class="list-group-item">km²</li>
-            <li class="list-group-item fw-bold">kW</li>
-            <li class="list-group-item">kW</li>
-            <li class="list-group-item">kW</li>
-            <li class="list-group-item">kW</li>
-            <li class="list-group-item">kW</li>
-            <li class="list-group-item">kW</li>
-            <li class="list-group-item fw-bold">&nbsp</li>
-            <li class="list-group-item">kWh</li>
-            <li class="list-group-item fw-bold">&nbsp</li>
-            <li class="list-group-item">kW</li>
-            <li class="list-group-item">kW</li>
-            <li class="list-group-item fw-bold">&nbsp</li>
-            <li class="list-group-item">kWh</li>
-            <li class="list-group-item">kWh</li>
-          </ul>
-        </div>
+{% if municipalities %}
+  <div class="row mt-4 g-0" id="municipality-results">
+    <div class="col-3">
+      <ul class="list-group rounded-0 text-truncate">
+        <li class="list-group-item fw-bold bg-secondary text-white">Gemeinde</li>
+        <li class="list-group-item">Fläche</li>
+        <li class="list-group-item fw-bold">erneuerbare Stromerzeugung</li>
+        <li class="list-group-item">Freiflächen-PV</li>
+        <li class="list-group-item">Dachflächen-PV</li>
+        <li class="list-group-item">Windkraft</li>
+        <li class="list-group-item">Biomasse</li>
+        <li class="list-group-item">Wasserkraft</li>
+        <li class="list-group-item fw-bold">Stromspeicher</li>
+        <li class="list-group-item">Speicherkapazität</li>
+        <li class="list-group-item fw-bold">Wärmegewinnung (KWK)</li>
+        <li class="list-group-item">thermische Leistung</li>
+        <li class="list-group-item">elektrische Leistung</li>
+        <li class="list-group-item fw-bold">Energiebedarf (errechnet)</li>
+        <li class="list-group-item">Strombedarf</li>
+        <li class="list-group-item">Wärmebedarf</li>
+      </ul>
+    </div>
+    {% for municipality in municipalities %}
+      <div class="col-2 text-truncate">
+        <ul class="list-group rounded-0">
+          <li class="list-group-item text-end fw-bold bg-secondary text-white">{{ municipality.name }}</li>
+          <li class="list-group-item text-end">{{ municipality.area_rounded|intcomma }}</li>
+          <li class="list-group-item text-end fw-bold">{{ municipality.total_net|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.pvground_net|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.pvroof_net|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.wind_net|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.biomass_net|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.hydro_net|intcomma }}</li>
+          <li class="list-group-item fw-bold">&nbsp</li>
+          <li class="list-group-item text-end">{{ municipality.storage_net|intcomma }}</li>
+          <li class="list-group-item fw-bold">&nbsp</li>
+          <li class="list-group-item text-end">{{ municipality.kwk_th_net|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.kwk_el_net|intcomma }}</li>
+          <li class="list-group-item fw-bold">&nbsp</li>
+          <li class="list-group-item fw-bold">&nbsp</li>
+          <li class="list-group-item fw-bold">&nbsp</li>
+        </ul>
       </div>
-      <a href="{% url 'explorer:details-csv' %}?{% for municipality_ids in municipalities %}id={{ municipality_ids.id }}&{% endfor %}">Als CSV herunterladen</a>
-    {% else %}
-      <div class="mt-3">Fügen Sie zunächst Gemeinden für die Optimierung hinzu.</div>
-    {% endif %}
+    {% endfor %}
+    <div class="col-1">
+      <ul class="list-group rounded-0">
+        <li class="list-group-item bg-secondary text-white">Einheit</li>
+        <li class="list-group-item">km²</li>
+        <li class="list-group-item fw-bold">kW</li>
+        <li class="list-group-item">kW</li>
+        <li class="list-group-item">kW</li>
+        <li class="list-group-item">kW</li>
+        <li class="list-group-item">kW</li>
+        <li class="list-group-item">kW</li>
+        <li class="list-group-item fw-bold">&nbsp</li>
+        <li class="list-group-item">kWh</li>
+        <li class="list-group-item fw-bold">&nbsp</li>
+        <li class="list-group-item">kW</li>
+        <li class="list-group-item">kW</li>
+        <li class="list-group-item fw-bold">&nbsp</li>
+        <li class="list-group-item">kWh</li>
+        <li class="list-group-item">kWh</li>
+      </ul>
+    </div>
   </div>
-{% endblock content %}
+  <div id="csv-link">
+    <a href="{% url 'explorer:details-csv' %}?{% for municipality_ids in municipalities %}id={{ municipality_ids.id }}&{% endfor %}">Als CSV herunterladen</a>
+  </div>
+{% else %}
+  <div class="mt-3">Fügen Sie zunächst Gemeinden für die Optimierung hinzu.</div>
+{% endif %}

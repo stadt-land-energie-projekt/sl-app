@@ -29,6 +29,11 @@ from .models import Municipality, Region
 
 MAX_MUNICIPALITY_COUNT = 3
 
+region_bbox = {
+    entry["name"]: entry["bounding_box"]
+    for entry in models.Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
+}
+
 
 def start_page(request: HttpRequest) -> HttpResponse:
     """Render the start page and handle form submissions from home.html."""
@@ -523,11 +528,35 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
-        region_bbox = {
-            entry["name"]: entry["bounding_box"]
-            for entry in models.Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
-        }
-        regions = [
+        try:
+            region_kiel = models.Region.objects.get(name="Kiel")
+            region_os = models.Region.objects.get(name="Oderland-Spree")
+        except models.Region.DoesNotExist:
+            region_kiel = None
+            region_os = None
+
+        if region_kiel:
+            ids_kiel = region_kiel.municipality_set.values_list("id", flat=True)
+            context["municipalities_region_kiel"] = municipalities_details(ids_kiel)
+        else:
+            context["municipalities_region_kiel"] = None
+
+        if region_os:
+            ids_os = region_os.municipality_set.values_list("id", flat=True)
+            context["municipalities_region_os"] = municipalities_details(ids_os)
+        else:
+            context["municipalities_region_os"] = None
+
+        regions = self.get_regions_data()
+
+        context["regions"] = regions
+        context["next_url"] = reverse("explorer:esys_robust")
+        return context
+
+    @staticmethod
+    def get_regions_data() -> list:
+        """Return the list of dictionaries containing region data."""
+        return [
             {
                 "title": "Region Oderland-Spree",
                 "bbox": region_bbox["Oderland-Spree"],
@@ -540,6 +569,13 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
                     "keyfact3",
                     "keyfact4",
                 ],
+                "plans": {
+                    "2023": {"wind": 40, "pv": 80, "moor": 1},
+                    "2030": {"wind": 70, "pv": 100, "moor": 2},
+                    "2040": {"wind": 80, "pv": 120, "moor": 4},
+                },
+                "area": "5.5%",
+                "co2": 1500.81,
             },
             {
                 "title": "Region Kiel",
@@ -553,12 +589,91 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
                     "keyfact3",
                     "keyfact4",
                 ],
+                "plans": {
+                    "2023": {"wind": 60, "pv": 80, "moor": 0},
+                    "2030": {"wind": 100, "pv": 120, "moor": 1},
+                    "2040": {"wind": 150, "pv": 140, "moor": 2},
+                },
+                "area": "3.5%",
+                "co2": 1829.81,
             },
         ]
 
-        context["regions"] = regions
-        context["next_url"] = reverse("explorer:esys_robust")
-        return context
+
+def all_charts(request: HttpRequest) -> HttpResponse:
+    """Build all charts."""
+    if request.method != "GET":
+        return HttpResponse(status=405)
+
+    region_name = request.GET.get("region", "")
+
+    regions = CaseStudies.get_regions_data()
+
+    # Find the region the user selected
+    selected_region = None
+    for reg in regions:
+        if reg["title"] == region_name:
+            selected_region = reg
+            break
+
+    # If nothing matches, we could return a fallback region or an error
+    if not selected_region:
+        selected_region = regions[0]
+
+    plans = selected_region["plans"]  # e.g. the dict with "2023", "2030", "2040"
+    x_axis_data = list(plans.keys())
+
+    # Build dummy chart data from 'selected_data' as you need
+    # The structure below should roughly match what your front end expects:
+    response_data = {
+        "production": {
+            "x_data": x_axis_data,
+            "y_data": {
+                "Production": [p["wind"] + p["pv"] for p in plans.values()],
+                "Consumption": [p["wind"] * 1.5 for p in plans.values()],
+            },
+            "y_label": "kWh",
+        },
+        "tech": {
+            "x_data": x_axis_data,
+            "y_data": {
+                "Wind": [p["wind"] for p in plans.values()],
+                "PV": [p["pv"] for p in plans.values()],
+            },
+            "y_label": "MW",
+            "target": {"Target 2040": 100},
+        },
+        "another": {
+            "x_data": x_axis_data,
+            "y_data": {
+                "Moor": [p["moor"] for p in plans.values()],
+            },
+            "y_label": "Moor KPI [dummy]",
+        },
+        "demand": {
+            "x_data": x_axis_data,
+            "y_data": {
+                "Households": [p["pv"] / 2 for p in plans.values()],
+                "Industry": [p["wind"] / 2 for p in plans.values()],
+            },
+            "y_label": "Energy Demand [GWh]",
+        },
+        "area": {
+            # For the pie chart, x_data is optional, but we keep a placeholder
+            "x_data": ["dummy"],
+            "y_data": {
+                # Dummy data for the pie
+                "Used Land": [45],
+                "Unused Land": [55],
+            },
+        },
+        "co2": {
+            "icon_url": "/static/images/co2_icon.png",
+            "co2_text": f"Region: {selected_region['title']} - CO₂ Emissions: {selected_region['co2']} tons",
+        },
+    }
+
+    return JsonResponse(response_data)
 
 
 class EsysRobust(TemplateView):
