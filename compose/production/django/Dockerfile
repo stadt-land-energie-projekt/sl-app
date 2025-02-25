@@ -15,8 +15,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libpq-dev \
   # git \
   git
-  # make
-  make
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements .
