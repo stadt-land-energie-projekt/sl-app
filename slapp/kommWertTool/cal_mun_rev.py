@@ -14,245 +14,259 @@ logger = logging.getLogger(__name__)
 
 CURRENT_DIR = Path(__file__).resolve().parent
 
-# ----------- GLOBAL PARAMETERS ----------- #
-with open(CURRENT_DIR / 'underlying-data-added-value-calc.json', 'r') as file:
-    underlying_data = json.load(file)
-
-# access to underlying data
-wind = underlying_data['wind']
-apvh = underlying_data['apvh']
-apvv = underlying_data['apvv']
-apv_general = underlying_data['apv_general']
-ffpv = underlying_data['ff-pv']
-colors = underlying_data['colors']
-ekst = underlying_data['ekst']
-gewst = underlying_data['gewst']
-eeg_participation = underlying_data['eeg_participation']
-bb_euro_mw = underlying_data['bb_euro_mw']
-electricity_price = underlying_data['average_electricity_price']
-
-# taxes
-mun_ekst_share = ekst['mun_ekst_share']
-annual_income = ekst['annual_income'] # average annual income in DE in €
-tax_assesment_amount = gewst['tax_assesment_amount'] # fix for DE (Steuermessbetrag)
-average_business_income = gewst['average_business_income'] # annual income of businesses
-# area costs per ha
-pv_area_costs = ffpv['area_costs'] # €/ha
-apv_area_costs = apv_general['area_costs'] # €/ha
-wea_area_costs = wind['area_costs'] # € / MW
-# invest costs per mw
-wea_invest_cost = wind['invest_cost'] # €/ha
-ffpv_invest_costs = ffpv['invest_cost'] # €/ha
-apvh_invest_costs = apvh['invest_cost'] # €/ha
-apvv_invest_costs = apvv['invest_cost'] # €/ha
-
-current_year = datetime.now().year
-
-# ----------- CREATE CHARTS ----------- #
-def create_echarts_data_pachteinnahmen(area_costs_yearly, area_est_yearly, area_gewst_yearly):
-    echarts_data = {
-        "legend": {
-            "top": "0",
-            "data": ["Direkte Pachteinnahmen", "Komm. ESt-Anteil", "Komm. GewSt-Anteil"]
-        },
-        "xAxis": {
-            "type": "category",
-            "data": ["WEA", "FF-PV", "APV"],
-        },
-        "yAxis": {
-            "type": "value",
-            "name": "Einnahmen in Euro",
-            "axisLabel": {
-                "formatter": "{value}".replace(",", ".")
-            }
-        },
-        "series": [
-            {
-                "name": "Direkte Pachteinnahmen",
-                "type": "bar",
-                "data": area_costs_yearly,
-                "itemStyle": {
-                    "color": colors['grey']  # Beispiel: grün
-                }
-            },
-            {
-                "name": "Komm. ESt-Anteil",
-                "type": "bar",
-                "data": area_est_yearly,
-                "itemStyle": {
-                    "color": colors['light_grey']  # Beispiel: blau
-                }
-            },
-            {
-                "name": "Komm. GewSt-Anteil",
-                "type": "bar",
-                "data": area_gewst_yearly,
-                "itemStyle": {
-                    "color": colors['yellow']  # Beispiel: orange
-                }
-            }
-        ]
-    }
-    return(echarts_data, f"pachteinnahmen.json")
-
-def create_echarts_data_eeg(wind_eeg_yearly, pv_eeg_yearly, apv_eeg_yearly):
-    echarts_data = {
-        "legend": {
-            "top": "0",
-            "data": ["WEA", "FF-PV", "APV"]
-        },
-        "xAxis": {
-            "type": "category",
-            "data": ["EEG Einnahmen"],
-        },
-        "yAxis": {
-            "type": "value",
-            "name": "Einnahmen in Euro",
-            "axisLabel": {
-                "formatter": "{value}".replace(",", ".")
-            }
-        },
-        "series": [
-            {"name": "WEA", "type": "bar", "itemStyle": {
-                    "color": colors['red']}, "data": [wind_eeg_yearly]},  # Wert als Liste
-            {"name": "FF-PV", "type": "bar", "itemStyle": {
-                    "color": colors['blue']}, "data": [pv_eeg_yearly]},  # Wert als Liste
-            {"name": "APV", "type": "bar", "itemStyle": {
-                    "color": colors['green']}, "data": [apv_eeg_yearly]}   # Wert als Liste
-        ]
-    }
-    return(echarts_data, f"eeg_participation.json")
-
-
-def create_echarts_data_gewerbesteuer(data, years, filename, title, color):
-    if not isinstance(data, list):
-        raise TypeError(f"Erwarteter Typ für 'data' ist list, erhalten: {type(data)}")
-    adjusted_data = [(item[0], max(item[1], 0)) for item in data]
-
-    echarts_data = {
-        "legend": {
-            "top": "0",
-            "data": [title]
-        },
-        "xAxis": {
-            "type": "category",
-            "name": "Jahre",
-            "data": list(range(1, years + 1))
-        },
-        "yAxis": {
-            "type": "value",
-            "name": "Gewerbesteuer",
-            "axisLabel": {
-                "formatter": "{value}".replace(",", ".")
-            }
-        },
-        "series": [{
-            "name": title,
-            "type": "bar",
-            "data": [item[1] for item in adjusted_data if item[0] <= years],
-            "itemStyle": {
-                "color": color
-            }
-        }]
-    }
-
-    return(echarts_data, filename)
-
-def create_echarts_data_srbb(wind_sr_bb_yearly, pv_sr_bb_yearly, apv_sr_bb_yearly):
-    echarts_data_sr = {
-        "legend": {
-            "top": "0",
-            "data": ["WEA", "FF-PV", "APV"]
-        },
-        "xAxis": {
-            "type": "category",
-            "data": ["Wind-/Solar-Euro"],
-        },
-        "yAxis": {
-            "type": "value",
-            "name": "Einnahmen in Euro",
-            "axisLabel": {
-                "formatter": "{value}".replace(",", ".")
-            }
-        },
-        "series": [
-            {"name": "WEA", "type": "bar", "itemStyle": {
-                    "color": colors['red']}, "data": [wind_sr_bb_yearly]},  # Wert als Liste
-            {"name": "FF-PV", "type": "bar", "itemStyle": {
-                    "color": colors['blue']}, "data": [pv_sr_bb_yearly]},  # Wert als Liste
-            {"name": "APV", "type": "bar", "itemStyle": {
-                    "color": colors['green']}, "data": [apv_sr_bb_yearly]}   # Wert als Liste
-        ]
-    }
-    return(echarts_data_sr, f"wind_solar_euro.json")
-def create_echarts_data_total_mun_income(trade_tax_plant, eeg_income, sr_bb_income,
-                                        area_costs_total, area_gewst_total, area_est_total, sum_wea_plot, sum_agri_pv_plot, sum_ff_pv_plot):
-    legend_data = []
-    series_data = []
-    def add_series(name, data, yAxisIndex=0):
-        if any(value > 0 for value in data):
-            series_data.append({"name": name, "type": "bar", "data": data, "yAxisIndex": yAxisIndex})
-        if yAxisIndex == 0:
-            legend_data.append(name)
-
-
-    add_series("GewSt.-Einnahmen Anlagengewinne", trade_tax_plant)
-    add_series("EEG-Beteiligung", eeg_income)
-    add_series("Wind-/Solar-Euro", sr_bb_income)
-    add_series("Direkte Pachteinnahmen", area_costs_total)
-    add_series("GewSt.-Einnahmen Pacht", area_gewst_total)
-    add_series("ESt.-Einnahmen Pacht", area_est_total)
-    add_series("Gesamteinnahmen WEA", sum_wea_plot, 1)
-    add_series("Gesamteinnahmen FF-PV", sum_ff_pv_plot, 1)
-    add_series("Gesamteinnahmen APV", sum_agri_pv_plot, 1)
-
-    echarts_data = {
-
-        "legend": {
-            "top": "0",
-            "bottom": "50%",
-            "padding": [5, 10, 15, 10],  # [top, right, bottom, left]
-            "data": legend_data
-        },
-        "xAxis": {
-            "type": "category",
-            "data": ["WEA", "FF-PV", "APV", "Gesamt WEA", "Gesamt FF-PV", "Gesamt APV"],
-        },
-        "yAxis": [
-            {
-                "type": "value",
-                "name": "Einnahmen",
-                "axisLabel": {
-                    "formatter": "{value}".replace(",", ".")
-                },
-                "splitNumber": 5
-            },
-            {
-                "type": "value",
-                "name": "Gesamteinnahmen",
-                "axisLabel": {
-                    "formatter": "{value}".replace(",", ".")
-                },
-                "position": "right",
-                "splitNumber": 5
-            }
-        ],
-        "series": [
-            {"name": "GewSt.-Einnahmen Anlagengewinne", "type": "bar", "itemStyle": {"color": colors['blue_lighter']}, "data": trade_tax_plant},
-            {"name": "EEG-Beteiligung", "type": "bar", "itemStyle": {"color": colors['green_darker']}, "data": eeg_income},
-            {"name": "Wind-/Solar-Euro", "itemStyle": {"color": colors['orange']}, "type": "bar", "data": sr_bb_income},
-            {"name": "Direkte Pachteinnahmen", "type": "bar", "itemStyle": {"color": colors['grey']}, "data": area_costs_total},
-            {"name": "GewSt.-Einnahmen Pacht", "type": "bar", "itemStyle": {"color": colors['yellow']}, "data": area_gewst_total},
-            {"name": "ESt.-Einnahmen Pacht", "type": "bar", "itemStyle": {"color": colors['light_grey']}, "data": area_est_total},
-            {"name": "Gesamteinnahmen WEA", "type": "bar", "itemStyle": {"color": colors['red']}, "data": sum_wea_plot, "yAxisIndex": 1},
-            {"name": "Gesamteinnahmen FF-PV", "type": "bar", "itemStyle": {"color": colors['blue']}, "data": sum_ff_pv_plot, "yAxisIndex": 1},
-            {"name": "Gesamteinnahmen APV", "type": "bar", "itemStyle": {"color": colors['green']}, "data": sum_agri_pv_plot, "yAxisIndex": 1},
-        ],
-    }
-    return(echarts_data, f"gesamteinnahmen.json")
 
 def main(form_data):
     results = {}  # Define results dictionary before the try block to ensure accessibility in case of an error
+    # ----------- GLOBAL PARAMETERS ----------- #
+    with open(CURRENT_DIR / 'underlying-data-added-value-calc.json', 'r') as file:
+        underlying_data = json.load(file)
+
+    # access to underlying data
+    wind = underlying_data['wind']
+    apvh = underlying_data['apvh']
+    apvv = underlying_data['apvv']
+    apv_general = underlying_data['apv_general']
+    ffpv = underlying_data['ff-pv']
+    colors = underlying_data['colors']
+    ekst = underlying_data['ekst']
+    gewst = underlying_data['gewst']
+    eeg_participation = underlying_data['eeg_participation']
+    bb_euro_mw = underlying_data['bb_euro_mw']
+    electricity_price = underlying_data['average_electricity_price']
+    property_tax_a = underlying_data['property_tax_a']
+
+    # taxes
+    mun_ekst_share = ekst['mun_ekst_share']
+    annual_income = ekst['annual_income']  # average annual income in DE in €
+    tax_assesment_amount = gewst['tax_assesment_amount']  # fix for DE (Steuermessbetrag)
+    average_business_income = gewst['average_business_income']  # annual income of businesses
+    # area costs per ha
+    pv_area_costs = ffpv['area_costs']  # €/ha
+    apv_area_costs = apv_general['area_costs']  # €/ha
+    wea_area_costs = wind['area_costs']  # € / MW
+    # invest costs per mw
+    wea_invest_cost = wind['invest_cost']  # €/ha
+    ffpv_invest_costs = ffpv['invest_cost']  # €/ha
+    apvh_invest_costs = apvh['invest_cost']  # €/ha
+    apvv_invest_costs = apvv['invest_cost']  # €/ha
+    apvv_mw_ha = apvv['mw_ha']
+    apvh_mw_ha = apvh['mw_ha']
+    current_year = datetime.now().year
+
+    # ----------- CREATE CHARTS ----------- #
+    def create_echarts_data_pachteinnahmen(area_costs_yearly, area_est_yearly, area_gewst_yearly):
+        echarts_data = {
+            "legend": {
+                "top": "0",
+                "data": ["Direkte Pachteinnahmen", "Komm. ESt-Anteil", "Komm. GewSt-Anteil"]
+            },
+            "xAxis": {
+                "type": "category",
+                "data": ["WEA", "FF-PV", "APV"],
+            },
+            "yAxis": {
+                "type": "value",
+                "name": "Einnahmen in Euro",
+                "axisLabel": {
+                    "formatter": "{value}".replace(",", ".")
+                }
+            },
+            "series": [
+                {
+                    "name": "Direkte Pachteinnahmen",
+                    "type": "bar",
+                    "data": area_costs_yearly,
+                    "itemStyle": {
+                        "color": colors['grey']  # Beispiel: grün
+                    }
+                },
+                {
+                    "name": "Komm. ESt-Anteil",
+                    "type": "bar",
+                    "data": area_est_yearly,
+                    "itemStyle": {
+                        "color": colors['light_grey']  # Beispiel: blau
+                    }
+                },
+                {
+                    "name": "Komm. GewSt-Anteil",
+                    "type": "bar",
+                    "data": area_gewst_yearly,
+                    "itemStyle": {
+                        "color": colors['yellow']  # Beispiel: orange
+                    }
+                }
+            ]
+        }
+        return (echarts_data, f"pachteinnahmen.json")
+
+    def create_echarts_data_eeg(wind_eeg_yearly, pv_eeg_yearly, apv_eeg_yearly):
+        echarts_data = {
+            "legend": {
+                "top": "0",
+                "data": ["WEA", "FF-PV", "APV"]
+            },
+            "xAxis": {
+                "type": "category",
+                "data": ["EEG Einnahmen"],
+            },
+            "yAxis": {
+                "type": "value",
+                "name": "Einnahmen in Euro",
+                "axisLabel": {
+                    "formatter": "{value}".replace(",", ".")
+                }
+            },
+            "series": [
+                {"name": "WEA", "type": "bar", "itemStyle": {
+                    "color": colors['red']}, "data": [wind_eeg_yearly]},  # Wert als Liste
+                {"name": "FF-PV", "type": "bar", "itemStyle": {
+                    "color": colors['blue']}, "data": [pv_eeg_yearly]},  # Wert als Liste
+                {"name": "APV", "type": "bar", "itemStyle": {
+                    "color": colors['green']}, "data": [apv_eeg_yearly]}  # Wert als Liste
+            ]
+        }
+        return (echarts_data, f"eeg_participation.json")
+
+    def create_echarts_data_gewerbesteuer(data, years, filename, title, color):
+        if not isinstance(data, list):
+            raise TypeError(f"Erwarteter Typ für 'data' ist list, erhalten: {type(data)}")
+        adjusted_data = [(item[0], max(item[1], 0)) for item in data]
+
+        echarts_data = {
+            "legend": {
+                "top": "0",
+                "data": [title]
+            },
+            "xAxis": {
+                "type": "category",
+                "name": "Jahre",
+                "data": list(range(1, years + 1))
+            },
+            "yAxis": {
+                "type": "value",
+                "name": "Gewerbesteuer",
+                "axisLabel": {
+                    "formatter": "{value}".replace(",", ".")
+                }
+            },
+            "series": [{
+                "name": title,
+                "type": "bar",
+                "data": [item[1] for item in adjusted_data if item[0] <= years],
+                "itemStyle": {
+                    "color": color
+                }
+            }]
+        }
+
+        return (echarts_data, filename)
+
+    def create_echarts_data_srbb(wind_sr_bb_yearly, pv_sr_bb_yearly, apv_sr_bb_yearly):
+        echarts_data_sr = {
+            "legend": {
+                "top": "0",
+                "data": ["WEA", "FF-PV", "APV"]
+            },
+            "xAxis": {
+                "type": "category",
+                "data": ["Wind-/Solar-Euro"],
+            },
+            "yAxis": {
+                "type": "value",
+                "name": "Einnahmen in Euro",
+                "axisLabel": {
+                    "formatter": "{value}".replace(",", ".")
+                }
+            },
+            "series": [
+                {"name": "WEA", "type": "bar", "itemStyle": {
+                    "color": colors['red']}, "data": [wind_sr_bb_yearly]},  # Wert als Liste
+                {"name": "FF-PV", "type": "bar", "itemStyle": {
+                    "color": colors['blue']}, "data": [pv_sr_bb_yearly]},  # Wert als Liste
+                {"name": "APV", "type": "bar", "itemStyle": {
+                    "color": colors['green']}, "data": [apv_sr_bb_yearly]}  # Wert als Liste
+            ]
+        }
+        return (echarts_data_sr, f"wind_solar_euro.json")
+
+    def create_echarts_data_total_mun_income(trade_tax_plant, eeg_income, sr_bb_income,
+                                             area_costs_total, area_gewst_total, area_est_total, sum_wea_plot,
+                                             sum_agri_pv_plot, sum_ff_pv_plot, property_tax):
+        legend_data = []
+        series_data = []
+
+        def add_series(name, data, yAxisIndex=0):
+            if any(value > 0 for value in data):
+                series_data.append({"name": name, "type": "bar", "data": data, "yAxisIndex": yAxisIndex})
+            if yAxisIndex == 0 and any(value > 0 for value in data):
+                legend_data.append(name)
+
+        add_series("GewSt.-Einnahmen Anlagengewinne", trade_tax_plant)
+        add_series("EEG-Beteiligung", eeg_income)
+        add_series("Wind-/Solar-Euro", sr_bb_income)
+        add_series("Direkte Pachteinnahmen", area_costs_total)
+        add_series("GewSt.-Einnahmen Pacht", area_gewst_total)
+        add_series("ESt.-Einnahmen Pacht", area_est_total)
+        add_series("Grundsteuer A", property_tax)
+        add_series("Gesamteinnahmen WEA", sum_wea_plot, 1)
+        add_series("Gesamteinnahmen FF-PV", sum_ff_pv_plot, 1)
+        add_series("Gesamteinnahmen APV", sum_agri_pv_plot, 1)
+        echarts_data = {
+
+            "legend": {
+                "top": "0",
+                "bottom": "50%",
+                "padding": [5, 10, 15, 10],  # [top, right, bottom, left]
+                "data": legend_data
+            },
+            "xAxis": {
+                "type": "category",
+                "data": ["WEA", "FF-PV", "APV", "Gesamt WEA", "Gesamt FF-PV", "Gesamt APV"],
+            },
+            "yAxis": [
+                {
+                    "type": "value",
+                    "name": "Einnahmen",
+                    "axisLabel": {
+                        "formatter": "{value}".replace(",", ".")
+                    },
+                    "splitNumber": 5
+                },
+                {
+                    "type": "value",
+                    "name": "Gesamteinnahmen",
+                    "axisLabel": {
+                        "formatter": "{value}".replace(",", ".")
+                    },
+                    "position": "right",
+                    "splitNumber": 5
+                }
+            ],
+            "series": [
+                {"name": "GewSt.-Einnahmen Anlagengewinne", "type": "bar",
+                 "itemStyle": {"color": colors['blue_lighter']}, "data": trade_tax_plant},
+                {"name": "EEG-Beteiligung", "type": "bar", "itemStyle": {"color": colors['green_darker']},
+                 "data": eeg_income},
+                {"name": "Wind-/Solar-Euro", "itemStyle": {"color": colors['orange']}, "type": "bar",
+                 "data": sr_bb_income},
+                {"name": "Direkte Pachteinnahmen", "type": "bar", "itemStyle": {"color": colors['grey']},
+                 "data": area_costs_total},
+                {"name": "GewSt.-Einnahmen Pacht", "type": "bar", "itemStyle": {"color": colors['yellow']},
+                 "data": area_gewst_total},
+                {"name": "ESt.-Einnahmen Pacht", "type": "bar", "itemStyle": {"color": colors['light_grey']},
+                 "data": area_est_total},
+                {"name": "Grundsteuer A", "type": "bar", "itemStyle": {"color": colors['light_green']},
+                 "data": property_tax},
+                {"name": "Gesamteinnahmen WEA", "type": "bar", "itemStyle": {"color": colors['red']},
+                 "data": sum_wea_plot, "yAxisIndex": 1},
+                {"name": "Gesamteinnahmen FF-PV", "type": "bar", "itemStyle": {"color": colors['blue']},
+                 "data": sum_ff_pv_plot, "yAxisIndex": 1},
+                {"name": "Gesamteinnahmen APV", "type": "bar", "itemStyle": {"color": colors['green']},
+                 "data": sum_agri_pv_plot, "yAxisIndex": 1},
+            ],
+        }
+        return (echarts_data, f"gesamteinnahmen.json")
 
     def process_form_data(form_data):
         data = {}
@@ -351,23 +365,33 @@ def main(form_data):
 
         return data
 
+    def parse_float(value, default=0.0):
+        try:
+            # Ersetze Komma durch Punkt und konvertiere zu float
+            return float(value.replace(',', '.'))
+        except (ValueError, AttributeError):
+            return default
+
     ffpv_area_max = int(form_data.get('ffpv_area_max', 0))
     apvv_area_max = int(form_data.get('apvv_area_max', 0))
     apvh_area_max = int(form_data.get('apvh_area_max', 0))
     wea_area_max = int(form_data.get('wea_area_max', 0))
     wea_eeg_share = int(form_data.get('wea_eeg_share', 100))
     wind_euro_share = int(form_data.get('wind_euro_share', 100))
-    rotor_diameter = int(form_data.get('rotor_diameter', 130))
+    rotor_diameter = int(form_data.get('rotor_diameter', 140))
     system_output = int(form_data.get('system_output', 4))
     wea_p_max = int(form_data.get('wea_p_max', 0))
     pv_p_max = int(form_data.get('pv_p_max', 0))
     apv_ver_p_max = int(form_data.get('apv_ver_p_max', 0))
     apv_hor_p_max = int(form_data.get('apv_hor_p_max', 0))
     area_ownertype = process_form_data(form_data).get('area_ownertype', {})
+    ownertype = process_form_data(form_data).get('ownertype', {})
     levy_rate = int(form_data.get('levy_rate', 407))
+    levy_rate_a = int(form_data.get('levy_rate_a', 310)) / 100
+    grassland_number = parse_float(form_data.get('grassland_number'), 30.0) / 100
+
     mun_key_value = int(form_data.get('mun_key_value', 0.003))
-    apvv_mw_ha = 0.35
-    apvh_mw_ha = 0.65
+
     choosen_mun = form_data.get('choosen_mun', 0)
     check_county = form_data.get('check_county', 'check_county_bb')
     # standard levy rate if None is given
@@ -382,6 +406,11 @@ def main(form_data):
     else:
         levy_rate = levy_rate / 100
 
+    if levy_rate_a == 0:
+        levy_rate_a = 3.1
+    else:
+        levy_rate_a = levy_rate_a
+
     # if no area for eeg or wind-euro is given, set to 100%
     if wea_eeg_share == 0:
         wea_eeg_share = 1
@@ -395,7 +424,7 @@ def main(form_data):
     # Calculate max. power if only area is given
     if wea_p_max == 0 and wea_area_max != 0:
         A_wea = (np.pi * rotor_diameter * 5 * rotor_diameter * 3)/5
-        N_wea = round((wea_area_max * 10000) / A_wea)
+        N_wea = max(np.floor(wea_p_max / system_output),1)
         wea_p_max = system_output * N_wea
     else:
         wea_p_max = wea_p_max
@@ -415,10 +444,12 @@ def main(form_data):
     # Calculate area if only power is given
     if wea_area_max == 0 and wea_p_max != 0:
         A_wea = (np.pi * rotor_diameter * 5 * rotor_diameter * 3)/5
-        N_wea = round(wea_p_max / system_output)
+        N_wea = max(np.floor(wea_p_max / system_output),1)
         wea_area_max = (A_wea * N_wea) / 10000
     else:
         wea_area_max = wea_area_max
+        A_wea = (np.pi * rotor_diameter * 5 * rotor_diameter * 3)/5
+        N_wea = max(np.floor(wea_p_max / system_output),1)
     if ffpv_area_max == 0 and pv_p_max != 0:
         ffpv_area_max = pv_p_max
     else:
@@ -431,6 +462,9 @@ def main(form_data):
         apvh_area_max = apv_hor_p_max / apvh_mw_ha
     else:
         apvh_area_max = apvh_area_max
+
+    # calculate wea area for property_tax
+    wea_area_property_tax = N_wea * property_tax_a['wea_area_taxable_ha'] * 10000 # delimited site area of the wind turbines
 
 
     '''
@@ -454,21 +488,26 @@ def main(form_data):
 
         return taxes
 
-    gewerbesteuer_income = average_business_income * tax_assesment_amount * levy_rate
-    gewerbesteuer_income_wea = (average_business_income) * tax_assesment_amount * levy_rate # no free-amount due to GmbH
-
     est_income = calc_tax_income(annual_income) # calculates income tax of average annual income
+    def round_down_to_hundred(number):
+        return np.floor(number / 100) * 100
 
-    def process_area(max_area, ownertype, area_share, area_costs, average_business_income, tax_assesment_amount,
-                     levy_rate, gewerbesteuer_income, annual_income, est_income, mun_ekst_share, mun_key_value):
+    def process_area(max_area, ownertype, area_share, area_costs, tax_assesment_amount,
+                     levy_rate, annual_income, est_income, mun_ekst_share, mun_key_value):
         area_share = area_share / 100  # Convert to decimal if percentage is given
+
         if ownertype == 'Gewerbliches Eigentum':
-            area_gewst = int(((((max_area * area_costs * area_share) + average_business_income)
-                               * tax_assesment_amount * levy_rate) - gewerbesteuer_income))
+            area_gewst = int(((max_area * area_costs * area_share)
+                               * tax_assesment_amount * levy_rate))
             area_gewst_total = area_gewst - int(
                 (((max_area * area_share * area_costs) * tax_assesment_amount / levy_rate) * 0.35))
             area_income = 0
             lease_est_income = 0
+            property_tax_a_tot = round_down_to_hundred(
+                ((wea_area_property_tax * property_tax_a['valuation_factor_earnings']) +
+                 (grassland_number * wea_area_property_tax * property_tax_a['yield_indicator'])) *
+                property_tax_a['net_earnings_factor']
+            ) * property_tax_a['tax_base'] * levy_rate_a * area_share # calculates property tax with the higher earnings value
         elif ownertype == 'Privateigentum':
             area_income_max = area_costs * (max_area * area_share) + annual_income
             taxes_list = []
@@ -478,31 +517,41 @@ def main(form_data):
             lease_est_income = taxes_list[0] * mun_ekst_share * mun_key_value
             area_gewst_total = 0
             area_income = 0
+            property_tax_a_tot = round_down_to_hundred(
+                ((wea_area_property_tax * property_tax_a['valuation_factor_earnings']) +
+                 (grassland_number * wea_area_property_tax * property_tax_a['yield_indicator'])) *
+                property_tax_a['net_earnings_factor']
+            ) * property_tax_a['tax_base'] * levy_rate_a * area_share  # calculates property tax with the higher earnings value
         elif ownertype == 'Gemeindeeigentum':
             area_income = area_costs * max_area * area_share
             area_gewst_total = 0
             lease_est_income = 0
+            property_tax_a_tot = 0
         else:
             area_income = 0
             area_gewst_total = 0
             lease_est_income = 0
-        return area_income, area_gewst_total, lease_est_income
+            property_tax_a_tot = round_down_to_hundred(
+                ((wea_area_property_tax * property_tax_a['valuation_factor_earnings']) +
+                 (grassland_number * wea_area_property_tax * property_tax_a['yield_indicator'])) *
+                property_tax_a['net_earnings_factor']
+            ) * property_tax_a['tax_base'] * levy_rate_a  # calculates property tax with the higher earnings value
+        return area_income, area_gewst_total, lease_est_income, property_tax_a_tot
 
     # Variables to accumulate the results
     apvh_area_income = apvh_area_gewst_total = lease_est_income_apvh = 0
     apvv_area_income = apvv_area_gewst_total = lease_est_income_apvv = 0
     pv_area_income = lease_trade_tax_pv = lease_est_income_pv = 0
     wea_area_income = lease_trade_tax_wea = lease_est_income_wea = 0
-
+    property_tax_a_wea = property_tax_a_tot = 0
     # Processing each ownertype for each category
     if 'apvh' in area_ownertype:
         for apvh_ownertype in area_ownertype['apvh']:
             ownertype_input_apvh = (
                 apvh_area_max, apvh_ownertype['ownertype'], apvh_ownertype['area_share'], apv_area_costs,
-                average_business_income, tax_assesment_amount, levy_rate, gewerbesteuer_income, annual_income, est_income,
-                mun_ekst_share, mun_key_value
+                tax_assesment_amount, levy_rate, annual_income, est_income, mun_ekst_share, mun_key_value
             )
-            area_income, area_gewst_total, lease_est_income = process_area(*ownertype_input_apvh)
+            area_income, area_gewst_total, lease_est_income, property_tax_a_tot = process_area(*ownertype_input_apvh)
             apvh_area_income += area_income
             apvh_area_gewst_total += area_gewst_total
             lease_est_income_apvh += lease_est_income
@@ -511,10 +560,10 @@ def main(form_data):
         for apvv_ownertype in area_ownertype['apvv']:
             ownertype_input_apvv = (
                 apvv_area_max, apvv_ownertype['ownertype'], apvv_ownertype['area_share'], apv_area_costs,
-                average_business_income, tax_assesment_amount, levy_rate, gewerbesteuer_income, annual_income, est_income,
+                tax_assesment_amount, levy_rate, annual_income, est_income,
                 mun_ekst_share, mun_key_value
             )
-            area_income, area_gewst_total, lease_est_income = process_area(*ownertype_input_apvv)
+            area_income, area_gewst_total, lease_est_income, property_tax_a_tot = process_area(*ownertype_input_apvv)
             apvv_area_income += area_income
             apvv_area_gewst_total += area_gewst_total
             lease_est_income_apvv += lease_est_income
@@ -523,10 +572,10 @@ def main(form_data):
         for pv_ownertype in area_ownertype['pv']:
             ownertype_input_pv = (
                 ffpv_area_max, pv_ownertype['ownertype'], pv_ownertype['area_share'], pv_area_costs,
-                average_business_income, tax_assesment_amount, levy_rate, gewerbesteuer_income, annual_income, est_income,
+                tax_assesment_amount, levy_rate, annual_income, est_income,
                 mun_ekst_share, mun_key_value
             )
-            area_income, area_gewst_total, lease_est_income = process_area(*ownertype_input_pv)
+            area_income, area_gewst_total, lease_est_income, property_tax_a_tot = process_area(*ownertype_input_pv)
             pv_area_income += area_income
             lease_trade_tax_pv += area_gewst_total
             lease_est_income_pv += lease_est_income
@@ -535,11 +584,12 @@ def main(form_data):
         for wea_ownertype in area_ownertype['wea']:
             ownertype_input_wea = (
                 wea_p_max, wea_ownertype['ownertype'], wea_ownertype['area_share'], wea_area_costs,
-                average_business_income, tax_assesment_amount, levy_rate, gewerbesteuer_income_wea, annual_income, est_income,
+                tax_assesment_amount, levy_rate, annual_income, est_income,
                 mun_ekst_share,
                 mun_key_value
             )
-            area_income, area_gewst_total, lease_est_income = process_area(*ownertype_input_wea)
+            area_income, area_gewst_total, lease_est_income, property_tax_a_tot = process_area(*ownertype_input_wea)
+            property_tax_a_wea += property_tax_a_tot
             wea_area_income += area_income
             lease_trade_tax_wea += area_gewst_total
             lease_est_income_wea += lease_est_income
@@ -562,6 +612,11 @@ def main(form_data):
     wind_sr_bb_yearly = (wea_p_max * bb_euro_mw['wind']) * wind_euro_share
     pv_sr_bb_yearly = pv_p_max * bb_euro_mw['pv']
     apv_sr_bb_yearly = (apv_ver_p_max + apv_hor_p_max) * bb_euro_mw['pv']
+
+
+    '''
+    PROPERTY TAX
+    '''
 
     '''
      INVESTMENT COSTS
@@ -620,11 +675,7 @@ def main(form_data):
                 annual_energy_yield = energy_generated * ((1 - degradation) ** year)
                 eeg_annual_amount = eeg_share_mun * ((1 - degradation) ** year)
 
-            if year == 1 and redemption_free_years == 1:
-                annual_interests = interest_year_1
-                repayment = 0
-                annual_costs = annual_opex + annual_interests + eeg_annual_amount
-            elif year == 2 and redemption_free_years == 1:
+            if year in [1, 2] and redemption_free_years == 1:
                 annual_interests = interest_year_1
                 repayment = 0
                 annual_costs = annual_opex + annual_interests + eeg_annual_amount
@@ -657,7 +708,7 @@ def main(form_data):
                     total_loss_carryforward -= subtracted_loss
 
                     # Deduct 60% of the remaining profit
-                    if total_loss_carryforward > 0 and total_loss_carryforward > (adjusted_profit * 0.6):
+                    if total_loss_carryforward > (adjusted_profit * 0.6):
                         extra_loss = adjusted_profit * 0.6
                         total_loss_carryforward -= extra_loss
                         adjusted_profit *= 0.4
@@ -704,7 +755,7 @@ def main(form_data):
         interest_rate = params.get("interest_rate", 0.05)  # Standard 5%
         repayment_period = params.get("repayment_period", 15)
         depreciation_duration = params.get("depreciation_duration", 0)
-        if choosen_mun == 0 and check_county == "check_county_sh":
+        if choosen_mun == 0 or check_county == "check_county_sh":
             sr_bb_euro = 0
         else:
             sr_bb_euro = installed_capacity * sr_bb_euro
@@ -750,14 +801,14 @@ def main(form_data):
          "opex10": wind['opex10'], "opex20": wind['opex20'], "debt_capital_share": wind['debt_capital_share'], "interest_rate": wind['interest_rate'],
          "repayment_period": wind['repayment_period'], "title": "Gewerbesteuer der WEA",
          "filename": "komm-wert-gwst-anlagenbetreibende-wind100.png", "bar_color": colors['orange'], "redemption_free_years": 1,
-         "name": 'Wind100', "depreciation_duration": 16, "degradation": wind['degradation']},  # FF-PV 100%
+         "name": 'Wind100', "depreciation_duration": wind['depreciation_duration'], "degradation": wind['degradation']},  # FF-PV 100%
         {"installed_capacity": pv_p_max, "energy_generated":  ffpv['flh'],
          "eeg_participation": 2,
          "profil": ffpv['flh'], "sr_bb_euro": bb_euro_mw['pv'], "investment_costs": ffpv_invest_costs,
          "opex10": ffpv['opex'], "opex20": ffpv['opex'], "debt_capital_share": ffpv['debt_capital_share'], "interest_rate": ffpv['interest_rate'],
          "repayment_period": ffpv['repayment_period'], "title": "Gewerbesteuer der FF-PV",
          "filename": "komm-wert-gwst-anlagenbetreibende-ff-pv-100.png", "bar_color": colors['green'],
-         "redemption_free_years": 1, "name": 'FFPV100', "depreciation_duration": 20,"degradation": ffpv['degradation']},
+         "redemption_free_years": 1, "name": 'FFPV100', "depreciation_duration": ffpv['depreciation_duration'],"degradation": ffpv['degradation']},
         # Agri-PV hor. 100%
         {"installed_capacity": apv_hor_p_max, "energy_generated":  apvh['flh'],
          "eeg_participation": eeg_participation,
@@ -766,7 +817,7 @@ def main(form_data):
          "debt_capital_share": apv_general['debt_capital_share'], "interest_rate": apv_general['interest_rate'], "repayment_period": apv_general['repayment_period'],
          "title": "Max. Gewerbesteuer der Agri-PV-Anlagen (hor.)",
          "filename": "komm-wert-gwst-anlagenbetreibende-agri-pv-hor-1.png", "bar_color": colors['blue'],
-         "redemption_free_years": 1, "name": 'APVH100', "depreciation_duration": 20, "degradation": apv_general['degradation']},
+         "redemption_free_years": 1, "name": 'APVH100', "depreciation_duration": apv_general['depreciation_duration'], "degradation": apv_general['degradation']},
         # Agri-PV ver. 100%
         {"installed_capacity": apv_ver_p_max, "energy_generated":  apvv['flh'],
          "eeg_participation": eeg_participation,
@@ -775,7 +826,7 @@ def main(form_data):
          "debt_capital_share": apv_general['debt_capital_share'], "interest_rate": apv_general['interest_rate'], "repayment_period": apv_general['repayment_period'],
          "title": "Max. Gewerbesteuer der Agri-PV-Anlagen (ver.)",
          "filename": "komm-wert-gwst-anlagenbetreibende-agri-pv-ver-1.png", "bar_color": colors['blue'],
-         "redemption_free_years": 1, "name": 'APVV100', "depreciation_duration": 20, "degradation": apv_general['degradation']},
+         "redemption_free_years": 1, "name": 'APVV100', "depreciation_duration": apv_general['depreciation_duration'], "degradation": apv_general['degradation']},
     ]
     for scenario in scenarios:
         run_scenario(scenario, trade_tax_results)
@@ -860,6 +911,7 @@ def main(form_data):
     trade_tax_plant = [total_trade_tax_3, total_trade_tax_1,
                              total_trade_tax_2]
     eeg_income = [wind_eeg_degradation_result, pv_eeg_degradation_result, apv_eeg_degradation_result]
+    property_tax = [property_tax_a_wea * years, 0, 0]
     # only show wind-/solar-euro for muns in brandenburg
     if choosen_mun != "0" and check_county != "check_county_sh":
         sr_bb_income = [wind_sr_bb_yearly * years, pv_sr_bb_yearly * years, apv_sr_bb_yearly * years]
@@ -870,23 +922,26 @@ def main(form_data):
     area_gewst_total = np.array(area_gewst_yearly) * years
     area_est_total = np.array(area_est_yearly) * years
 
-    sum_wea = total_trade_tax_3 + wind_eeg_degradation_result + wind_sr_bb_yearly * years + area_costs_total[0] + area_gewst_total[0] + area_est_total[0]
+    sum_wea = property_tax_a_wea + total_trade_tax_3 + wind_eeg_degradation_result + wind_sr_bb_yearly * years + area_costs_total[0] + area_gewst_total[0] + area_est_total[0]
     sum_ff_pv = total_trade_tax_1 + pv_eeg_degradation_result + pv_sr_bb_yearly * years  + area_costs_total[1] + area_gewst_total[1] + area_est_total[1]
     sum_agri_pv = total_trade_tax_2 + apv_eeg_degradation_result + apv_sr_bb_yearly * years + area_costs_total[2] + area_gewst_total[2] + area_est_total[2]
     sum_wea_plot = [0, 0, 0, sum_wea, 0, 0]
     sum_agri_pv_plot = [0, 0, 0, 0, 0, sum_agri_pv]
     sum_ff_pv_plot = [0, 0, 0, 0, sum_ff_pv, 0]
+    # create charts
     echart_area_lease_income = create_echarts_data_pachteinnahmen(area_costs_yearly, area_est_yearly, area_gewst_yearly)
     echart_eeg = create_echarts_data_eeg(wind_eeg_yearly, pv_eeg_yearly, apv_eeg_yearly)
     echart_srbb = create_echarts_data_srbb(wind_sr_bb_yearly, pv_sr_bb_yearly, apv_sr_bb_yearly)
 
     echart_total_income = create_echarts_data_total_mun_income(trade_tax_plant, eeg_income, sr_bb_income,
                                         area_costs_total.tolist(), area_gewst_total.tolist(),
-                                        area_est_total.tolist(), sum_wea_plot, sum_agri_pv_plot, sum_ff_pv_plot)
+                                        area_est_total.tolist(), sum_wea_plot, sum_agri_pv_plot, sum_ff_pv_plot, property_tax)
 
     # correct format for values displayed on added_value_results.html
     def format_numbers(value):
         return f"{value:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+    def format_numbers_0(value):
+        return f"{value:,.0f}".replace(',', 'X').replace('.', ',').replace('X', '.')
 
     apv_area_income = apvh_area_income + apvv_area_income
     lease_est_income_apv = lease_est_income_apvh + lease_est_income_apvv
@@ -916,7 +971,9 @@ def main(form_data):
     sum_wea = format_numbers(sum_wea)
     sum_ff_pv = format_numbers(sum_ff_pv)
     sum_agri_pv = format_numbers(sum_agri_pv)
-
+    property_tax_a_wea = format_numbers(property_tax_a_wea)
+    N_wea = format_numbers_0(N_wea)
+    wea_area_property_tax = format_numbers_0(wea_area_property_tax)
 
     results.update({"wind_eeg_yearly": wind_eeg_yearly,
                "pv_eeg_yearly": pv_eeg_yearly,
@@ -951,7 +1008,9 @@ def main(form_data):
                     'echart_trade_tax_pv': echart_trade_tax_pv,
                     'echart_trade_tax_apv': echart_trade_tax_apv,
                     'echart_total_income': echart_total_income,
-
+                    'property_tax_a_wea': property_tax_a_wea,
+                    'N_wea': N_wea,
+                    'wea_area_property_tax':wea_area_property_tax
                     })
 
     return results

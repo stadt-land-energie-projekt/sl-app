@@ -12,6 +12,13 @@
     "annual_income": 59094,
     "mun_ekst_share": 0.15
   },
+  "property_tax_a": {
+    "wea_area_taxable_ha": 0.4,
+    "valuation_factor_earnings" : 0.5958,
+    "yield_indicator": 0.041,
+    "net_earnings_factor": 18.6,
+    "tax_base": 0.00055
+  },
   "wind": {
     "area_costs": 16000,
     "flh": 2500,
@@ -21,24 +28,28 @@
     "debt_capital_share": 0.8,
     "interest_rate": 0.05,
     "degradation":  0.006,
-    "invest_cost": 1651000
+    "invest_cost": 1651000,
+    "depreciation_duration": 16
   },
   "apv_general": {
     "area_costs": 830,
     "repayment_period": 15,
     "debt_capital_share": 0.8,
     "interest_rate": 0.05,
-    "degradation":  0.0025
+    "degradation":  0.0025,
+    "depreciation_duration": 20
   },
   "apvh": {
     "flh": 940,
+    "mw_ha": 0.65,
     "opex": 12870,
-    "invest_cost": 950000
+    "invest_cost": 945000
   },
   "apvv": {
     "flh": 867,
+    "mw_ha": 0.35,
     "opex": 11440,
-    "invest_cost": 900000
+    "invest_cost": 831000
   },
   "ff-pv": {
     "area_costs": 3000,
@@ -48,7 +59,8 @@
     "debt_capital_share": 0.8,
     "interest_rate": 0.05,
     "degradation":  0.0025,
-    "invest_cost": 800000
+    "invest_cost": 800000,
+    "depreciation_duration": 20
   },
   "average_electricity_price": {
     "2025": 0.102,
@@ -87,6 +99,7 @@
     "green": "#67C23A",
     "orange": "#FF9900",
     "blue_lighter": "#BBDEEA",
-    "green_darker": "#A7649C"
+    "green_darker": "#A7649C",
+    "light_green": "#90EE90"
   }
 }
