@@ -64,6 +64,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",  # Handy template tags
     "django.contrib.admin",
+    "django_cotton",
     "django.forms",
     "django.contrib.gis",
 ]
@@ -85,6 +86,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "slapp.users",
     "slapp.explorer",
+    "slapp.kommWertTool"
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

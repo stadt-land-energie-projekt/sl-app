@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% load static compress %}
+
+{% block content_no_sidebar %}
+  <div class="flex-container">
+    {% for region in regions %}
+      {{ region.centroid }}
+      <c-regions title="{{ region.title }}" :bbox="region.bbox" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" keyfact0="{{ region.keyfacts.0 }}" keyfact1="{{ region.keyfacts.1 }}" keyfact2="{{ region.keyfacts.2 }}" keyfact3="{{ region.keyfacts.3 }}">
+      </c-regions>
+    {% endfor %}
+  </div>
+  <div id="legend" class="legend"></div>
+  <div id="map"></div>
+  <a href="{{ next_url }}" class="btn btn-primary mt-3">Hier geht's zur regionalen Energiewende</a>
+{% endblock content_no_sidebar %}
+{% block javascript %}
+  {{ block.super }}
+  {% compress js %}
+    <script src="{% static 'vendors/maplibre/js/maplibre-gl.js' %}"></script>
+    <script src="{% static 'vendors/pubsub/js/pubsub.js' %}"></script>
+    <script src="{% static 'js/region.js' %}"></script>
+  {% endcompress %}
+{% endblock javascript %}
+{% block inline_javascript %}
+  <script>
+    const eventTopics = {};
+  </script>
+  {% include 'django_mapengine/map_json.html' %}
+  {% compress js %}
+    {% include 'django_mapengine/map_js.html' %}
+  {% endcompress %}
+{% endblock inline_javascript %}
+{% block css %}
+  {{ block.super }}
+  {% compress css %}
+    <link href="{% static 'vendors/maplibre/css/maplibre-gl.css' %}"
+          rel='stylesheet' />
+  {% endcompress %}
+{% endblock css %}

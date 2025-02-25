@@ -1,0 +1,147 @@
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.region-container {
+  position: relative;
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 20px;
+  margin: 50px;
+  min-width: 300px;
+  flex: 1 1 300px;
+  overflow: visible;
+}
+
+.top-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.top-row h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.info-box {
+  display: inline-block;
+  margin-left: 20px;
+  padding: 4px 8px;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  font-size: 0.9rem;
+  color: #333;
+  background: transparent;
+}
+
+.info-box::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  min-width: 200%;
+  max-width: 500%;
+  white-space: normal;
+  text-align: center;
+}
+
+.info-box:hover::after {
+  opacity: 1;
+}
+
+.region-image {
+  position: absolute;
+  top: -20%;
+  right: -8%;
+  max-height: 33vh;
+  height: auto;
+  width: auto;
+  z-index: -1;
+}
+
+.region-text {
+  margin-top: 20px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.keyfacts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  font-size: 26px;
+}
+
+.keyfacts .fact-item {
+  background-color: #aff4c6;
+  border: 1px solid #aff4c6;
+  border-radius: 5px;
+  margin: 4px;
+  padding: 20px;
+}
+
+.cta-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 20px 0;
+  box-sizing: border-box;
+}
+
+.cta-row .left-text {
+  flex: 0 0 auto;
+  margin-right: 10px;
+  text-align: left;
+}
+
+.cta-row .center-button {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.select-button {
+  background-color: #0d99ff;
+  border-width: 5px;
+  color: white;
+  border: 5px solid #0059b9;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 16px 16px;
+  cursor: pointer;
+  display: inline-block;
+  width: 55%;
+  box-sizing: border-box;
+}
+
+.select-button:active {
+  background-color: #bde3ff;
+  color: black;
+  border: 5px solid #bde3ff;
+}
+
+.select-button:hover {
+  opacity: 0.9;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}

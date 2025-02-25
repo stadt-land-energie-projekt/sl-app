@@ -1,0 +1,23 @@
+<div class="region-container">
+  <div class="top-row">
+    <h1>{{ title }}</h1>
+    <span class="info-box" data-tooltip="{{ info }}">Mehr Infos</span>
+    <img src="{{ img_source }}" alt="Region image" class="region-image" />
+  </div>
+  <div class="region-text">{{ text }}</div>
+  <div class="keyfacts">
+    <span class="fact-item">{{ keyfact0 }}</span>
+    <span class="fact-item">{{ keyfact1 }}</span>
+    <span class="fact-item">{{ keyfact2 }}</span>
+    <span class="fact-item">{{ keyfact3 }}</span>
+  </div>
+  <p class="cta-row">
+    <span class="left-text">...</span>
+    <span class="center-button">
+      <button class="select-button"
+              onclick="selectRegion([[{{ bbox.extent.0 | floatformat:"10u" }}, {{ bbox.extent.1 | floatformat:"10u" }}], [{{ bbox.extent.2 | floatformat:"10u" }}, {{ bbox.extent.3 | floatformat:"10u" }}]])">
+        Auswählen
+      </button>
+    </span>
+  </p>
+</div>

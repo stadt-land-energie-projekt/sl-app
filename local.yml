@@ -54,31 +54,3 @@ services:
   redis:
     image: redis:6
     container_name: slapp_local_redis
-
-  celeryworker:
-    <<: *django
-    image: slapp_local_celeryworker
-    container_name: slapp_local_celeryworker
-    depends_on:
-      - redis
-      - postgres
-    ports: []
-    command: /start-celeryworker
-
-  celerybeat:
-    <<: *django
-    image: slapp_local_celerybeat
-    container_name: slapp_local_celerybeat
-    depends_on:
-      - redis
-      - postgres
-    ports: []
-    command: /start-celerybeat
-
-  flower:
-    <<: *django
-    image: slapp_local_flower
-    container_name: slapp_local_flower
-    ports:
-      - '5555:5555'
-    command: /start-flower

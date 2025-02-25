@@ -51,11 +51,14 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
+# INstall uv
+RUN pip install --no-cache-dir uv
+
 # Copy your requirements.txt file to the container
 COPY ./requirements ${APP_HOME}/requirements
 
 # Install Python dependencies directly from requirements.txt
-RUN pip install --no-cache-dir -r ${APP_HOME}/requirements/${BUILD_ENVIRONMENT}.txt
+RUN uv pip install --system --no-cache-dir -r ${APP_HOME}/requirements/${BUILD_ENVIRONMENT}.txt
 
 COPY ./compose/production/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint

@@ -18,8 +18,6 @@
     <meta name="author" content="Hendrik Huyskens" />
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
     {% block css %}
-      <!-- Your stuff: Third-party CSS libraries go here -->
-      <!-- This file stores project-specific CSS -->
       {% compress css %}
         <link rel="stylesheet"
               type="text/x-scss"
@@ -28,26 +26,24 @@
         <link href="{% static 'vendors/bootstrap/scss/bootstrap.scss' %}"
               rel="stylesheet"
               type="text/x-scss" />
+        <link href="{% static 'vendors/fontawesome/css/fontawesome.css' %}"
+              rel="stylesheet"
+              type="text/x-scss" />
         <link href="{% static 'vendors/ionrangeslider/css/ion.rangeSlider.min.css' %}"
               rel="stylesheet" />
       {% endcompress %}
     {% endblock css %}
-    <!-- Le javascript
-    ================================================== -->
-    {# Placed at the top of the document so pages load faster with defer #}
     {% block javascript %}
-      <!-- Your stuff: Third-party javascript libraries go here -->
-      <!-- place project specific Javascript in this file -->
       {% compress js %}
+        <script src="{% static 'vendors/jquery/js/jquery.min.js' %}"></script>
+        <script src="{% static 'vendors/popper/js/popper.js' %}"></script>
         <script src="{% static 'vendors/bootstrap/js/bootstrap.min.js' %}"></script>
         <script defer src="{% static 'js/project.js' %}"></script>
         <script defer src="{% static 'vendors/matomo/matomo.js' %}"></script>
         <script defer
                 src="{% static 'vendors/ionrangeslider/js/ion.rangeSlider.min.js' %}"></script>
-        <!-- HTMX -->
         <script defer src="{% static 'vendors/htmx/js/htmx.js' %}"></script>
-        <script src="{% static 'vendors/jquery/js/jquery.min.js' %}"></script>
-        <script src="{% static 'js/municipality.js' %}"></script>
+        <script defer src="{% static 'vendors/echarts/js/echarts.min.js' %}"></script>
       {% endcompress %}
     {% endblock javascript %}
   </head>
@@ -67,133 +63,14 @@
           </button>
           <a class="navbar-brand" href="{% url 'explorer:home' %}">Stadt-Land-Energie</a>
           <div class="collapse navbar-collapse d-flex justify-content-end"
-               id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-              {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'users:detail' request.user.pk %}">{% translate "My Profile" %}</a>
-                </li>
-                <li class="nav-item">
-                  {# URL provided by django-allauth/account/urls.py #}
-                  <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
-                </li>
-              {% else %}
-                <li class="nav-item">
-                  {# URL provided by django-allauth/account/urls.py #}
-                  <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
-                </li>
-              {% endif %}
-            </ul>
-          </div>
+               id="navbarSupportedContent"></div>
         </div>
       </nav>
     </div>
-    <section class="wizard">
-      <div class="wizard__wrap">
-        <div class="wizard__back">
-          {% if prev_url != None %}
-            <a class="btn btn-primary" href="{{ prev_url }}" role="button">Zurück
-              <svg width="16"
-                   height="16"
-                   version="1.1"
-                   fill="currentColor"
-                   viewBox="0 0 16.933 16.933"
-                   xmlns="http://www.w3.org/2000/svg">
-                <path d="m10.794 16.748 1.4961-1.4961-6.7832-6.7832 6.7832-6.7832-1.4961-1.4961-8.2793 8.2793z" />
-              </svg>
-            </a>
-          {% else %}
-            <a class="btn btn-primary btn-disabled" href="" role="button">
-              Zurück
-              <svg width="16"
-                   height="16"
-                   version="1.1"
-                   fill="currentColor"
-                   viewBox="0 0 16.933 16.933"
-                   xmlns="http://www.w3.org/2000/svg">
-                <path d="m10.794 16.748 1.4961-1.4961-6.7832-6.7832 6.7832-6.7832-1.4961-1.4961-8.2793 8.2793z" />
-              </svg>
-            </a>
-          {% endif %}
-        </div>
-        <div class="wizard__main">
-          <ul class="wizard__list nav nav-tabs" role="tablist">
-            <li id="step_1_start"
-                class="wizard__list-item {% if active_tab == 'step_1_start' %}active{% endif %}"
-                role="presentation">
-              <span class="wizard__list-number">1</span>
-              <span class="wizard__list-text">Start</span>
-            </li>
-            <li id="step_2_today"
-                class="wizard__list-item {% if active_tab == 'step_2_today' %}active{% endif %}"
-                role="presentation">
-              <span class="wizard__list-number">2</span>
-              <span class="wizard__list-text">Situation heute</span>
-            </li>
-            <li id="step_3_details"
-                class="wizard__list-item {% if active_tab == 'step_3_details' %}active{% endif %}"
-                role="presentation">
-              <span class="wizard__list-number">3</span>
-              <span class="wizard__list-text">Detailansicht</span>
-            </li>
-            <li id="step_4_mode"
-                class="wizard__list-item {% if active_tab == 'step_4_mode' %}active{% endif %}"
-                role="presentation">
-              <span class="wizard__list-number">4</span>
-              <span class="wizard__list-text">Auswahl ESM Modus</span>
-            </li>
-            <li id="step_5_parameters"
-                class="wizard__list-item {% if active_tab == 'step_5_parameters' %}active{% endif %}"
-                role="presentation">
-              <span class="wizard__list-number">5</span>
-              <span class="wizard__list-text">ESM Konfiguration</span>
-            </li>
-            <li id="step_6_results"
-                class="wizard__list-item {% if active_tab == 'step_6_results' %}active{% endif %}"
-                role="presentation">
-              <span class="wizard__list-number">6</span>
-              <span class="wizard__list-text">Ergebnisse</span>
-            </li>
-            <li id="step_7_added_value"
-                class="wizard__list-item {% if active_tab == 'step_7_added_value' %}active{% endif %}"
-                role="presentation">
-              <span class="wizard__list-number">7</span>
-              <span class="wizard__list-text">Wertschöpfung</span>
-            </li>
-          </ul>
-        </div>
-        <div class="wizard__next">
-          {% if next_url != None %}
-            <a class="btn btn-primary" href="{{ next_url }}" role="button">Weiter
-              <svg width="16"
-                   height="16"
-                   version="1.1"
-                   fill="currentColor"
-                   viewBox="0 0 16.933 16.933"
-                   xmlns="http://www.w3.org/2000/svg">
-                <path d="m6.1387 0.1875-1.4961 1.4961 6.7832 6.7832-6.7832 6.7832 1.4961 1.4961 8.2793-8.2793z" />
-              </svg>
-            </a>
-          {% else %}
-            <a class="btn btn-primary btn-disabled" href="" role="button">
-              Weiter
-              <svg width="16"
-                   height="16"
-                   version="1.1"
-                   fill="currentColor"
-                   viewBox="0 0 16.933 16.933"
-                   xmlns="http://www.w3.org/2000/svg">
-                <path d="m6.1387 0.1875-1.4961 1.4961 6.7832 6.7832-6.7832 6.7832 1.4961 1.4961 8.2793-8.2793z" />
-              </svg>
-            </a>
-          {% endif %}
-        </div>
-      </div>
-    </section>
     <div class="container">
       {% if messages %}
         {% for message in messages %}
-          <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+          <div class="mt-3 alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
             {{ message }}
             <button type="button"
                     class="btn-close"
@@ -204,13 +81,11 @@
       {% endif %}
     </div>
     <header class="bg-info p-1" id="selected_municipalities">
-      <div class="container">
-        <div class="row" id="selected_municipalities_banner">{% include 'pages/partials/banner.html' %}</div>
-      </div>
+      <div class="container"></div>
     </header>
-    <div class="container-fluid h-100">
+    <div class="container-fluid mb-2">
       {% if has_sidepanel %}
-        <div class="row h-100">
+        <div class="row">
           <div class="col-3 sidebar pt-3 border-end border-2">
             {% block sidebar_content %}
             {% endblock sidebar_content %}
@@ -225,19 +100,9 @@
         {% endblock content_no_sidebar %}
       {% endif %}
     </div>
-    <!-- /container -->
     {% block modal %}
     {% endblock modal %}
     {% block inline_javascript %}
-      {% comment %}
-    Script tags with only code, no src (defer by default). To run
-    with a "defer" so that you run inline code:
-    <script>
-      window.addEventListener('DOMContentLoaded', () => {
-        /* Run whatever you want */
-      });
-    </script>
-      {% endcomment %}
     {% endblock inline_javascript %}
     <footer class="bg-light text-center text-lg-start mt-auto">
       <div class="container p-2">

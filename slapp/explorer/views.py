@@ -6,16 +6,19 @@ import csv
 from typing import TYPE_CHECKING, Any
 
 from django.contrib import messages
+from django.contrib.gis.db.models.functions import Envelope
 from django.db.models import Sum
 from django.db.models.functions import Round
 from django.http import HttpResponse, JsonResponse
+
+from . import models
 
 if TYPE_CHECKING:
     from django.http.request import HttpRequest
 
 import json
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.templatetags.l10n import localize
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
@@ -28,23 +31,13 @@ MAX_MUNICIPALITY_COUNT = 3
 
 
 def start_page(request: HttpRequest) -> HttpResponse:
-    """Render the start / home page."""
-    next_url = reverse("explorer:map")
-    prev_url = None
-    active_tab = "step_1_start"
-    sidepanel = False
-
-    ids = request.session.get("municipality_ids", [])
-    muns = Municipality.objects.filter(id__in=ids) if ids else None
-
-    context = {
-        "next_url": next_url,
-        "prev_url": prev_url,
-        "active_tab": active_tab,
-        "has_sidepanel": sidepanel,
-        "municipalities": muns
-    }
-    return render(request, "pages/home.html", context)
+    """Render the start page and handle form submissions from home.html."""
+    if request.method == "POST":
+        if "go_to_case_studies" in request.POST:
+            return redirect("explorer:case_studies")
+        if "go_to_calculator" in request.POST:
+            return redirect("explorer:calculator")
+    return render(request, "pages/home.html")
 
 
 class MapGLView(TemplateView, views.MapEngineMixin):
@@ -132,6 +125,7 @@ def details_list(request: HttpRequest) -> HttpResponse:
     }
 
     return render(request, "pages/details.html", context)
+
 
 def load_municipalities(request: HttpRequest) -> HttpResponse:
     """Return list of municipalities for chosen region."""
@@ -237,7 +231,7 @@ def choose_esm_mode(request: HttpRequest) -> HttpResponse:
         "prev_url": prev_url,
         "active_tab": active_tab,
         "has_sidepanel": sidepanel,
-        "municipalities": muns
+        "municipalities": muns,
     }
     return render(request, render_template, context)
 
@@ -322,7 +316,7 @@ def optimization_results(request: HttpRequest) -> HttpResponse:
         municipalities = None
         messages.add_message(request, messages.WARNING, "Keine Gemeinde(n) ausgewählt.")
 
-    next_url = reverse("explorer:added_value")
+    next_url = reverse("kommWertTool:added_value")
     prev_url = reverse("explorer:parameters_variation")
     active_tab = "step_6_results"
     sidepanel = True
@@ -354,7 +348,7 @@ def robustness_parameters(request: HttpRequest) -> HttpResponse:
         "prev_url": prev_url,
         "active_tab": active_tab,
         "has_sidepanel": sidepanel,
-        "municipalities": muns
+        "municipalities": muns,
     }
     return render(request, "pages/parameters_robustness.html", context)
 
@@ -414,7 +408,7 @@ def robustness(request: HttpRequest) -> HttpResponse:
         municipalities = None
         messages.add_message(request, messages.WARNING, "Keine Gemeinde(n) ausgewählt.")
 
-    next_url = reverse("explorer:added_value")
+    next_url = reverse("kommWertTool:added_value")
     prev_url = reverse("explorer:parameters_robustness")
     active_tab = "step_6_results"
     sidepanel = True
@@ -449,7 +443,7 @@ def added_value(request: HttpRequest) -> HttpResponse:
         "prev_url": prev_url,
         "active_tab": active_tab,
         "has_sidepanel": sidepanel,
-        "municipalities": muns
+        "municipalities": muns,
     }
     return render(request, "pages/added_value.html", context)
 
@@ -462,11 +456,11 @@ menu_tabs = [
     {4: "explorer:esm_mode"},
     {5: "explorer:parameters_variation"},
     {6: "explorer:results_variation"},
-    {7: "explorer:added_value"},
+    {7: "kommWertTool:added_value"},
     {8: "--- placeholder ---"},
     {9: "explorer:parameters_robustness"},
     {10: "explorer:results_robustness"},
-    {11: "explorer:added_value"},
+    {11: "kommWertTool:added_value"},
 ]
 
 
@@ -518,3 +512,90 @@ def esm_choice(request: HttpRequest, tab_id: int) -> HttpResponse:  # noqa: ARG0
         response = "<input id='tab_name' type='hidden' name='tab_id' value='8' />"
 
     return HttpResponse(response, content_type="text/html")
+
+
+class CaseStudies(TemplateView, views.MapEngineMixin):
+    """Display the Case Studies page with a list of region data."""
+
+    template_name = "pages/case_studies.html"
+
+    def get_context_data(self, **kwargs) -> dict:
+        """Manage context data."""
+        context = super().get_context_data(**kwargs)
+
+        region_bbox = {
+            entry["name"]: entry["bounding_box"]
+            for entry in models.Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
+        }
+        regions = [
+            {
+                "title": "Region Oderland-Spree",
+                "bbox": region_bbox["Oderland-Spree"],
+                "info": "Hier steht mehr Info über die Region Oderland-Spree",
+                "img_source": "Oderland-Spree.png",
+                "text": "Text und Key Facts für Oderland-Spree",
+                "keyfacts": [
+                    "keyfact1",
+                    "keyfact2",
+                    "keyfact3",
+                    "keyfact4",
+                ],
+            },
+            {
+                "title": "Region Kiel",
+                "bbox": region_bbox["Kiel"],
+                "info": "Hier steht mehr Info über die Region Kiel",
+                "img_source": "Kiel.png",
+                "text": "Text und Key Facts für Kiel",
+                "keyfacts": [
+                    "keyfact1",
+                    "keyfact2",
+                    "keyfact3",
+                    "keyfact4",
+                ],
+            },
+        ]
+
+        context["regions"] = regions
+        context["next_url"] = reverse("explorer:esys_robust")
+        return context
+
+
+class EsysRobust(TemplateView):
+    """Display the Esys page with energy system and robustness."""
+
+    template_name = "pages/esys_robust.html"
+
+    def get_context_data(self, **kwargs) -> dict:
+        """Manage context data."""
+        context = super().get_context_data(**kwargs)
+
+        context["next_url"] = reverse("explorer:results")
+        return context
+
+
+class Results(TemplateView):
+    """Display the Results page with central results, basic results and sensitivities."""
+
+    template_name = "pages/results.html"
+
+    def get_context_data(self, **kwargs) -> dict:
+        """Manage context data."""
+        context = super().get_context_data(**kwargs)
+
+        context["home_url"] = reverse("explorer:home")
+        context["calculator_url"] = reverse("explorer:calculator")
+        return context
+
+
+class Calculator(TemplateView):
+    """Display the Calculator page with value creation and the calculator."""
+
+    template_name = "pages/calculator.html"
+
+    def get_context_data(self, **kwargs) -> dict:
+        """Manage context data."""
+        context = super().get_context_data(**kwargs)
+
+        context["next_url"] = reverse("explorer:home")
+        return context
