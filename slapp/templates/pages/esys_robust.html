@@ -3,7 +3,68 @@
 {% load static %}
 
 {% block content_no_sidebar %}
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+        rel="stylesheet" />
   <div class="flex-container">
-    <a href="{{ next_url }}" class="btn btn-primary mt-3">Hier geht's zur regionalen Energiewende</a>
+    <div class="box" id="header">
+      <div class="text">
+        <h2>Kurzintro Energiesystem & Robustheit</h2>
+        <p>
+          Hier haben wir für Sie bereits den optimalen Kraftwerkspark, sowie Einsatz bestimmt und für Sie ausgerechnet, wie robust die Ergebnisse sind...
+        </p>
+      </div>
+      <img src="{% static '/images/icons/robust_header.png' %}"
+           alt="header icon" />
+    </div>
+    <div class="box" id="energy_system">
+      <div class="text">
+        <h2>
+          Das Energiesystem im Jahr 2045 <span class="info-box"
+       data-tooltip="Hier steht vielleicht der Szenarioname">Mehr Infos</span>
+        </h2>
+        <p>
+          Ein erneuerbares Energiesystem im Jahr 2045 basiert vollständig auf nachhaltigen Quellen wie Sonne, Wind, Wasser
+          und Biomasse. Dank intelligenter Netze, leistungsfähiger Speichertechnologien und sektorübergreifender Kopplung
+          ist die Energieversorgung flexibel und stabil. Dezentrale Erzeugung und digitale Steuerung ermöglichen eine
+          effiziente Nutzung, während Wasserstoff und synthetische Kraftstoffe schwer elektrifizierbare Bereiche versorgen.
+          Durch fortschrittliche Energiemärkte und adaptive Verbrauchssteuerung bleibt das System resilient gegenüber
+          Schwankungen und gewährleistet eine sichere, klimaneutrale Energiezukunft.
+        </p>
+        <div class="flex">
+          <div class="fact">Ausbau EE</div>
+          <div class="fact">H2 in der Industrie</div>
+          <div class="fact">Hochlauf der Elektro-mobilität</div>
+          <div class="fact">Speicherung als Schlüssel</div>
+          <div class="fact">Nutzung von Flexibilitäten</div>
+          <div class="fact">WEITERER PUNKT</div>
+        </div>
+        <div class="dropdown-container">
+          <div class="dropdown">
+            <button class="btn btn-transparent"
+                    id="info-dropdown"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-bs-display="static"
+                    aria-expanded="false">
+              <img src="{% static '/images/icons/dropdown.svg' %}"
+                   alt="dropdown"
+                   class="dropdown-icon" />
+              Mehr Infos
+            </button>
+            <div class="dropdown-menu" aria-labelledby="info-dropdown">
+              <img src="{% static '/images/robust_diagram.png' %}"
+                   alt="energy system diagram"
+                   class="dropdown-img" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <img src="{% static '/images/icons/robust_energy_system.png' %}"
+           alt="energy system icon"
+           id="energy_system-icon" />
+    </div>
+    <div class="next-step-button">
+      <a href="{{ next_url }}" class="btn btn-primary mt-3">Hier geht's zur regionalen Energiewende</a>
+    </div>
   </div>
 {% endblock content_no_sidebar %}

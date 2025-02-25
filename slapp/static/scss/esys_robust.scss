@@ -1,0 +1,139 @@
+.box {
+    position: relative;
+    display: flex;
+    border: 1px solid #e3e3e3;
+    border-radius: 10px;
+    width: 95%;
+    margin: auto;
+    margin-bottom: 50px;
+    padding: 20px;
+  }
+
+#header {
+    position: relative;
+    margin-top: 50px;
+}
+
+#header img {
+  position: relative;
+  top: -50px;
+  height: 200px;
+  width: auto;
+}
+
+.info-box {
+  display: inline-block;
+  margin-left: 20px;
+  padding: 4px 8px;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  font-size: 0.9rem;
+  color: #333;
+  background: transparent;
+}
+
+.info-box::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  min-width: 200%;
+  max-width: 500%;
+  white-space: normal;
+  text-align: center;
+}
+
+.info-box:hover::after {
+  opacity: 1;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  font-size: 26px;
+  }
+
+.fact {
+  aspect-ratio : 1 / 1;
+  width: 15%;
+  background-color: #aff4c6;
+  border: 1px solid #aff4c6;
+  border-radius: 5px;
+  margin: 15px 15px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.btn.btn-transparent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+  background: transparent;
+  color: #333;
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: auto;
+}
+
+.dropdown-icon {
+  height: 24px;
+  width: auto;
+  margin-right: 8px;
+}
+
+.dropdown {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dropdown-menu {
+  padding: 10px;
+  min-width: 70vw;
+  text-align: center;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dropdown-img {
+  width: 70vw;
+  max-width: 1200px;
+  display: block;
+  margin: 10px auto;
+}
+
+#energy_system-icon {
+  position: relative;
+  top: -50px;
+  height: 300px;
+  width: auto;
+ }
