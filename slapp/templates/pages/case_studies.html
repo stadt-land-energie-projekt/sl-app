@@ -7,7 +7,7 @@
   <div class="flex-container">
     {% for region in regions %}
       {{ region.centroid }}
-      <c-regions title="{{ region.title }}" :bbox="region.bbox" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" keyfact0="{{ region.keyfacts.0 }}" keyfact1="{{ region.keyfacts.1 }}" keyfact2="{{ region.keyfacts.2 }}" keyfact3="{{ region.keyfacts.3 }}">
+      <c-regions title="{{ region.title }}" :bbox="region.bbox" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" :keyfacts="region.keyfacts">
       </c-regions>
     {% endfor %}
   </div>
