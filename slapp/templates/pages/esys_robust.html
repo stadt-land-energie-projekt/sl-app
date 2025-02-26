@@ -6,17 +6,18 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
         rel="stylesheet" />
   <div class="flex-container">
-    <div class="box" id="header">
+    <div class="robust-box" id="header">
       <div class="text">
         <h2>Kurzintro Energiesystem & Robustheit</h2>
         <p>
           Hier haben wir für Sie bereits den optimalen Kraftwerkspark, sowie Einsatz bestimmt und für Sie ausgerechnet, wie robust die Ergebnisse sind...
         </p>
       </div>
-      <img src="{% static '/images/icons/robust_header.png' %}"
-           alt="header icon" />
+      <img src="{% static '/images/icons/robust_header.svg' %}"
+           alt="header icon"
+           id="header-icon" />
     </div>
-    <div class="box" id="energy_system">
+    <div class="robust-box" id="energy_system">
       <div class="text">
         <h2>
           Das Energiesystem im Jahr 2045 <span class="info-box"
@@ -30,7 +31,7 @@
           Durch fortschrittliche Energiemärkte und adaptive Verbrauchssteuerung bleibt das System resilient gegenüber
           Schwankungen und gewährleistet eine sichere, klimaneutrale Energiezukunft.
         </p>
-        <div class="flex">
+        <div class="flex-box">
           <div class="fact">Ausbau EE</div>
           <div class="fact">H2 in der Industrie</div>
           <div class="fact">Hochlauf der Elektro-mobilität</div>
@@ -38,33 +39,75 @@
           <div class="fact">Nutzung von Flexibilitäten</div>
           <div class="fact">WEITERER PUNKT</div>
         </div>
-        <div class="dropdown-container">
-          <div class="dropdown">
-            <button class="btn btn-transparent"
-                    id="info-dropdown"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    data-bs-display="static"
-                    aria-expanded="false">
-              <img src="{% static '/images/icons/dropdown.svg' %}"
-                   alt="dropdown"
-                   class="dropdown-icon" />
-              Mehr Infos
-            </button>
-            <div class="dropdown-menu" aria-labelledby="info-dropdown">
-              <img src="{% static '/images/robust_diagram.png' %}"
-                   alt="energy system diagram"
-                   class="dropdown-img" />
-            </div>
-          </div>
+        <div class="image-toggle-container">
+          <button class="btn btn-transparent">
+            <img src="{% static '/images/icons/dropdown.svg' %}"
+                 alt="dropdown"
+                 class="dropdown-icon" />
+            Mehr Infos
+          </button>
+        </div>
+        <div class="hidden-image-container">
+          <img src="{% static '/images/robust_diagram.png' %}"
+               alt="energy system diagram"
+               class="toggle-img" />
         </div>
       </div>
-      <img src="{% static '/images/icons/robust_energy_system.png' %}"
+      <img src="{% static '/images/icons/robust_energy_system.svg' %}"
            alt="energy system icon"
            id="energy_system-icon" />
+    </div>
+    <div class="robust-box">
+      <div class="text">
+        <h2>Robuste Energieszenarien</h2>
+        <h2>Was ist das?</h2>
+        <p>
+          Robuste Energiesystem-Szenarien sind Modellierungsergebnisse, die auch unter veränderten Annahmen und
+          Unsicherheiten verlässlich bleiben. Das bedeutet, dass die getroffenen Aussagen und Schlussfolgerungen eines
+          Energiesystemmodells nicht stark von einzelnen Parametern oder unsicheren Eingangsgrößen abhängen.
+          Solche Szenarien basieren auf Sensitivitätsanalysen und berücksichtigen verschiedene zukünftige Entwicklungen,
+          um stabile und belastbare Empfehlungen für die Energiepolitik und -planung zu ermöglichen.
+        </p>
+        <div class="image-toggle-container">
+          <button class="btn btn-transparent">
+            <img src="{% static '/images/icons/dropdown.svg' %}"
+                 alt="dropdown"
+                 class="dropdown-icon" />
+            Mehr Infos
+          </button>
+        </div>
+        <div class="hidden-image-container" id="robust-info">
+          <h3>Warum ist das wichtig?</h3>
+          <p>
+            Die Robustheit von Energiesystem-Szenarien ist entscheidend, um fundierte und verlässliche Entscheidungen
+            für die zukünftige Energieversorgung zu treffen. Da Planungen und Investitionen oft langfristig angelegt
+            sind, müssen sie gegenüber Unsicherheiten wie technologischem Fortschritt, politischen Veränderungen oder
+            Marktpreisschwankungen belastbar sein. Ein robustes Szenario bietet Sicherheit für Entscheidungsträger,
+            da es tragfähige Lösungen aufzeigt, die auch unter variierenden Rahmenbedingungen funktionieren.
+            Dadurch lassen sich Fehlinvestitionen vermeiden, Risiken minimieren und eine nachhaltige, resiliente
+            Energiezukunft gezielt gestalten.
+          </p>
+          <h3>Wie funktioniert das?</h3>
+          <p>
+            Die Robustheit von Energiesystem-Szenarien ist entscheidend, um fundierte und verlässliche Entscheidungen
+            für die zukünftige Energieversorgung zu treffen. Da Planungen und Investitionen oft langfristig angelegt
+            sind, müssen sie gegenüber Unsicherheiten wie technologischem Fortschritt, politischen Veränderungen oder
+            Marktpreisschwankungen belastbar sein. Ein robustes Szenario bietet Sicherheit für Entscheidungsträger,
+            da es tragfähige Lösungen aufzeigt, die auch unter variierenden Rahmenbedingungen funktionieren. Dadurch
+            lassen sich Fehlinvestitionen vermeiden, Risiken minimieren und eine nachhaltige, resiliente Energiezukunft
+            gezielt gestalten.
+          </p>
+        </div>
+      </div>
+      <img src="{% static '/images/icons/robust_scenarios.svg' %}"
+           alt="scenarios icon"
+           id="scenarios-icon" />
     </div>
     <div class="next-step-button">
       <a href="{{ next_url }}" class="btn btn-primary mt-3">Hier geht's zur regionalen Energiewende</a>
     </div>
   </div>
 {% endblock content_no_sidebar %}
+{% block javascript %}
+  <script src="{% static 'js/esys_robust.js' %}"></script>
+{% endblock javascript %}

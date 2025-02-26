@@ -1,15 +1,12 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const dropdownToggle = document.querySelector("#info-dropdown");
-    const dropdownMenu = document.querySelector(".dropdown");
+document.addEventListener("DOMContentLoaded", function () {
+    const toggleButtons = document.querySelectorAll(".btn-transparent");
 
-    dropdownToggle.addEventListener("click", function(event) {
-        dropdownMenu.classList.toggle("show");
-        event.stopPropagation();
-    });
-
-    document.addEventListener("click", function(event) {
-        if (!dropdownMenu.contains(event.target)) {
-            dropdownMenu.classList.remove("show");
-        }
+    toggleButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const imageContainer = this.closest(".text").querySelector(".hidden-image-container");
+            if (imageContainer) {
+                imageContainer.classList.toggle("active");
+            }
+        });
     });
 });
