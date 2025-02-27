@@ -1,0 +1,23 @@
+#header {
+  margin-top: 50px;
+  }
+
+#regions-container {
+  display: flex;
+  width: 100%;
+  }
+
+.region-box {
+  display: block;
+  width: 30vw;
+  margin: 50px;
+  text-align: center;
+  }
+
+.region-box img {
+  width: 100%;
+  }
+
+.region-box button {
+  margin: auto;
+  }

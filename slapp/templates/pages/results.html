@@ -4,10 +4,39 @@
 
 {% block content_no_sidebar %}
   <div class="flex-container">
-    <h1>Zentrale Ergebnisse</h1>
-    <div>
-      <img src="{% static 'images/Oderland-Spree.png' %}"
-           alt="Oderland-Spree Verbund" />
+    <div id="header">
+      <h1>Zentrale Ergebnisse</h1>
+    </div>
+    <div id="regions-container">
+      <div class="region-box">
+        <h2>Oderland-Spree (Verbund)</h2>
+        <img src="{% static 'images/Oderland-Spree.png' %}"
+             alt="Karte Oderland-Spree Verbund" />
+        <button class="select-button" onclick="">Auswählen</button>
+      </div>
+      <div class="region-box">
+        <h2>Oderland-Spree (Einzeln)</h2>
+        <img src="{% static 'images/Oderland-Spree-single.png' %}"
+             alt="Karte Oderland-Spree Einzeln" />
+        <button class="select-button" onclick="">Auswählen</button>
+      </div>
+      <div class="region-box">
+        <h2>Kiel</h2>
+        <img src="{% static 'images/Kiel.png' %}" alt="Karte Kiel" />
+        <button class="select-button" onclick="">Auswählen</button>
+      </div>
+    </div>
+    <div class="hidden-div">
+      <div>
+        <h3>Strom</h3>
+        <table>
+          Hier kommt eine Tabelle
+        </table>
+      </div>
+      <div id="basic-solution">
+        <h1>Basislösung</h1>
+        <div id="charts"></div>
+      </div>
     </div>
     <a href="{{ home_url }}" class="btn btn-primary mt-3">Zur Hauptseite</a>
     <a href="{{ calculator_url }}" class="btn btn-primary mt-3">Zum Wertschöpfungsrechner</a>

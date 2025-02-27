@@ -65,13 +65,10 @@
 }
 
 .region-image {
-  position: absolute;
-  top: -20%;
-  right: -8%;
-  max-height: 33vh;
-  height: auto;
-  width: auto;
-  z-index: -1;
+  position: relative;
+  height: 200px;
+  width: 200px;
+  margin: 10px;
 }
 
 .region-text {
