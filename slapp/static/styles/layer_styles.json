@@ -648,7 +648,7 @@
       "fill-color": "#41AB5D"
     }
   },
-  "water": {
+  "waters": {
     "type": "fill",
     "paint": {
       "fill-color": "#2171B5"
