@@ -6,7 +6,6 @@ import csv
 from typing import TYPE_CHECKING, Any
 
 from django.contrib import messages
-from django.contrib.gis.db.models.functions import Envelope
 from django.http import HttpResponse, JsonResponse
 
 from . import models
@@ -490,15 +489,10 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
 
     template_name = "pages/case_studies.html"
 
-    region_bbox = {
-        entry["name"]: entry["bounding_box"]
-        for entry in models.Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
-    }
-
     def dispatch(self, request: HttpRequest, *args: object, **kwargs: object) -> HttpResponse:
         """Return charts."""
         if request.resolver_match.url_name == "all_charts":
-            return all_charts(request, self.region_bbox)
+            return all_charts(request)
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -525,7 +519,7 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
         else:
             context["municipalities_region_os"] = None
 
-        regions = get_data(self.region_bbox)
+        regions = get_data()
 
         context["regions"] = regions
         context["next_url"] = reverse("explorer:esys_robust")

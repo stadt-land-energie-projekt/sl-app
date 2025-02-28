@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from django.contrib.gis.db.models.functions import Envelope
 from django.db.models import Sum
 from django.db.models.functions import Round
 from django.http import HttpResponse, JsonResponse
@@ -11,12 +12,15 @@ from django.http import HttpResponse, JsonResponse
 if TYPE_CHECKING:
     from django.http.request import HttpRequest
 
-from .models import Municipality
+from .models import Municipality, Region
 
 
-@staticmethod
-def get_regions_data(region_bbox: dict) -> list:
+def get_regions_data() -> list:
     """Return the list of dictionaries containing region data."""
+    region_bbox = {
+        entry["name"]: entry["bounding_box"]
+        for entry in Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
+    }
     return [
         {
             "title": "Region Oderland-Spree",
@@ -61,14 +65,14 @@ def get_regions_data(region_bbox: dict) -> list:
     ]
 
 
-def all_charts(request: HttpRequest, region_bbox: dict) -> HttpResponse:
+def all_charts(request: HttpRequest) -> HttpResponse:
     """Build all charts."""
     if request.method != "GET":
         return HttpResponse(status=405)
 
     region_name = request.GET.get("region", "")
 
-    regions = get_regions_data(region_bbox)
+    regions = get_regions_data()
 
     selected_region = None
     for reg in regions:
