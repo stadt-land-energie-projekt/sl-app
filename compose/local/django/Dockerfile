@@ -46,7 +46,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   gettext \
   git \
   # Add gcc compiler in order to compile libsass on MAC \
-  gcc \
+  gcc g++ \
   # Geospatioal dependencies
   binutils libproj-dev gdal-bin \
   # make: for data commands
