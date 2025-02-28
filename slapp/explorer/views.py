@@ -6,9 +6,6 @@ import csv
 from typing import TYPE_CHECKING, Any
 
 from django.contrib import messages
-from django.contrib.gis.db.models.functions import Envelope
-from django.db.models import Sum
-from django.db.models.functions import Round
 from django.http import HttpResponse, JsonResponse
 
 from . import models
@@ -26,6 +23,9 @@ from django_mapengine import views
 
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
+from .regions import all_charts
+from .regions import get_regions_data as get_data
+from .regions import municipalities_details
 
 MAX_MUNICIPALITY_COUNT = 3
 
@@ -68,36 +68,6 @@ class MapGLView(TemplateView, views.MapEngineMixin):
 
         context["mapengine_store_cold_init"]["fly_to_clicked_feature"] = False
         return context
-
-
-def municipalities_details(ids: list[int]) -> list[Municipality]:
-    """Return municipalities."""
-    municipalities = (
-        Municipality.objects.filter(id__in=ids)
-        .annotate(area_rounded=Round("area", precision=1))
-        .annotate(biomass_net=Round(Sum("biomass__capacity_net", default=0) / 1000, precision=1))
-        .annotate(pvground_net=Round(Sum("pvground__capacity_net", default=0) / 1000, precision=1))
-        .annotate(pvroof_net=Round(Sum("pvroof__capacity_net", default=0) / 1000, precision=1))
-        .annotate(wind_net=Round(Sum("windturbine__capacity_net", default=0) / 1000, precision=1))
-        .annotate(hydro_net=Round(Sum("hydro__capacity_net", default=0) / 1000, precision=1))
-        .annotate(
-            total_net=Round(
-                (
-                    Sum("windturbine__capacity_net", default=0)
-                    + Sum("hydro__capacity_net", default=0)
-                    + Sum("pvroof__capacity_net", default=0)
-                    + Sum("pvground__capacity_net", default=0)
-                    + Sum("biomass__capacity_net", default=0)
-                )
-                / 1000,
-                precision=1,
-            ),
-        )
-        .annotate(storage_net=Round(Sum("storage__capacity_net", default=0) / 1000, precision=1))
-        .annotate(kwk_el_net=Round(Sum("combustion__capacity_net", default=0) / 1000, precision=1))
-        .annotate(kwk_th_net=Round(Sum("combustion__th_capacity", default=0) / 1000, precision=1))
-    )
-    return municipalities
 
 
 def details_list(request: HttpRequest) -> HttpResponse:
@@ -519,42 +489,37 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
 
     template_name = "pages/case_studies.html"
 
+    def dispatch(self, request: HttpRequest, *args: object, **kwargs: object) -> HttpResponse:
+        """Return charts."""
+        if request.resolver_match.url_name == "all_charts":
+            return all_charts(request)
+
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs) -> dict:
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
-        region_bbox = {
-            entry["name"]: entry["bounding_box"]
-            for entry in models.Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
-        }
-        regions = [
-            {
-                "title": "Region Oderland-Spree",
-                "bbox": region_bbox["Oderland-Spree"],
-                "info": "Hier steht mehr Info über die Region Oderland-Spree",
-                "img_source": "Oderland-Spree.png",
-                "text": "Text und Key Facts für Oderland-Spree",
-                "keyfacts": [
-                    "keyfact1",
-                    "keyfact2",
-                    "keyfact3",
-                    "keyfact4",
-                ],
-            },
-            {
-                "title": "Region Kiel",
-                "bbox": region_bbox["Kiel"],
-                "info": "Hier steht mehr Info über die Region Kiel",
-                "img_source": "Kiel.png",
-                "text": "Text und Key Facts für Kiel",
-                "keyfacts": [
-                    "keyfact1",
-                    "keyfact2",
-                    "keyfact3",
-                    "keyfact4",
-                ],
-            },
-        ]
+        try:
+            region_kiel = models.Region.objects.get(name="Kiel")
+            region_os = models.Region.objects.get(name="Oderland-Spree")
+        except models.Region.DoesNotExist:
+            region_kiel = None
+            region_os = None
+
+        if region_kiel:
+            ids_kiel = region_kiel.municipality_set.values_list("id", flat=True)
+            context["municipalities_region_kiel"] = municipalities_details(ids_kiel)
+        else:
+            context["municipalities_region_kiel"] = None
+
+        if region_os:
+            ids_os = region_os.municipality_set.values_list("id", flat=True)
+            context["municipalities_region_os"] = municipalities_details(ids_os)
+        else:
+            context["municipalities_region_os"] = None
+
+        regions = get_data()
 
         context["regions"] = regions
         context["next_url"] = reverse("explorer:esys_robust")

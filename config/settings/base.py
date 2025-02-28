@@ -86,7 +86,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "slapp.users",
     "slapp.explorer",
-    "slapp.kommWertTool"
+    "slapp.kommWertTool",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -419,7 +419,7 @@ MAP_ENGINE_API_MVTS = {
         setup.MVTAPI("road_default", "explorer", "Road"),
         setup.MVTAPI("road_railway-500m_region", "explorer", "RoadRailway500m"),
         setup.MVTAPI("settlement-0m", "explorer", "Settlement0m"),
-        setup.MVTAPI("water", "explorer", "Water"),
+        setup.MVTAPI("waters", "explorer", "Water"),
     ],
 }
 
