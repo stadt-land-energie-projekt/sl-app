@@ -1,0 +1,145 @@
+.robust-box {
+    position: relative;
+    display: flex;
+    border: 1px solid #e3e3e3;
+    border-radius: 10px;
+    width: 95%;
+    margin: auto;
+    margin-bottom: 50px;
+    padding: 20px;
+  }
+
+#header {
+    position: relative;
+    margin-top: 50px;
+}
+
+#header-icon {
+  position: relative;
+  height: 25%;
+  width: auto;
+}
+
+.info-box {
+  display: inline-block;
+  margin-left: 20px;
+  padding: 4px 8px;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  font-size: 0.9rem;
+  color: #333;
+  background: transparent;
+}
+
+.info-box::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  min-width: 200%;
+  max-width: 500%;
+  white-space: normal;
+  text-align: center;
+}
+
+.info-box:hover::after {
+  opacity: 1;
+}
+
+.flex-box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  font-size: 26px;
+  }
+
+.fact {
+  aspect-ratio : 1 / 1;
+  width: 15%;
+  background-color: #aff4c6;
+  border: 1px solid #aff4c6;
+  border-radius: 5px;
+  margin: 15px 15px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn.btn-transparent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border: 2px solid #333;
+  border-radius: 6px;
+  background: rgba(200, 200, 200, 0.2);
+  color: #333;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.3s ease, border 0.3s ease;
+}
+
+.btn.btn-transparent:hover {
+  background: rgba(200, 200, 200, 0.5);
+  border-color: #000;
+}
+
+.dropdown-icon {
+  height: 24px;
+  width: auto;
+  margin-right: 8px;
+}
+
+.image-toggle-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.hidden-image-container {
+  display: none;
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.hidden-image-container.active {
+  display: block;
+}
+
+.toggle-img {
+  width: 70vw;
+  max-width: 1200px;
+  display: block;
+  margin: 10px auto;
+}
+
+#energy_system-icon {
+  position: relative;
+  height: 30%;
+  width: auto;
+ }
+
+#scenarios-icon {
+  position: relative;
+  height: 200px;
+  width: auto;
+}
+
+#robust-info {
+    text-align: left;
+    }
