@@ -7,8 +7,6 @@ from typing import TYPE_CHECKING, Any
 
 from django.contrib import messages
 from django.contrib.gis.db.models.functions import Envelope
-from django.db.models import Sum
-from django.db.models.functions import Round
 from django.http import HttpResponse, JsonResponse
 
 from . import models
@@ -26,13 +24,11 @@ from django_mapengine import views
 
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
+from .regions import all_charts
+from .regions import get_regions_data as get_data
+from .regions import municipalities_details
 
 MAX_MUNICIPALITY_COUNT = 3
-
-region_bbox = {
-    entry["name"]: entry["bounding_box"]
-    for entry in models.Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
-}
 
 
 def start_page(request: HttpRequest) -> HttpResponse:
@@ -73,36 +69,6 @@ class MapGLView(TemplateView, views.MapEngineMixin):
 
         context["mapengine_store_cold_init"]["fly_to_clicked_feature"] = False
         return context
-
-
-def municipalities_details(ids: list[int]) -> list[Municipality]:
-    """Return municipalities."""
-    municipalities = (
-        Municipality.objects.filter(id__in=ids)
-        .annotate(area_rounded=Round("area", precision=1))
-        .annotate(biomass_net=Round(Sum("biomass__capacity_net", default=0) / 1000, precision=1))
-        .annotate(pvground_net=Round(Sum("pvground__capacity_net", default=0) / 1000, precision=1))
-        .annotate(pvroof_net=Round(Sum("pvroof__capacity_net", default=0) / 1000, precision=1))
-        .annotate(wind_net=Round(Sum("windturbine__capacity_net", default=0) / 1000, precision=1))
-        .annotate(hydro_net=Round(Sum("hydro__capacity_net", default=0) / 1000, precision=1))
-        .annotate(
-            total_net=Round(
-                (
-                    Sum("windturbine__capacity_net", default=0)
-                    + Sum("hydro__capacity_net", default=0)
-                    + Sum("pvroof__capacity_net", default=0)
-                    + Sum("pvground__capacity_net", default=0)
-                    + Sum("biomass__capacity_net", default=0)
-                )
-                / 1000,
-                precision=1,
-            ),
-        )
-        .annotate(storage_net=Round(Sum("storage__capacity_net", default=0) / 1000, precision=1))
-        .annotate(kwk_el_net=Round(Sum("combustion__capacity_net", default=0) / 1000, precision=1))
-        .annotate(kwk_th_net=Round(Sum("combustion__th_capacity", default=0) / 1000, precision=1))
-    )
-    return municipalities
 
 
 def details_list(request: HttpRequest) -> HttpResponse:
@@ -524,6 +490,18 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
 
     template_name = "pages/case_studies.html"
 
+    region_bbox = {
+        entry["name"]: entry["bounding_box"]
+        for entry in models.Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
+    }
+
+    def dispatch(self, request: HttpRequest, *args: object, **kwargs: object) -> HttpResponse:
+        """Return charts."""
+        if request.resolver_match.url_name == "all_charts":
+            return all_charts(request, self.region_bbox)
+
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs) -> dict:
         """Manage context data."""
         context = super().get_context_data(**kwargs)
@@ -547,133 +525,11 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
         else:
             context["municipalities_region_os"] = None
 
-        regions = self.get_regions_data()
+        regions = get_data(self.region_bbox)
 
         context["regions"] = regions
         context["next_url"] = reverse("explorer:esys_robust")
         return context
-
-    @staticmethod
-    def get_regions_data() -> list:
-        """Return the list of dictionaries containing region data."""
-        return [
-            {
-                "title": "Region Oderland-Spree",
-                "bbox": region_bbox["Oderland-Spree"],
-                "info": "Hier steht mehr Info über die Region Oderland-Spree",
-                "img_source": "Oderland-Spree.png",
-                "text": "Text und Key Facts für Oderland-Spree",
-                "keyfacts": [
-                    "keyfact1",
-                    "keyfact2",
-                    "keyfact3",
-                    "keyfact4",
-                ],
-                "plans": {
-                    "2023": {"wind": 40, "pv": 80, "moor": 1},
-                    "2030": {"wind": 70, "pv": 100, "moor": 2},
-                    "2040": {"wind": 80, "pv": 120, "moor": 4},
-                },
-                "area": "5.5%",
-                "co2": 1500.81,
-            },
-            {
-                "title": "Region Kiel",
-                "bbox": region_bbox["Kiel"],
-                "info": "Hier steht mehr Info über die Region Kiel",
-                "img_source": "Kiel.png",
-                "text": "Text und Key Facts für Kiel",
-                "keyfacts": [
-                    "keyfact1",
-                    "keyfact2",
-                    "keyfact3",
-                    "keyfact4",
-                ],
-                "plans": {
-                    "2023": {"wind": 60, "pv": 80, "moor": 0},
-                    "2030": {"wind": 100, "pv": 120, "moor": 1},
-                    "2040": {"wind": 150, "pv": 140, "moor": 2},
-                },
-                "area": "3.5%",
-                "co2": 1829.81,
-            },
-        ]
-
-
-def all_charts(request: HttpRequest) -> HttpResponse:
-    """Build all charts."""
-    if request.method != "GET":
-        return HttpResponse(status=405)
-
-    region_name = request.GET.get("region", "")
-
-    regions = CaseStudies.get_regions_data()
-
-    # Find the region the user selected
-    selected_region = None
-    for reg in regions:
-        if reg["title"] == region_name:
-            selected_region = reg
-            break
-
-    # If nothing matches, we could return a fallback region or an error
-    if not selected_region:
-        selected_region = regions[0]
-
-    plans = selected_region["plans"]  # e.g. the dict with "2023", "2030", "2040"
-    x_axis_data = list(plans.keys())
-
-    # Build dummy chart data from 'selected_data' as you need
-    # The structure below should roughly match what your front end expects:
-    response_data = {
-        "production": {
-            "x_data": x_axis_data,
-            "y_data": {
-                "Production": [p["wind"] + p["pv"] for p in plans.values()],
-                "Consumption": [p["wind"] * 1.5 for p in plans.values()],
-            },
-            "y_label": "kWh",
-        },
-        "tech": {
-            "x_data": x_axis_data,
-            "y_data": {
-                "Wind": [p["wind"] for p in plans.values()],
-                "PV": [p["pv"] for p in plans.values()],
-            },
-            "y_label": "MW",
-            "target": {"Target 2040": 100},
-        },
-        "another": {
-            "x_data": x_axis_data,
-            "y_data": {
-                "Moor": [p["moor"] for p in plans.values()],
-            },
-            "y_label": "Moor KPI [dummy]",
-        },
-        "demand": {
-            "x_data": x_axis_data,
-            "y_data": {
-                "Households": [p["pv"] / 2 for p in plans.values()],
-                "Industry": [p["wind"] / 2 for p in plans.values()],
-            },
-            "y_label": "Energy Demand [GWh]",
-        },
-        "area": {
-            # For the pie chart, x_data is optional, but we keep a placeholder
-            "x_data": ["dummy"],
-            "y_data": {
-                # Dummy data for the pie
-                "Used Land": [45],
-                "Unused Land": [55],
-            },
-        },
-        "co2": {
-            "icon_url": "/static/images/co2_icon.png",
-            "co2_text": f"Region: {selected_region['title']} - CO₂ Emissions: {selected_region['co2']} tons",
-        },
-    }
-
-    return JsonResponse(response_data)
 
 
 class EsysRobust(TemplateView):

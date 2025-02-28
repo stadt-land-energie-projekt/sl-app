@@ -16,6 +16,7 @@ urlpatterns = [
     path("results_robustness/", views.robustness, name="results_robustness"),
     path("parameters_robustness/", views.robustness_parameters, name="parameters_robustness"),
     path("case_studies/", views.CaseStudies.as_view(), name="case_studies"),
+    path("chart/all_charts", views.CaseStudies.as_view(), name="all_charts"),
     path("esys_robust/", views.EsysRobust.as_view(), name="esys_robust"),
     path("results/", views.Results.as_view(), name="results"),
     path("calculator", views.Calculator.as_view(), name="calculator"),
@@ -28,7 +29,6 @@ htmx_urlpatterns = [
     path("wizard-next/", views.next_menu_tab, name="wizard-next-step"),
     path("wizard-previous/", views.previous_menu_tab, name="wizard-previous-step"),
     path("esm-choice/<int:tab_id>", views.esm_choice, name="esm_choice"),
-    path("chart/all_charts", views.all_charts, name="all_charts"),
 ]
 
 urlpatterns += htmx_urlpatterns
