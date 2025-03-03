@@ -23,7 +23,7 @@ from django_mapengine import views
 
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
-from .regions import all_charts
+from .regions import all_charts, flow_chart
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
 
@@ -543,6 +543,13 @@ class Results(TemplateView):
     """Display the Results page with central results, basic results and sensitivities."""
 
     template_name = "pages/results.html"
+
+    def dispatch(self, request: HttpRequest, *args: object, **kwargs: object) -> HttpResponse:
+        """Return electricity flow charts."""
+        if request.resolver_match.url_name == "flow_chart":
+            return flow_chart(request)
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs) -> dict:
         """Manage context data."""
