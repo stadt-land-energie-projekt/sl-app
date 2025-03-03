@@ -28,13 +28,18 @@
       </div>
     </div>
     <div class="hidden-div">
-      <div>
-        <h3>Strom</h3>
-        <div id="electricity-charts"></div>
+      <div class="flex-container">
+        <div id="electricity-chart"></div>
+        <div id="hydrogen-chart"></div>
       </div>
       <div id="basic-solution">
         <h1>Basislösung</h1>
-        <div id="basic-charts"></div>
+        <div id="basic-charts">
+          <div id="chart-electricity" class="chart-container"></div>
+          <div id="chart-heat" class="chart-container"></div>
+          <div id="chart-capacity" class="chart-container"></div>
+          <div id="chart-costs" class="chart-container"></div>
+        </div>
       </div>
     </div>
     <div>
@@ -45,5 +50,15 @@
 {% endblock content_no_sidebar %}
 {% block javascript %}
   {{ block.super }}
+  <script>
+    var chartData = JSON.parse('{{ chart_data|safe }}');
+    var electricityChartData = chartData.electricity;
+    var heatChartData = chartData.heat;
+    var capacityChartData = chartData.capacity;
+    var costsChartData = chartData.costs;
+
+    console.log("Electricity chart data:", electricityChartData);
+    console.log("Heat chart data:", heatChartData);
+  </script>
   <script src="{% static 'js/results.js' %}" defer></script>
 {% endblock javascript %}

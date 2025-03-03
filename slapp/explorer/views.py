@@ -555,8 +555,40 @@ class Results(TemplateView):
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
+        chart_data = {
+            "electricity": {
+                "categories": ["Jan", "Feb", "Mar"],
+                "series": {
+                    "Generation": [120, 200, 150],
+                    "Consumption": [90, 50, 110],
+                },
+            },
+            "heat": {
+                "categories": ["Jan", "Feb", "Mar"],
+                "series": {
+                    "Generation": [80, 60, 90],
+                    "Consumption": [40, 30, 55],
+                },
+            },
+            "capacity": {
+                "categories": ["Wind", "Solar", "Biomass"],
+                "series": {
+                    "Existing": [300, 200, 100],
+                    "Addition": [30, 20, 10],
+                },
+            },
+            "costs": {
+                "categories": ["Project A", "Project B", "Project C"],
+                "series": {
+                    "Variable costs": [50000, 30000, 45000],
+                    "Investment": [200000, 150000, 250000],
+                },
+            },
+        }
+
         context["home_url"] = reverse("explorer:home")
         context["calculator_url"] = reverse("explorer:calculator")
+        context["chart_data"] = json.dumps(chart_data)
         return context
 
 

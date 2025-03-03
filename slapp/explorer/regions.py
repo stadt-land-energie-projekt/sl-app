@@ -165,81 +165,204 @@ def municipalities_details(ids: list[int]) -> list[Municipality]:
     return municipalities
 
 
-def get_energy_data(region: str) -> dict:
+def get_energy_data(region: str) -> list:
     """Return energy data."""
     energy_data = {}
     if region == "verbu":
-        energy_data = {
-            "title": "Stromaustausch (Verbund)",
-            "energyData": [
-                {"source": "Strausberg", "target": "Rüdersdorf bei Berlin", "value": 120},
-                {"source": "Rüdersdorf bei Berlin", "target": "Strausberg", "value": 20},
-                {"source": "Rüdersdorf bei Berlin", "target": "Grünheide (Mark)", "value": 80},
-                {"source": "Grünheide (Mark)", "target": "Rüdersdorf bei Berlin", "value": 200},
-                {"source": "Grünheide (Mark)", "target": "Erkner", "value": 150},
-                {"source": "Erkner", "target": "Grünheide (Mark)", "value": 50},
-                {"source": "Erkner", "target": "Strausberg", "value": 100},
-                {"source": "Strausberg", "target": "Erkner", "value": 10},
-                {"source": "Strausberg", "target": "Grünheide (Mark)", "value": 50},
-                {"source": "Grünheide (Mark)", "target": "Strausberg", "value": 5},
-                {"source": "Rüdersdorf bei Berlin", "target": "Erkner", "value": 90},
-                {"source": "Erkner", "target": "Rüdersdorf bei Berlin", "value": 120},
-                {"source": "Strausberg", "target": "Netz", "value": 120},
-                {"source": "Netz", "target": "Strausberg", "value": 20},
-                {"source": "Grünheide (Mark)", "target": "Netz ", "value": 10},
-                {"source": "Netz ", "target": "Grünheide (Mark)", "value": 100},
-                {"source": "Erkner", "target": "Netz  ", "value": 120},
-                {"source": "Netz  ", "target": "Erkner", "value": 20},
-                {"source": "Rüdersdorf bei Berlin", "target": "Netz   ", "value": 100},
-                {"source": "Netz   ", "target": "Rüdersdorf bei Berlin", "value": 40},
-            ],
-            "nodes": [
-                {"name": "Strausberg", "x": 50, "y": -50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
-                {"name": "Rüdersdorf bei Berlin", "x": 0, "y": 0, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
-                {"name": "Grünheide (Mark)", "x": 50, "y": 50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
-                {"name": "Erkner", "x": -10, "y": 50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
-                {"name": "Netz", "x": 80, "y": -25, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
-                {"name": "Netz ", "x": 60, "y": 75, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
-                {"name": "Netz  ", "x": -20, "y": 75, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
-                {"name": "Netz   ", "x": -20, "y": -20, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
-            ],
-        }
+        energy_data = [
+            {
+                "title": "Stromaustausch (Verbund)",
+                "energyData": [
+                    {"source": "Strausberg", "target": "Rüdersdorf bei Berlin", "value": 120},
+                    {"source": "Rüdersdorf bei Berlin", "target": "Strausberg", "value": 20},
+                    {"source": "Rüdersdorf bei Berlin", "target": "Grünheide (Mark)", "value": 80},
+                    {"source": "Grünheide (Mark)", "target": "Rüdersdorf bei Berlin", "value": 200},
+                    {"source": "Grünheide (Mark)", "target": "Erkner", "value": 150},
+                    {"source": "Erkner", "target": "Grünheide (Mark)", "value": 50},
+                    {"source": "Erkner", "target": "Strausberg", "value": 100},
+                    {"source": "Strausberg", "target": "Erkner", "value": 10},
+                    {"source": "Strausberg", "target": "Grünheide (Mark)", "value": 50},
+                    {"source": "Grünheide (Mark)", "target": "Strausberg", "value": 5},
+                    {"source": "Rüdersdorf bei Berlin", "target": "Erkner", "value": 90},
+                    {"source": "Erkner", "target": "Rüdersdorf bei Berlin", "value": 120},
+                    {"source": "Strausberg", "target": "Netz", "value": 120},
+                    {"source": "Netz", "target": "Strausberg", "value": 20},
+                    {"source": "Grünheide (Mark)", "target": "Netz ", "value": 10},
+                    {"source": "Netz ", "target": "Grünheide (Mark)", "value": 100},
+                    {"source": "Erkner", "target": "Netz  ", "value": 120},
+                    {"source": "Netz  ", "target": "Erkner", "value": 20},
+                    {"source": "Rüdersdorf bei Berlin", "target": "Netz   ", "value": 100},
+                    {"source": "Netz   ", "target": "Rüdersdorf bei Berlin", "value": 40},
+                ],
+                "nodes": [
+                    {"name": "Strausberg", "x": 50, "y": -50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
+                    {
+                        "name": "Rüdersdorf bei Berlin",
+                        "x": 0,
+                        "y": 0,
+                        "itemStyle": {"color": "#798897"},
+                        "symbolSize": 30,
+                    },
+                    {
+                        "name": "Grünheide (Mark)",
+                        "x": 50,
+                        "y": 50,
+                        "itemStyle": {"color": "#798897"},
+                        "symbolSize": 30,
+                    },
+                    {"name": "Erkner", "x": -10, "y": 50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
+                    {"name": "Netz", "x": 80, "y": -25, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                    {"name": "Netz ", "x": 60, "y": 75, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                    {"name": "Netz  ", "x": -20, "y": 75, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                    {"name": "Netz   ", "x": -20, "y": -20, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                ],
+            },
+            {
+                "title": "Wasserstoffaustausch (Verbund)",
+                "energyData": [
+                    {"source": "Strausberg", "target": "Rüdersdorf bei Berlin", "value": 120},
+                    {"source": "Rüdersdorf bei Berlin", "target": "Strausberg", "value": 20},
+                    {"source": "Rüdersdorf bei Berlin", "target": "Grünheide (Mark)", "value": 80},
+                    {"source": "Grünheide (Mark)", "target": "Rüdersdorf bei Berlin", "value": 200},
+                    {"source": "Grünheide (Mark)", "target": "Erkner", "value": 150},
+                    {"source": "Erkner", "target": "Grünheide (Mark)", "value": 50},
+                    {"source": "Erkner", "target": "Strausberg", "value": 100},
+                    {"source": "Strausberg", "target": "Erkner", "value": 10},
+                    {"source": "Strausberg", "target": "Grünheide (Mark)", "value": 50},
+                    {"source": "Grünheide (Mark)", "target": "Strausberg", "value": 5},
+                    {"source": "Rüdersdorf bei Berlin", "target": "Erkner", "value": 90},
+                    {"source": "Erkner", "target": "Rüdersdorf bei Berlin", "value": 120},
+                    {"source": "Strausberg", "target": "Netz", "value": 120},
+                    {"source": "Netz", "target": "Strausberg", "value": 20},
+                    {"source": "Grünheide (Mark)", "target": "Netz ", "value": 10},
+                    {"source": "Netz ", "target": "Grünheide (Mark)", "value": 100},
+                    {"source": "Erkner", "target": "Netz  ", "value": 120},
+                    {"source": "Netz  ", "target": "Erkner", "value": 20},
+                    {"source": "Rüdersdorf bei Berlin", "target": "Netz   ", "value": 100},
+                    {"source": "Netz   ", "target": "Rüdersdorf bei Berlin", "value": 40},
+                ],
+                "nodes": [
+                    {"name": "Strausberg", "x": 50, "y": -50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
+                    {
+                        "name": "Rüdersdorf bei Berlin",
+                        "x": 0,
+                        "y": 0,
+                        "itemStyle": {"color": "#798897"},
+                        "symbolSize": 30,
+                    },
+                    {
+                        "name": "Grünheide (Mark)",
+                        "x": 50,
+                        "y": 50,
+                        "itemStyle": {"color": "#798897"},
+                        "symbolSize": 30,
+                    },
+                    {"name": "Erkner", "x": -10, "y": 50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
+                    {"name": "Netz", "x": 80, "y": -25, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                    {"name": "Netz ", "x": 60, "y": 75, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                    {"name": "Netz  ", "x": -20, "y": 75, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                    {"name": "Netz   ", "x": -20, "y": -20, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                ],
+            },
+        ]
     elif region == "einzeln":
-        energy_data = {
-            "title": "Stromaustausch (einzeln)",
-            "energyData": [
-                {"source": "Strausberg", "target": "Netz", "value": 120},
-                {"source": "Netz", "target": "Strausberg", "value": 20},
-                {"source": "Grünheide (Mark)", "target": "Netz ", "value": 10},
-                {"source": "Netz ", "target": "Grünheide (Mark)", "value": 100},
-                {"source": "Erkner", "target": "Netz  ", "value": 120},
-                {"source": "Netz  ", "target": "Erkner", "value": 20},
-                {"source": "Rüdersdorf bei Berlin", "target": "Netz   ", "value": 100},
-                {"source": "Netz   ", "target": "Rüdersdorf bei Berlin", "value": 40},
-            ],
-            "nodes": [
-                {"name": "Strausberg", "x": 50, "y": -50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
-                {"name": "Rüdersdorf bei Berlin", "x": 0, "y": 0, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
-                {"name": "Grünheide (Mark)", "x": 50, "y": 50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
-                {"name": "Erkner", "x": -10, "y": 50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
-                {"name": "Netz", "x": 80, "y": -25, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
-                {"name": "Netz ", "x": 60, "y": 75, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
-                {"name": "Netz  ", "x": -20, "y": 75, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
-                {"name": "Netz   ", "x": -20, "y": -20, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
-            ],
-        }
+        energy_data = [
+            {
+                "title": "Stromaustausch (einzeln)",
+                "energyData": [
+                    {"source": "Strausberg", "target": "Netz", "value": 120},
+                    {"source": "Netz", "target": "Strausberg", "value": 20},
+                    {"source": "Grünheide (Mark)", "target": "Netz ", "value": 10},
+                    {"source": "Netz ", "target": "Grünheide (Mark)", "value": 100},
+                    {"source": "Erkner", "target": "Netz  ", "value": 120},
+                    {"source": "Netz  ", "target": "Erkner", "value": 20},
+                    {"source": "Rüdersdorf bei Berlin", "target": "Netz   ", "value": 100},
+                    {"source": "Netz   ", "target": "Rüdersdorf bei Berlin", "value": 40},
+                ],
+                "nodes": [
+                    {"name": "Strausberg", "x": 50, "y": -50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
+                    {
+                        "name": "Rüdersdorf bei Berlin",
+                        "x": 0,
+                        "y": 0,
+                        "itemStyle": {"color": "#798897"},
+                        "symbolSize": 30,
+                    },
+                    {
+                        "name": "Grünheide (Mark)",
+                        "x": 50,
+                        "y": 50,
+                        "itemStyle": {"color": "#798897"},
+                        "symbolSize": 30,
+                    },
+                    {"name": "Erkner", "x": -10, "y": 50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
+                    {"name": "Netz", "x": 80, "y": -25, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                    {"name": "Netz ", "x": 60, "y": 75, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                    {"name": "Netz  ", "x": -20, "y": 75, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                    {"name": "Netz   ", "x": -20, "y": -20, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                ],
+            },
+            {
+                "title": "Wasserstoffaustausch (einzeln)",
+                "energyData": [
+                    {"source": "Strausberg", "target": "Netz", "value": 120},
+                    {"source": "Netz", "target": "Strausberg", "value": 20},
+                    {"source": "Grünheide (Mark)", "target": "Netz ", "value": 10},
+                    {"source": "Netz ", "target": "Grünheide (Mark)", "value": 100},
+                    {"source": "Erkner", "target": "Netz  ", "value": 120},
+                    {"source": "Netz  ", "target": "Erkner", "value": 20},
+                    {"source": "Rüdersdorf bei Berlin", "target": "Netz   ", "value": 100},
+                    {"source": "Netz   ", "target": "Rüdersdorf bei Berlin", "value": 40},
+                ],
+                "nodes": [
+                    {"name": "Strausberg", "x": 50, "y": -50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
+                    {
+                        "name": "Rüdersdorf bei Berlin",
+                        "x": 0,
+                        "y": 0,
+                        "itemStyle": {"color": "#798897"},
+                        "symbolSize": 30,
+                    },
+                    {
+                        "name": "Grünheide (Mark)",
+                        "x": 50,
+                        "y": 50,
+                        "itemStyle": {"color": "#798897"},
+                        "symbolSize": 30,
+                    },
+                    {"name": "Erkner", "x": -10, "y": 50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
+                    {"name": "Netz", "x": 80, "y": -25, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                    {"name": "Netz ", "x": 60, "y": 75, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                    {"name": "Netz  ", "x": -20, "y": 75, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                    {"name": "Netz   ", "x": -20, "y": -20, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                ],
+            },
+        ]
     elif region == "Kiel":
-        energy_data = {
-            "title": "Stromaustausch (Kiel)",
-            "energyData": [
-                {"source": "Kiel", "target": "Netz", "value": 120},
-                {"source": "Netz", "target": "Kiel", "value": 20},
-            ],
-            "nodes": [
-                {"name": "Kiel", "x": 0, "y": 0, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
-                {"name": "Netz", "x": 25, "y": 0, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
-            ],
-        }
+        energy_data = [
+            {
+                "title": "Stromaustausch (Kiel)",
+                "energyData": [
+                    {"source": "Kiel", "target": "Netz", "value": 120},
+                    {"source": "Netz", "target": "Kiel", "value": 20},
+                ],
+                "nodes": [
+                    {"name": "Kiel", "x": 0, "y": 0, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
+                    {"name": "Netz", "x": 25, "y": 0, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                ],
+            },
+            {
+                "title": "Stromaustausch (Kiel)",
+                "energyData": [
+                    {"source": "Kiel", "target": "Netz", "value": 120},
+                    {"source": "Netz", "target": "Kiel", "value": 20},
+                ],
+                "nodes": [
+                    {"name": "Kiel", "x": 0, "y": 0, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
+                    {"name": "Netz", "x": 25, "y": 0, "itemStyle": {"color": "#000000"}, "symbolSize": 10},
+                ],
+            },
+        ]
     return energy_data
 
 
@@ -248,16 +371,18 @@ def flow_chart(request: HttpRequest) -> JsonResponse:
     chart_type = request.GET.get("type", "verbu")
 
     if chart_type == "verbu":
-        response_data = get_energy_data("verbu")
+        flow_data = get_energy_data("verbu")
     elif chart_type == "einzeln":
-        response_data = get_energy_data("einzeln")
+        flow_data = get_energy_data("einzeln")
     elif chart_type == "kiel":
-        response_data = get_energy_data("Kiel")
+        flow_data = get_energy_data("Kiel")
     else:
-        response_data = {
+        flow_data = {
             "title": "Unbekannter Typ",
             "energyData": [],
             "nodes": [],
         }
+
+    response_data = {"data": flow_data}
 
     return JsonResponse(response_data)

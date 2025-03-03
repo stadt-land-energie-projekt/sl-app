@@ -24,9 +24,31 @@
 
 .hidden-div {
   display: none;
+  width: 100%;
   }
 
-#electricity-charts {
-  width: 800px;
-  height: 600px;
+#electricity-chart {
+  width: 500px;
+  min-height: 600px;
+  }
+
+#hydrogen-chart {
+  width: 500px;
+  min-height: 600px;
+  }
+
+.basic-charts {
+  display: flex;
+  width: 100%;
+  }
+
+.chart-container {
+  width: 50%;
+  height: 400px;
+  border: 1px solid #ccc;
+}
+
+#chart-electricity {
+  min-width: 400px;
+  height: 200px;
   }
