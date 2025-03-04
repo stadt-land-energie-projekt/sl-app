@@ -2,11 +2,13 @@
 
 @import "../vendors/bootstrap/scss/bootstrap";
 
-
+@import 'base/mixins.scss';
+@import 'base/variables.scss';
 @import 'components/navbar.scss';
 @import 'components/link_buttons';
 @import 'components/sliders';
 @import 'components/wizard';
-@import 'home.scss';
-@import 'case_studies.scss';
-@import 'esys_robust.scss';
+@import 'layouts/general.scss';
+@import 'layouts/home.scss';
+@import 'layouts/case_studies.scss';
+@import 'layouts/esys_robust.scss';

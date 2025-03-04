@@ -1,0 +1,98 @@
+.hero {
+  background-image: url("/static/images/sle-hp-bg-min.png");
+  background-size: cover;
+  background-position: bottom;
+
+  &__container {
+    @include container;
+  }
+
+  &__title {
+    display: flex;
+    flex-direction: column;
+    padding-top: 8rem;
+    padding-bottom: 2rem;
+
+    &--name {
+      font-size: 1.25rem;
+      color: $font-color-secondary;
+      font-weight: 400;
+    }
+
+    &--heading {
+      font-size: 4rem;
+      color: $font-color-main;
+      font-weight: 700;
+    }
+  }
+
+  &__description {
+    font-size: 1.75rem;
+    color: $font-color-main;
+    font-weight: 300;
+    padding-bottom: 4rem;
+  }
+
+  &__scenarios {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-bottom: 4rem;
+
+    @media only screen and (min-width: 992px) {
+      padding-bottom: 8rem;
+    }
+
+    @media only screen and (min-width: 1400px) {
+      padding-bottom: 12rem;
+    }
+
+    @media only screen and (min-width: 1600px) {
+      padding-bottom: 16rem;
+    }
+
+    &--item {
+      flex: 1;
+      background-color: #fff;
+      border-radius: $border-radius;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      color: $font-color-main;
+      font-weight: 700;
+      padding-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1rem;
+      color: $font-color-secondary;
+      font-weight: 400;
+      flex-grow: 1;
+    }
+
+    button {
+      background-color: $color-secondary;
+      color: $font-color-main;
+      border: none;
+      border-radius: $border-radius;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: auto;
+      width: 100%;
+    }
+  }
+}
+
+.home {
+  &__container {
+    @include container;
+  }
+}

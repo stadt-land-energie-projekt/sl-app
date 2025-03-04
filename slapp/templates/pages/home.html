@@ -3,67 +3,70 @@
 {% load static %}
 
 {% block content_no_sidebar %}
-  <div class="container">
-    <div class="p-5 mb-4 bg-white rounded-3 mt-5">
-      <div class="container-fluid py-5">
-        <div class="flex">
-          <div class="box">
-            <h1>Szenario-Explorer</h1>
-            <p>Interkommunale Energiewendeszenarien und Wertschöpfung im Stadt-Land-Nexus</p>
-            <h3>Stadt-Land-Nexus</h3>
-            <p>
-              Städte und ihre Regionen sind miteinander verflochten und in ihrer Beziehung in vielen Fällen voneinander
-              abhängig. Vor allem, weil sie über unterschiedliche und häufig komplementäre Ressourcen verfügen.
-              Dazu gehören Menschen, Waren, Dienstleistungen, Geld oder auch Umweltleistungen. Als Stadt-Land-Nexus
-              bezeichnet man die wechselseitigen Ströme dieser Ressourcen zwischen Städten und ihren umliegenden Gebieten.
-            </p>
-            <h3>Herausforderungen im Bindeglied zwischen urban und rural</h3>
-            <p>
-              Die unterschiedlichen, teils gegenläufigen Rahmenbedingungen und Handlungsspielräume verschiedener
-              Regionen stellen Städte und Gemeinden vor Herausforderungen in der Klimaschutz-Frage. Besonders im
-              Stadt-Land-Bezug gibt es ein interkommunales Spannungsfeld. Das betrifft sozio-demographische,
-              wirtschaftliche sowie raum- und siedlungsstrukturelle Gegebenheiten und damit auch für die Energiewende
-              entscheidende Rahmenbedingungen. Ein oft genutzter Begriff für diese unterschiedlichen Rahmenbedingungen
-              ist das „Stadt-Land-Gefälle“.
-              Wie können trotz alldem zukunftsfähige und regional verzahnte Klimaschutz- und Energiekonzepte entwickelt werden?
-              Welche eigenen Impulse und innovativen Ansätze können die ins Stocken geratene Energiewende auf
-              übergeordneter Ebene vorantreiben? Das sind die Fragen, auf die es nun Antworten zu finden gilt.
-            </p>
-          </div>
-          <img src="{% static '/images/SLE-App.png' %}" alt="SLE Logo" />
+  <div class="hero">
+    <div class="hero__container">
+      <h1 class="hero__title">
+        <span class="hero__title--name">Stadt-Land-Energie</span>
+        <span class="hero__title--heading">Szenario-Explorer</span>
+      </h1>
+      <p class="hero__description">Interkommunale Energiewendeszenarien und Wertschöpfung im Stadt-Land-Nexus</p>
+      <div class="hero__scenarios">
+        <div class="hero__scenarios--item">
+          <h2>
+            Regionale Energiewendeszenarien
+          </h2>
+          <p>
+            Text für regionale, robuste Energiewendeszenarien Text für regionale, robuste Energiewendeszenarien Text
+            für regionale, robuste Energiewendeszenarien
+          </p>
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="go_to_case_studies" class="btn btn-primary">
+              Hier geht's zur regionalen Energiewende
+            </button>
+          </form>
         </div>
-        <div class="flex">
-          <div class="box">
-            <h1>
-              Regionale
-              Energiewendeszenarien
-            </h1>
-            <p>
-              Text für regionale, robuste Energiewendeszenarien Text für regionale, robuste Energiewendeszenarien Text
-              für regionale, robuste Energiewendeszenarien
-            </p>
-            <form method="post">
-              {% csrf_token %}
-              <button type="submit" name="go_to_case_studies" class="btn btn-primary">
-                Hier geht's zur regionalen Energiewende
-              </button>
-            </form>
-          </div>
-          <div class="box">
-            <h1>Wertschöpfungsrechner</h1>
-            <p>
-              Text für Wertschöpfungsrechner Text für Wertschöpfungsrechner Text für Wertschöpfungsrechner Text für
-              Wertschöpfungsrechner Text für Wertschöpfungsrechner Text für Wertschöpfungsrechner
-            </p>
-            <form method="post">
-              {% csrf_token %}
-              <button type="submit" name="go_to_added_value" class="btn btn-primary">Hier geht's zum Rechner</button>
-            </form>
-          </div>
+        <div class="hero__scenarios--item">
+          <h2>Wertschöpfungsrechner</h2>
+          <p>
+            Text für Wertschöpfungsrechner Text für Wertschöpfungsrechner Text für Wertschöpfungsrechner Text für
+            Wertschöpfungsrechner Text für Wertschöpfungsrechner Text für Wertschöpfungsrechner
+          </p>
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="go_to_added_value" class="btn btn-primary">Hier geht's zum Rechner</button>
+          </form>
         </div>
-        <div class="box">
-          <p>Projektinfos & Hintergrund</p>
-        </div>
+      </div>
+    </div>
+  </div>
+  <div class="home">
+    <div class="home__container">
+      <h3>Stadt-Land-Nexus</h3>
+      <p>
+        Städte und ihre Regionen sind miteinander verflochten und in ihrer Beziehung in vielen Fällen voneinander
+        abhängig. Vor allem, weil sie über unterschiedliche und häufig komplementäre Ressourcen verfügen.
+        Dazu gehören Menschen, Waren, Dienstleistungen, Geld oder auch Umweltleistungen. Als Stadt-Land-Nexus
+        bezeichnet man die wechselseitigen Ströme dieser Ressourcen zwischen Städten und ihren umliegenden Gebieten.
+      </p>
+      <h3>Herausforderungen im Bindeglied zwischen urban und rural</h3>
+      <p>
+        Die unterschiedlichen, teils gegenläufigen Rahmenbedingungen und Handlungsspielräume verschiedener
+        Regionen stellen Städte und Gemeinden vor Herausforderungen in der Klimaschutz-Frage. Besonders im
+        Stadt-Land-Bezug gibt es ein interkommunales Spannungsfeld. Das betrifft sozio-demographische,
+        wirtschaftliche sowie raum- und siedlungsstrukturelle Gegebenheiten und damit auch für die Energiewende
+        entscheidende Rahmenbedingungen. Ein oft genutzter Begriff für diese unterschiedlichen Rahmenbedingungen
+        ist das „Stadt-Land-Gefälle“.
+        Wie können trotz alldem zukunftsfähige und regional verzahnte Klimaschutz- und Energiekonzepte entwickelt werden?
+        Welche eigenen Impulse und innovativen Ansätze können die ins Stocken geratene Energiewende auf
+        übergeordneter Ebene vorantreiben? Das sind die Fragen, auf die es nun Antworten zu finden gilt.
+      </p>
+      <img src="{% static '/images/SLE-App-Img-Only.png' %}" alt="SLE Logo" />
+    </div>
+    <div class="flex">
+
+      <div class="box">
+        <p>Projektinfos & Hintergrund</p>
       </div>
     </div>
   </div>
