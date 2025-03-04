@@ -20,7 +20,7 @@ urlpatterns = [
     path("explorer/", include("slapp.explorer.urls", namespace="explorer")),
     path("map/", include("django_mapengine.urls")),
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
-    path('kommWertTool/', include('slapp.kommWertTool.urls', namespace="kommWertTool")),
+    path("added_value/", include("slapp.kommWertTool.urls", namespace="added_value")),
 ]
 
 # API URLS

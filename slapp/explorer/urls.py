@@ -19,7 +19,6 @@ urlpatterns = [
     path("chart/all_charts", views.CaseStudies.as_view(), name="all_charts"),
     path("esys_robust/", views.EsysRobust.as_view(), name="esys_robust"),
     path("results/", views.Results.as_view(), name="results"),
-    path("calculator", views.Calculator.as_view(), name="calculator"),
 ]
 
 htmx_urlpatterns = [
