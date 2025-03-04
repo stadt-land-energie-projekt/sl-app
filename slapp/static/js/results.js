@@ -128,7 +128,6 @@ function createFlowChart(domElement, chartData, resource) {
     chart.resize();
 }
 
-
 function showHiddenDiv(chartType, button) {
     let allButtons = document.querySelectorAll(".select-button");
     allButtons.forEach(b => b.classList.remove("selected"));
@@ -140,19 +139,18 @@ function showHiddenDiv(chartType, button) {
 
     loadFlowsChart(chartType, "electricity");
     loadFlowsChart(chartType, "hydrogen");
+    loadBasicCharts();
     }
 
 function loadElectricityChart(data) {
-    let el = document.getElementById("chart-electricity");
+    let el = document.getElementById("basic-electricity");
     if (!el) return;
 
     let chart = getOrCreateChart(el);
 
-    // Data from the context dictionary
     let categories = data.categories || [];
     let seriesData = data.series || {};
 
-    // Convert our "series" dict into ECharts series array
     let series = [];
     Object.keys(seriesData).forEach((key) => {
         series.push({
@@ -180,11 +178,8 @@ function loadElectricityChart(data) {
     chart.resize();
 }
 
-/**
- * Load Heat chart (horizontal stacked bar).
- */
 function loadHeatChart(data) {
-    let el = document.getElementById("chart-heat");
+    let el = document.getElementById("basic-heat");
     if (!el) return;
 
     let chart = getOrCreateChart(el);
@@ -219,11 +214,8 @@ function loadHeatChart(data) {
     chart.resize();
 }
 
-/**
- * Load Capacity chart (horizontal stacked bar).
- */
 function loadCapacityChart(data) {
-    let el = document.getElementById("chart-capacity");
+    let el = document.getElementById("basic-capacity");
     if (!el) return;
 
     let chart = getOrCreateChart(el);
@@ -258,11 +250,8 @@ function loadCapacityChart(data) {
     chart.resize();
 }
 
-/**
- * Load Costs chart (horizontal stacked bar).
- */
 function loadCostsChart(data) {
-    let el = document.getElementById("chart-costs");
+    let el = document.getElementById("basic-costs");
     if (!el) return;
 
     let chart = getOrCreateChart(el);
@@ -297,9 +286,61 @@ function loadCostsChart(data) {
     chart.resize();
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+function loadBasicCharts() {
     loadElectricityChart(electricityChartData);
     loadHeatChart(heatChartData);
     loadCapacityChart(capacityChartData);
     loadCostsChart(costsChartData);
-});
+}
+
+function loadCostCapacityLineChart(data) {
+    let el = document.getElementById("cost-capacity-chart");
+    if (!el) return;
+
+    let chart = getOrCreateChart(el);
+
+    let lineData = data.xy_data || [];
+
+    let option = {
+        title: {
+            text: "Kosten vs. Installierte Leistung",
+            left: "center"
+        },
+        tooltip: {
+            trigger: "axis",
+            formatter: (params) => {
+                let value = params[0].value;
+                let xVal = value[0];
+                let yVal = value[1];
+                return `Kosten: ${xVal} €<br/>Leistung: ${yVal} MW`;
+            }
+        },
+        xAxis: {
+            type: "value",
+            name: "Kosten (€)"
+        },
+        yAxis: {
+            type: "value",
+            name: "Installierte Leistung (MW)"
+        },
+        series: [
+            {
+                type: "line",
+                data: lineData,
+                smooth: true
+            }
+        ]
+    };
+
+    chart.setOption(option);
+    chart.resize();
+}
+
+function showTechData() {
+    const techContainer = document.getElementById("tech-charts");
+    if (techContainer) {
+        techContainer.classList.toggle("active");
+    }
+
+    loadCostCapacityLineChart(costCapacityData);
+}

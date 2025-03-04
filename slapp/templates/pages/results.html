@@ -34,11 +34,27 @@
       </div>
       <div id="basic-solution">
         <h1>Basislösung</h1>
-        <div id="basic-charts">
-          <div id="chart-electricity" class="chart-container"></div>
-          <div id="chart-heat" class="chart-container"></div>
-          <div id="chart-capacity" class="chart-container"></div>
-          <div id="chart-costs" class="chart-container"></div>
+        <div class="flex-container" id="basic-charts">
+          <div id="basic-electricity" class="chart-container"></div>
+          <div id="basic-heat" class="chart-container"></div>
+          <div id="basic-capacity" class="chart-container"></div>
+          <div id="basic-costs" class="chart-container"></div>
+        </div>
+      </div>
+      <div>
+        <h1>Sensitivitäten</h1>
+        <p>Hier kommt auch noch ein Intro-Text dazu.</p>
+        <div class="image-toggle-container" id="tech-button">
+          <button class="btn btn-transparent" onclick="showTechData()">
+            <img src="{% static '/images/icons/dropdown.svg' %}"
+                 alt="dropdown"
+                 class="dropdown-icon" />
+            Tech
+          </button>
+        </div>
+        <div id="tech-charts">
+          <div id="cost-capacity-chart"></div>
+          <div id="another-chart">another chart</div>
         </div>
       </div>
     </div>
@@ -56,9 +72,8 @@
     var heatChartData = chartData.heat;
     var capacityChartData = chartData.capacity;
     var costsChartData = chartData.costs;
-
-    console.log("Electricity chart data:", electricityChartData);
-    console.log("Heat chart data:", heatChartData);
+    var costCapacityData = JSON.parse('{{ cost_capacity|safe }}');
+    console.log("costcapacity: " + costCapacityData);
   </script>
   <script src="{% static 'js/results.js' %}" defer></script>
 {% endblock javascript %}

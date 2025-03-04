@@ -586,9 +586,20 @@ class Results(TemplateView):
             },
         }
 
+        cost_capacity_data = {
+            "xy_data": [
+                [0, 0],
+                [50, 20],
+                [100, 50],
+                [150, 80],
+                [200, 120],
+            ],
+        }
+
         context["home_url"] = reverse("explorer:home")
         context["calculator_url"] = reverse("explorer:calculator")
         context["chart_data"] = json.dumps(chart_data)
+        context["cost_capacity"] = json.dumps(cost_capacity_data)
         return context
 
 
