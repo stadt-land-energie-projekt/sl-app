@@ -20,7 +20,6 @@ urlpatterns = [
     path("esys_robust/", views.EsysRobust.as_view(), name="esys_robust"),
     path("results/", views.Results.as_view(), name="results"),
     path("chart/flow_chart/", views.Results.as_view(), name="flow_chart"),
-    path("calculator", views.Calculator.as_view(), name="calculator"),
 ]
 
 htmx_urlpatterns = [

@@ -35,8 +35,8 @@ def start_page(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         if "go_to_case_studies" in request.POST:
             return redirect("explorer:case_studies")
-        if "go_to_calculator" in request.POST:
-            return redirect("explorer:calculator")
+        if "go_to_added_value" in request.POST:
+            return redirect("added_value:index")
     return render(request, "pages/home.html")
 
 
@@ -597,7 +597,7 @@ class Results(TemplateView):
         }
 
         context["home_url"] = reverse("explorer:home")
-        context["calculator_url"] = reverse("explorer:calculator")
+        context["added_value_url"] = reverse("added_value:index")
         context["chart_data"] = json.dumps(chart_data)
         context["cost_capacity"] = json.dumps(cost_capacity_data)
         return context
