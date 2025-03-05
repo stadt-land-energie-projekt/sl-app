@@ -61,7 +61,10 @@
                   aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <a class="navbar-brand" href="{% url 'explorer:home' %}">Stadt-Land-Energie</a>
+          <a class="navbar-brand" href="{% url 'explorer:home' %}">
+            <img src="{% static '/images/SLE-App-Img-Only.png' %}" alt="SLE Logo" width="45" height="40" />
+            <span class="ms-1">Stadt-Land-Energie</span>
+          </a>
           <div class="collapse navbar-collapse d-flex justify-content-end"
                id="navbarSupportedContent"></div>
         </div>
@@ -83,7 +86,7 @@
     <header class="bg-info p-1" id="selected_municipalities">
       <div class="container"></div>
     </header>
-    <div class="container-fluid mb-2">
+    <div class="main-container">
       {% if has_sidepanel %}
         <div class="row">
           <div class="col-3 sidebar pt-3 border-end border-2">
