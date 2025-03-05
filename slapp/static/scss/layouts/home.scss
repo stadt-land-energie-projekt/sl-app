@@ -10,38 +10,56 @@
   &__title {
     display: flex;
     flex-direction: column;
-    padding-top: 8rem;
-    padding-bottom: 2rem;
+    padding-top: 6rem;
+    padding-bottom: 1rem;
+
+    @media only screen and (min-width: 1400px) {
+      padding-top: 8rem;
+      padding-bottom: 2rem;
+    }
 
     &--name {
-      font-size: 1.25rem;
+      font-size: 1rem;
       color: $font-color-secondary;
       font-weight: 400;
+
+      @media only screen and (min-width: 992px) {
+        font-size: 1.25rem;
+      }
     }
 
     &--heading {
-      font-size: 4rem;
+      font-size: 2.5rem;
       color: $font-color-main;
       font-weight: 700;
+
+      @media only screen and (min-width: 992px) {
+        font-size: 4rem;
+      }
     }
   }
 
   &__description {
-    font-size: 1.75rem;
+    font-size: 1.25rem;
     color: $font-color-main;
     font-weight: 300;
     padding-bottom: 4rem;
+
+    @media only screen and (min-width: 992px) {
+      font-size: 1.75rem;
+    }
   }
 
   &__scenarios {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     gap: 2rem;
     padding-bottom: 4rem;
 
     @media only screen and (min-width: 992px) {
       padding-bottom: 8rem;
+      flex-direction: row;
     }
 
     @media only screen and (min-width: 1400px) {
@@ -77,22 +95,50 @@
     }
 
     button {
-      background-color: $color-secondary;
-      color: $font-color-main;
-      border: none;
-      border-radius: $border-radius;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: auto;
-      width: 100%;
+      @include button-primary;
     }
   }
 }
 
 .home {
+  padding-top: 6rem;
+
+  @media only screen and (min-width: 1400px) {
+    padding-top: 8rem;
+  }
+
   &__container {
-    @include container;
+    @extend .container;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+
+    @media only screen and (min-width: 992px) {
+      max-width: 800px;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    @media only screen and (min-width: 1400px) {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  &__paragraph {
+    padding-bottom: 4rem;
+
+    h2 {
+      font-size: 2rem;
+      color: $font-color-main;
+      font-weight: 700;
+      padding-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1rem;
+      color: $font-color-secondary;
+      font-weight: 400;
+      line-height: 160%;
+    }
   }
 }
