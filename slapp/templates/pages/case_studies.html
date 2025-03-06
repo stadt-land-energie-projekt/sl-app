@@ -16,39 +16,44 @@
           </c-regions>
         {% endfor %}
       </section>
-      <div id="legend" class="legend"></div>
-      <div class="cs__info">
-        <div class="cs__tabs">
-          <button class="tab-button active" data-tab="map">Karte</button>
-          <button class="tab-button" data-tab="charts">Statistiken</button>
-          <button class="tab-button" data-tab="details">Details</button>
-        </div>
-        <div class="cs__tabs-content">
-          <div id="map" class="tab-content active"></div>
-          <div id="charts" class="tab-content">
-            <div class="charts-container">
-              <div id="chart-production" class="chart"></div>
-              <div id="chart-tech" class="chart"></div>
-              <div id="chart-another" class="chart"></div>
-              <div id="chart-demand" class="chart"></div>
-              <div id="chart-area" class="chart"></div>
-              <div id="co2-info" class="chart"></div>
-            </div>
+    </div>
+    <section class="bg-light">
+      <div class="cs__container">
+        <div id="legend" class="legend"></div>
+        <div class="cs__info">
+          <h2 class="cs__region">Regionname</h2>
+          <div class="cs__tabs">
+            <button class="tab-button active" data-tab="map">Karte</button>
+            <button class="tab-button" data-tab="charts">Statistiken</button>
+            <button class="tab-button" data-tab="details">Details</button>
           </div>
-          <div id="details" class="tab-content">
-            <div id="table-details-os" class="container mt-4">
-              <h2>Detailansicht Oderland-Spree</h2>
-              {% include "pages/details.html" with municipalities=municipalities_region_os %}
+          <div class="cs__tabs-content">
+            <div id="map" class="tab-content active"></div>
+            <div id="charts" class="tab-content">
+              <div class="charts-container">
+                <div id="chart-production" class="chart"></div>
+                <div id="chart-tech" class="chart"></div>
+                <div id="chart-another" class="chart"></div>
+                <div id="chart-demand" class="chart"></div>
+                <div id="chart-area" class="chart"></div>
+                <div id="co2-info" class="chart"></div>
+              </div>
             </div>
-            <div id="table-details-kiel" class="container mt-4">
-              <h2>Detailansicht Kiel</h2>
-              {% include "pages/details.html" with municipalities=municipalities_region_kiel %}
+            <div id="details" class="tab-content">
+              <div id="table-details-os" class="container mt-4">
+                <h2>Detailansicht Oderland-Spree</h2>
+                {% include "pages/details.html" with municipalities=municipalities_region_os %}
+              </div>
+              <div id="table-details-kiel" class="container mt-4">
+                <h2>Detailansicht Kiel</h2>
+                {% include "pages/details.html" with municipalities=municipalities_region_kiel %}
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <a href="{{ next_url }}" class="btn btn-primary mt-3" id="btn_next">Hier geht's zur regionalen Energiewende</a>
-    </div>
+    </section>
+    <a href="{{ next_url }}" class="btn btn-primary mt-3" id="btn_next">Hier geht's zur regionalen Energiewende</a>
   </main>
 {% endblock content_no_sidebar %}
 {% block javascript %}
