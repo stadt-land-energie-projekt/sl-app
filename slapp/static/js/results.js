@@ -334,11 +334,60 @@ function loadCostCapacityLineChart(data) {
     chart.resize();
 }
 
-function showTechData() {
-    const techContainer = document.getElementById("tech-charts");
-    if (techContainer) {
-        techContainer.classList.toggle("active");
-    }
+document.querySelector('.dropdown-button').addEventListener('click', function() {
+        document.querySelector('.dropdown-content').classList.toggle('show');
+    });
 
-    loadCostCapacityLineChart(costCapacityData);
+window.onclick = function(event) {
+    if (!event.target.matches('.dropdown-button')) {
+        let dropdowns = document.getElementsByClassName("dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+            let openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+};
+
+function showCostCapData() {
+    costCapContainer = document.getElementById("cost-cap-container")
+    if (costCapContainer) {
+        costCapContainer.classList.add("active");
+    }
 }
+
+function loadCostCapacityData(type) {
+    fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(type)}`, {
+        method: 'GET',
+        headers: {
+            "Accept": "application/json",
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Netzwerkfehler: " + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        loadCostCapacityLineChart(data);
+    })
+    .catch(error => {
+        console.error("Fehler beim Laden der Cost-Capacity-Daten:", error);
+    });
+}
+
+document.querySelectorAll('.dropdown-content a').forEach(item => {
+    item.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        const selectedType = this.getAttribute('type');
+        loadCostCapacityData(selectedType);
+        showCostCapData();
+
+        document.querySelector('.dropdown-content').classList.remove('show');
+
+        document.querySelector('.dropdown-button').textContent = selectedType;
+    });
+});

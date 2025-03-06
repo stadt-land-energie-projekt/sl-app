@@ -44,15 +44,15 @@
       <div>
         <h1>Sensitivitäten</h1>
         <p>Hier kommt auch noch ein Intro-Text dazu.</p>
-        <div class="image-toggle-container" id="tech-button">
-          <button class="btn btn-transparent" onclick="showTechData()">
-            <img src="{% static '/images/icons/dropdown.svg' %}"
-                 alt="dropdown"
-                 class="dropdown-icon" />
-            Tech
-          </button>
+        <div class="dropdown">
+          <button class="dropdown-button">Bitte auswählen</button>
+          <div class="dropdown-content">
+            <a href="#" type="Technologie">Technologie</a>
+            <a href="#" type="Etwas anderes">Etwas anderes</a>
+            <a href="#" type="Sonstiges">Sonstiges</a>
+          </div>
         </div>
-        <div id="tech-charts">
+        <div id="cost-cap-container">
           <div id="cost-capacity-chart"></div>
           <div id="another-chart">another chart</div>
         </div>
@@ -61,10 +61,10 @@
         <h1>Alternative Lösungen erkunden</h1>
         <p>
           Neben der obigen Basislösung haben wir zahlreiche alternative Wege zu einem erneuerbaren Energiesystem berechnet.
-          Dafür haben wir den sogenannten Ansatz Modelling to Generate Alternatives (MGA) verwendet.
-          Das bedeutet, dass für jede Technologie verschiedene Ausbaumöglichkeiten existieren, ohne dass die Gesamtsystemkosten
-          stark von den Kosten der (optimalen) Basislösung abweichen. Die Alternativen sollten nicht mehr als 1-2 %
-          günstiger oder teurer als die Basislösung sein.
+          Dafür haben wir den sogenannten Ansatz <span>Modelling to Generate Alternatives</span> (MGA) verwendet.
+          Das bedeutet, dass für jede Technologie <span>verschiedene Ausbaumöglichkeiten</span> existieren, ohne dass die Gesamtsystemkosten
+          stark von den Kosten der (optimalen) Basislösung abweichen. Die Alternativen sollten nicht mehr als <span>1-2 %
+          günstiger oder teurer als die Basislösung</span> sein.
           Der verstärkte Ausbau einer Technologie bei nahezu
           gleichbleibenden Kosten funktioniert natürlich nur, wenn andere Technologien dafür weniger stark wachsen.
           Das bedeutet, dass sich die Zusammensetzung des künftigen Energiesystems mit dem Fokus auf eine oder mehrere
@@ -77,7 +77,7 @@
                  alt="battery icon"
                  id="battery-icon" />
             <div>
-              Batteriespeicher: Statt X MWh in der Basislösung können Sie zusätzliche Speicherkapazitäten installieren.
+              <span>Batteriespeicher:</span> Statt X MWh in der Basislösung können Sie zusätzliche Speicherkapazitäten installieren.
               Das kostet Sie für diese Anlagen zwar mehr, kann jedoch an anderer Stelle Kosten sparen, da z.B. mehr am
               Tage gewonnene Energie in die Nachtstunden verschoben werden kann und damit weniger Photovoltaik und
               Windenergieanlagen erforderlich werden, um den Energiebedarf zu decken.
@@ -86,11 +86,15 @@
         </div>
         <div>
           <div class="scope-charts">
-            <div class="plus_minus-container">
-              <img src="{% static '/images/icons/plus_minus.svg' %}"
-                   alt="plus_minus icon"
-                   id="plus_minus-icon" />
-              1 %
+            <div>
+              <div class="plus-minus-container">
+                <img src="{% static '/images/icons/plus_minus.svg' %}"
+                     alt="plus-minus icon"
+                     id="plus-minus-icon" />
+                1 %
+              </div>
+              Wenn Sie innerhalb von <span>+/- 1% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
+              folgende Spielräume:
             </div>
             Hier charts +-1%
           </div>
@@ -112,8 +116,6 @@
     var heatChartData = chartData.heat;
     var capacityChartData = chartData.capacity;
     var costsChartData = chartData.costs;
-    var costCapacityData = JSON.parse('{{ cost_capacity|safe }}');
-    console.log("costcapacity: " + costCapacityData);
   </script>
   <script src="{% static 'js/results.js' %}" defer></script>
 {% endblock javascript %}

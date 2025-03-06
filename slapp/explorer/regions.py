@@ -386,3 +386,45 @@ def flow_chart(request: HttpRequest) -> JsonResponse:
     response_data = {"data": flow_data}
 
     return JsonResponse(response_data)
+
+
+def cost_capacity_chart(request: HttpRequest) -> JsonResponse:
+    """Return chosen data for cost capacity chart."""
+    data_type = request.GET.get("type", "")
+
+    if data_type == "Technologie":
+        cost_capacity_data = {
+            "xy_data": [
+                [0, 0],
+                [50, 20],
+                [100, 50],
+                [150, 80],
+                [200, 120],
+            ],
+        }
+    elif data_type == "Etwas anderes":
+        cost_capacity_data = {
+            "xy_data": [
+                [0, 0],
+                [50, 10],
+                [100, 30],
+                [150, 70],
+                [200, 130],
+            ],
+        }
+    elif data_type == "Sonstiges":
+        cost_capacity_data = {
+            "xy_data": [
+                [0, 0],
+                [50, 40],
+                [100, 200],
+                [150, 300],
+                [200, 350],
+            ],
+        }
+    else:
+        cost_capacity_data = {
+            "xy_data": [],
+        }
+
+    return JsonResponse(cost_capacity_data)

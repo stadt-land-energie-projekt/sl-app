@@ -6,7 +6,7 @@ import csv
 from typing import TYPE_CHECKING, Any
 
 from django.contrib import messages
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseBase, JsonResponse
 
 from . import models
 
@@ -23,7 +23,7 @@ from django_mapengine import views
 
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
-from .regions import all_charts, flow_chart
+from .regions import all_charts, cost_capacity_chart, flow_chart
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
 
@@ -544,10 +544,12 @@ class Results(TemplateView):
 
     template_name = "pages/results.html"
 
-    def dispatch(self, request: HttpRequest, *args: object, **kwargs: object) -> HttpResponse:
+    def dispatch(self, request: HttpRequest, *args: object, **kwargs: object) -> HttpResponseBase:
         """Return electricity flow charts."""
         if request.resolver_match.url_name == "flow_chart":
             return flow_chart(request)
+        if request.resolver_match.url_name == "cost_capacity_chart":
+            return cost_capacity_chart(request)
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -586,20 +588,9 @@ class Results(TemplateView):
             },
         }
 
-        cost_capacity_data = {
-            "xy_data": [
-                [0, 0],
-                [50, 20],
-                [100, 50],
-                [150, 80],
-                [200, 120],
-            ],
-        }
-
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
         context["chart_data"] = json.dumps(chart_data)
-        context["cost_capacity"] = json.dumps(cost_capacity_data)
         return context
 
 
