@@ -90,13 +90,11 @@ function createFlowChart(domElement, chartData, resource) {
         },
         series: [{
             type: "graph",
-            layout: "force",
             force: {
                 repulsion: 300,
                 edgeLength: [50, 200]
             },
             roam: true,
-            zoom: 0.2,
             label: {
                 show: true,
                 position: "right",
