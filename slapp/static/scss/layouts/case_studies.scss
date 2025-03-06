@@ -32,9 +32,13 @@
 
   &__selection {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     gap: 2rem;
+
+    @media only screen and (min-width: 1200px) {
+      flex-direction: row;
+    }
   }
 
   &__region-container {
@@ -109,6 +113,10 @@
       font-size: 0.875rem;
       font-weight: 700;
       color: $font-color-main;
+
+      img {
+        margin-right: 0.25rem;
+      }
     }
 
     p {
