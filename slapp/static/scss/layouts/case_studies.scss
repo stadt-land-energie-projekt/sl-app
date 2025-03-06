@@ -125,6 +125,46 @@
       @include button-primary;
     }
   }
+
+  &__region-container.selected {
+    background-color: #eff6ff;
+    border: 2px solid $color-selected;
+
+    .cs__info-box {
+      span {
+        border: 1px solid $color-selected;
+        color: $color-selected;
+      }
+    }
+
+    .cs__region-text {
+      color: $font-color-main;
+    }
+
+    .cs__keyfacts {
+      .fact-item {
+        background-color: #dbeafe;
+      }
+  
+      img {
+        filter: brightness(0) saturate(100%) invert(24%) sepia(14%) saturate(6397%) hue-rotate(204deg) brightness(86%) contrast(103%);
+      }
+  
+      h3,
+      p {
+        color: #1E3A8A;
+      }
+    }
+  
+    .cs__cta-row {
+      button {
+        background-color: #eff6ff;
+        color: $color-selected;
+        border: 1px solid $color-selected;
+        pointer-events: none;
+      }
+    }
+  }
 }
 
 .charts-container {
