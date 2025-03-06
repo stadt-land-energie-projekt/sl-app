@@ -29,10 +29,10 @@ def get_regions_data() -> list:
             "img_source": "Oderland-Spree-Map.png",
             "text": "Sie ist eine dynamische Region im Osten Brandenburgs, in der ländliche und städtische Strukturen aufeinandertreffen. Die Nähe zu Berlin, die Ansiedlung großer Industrieprojekte und der hohe Anteil erneuerbarer Energien machen sie zu einem spannenden Beispiel für die Energiewende im Stadt-Land-Nexus.",
             "keyfacts": [
-                {"title": "Struktur", "fact": "Mischung aus ländlichen Gebieten und kleineren Städten"},
-                {"title": "Besonderheit", "fact": "Tesla-Gigafactory als wirtschaftlicher Impulsgeber"},
-                {"title": "Erneuerbare Energien", "fact": "Hoher Anteil an Wind- und Solarenergie"},
-                {"title": "Herausforderung", "fact": "Energieinfrastruktur für wachsende Industrie und Bevölkerung"},
+                {"title": "Struktur", "fact": "Mischung aus ländlichen Gebieten und kleineren Städten", "icon": "/static/images/icons/case-study-structure.svg"},
+                {"title": "Besonderheit", "fact": "Tesla-Gigafactory als wirtschaftlicher Impulsgeber", "icon": "/static/images/icons/case-study-particularity.svg"},
+                {"title": "Erneuerbare Energien", "fact": "Hoher Anteil an Wind- und Solarenergie", "icon": "/static/images/icons/case-study-renewable.svg"},
+                {"title": "Herausforderung", "fact": "Energieinfrastruktur für wachsende Industrie und Bevölkerung", "icon": "/static/images/icons/case-study-challenge.svg"},
             ],
             "plans": {
                 "2023": {"wind": 40, "pv": 80, "moor": 1},
@@ -49,10 +49,10 @@ def get_regions_data() -> list:
             "img_source": "Kiel-Map.png",
             "text": "Die Stadt ist ein bedeutender Standort für die Schiffbauindustrie, Offshore-Windenergie und innovative Forschung. Die starke Verbindung zur Ostsee prägt das wirtschaftliche und kulturelle Leben Kiels und macht die Region zu einem wichtigen Akteur der nachhaltigen maritimen Entwicklung.",
             "keyfacts": [
-                {"title": "Struktur", "fact": "Mischung aus Hafenwirtschaft, Wissenschaft und urbanem Leben"},
-                {"title": "Besonderheit", "fact": "Hafen als Knotenpunkt für Schifffahrt und internationale Logistik"},
-                {"title": "Erneuerbare Energien", "fact": "Offshore-Windenergie und nachhaltige Mobilitätsprojekte"},
-                {"title": "Herausforderung", "fact": "Transformation der Werftindustrie und Anpassung an den Klimawandel"},
+                {"title": "Struktur", "fact": "Mischung aus Hafenwirtschaft, Wissenschaft und urbanem Leben", "icon": "/static/images/icons/case-study-structure.svg"},
+                {"title": "Besonderheit", "fact": "Hafen als Knotenpunkt für Schifffahrt und internationale Logistik", "icon": "/static/images/icons/case-study-particularity.svg"},
+                {"title": "Erneuerbare Energien", "fact": "Offshore-Windenergie und nachhaltige Mobilitätsprojekte", "icon": "/static/images/icons/case-study-renewable.svg"},
+                {"title": "Herausforderung", "fact": "Transformation der Werftindustrie und Anpassung an den Klimawandel", "icon": "/static/images/icons/case-study-challenge.svg"},
             ],
             "plans": {
                 "2023": {"wind": 60, "pv": 80, "moor": 0},
