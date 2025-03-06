@@ -17,22 +17,35 @@
         {% endfor %}
       </section>
       <div id="legend" class="legend"></div>
-      <div id="map"></div>
-      <div class="charts-container">
-        <div id="chart-production" class="chart"></div>
-        <div id="chart-tech" class="chart"></div>
-        <div id="chart-another" class="chart"></div>
-        <div id="chart-demand" class="chart"></div>
-        <div id="chart-area" class="chart"></div>
-        <div id="co2-info" class="chart"></div>
-      </div>
-      <div id="table-details-os" class="container mt-4">
-        <h2>Detailansicht Oderland-Spree</h2>
-        {% include "pages/details.html" with municipalities=municipalities_region_os %}
-      </div>
-      <div id="table-details-kiel" class="container mt-4">
-        <h2>Detailansicht Kiel</h2>
-        {% include "pages/details.html" with municipalities=municipalities_region_kiel %}
+      <div class="cs__info">
+        <div class="cs__tabs">
+          <button class="tab-button active" data-tab="map">Karte</button>
+          <button class="tab-button" data-tab="charts">Statistiken</button>
+          <button class="tab-button" data-tab="details">Details</button>
+        </div>
+        <div class="cs__tabs-content">
+          <div id="map" class="tab-content active"></div>
+          <div id="charts" class="tab-content">
+            <div class="charts-container">
+              <div id="chart-production" class="chart"></div>
+              <div id="chart-tech" class="chart"></div>
+              <div id="chart-another" class="chart"></div>
+              <div id="chart-demand" class="chart"></div>
+              <div id="chart-area" class="chart"></div>
+              <div id="co2-info" class="chart"></div>
+            </div>
+          </div>
+          <div id="details" class="tab-content">
+            <div id="table-details-os" class="container mt-4">
+              <h2>Detailansicht Oderland-Spree</h2>
+              {% include "pages/details.html" with municipalities=municipalities_region_os %}
+            </div>
+            <div id="table-details-kiel" class="container mt-4">
+              <h2>Detailansicht Kiel</h2>
+              {% include "pages/details.html" with municipalities=municipalities_region_kiel %}
+            </div>
+          </div>
+        </div>
       </div>
       <a href="{{ next_url }}" class="btn btn-primary mt-3" id="btn_next">Hier geht's zur regionalen Energiewende</a>
     </div>
@@ -51,6 +64,25 @@
   <script>
     const eventTopics = {};
     window.regionTitle = "{{ regions.0.title|escapejs }}";
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const buttons = document.querySelectorAll(".tab-button");
+      const contents = document.querySelectorAll(".tab-content");
+  
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          // Remove active class from all buttons and contents
+          buttons.forEach((btn) => btn.classList.remove("active"));
+          contents.forEach((content) => content.classList.remove("active"));
+  
+          // Add active class to clicked button and corresponding content
+          button.classList.add("active");
+          document.getElementById(button.dataset.tab).classList.add("active");
+          console.log(button)
+        });
+      });
+    });
   </script>
   {% include 'django_mapengine/map_json.html' %}
   {% compress js %}

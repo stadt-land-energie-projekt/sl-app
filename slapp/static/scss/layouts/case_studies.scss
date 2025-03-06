@@ -165,6 +165,55 @@
       }
     }
   }
+
+  .cs__tabs {
+    display: flex;
+    justify-content: space-around; /* Equal spacing */
+    align-items: center;
+    border-bottom: 2px solid #cce; /* Light bottom border */
+    padding: 8px 0;
+    background: #f8f9fa; /* Light gray background */
+  }
+
+  /* Tab buttons */
+  .tab-button {
+    flex: 1; /* Equal width */
+    text-align: center;
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    padding: 12px 0;
+    position: relative;
+  }
+
+  .tab-button.active {
+    font-weight: bold;
+    color: #000;
+  }
+
+  .tab-button.active::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 3px;
+    background: #000;
+    border-radius: 2px;
+  }
+
+  .tab-content {
+    display: none;
+    padding: 20px;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
 }
 
 .charts-container {
