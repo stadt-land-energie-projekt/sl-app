@@ -243,12 +243,18 @@
   margin: 10px;
   }
 
-#btn_next {
-  display: block;
-  width: 20%;
-  margin: auto;
-  text-align: center;
+.cs__button {
+  display: flex;
+  justify-content: center;
+  padding: 4rem 2rem;
+
+  a {
+    @include button-primary;
+    display: inline-block;
+    width: auto;
+    text-decoration: none;
   }
+}
 
 #map {
   width: 100%;
