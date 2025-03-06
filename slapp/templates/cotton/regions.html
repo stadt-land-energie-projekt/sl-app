@@ -1,14 +1,21 @@
-<div class="region-container">
-  <div class="top-row">
-    <h1>{{ title }}</h1>
-    <span class="info-box" data-tooltip="{{ info }}">Mehr Infos</span>
-    <img src="{{ img_source }}" alt="Region image" class="region-image" />
+<div class="cs__region-container">
+  <img class="cs__region-image" src="{{ img_source }}" alt="Region image" />
+  <div class="cs__top-row">
+    <h2>{{ title }}</h2>
+    <span class="cs__info-box">
+      <span class="info-box" data-tooltip="{{ info }}">Mehr Infos</span>
+    </span>
   </div>
-  <div class="region-text">{{ text }}</div>
-  <div class="keyfacts">
-    {% for keyfact in keyfacts %}<span class="fact-item">{{ keyfact }}</span>{% endfor %}
+  <div class="cs__region-text">{{ text }}</div>
+  <div class="cs__keyfacts">
+    {% for keyfact in keyfacts %}
+      <div class="fact-item">
+        <strong>{{ keyfact.title }}</strong>: {{ keyfact.fact }}
+      </div>
+    {% endfor %}
   </div>
-  <p class="cta-row">
+
+  <p class="cs__cta-row">
     <span class="left-text">...</span>
     <span class="center-button">
       <button class="select-button"

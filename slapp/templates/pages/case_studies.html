@@ -3,33 +3,40 @@
 {% load static compress %}
 
 {% block content_no_sidebar %}
-  <div class="header">Kurzintro und Präsentation der Case Studies</div>
-  <div class="flex-container">
-    {% for region in regions %}
-      {{ region.centroid }}
-      <c-regions title="{{ region.title }}" :bbox="region.bbox" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" :keyfacts="region.keyfacts">
-      </c-regions>
-    {% endfor %}
-  </div>
-  <div id="legend" class="legend"></div>
-  <div id="map"></div>
-  <div class="charts-container">
-    <div id="chart-production" class="chart"></div>
-    <div id="chart-tech" class="chart"></div>
-    <div id="chart-another" class="chart"></div>
-    <div id="chart-demand" class="chart"></div>
-    <div id="chart-area" class="chart"></div>
-    <div id="co2-info" class="chart"></div>
-  </div>
-  <div id="table-details-os" class="container mt-4">
-    <h2>Detailansicht Oderland-Spree</h2>
-    {% include "pages/details.html" with municipalities=municipalities_region_os %}
-  </div>
-  <div id="table-details-kiel" class="container mt-4">
-    <h2>Detailansicht Kiel</h2>
-    {% include "pages/details.html" with municipalities=municipalities_region_kiel %}
-  </div>
-  <a href="{{ next_url }}" class="btn btn-primary mt-3" id="btn_next">Hier geht's zur regionalen Energiewende</a>
+  <main class="cs">
+    <div class="cs__container">
+      <header>
+        <h1>Case Studies</h1>
+        <p>Wie lassen sich interkommunale Energiewendeszenarien erfolgreich umsetzen? Zwei Fallstudien aus Deutschland zeigen praxisnahe Lösungen für eine nachhaltige und regionale Energiezukunft. Anhand konkreter Beispiele wird deutlich, welche Herausforderungen Städte und ländliche Regionen gemeinsam meistern müssen – und welche Chancen sich durch innovative Konzepte und Kooperationen ergeben.</p>
+      </header>
+      <section class="cs__selection">
+        {% for region in regions %}
+          {{ region.centroid }}
+          <c-regions title="{{ region.title }}" :bbox="region.bbox" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" :keyfacts="region.keyfacts">
+          </c-regions>
+        {% endfor %}
+      </section>
+      <div id="legend" class="legend"></div>
+      <div id="map"></div>
+      <div class="charts-container">
+        <div id="chart-production" class="chart"></div>
+        <div id="chart-tech" class="chart"></div>
+        <div id="chart-another" class="chart"></div>
+        <div id="chart-demand" class="chart"></div>
+        <div id="chart-area" class="chart"></div>
+        <div id="co2-info" class="chart"></div>
+      </div>
+      <div id="table-details-os" class="container mt-4">
+        <h2>Detailansicht Oderland-Spree</h2>
+        {% include "pages/details.html" with municipalities=municipalities_region_os %}
+      </div>
+      <div id="table-details-kiel" class="container mt-4">
+        <h2>Detailansicht Kiel</h2>
+        {% include "pages/details.html" with municipalities=municipalities_region_kiel %}
+      </div>
+      <a href="{{ next_url }}" class="btn btn-primary mt-3" id="btn_next">Hier geht's zur regionalen Energiewende</a>
+    </div>
+  </main>
 {% endblock content_no_sidebar %}
 {% block javascript %}
   {{ block.super }}
