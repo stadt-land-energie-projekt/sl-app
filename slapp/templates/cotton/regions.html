@@ -1,15 +1,27 @@
-<div class="region-container">
-  <div class="top-row">
-    <h1>{{ title }}</h1>
-    <span class="info-box" data-tooltip="{{ info }}">Mehr Infos</span>
-    <img src="{{ img_source }}" alt="Region image" class="region-image" />
+<div class="cs__region-container">
+  <img class="cs__region-image" src="{{ img_source }}" alt="Region image" />
+  <div class="cs__top-row">
+    <h2>{{ title }}</h2>
+    <span class="cs__info-box">
+      <span class="info-box" data-tooltip="{{ info }}">Mehr Infos</span>
+    </span>
   </div>
-  <div class="region-text">{{ text }}</div>
-  <div class="keyfacts">
-    {% for keyfact in keyfacts %}<span class="fact-item">{{ keyfact }}</span>{% endfor %}
+  <div class="cs__region-text">{{ text }}</div>
+  <div class="cs__keyfacts">
+    {% for keyfact in keyfacts %}
+      <div class="fact-item">
+        <h3>
+          <img src="{{ keyfact.icon }}" alt="{{ keyfact.title }} icon" class="fact-icon">
+          {{ keyfact.title }}
+        </h3>
+        <p>{{ keyfact.fact }}</p>
+      </div>
+    {% endfor %}
   </div>
-  <p class="cta-row">
-    <span class="left-text">...</span>
+
+  <p class="cs__cta-row">
+    <!-- Not sure what that is ? -->
+    <!-- <span class="left-text">...</span> -->
     <span class="center-button">
       <button class="select-button"
               onclick="regionSelected(this, '{{ region.title }}');selectRegion([[{{ bbox.extent.0 | floatformat:'10u' }}, {{ bbox.extent.1 | floatformat:'10u' }}], [{{ bbox.extent.2 | floatformat:'10u' }}, {{ bbox.extent.3 | floatformat:'10u' }}]]);">
