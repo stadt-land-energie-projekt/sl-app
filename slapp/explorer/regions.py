@@ -394,37 +394,55 @@ def cost_capacity_chart(request: HttpRequest) -> JsonResponse:
 
     if data_type == "Technologie":
         cost_capacity_data = {
-            "xy_data": [
+            "line_data": [
                 [0, 0],
                 [50, 20],
                 [100, 50],
                 [150, 80],
                 [200, 120],
             ],
+            "bar_data": [
+                {"name": "Kategorie A", "value": 100},
+                {"name": "Kategorie B", "value": 60},
+                {"name": "Kategorie C", "value": 130},
+                {"name": "Kategorie D", "value": 90},
+            ],
         }
     elif data_type == "Etwas anderes":
         cost_capacity_data = {
-            "xy_data": [
+            "line_data": [
                 [0, 0],
                 [50, 10],
                 [100, 30],
                 [150, 70],
                 [200, 130],
             ],
+            "bar_data": [
+                {"name": "Andere A", "value": 75},
+                {"name": "Andere B", "value": 50},
+                {"name": "Andere C", "value": 110},
+            ],
         }
     elif data_type == "Sonstiges":
         cost_capacity_data = {
-            "xy_data": [
+            "line_data": [
                 [0, 0],
                 [50, 40],
                 [100, 200],
                 [150, 300],
                 [200, 350],
             ],
+            "bar_data": [
+                {"name": "Sonstige 1", "value": 20},
+                {"name": "Sonstige 2", "value": 40},
+                {"name": "Sonstige 3", "value": 60},
+                {"name": "Sonstige 4", "value": 100},
+            ],
         }
     else:
         cost_capacity_data = {
-            "xy_data": [],
+            "line_data": [],
+            "bar_data": [],
         }
 
     return JsonResponse(cost_capacity_data)

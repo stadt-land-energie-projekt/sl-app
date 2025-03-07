@@ -292,12 +292,12 @@ function loadBasicCharts() {
 }
 
 function loadCostCapacityLineChart(data) {
-    let el = document.getElementById("cost-capacity-chart");
+    let el = document.getElementById("line-chart");
     if (!el) return;
 
     let chart = getOrCreateChart(el);
 
-    let lineData = data.xy_data || [];
+    let lineData = data.line_data || [];
 
     let option = {
         title: {
@@ -334,6 +334,71 @@ function loadCostCapacityLineChart(data) {
     chart.resize();
 }
 
+function loadHorizontalBarChart(data) {
+    let el = document.getElementById("bar-chart");
+    if (!el) return;
+
+    let chart = getOrCreateChart(el);
+
+    let barData = data.bar_data || [];
+
+    let categories = barData.map(item => item.name);
+    let values = barData.map(item => item.value);
+
+    let option = {
+        title: {
+            text: "Horizontales Balkendiagramm",
+            left: "center"
+        },
+        tooltip: {
+            trigger: "item",
+            formatter: (params) => {
+                return `${params.name}<br/>Wert: ${params.value}`;
+            }
+        },
+        xAxis: {
+            type: "value",
+            name: "Wert"
+        },
+        yAxis: {
+            type: "category",
+            data: categories
+        },
+        series: [
+            {
+                type: "bar",
+                data: values
+            }
+        ]
+    };
+
+    chart.setOption(option);
+    chart.resize();
+}
+
+function loadCostCapacityData(type) {
+    fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(type)}`, {
+        method: 'GET',
+        headers: {
+            "Accept": "application/json",
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Netzwerkfehler: " + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        loadCostCapacityLineChart(data);
+        loadHorizontalBarChart(data);
+    })
+    .catch(error => {
+        console.error("Fehler beim Laden der Cost-Capacity-Daten:", error);
+    });
+}
+
+
 document.querySelector('.dropdown-button').addEventListener('click', function() {
         document.querySelector('.dropdown-content').classList.toggle('show');
     });
@@ -355,27 +420,6 @@ function showCostCapData() {
     if (costCapContainer) {
         costCapContainer.classList.add("active");
     }
-}
-
-function loadCostCapacityData(type) {
-    fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(type)}`, {
-        method: 'GET',
-        headers: {
-            "Accept": "application/json",
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Netzwerkfehler: " + response.status);
-        }
-        return response.json();
-    })
-    .then(data => {
-        loadCostCapacityLineChart(data);
-    })
-    .catch(error => {
-        console.error("Fehler beim Laden der Cost-Capacity-Daten:", error);
-    });
 }
 
 document.querySelectorAll('.dropdown-content a').forEach(item => {
