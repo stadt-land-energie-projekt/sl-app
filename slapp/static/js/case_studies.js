@@ -1,10 +1,10 @@
 function regionSelected(buttonElement, regionTitle) {
-    let allButtons = document.querySelectorAll(".select-button");
-    allButtons.forEach(btn => {
-        btn.classList.remove("selected");
+    document.querySelectorAll(".cs__region-container").forEach(container => {
+    container.classList.remove("selected");
     });
 
-    buttonElement.classList.add("selected");
+    const parentContainer = buttonElement.closest(".cs__region-container");
+    parentContainer.classList.add("selected");
 
     load_charts(regionTitle);
     display_details(regionTitle)
