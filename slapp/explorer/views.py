@@ -6,7 +6,7 @@ import csv
 from typing import TYPE_CHECKING, Any
 
 from django.contrib import messages
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseBase, JsonResponse
 
 from . import models
 
@@ -23,7 +23,7 @@ from django_mapengine import views
 
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
-from .regions import all_charts
+from .regions import all_charts, cost_capacity_chart, flow_chart, generate_html_table, get_dataframes
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
 
@@ -544,23 +544,62 @@ class Results(TemplateView):
 
     template_name = "pages/results.html"
 
+    def dispatch(self, request: HttpRequest, *args: object, **kwargs: object) -> HttpResponseBase:
+        """Return electricity flow charts."""
+        if request.resolver_match.url_name == "flow_chart":
+            return flow_chart(request)
+        if request.resolver_match.url_name == "cost_capacity_chart":
+            return cost_capacity_chart(request)
+
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs) -> dict:
         """Manage context data."""
         context = super().get_context_data(**kwargs)
+
+        chart_data = {
+            "electricity": {
+                "categories": ["Jan", "Feb", "Mar"],
+                "series": {
+                    "Generation": [120, 200, 150],
+                    "Consumption": [90, 50, 110],
+                },
+            },
+            "heat": {
+                "categories": ["Jan", "Feb", "Mar"],
+                "series": {
+                    "Generation": [80, 60, 90],
+                    "Consumption": [40, 30, 55],
+                },
+            },
+            "capacity": {
+                "categories": ["Wind", "Solar", "Biomass"],
+                "series": {
+                    "Existing": [300, 200, 100],
+                    "Addition": [30, 20, 10],
+                },
+            },
+            "costs": {
+                "categories": ["Project A", "Project B", "Project C"],
+                "series": {
+                    "Variable costs": [50000, 30000, 45000],
+                    "Investment": [200000, 150000, 250000],
+                },
+            },
+        }
+
+        df1, df2, scale = get_dataframes()
+
+        html_table_1 = generate_html_table(df1, scale)
+        html_table_2 = generate_html_table(df2, scale)
+
+        plus_minus_table = {
+            "table_1": html_table_1,
+            "table_2": html_table_2,
+        }
 
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
-        return context
-
-
-class Calculator(TemplateView):
-    """Display the Calculator page with value creation and the calculator."""
-
-    template_name = "pages/calculator.html"
-
-    def get_context_data(self, **kwargs) -> dict:
-        """Manage context data."""
-        context = super().get_context_data(**kwargs)
-
-        context["next_url"] = reverse("explorer:home")
+        context["chart_data"] = json.dumps(chart_data)
+        context["table"] = plus_minus_table
         return context
