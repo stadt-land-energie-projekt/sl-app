@@ -1,13 +1,26 @@
 function regionSelected(buttonElement, regionTitle) {
     document.querySelectorAll(".cs__region-container").forEach(container => {
-    container.classList.remove("selected");
+        container.classList.remove("selected");
+        const button = container.querySelector("button");
+        if (button) {
+            if (button.hasAttribute("Auswählen")) {
+                button.textContent = button.getAttribute("Auswählen");
+            }
+        }
     });
 
     const parentContainer = buttonElement.closest(".cs__region-container");
     parentContainer.classList.add("selected");
+    const button = parentContainer.querySelector("button");
+    if (button) {
+        if (!button.hasAttribute("Auswählen")) {
+            button.setAttribute("Auswählen", button.textContent);
+        }
+        button.textContent = "Ausgewählt";
+    }
 
     load_charts(regionTitle);
-    display_details(regionTitle)
+    display_details(regionTitle);
 }
 
 function display_details(regionTitle){
