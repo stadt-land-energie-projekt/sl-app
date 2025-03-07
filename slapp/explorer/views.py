@@ -23,7 +23,7 @@ from django_mapengine import views
 
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
-from .regions import all_charts, cost_capacity_chart, flow_chart
+from .regions import all_charts, cost_capacity_chart, flow_chart, generate_html_table, get_dataframes
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
 
@@ -588,20 +588,18 @@ class Results(TemplateView):
             },
         }
 
+        df1, df2, scale = get_dataframes()
+
+        html_table_1 = generate_html_table(df1, scale)
+        html_table_2 = generate_html_table(df2, scale)
+
+        plus_minus_table = {
+            "table_1": html_table_1,
+            "table_2": html_table_2,
+        }
+
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
         context["chart_data"] = json.dumps(chart_data)
-        return context
-
-
-class Calculator(TemplateView):
-    """Display the Calculator page with value creation and the calculator."""
-
-    template_name = "pages/calculator.html"
-
-    def get_context_data(self, **kwargs) -> dict:
-        """Manage context data."""
-        context = super().get_context_data(**kwargs)
-
-        context["next_url"] = reverse("explorer:home")
+        context["table"] = plus_minus_table
         return context

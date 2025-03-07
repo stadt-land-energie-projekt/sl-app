@@ -4,7 +4,7 @@
 
 {% block content_no_sidebar %}
   <div class="flex-container">
-    <div id="header">
+    <div class="container" id="header">
       <h1>Zentrale Ergebnisse</h1>
       <p>Wähle eine Case Study</p>
     </div>
@@ -32,7 +32,7 @@
         <div id="electricity-chart"></div>
         <div id="hydrogen-chart"></div>
       </div>
-      <div id="basic-solution">
+      <div class="container" id="basic-solution">
         <h1>Basislösung</h1>
         <div class="flex-container" id="basic-charts">
           <div id="basic-electricity" class="chart-container"></div>
@@ -41,7 +41,7 @@
           <div id="basic-costs" class="chart-container"></div>
         </div>
       </div>
-      <div>
+      <div class="container">
         <h1>Sensitivitäten</h1>
         <p>Hier kommt auch noch ein Intro-Text dazu.</p>
         <div class="dropdown">
@@ -57,7 +57,7 @@
           <div class="cost-capacity-chart" id="bar-chart">another chart</div>
         </div>
       </div>
-      <div>
+      <div class="container">
         <h1>Alternative Lösungen erkunden</h1>
         <p>
           Neben der obigen Basislösung haben wir zahlreiche alternative Wege zu einem erneuerbaren Energiesystem berechnet.
@@ -85,20 +85,32 @@
           </div>
         </div>
         <div>
-          <div class="scope-charts">
-            <div>
+          <div class="scope-chart">
+            <div class="flex-container">
               <div class="plus-minus-container">
                 <img src="{% static '/images/icons/plus_minus.svg' %}"
                      alt="plus-minus icon"
-                     id="plus-minus-icon" />
+                     class="plus-minus-icon" />
                 1 %
               </div>
               Wenn Sie innerhalb von <span>+/- 1% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
               folgende Spielräume:
             </div>
-            Hier charts +-1%
+            <div class="table">{{ table.table_1|safe }}</div>
           </div>
-          <div class="scope-charts">Hier charts +-2%</div>
+          <div class="scope-chart">
+            <div class="flex-container">
+              <div class="plus-minus-container">
+                <img src="{% static '/images/icons/plus_minus.svg' %}"
+                     alt="plus-minus icon"
+                     class="plus-minus-icon" />
+                2 %
+              </div>
+              Wenn Sie innerhalb von <span>+/- 2% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
+              folgende Spielräume:
+            </div>
+            <div class="table">{{ table.table_2|safe }}</div>
+          </div>
         </div>
       </div>
     </div>
