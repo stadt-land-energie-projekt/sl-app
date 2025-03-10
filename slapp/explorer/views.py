@@ -23,7 +23,7 @@ from django_mapengine import views
 
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
-from .regions import all_charts, cost_capacity_chart, flow_chart, generate_html_table, get_dataframes
+from .regions import all_charts, build_table_data, cost_capacity_chart, flow_chart, get_dataframes
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
 
@@ -590,16 +590,13 @@ class Results(TemplateView):
 
         df1, df2, scale = get_dataframes()
 
-        html_table_1 = generate_html_table(df1, scale)
-        html_table_2 = generate_html_table(df2, scale)
-
-        plus_minus_table = {
-            "table_1": html_table_1,
-            "table_2": html_table_2,
+        range_tbl = {
+            "table_1": build_table_data(df1, scale),
+            "table_2": build_table_data(df2, scale),
         }
 
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
         context["chart_data"] = json.dumps(chart_data)
-        context["table"] = plus_minus_table
+        context["range"] = range_tbl
         return context

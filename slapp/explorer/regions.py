@@ -512,57 +512,41 @@ def get_dataframes() -> tuple[pd.DataFrame, pd.DataFrame, float]:
     return df1, df2, scale
 
 
-def generate_html_table(dataframe: pd.DataFrame, scale: float) -> str:
-    """Build an HTML table from the DataFrame."""
+def build_table_data(dataframe: pd.DataFrame, scale: float) -> list[dict]:
+    """Convert the given DataFrame into a list of dictionaries for templating."""
+    # Fixed colors for first three rows
     fixed_colors = ["#cdf4d3", "#ffe0c2", "#ffcdc2"]
 
-    # Reset index so that each row's technology name is a normal column named 'index'
+    # Reset index so we have a column "index"
     dataframe = dataframe.reset_index()
     dataframe = dataframe.rename(columns={"index": "Technologie"})
 
-    bars = []
+    rows = []
     for idx, row in dataframe.iterrows():
-        # Determine color
         color = fixed_colors[idx] if idx < len(fixed_colors) else random_pastel_color()
 
-        # Parse min/max for per_cap
         vmin, vmax = parse_range(row["per_cap"])
         diff = vmax - vmin
 
-        # Prevent division by zero
         if scale > 0:
-            left_pct = (vmin / scale) * 100
+            offset_pct = (vmin / scale) * 100
             width_pct = (diff / scale) * 100
+
         else:
-            left_pct = 0
+            offset_pct = 0
             width_pct = 0
 
-        # Build the HTML snippet in one line (no extra \n).
-        # The bar starts at 'left_pct' and has 'width_pct' of the container's width.
-        bar_html = (
-            f'<div class="bar-container" '
-            f'style="width:200px; background:#fff; height:14px; position:relative;">'
-            f'<div class="bar" '
-            f'style="position:absolute; left:{left_pct}%; width:{width_pct}%; height:100%; background:{color};">'
-            f"</div></div>"
+        offset_str = f"{offset_pct:.1f}"
+        width_str = f"{width_pct:.1f}"
+        rows.append(
+            {
+                "technologie": row["Technologie"],
+                "per_cap": row["per_cap"],
+                "pot": row["pot"],
+                "cost": row["cost"],
+                "offset_pct": offset_str,
+                "width_pct": width_str,
+                "color": color,
+            },
         )
-        bars.append(bar_html)
-
-    # Insert the new column at position 1 (second column)
-    dataframe.insert(1, " ", bars)
-
-    # Rename the remaining columns
-    dataframe = dataframe.rename(
-        columns={
-            "per_cap": "Leistung/Kapazität",
-            "pot": "Technisches Potential",
-            "cost": "Kosten",
-        },
-    )
-
-    # Define final column order explicitly (optional)
-    dataframe = dataframe[["Technologie", " ", "Leistung/Kapazität", "Technisches Potential", "Kosten"]]
-
-    # Convert to HTML (escape=False to allow bar HTML)
-    html_table = dataframe.to_html(classes="table", index=False, escape=False)
-    return html_table
+    return rows

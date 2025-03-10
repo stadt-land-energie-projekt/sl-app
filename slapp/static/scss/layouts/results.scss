@@ -144,16 +144,28 @@ span {
   }
 
 .table {
+  border-collapse: collapse;
   background: #fff;
   width: 60%;
+}
 
-  th, td {
+.table th, .table td {
     border: 1px solid #ddd;
     padding: 6px 8px;
   }
 
-  th {
+.table th {
     background: #f0f0f0;
     font-weight: 600;
   }
+
+.bar-container {
+  width: 200px;
+  height: 14px;
+  position: relative;
+}
+
+.bar {
+  position: absolute;
+  height: 100%;
 }
