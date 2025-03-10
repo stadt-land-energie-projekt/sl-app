@@ -1,13 +1,36 @@
 function regionSelected(buttonElement, regionTitle) {
-    let allButtons = document.querySelectorAll(".select-button");
-    allButtons.forEach(btn => {
-        btn.classList.remove("selected");
+    document.querySelectorAll(".cs__region-container").forEach(container => {
+        container.classList.remove("selected");
+        const button = container.querySelector("button");
+        if (button) {
+            if (button.hasAttribute("Auswählen")) {
+                button.textContent = button.getAttribute("Auswählen");
+            }
+        }
     });
 
-    buttonElement.classList.add("selected");
+    const parentContainer = buttonElement.closest(".cs__region-container");
+    parentContainer.classList.add("selected");
+    const button = parentContainer.querySelector("button");
+    if (button) {
+        if (!button.hasAttribute("Auswählen")) {
+            button.setAttribute("Auswählen", button.textContent);
+        }
+        button.textContent = "Ausgewählt";
+    }
+
+    const detailsElement = document.getElementById("cs-details");
+    if (detailsElement) {
+        detailsElement.style.display = "block";
+    }
+
+    const selectedNameElement = document.querySelector("#cs-details #cs-selected-name");
+    if (selectedNameElement) {
+        selectedNameElement.textContent = regionTitle;
+    }
 
     load_charts(regionTitle);
-    display_details(regionTitle)
+    display_details(regionTitle);
 }
 
 function display_details(regionTitle){
