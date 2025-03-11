@@ -16,11 +16,11 @@ urlpatterns = [
     path("results_robustness/", views.robustness, name="results_robustness"),
     path("parameters_robustness/", views.robustness_parameters, name="parameters_robustness"),
     path("case_studies/", views.CaseStudies.as_view(), name="case_studies"),
-    path("chart/all_charts", views.CaseStudies.as_view(), name="all_charts"),
+    path("chart/all_charts", views.all_charts, name="all_charts"),
     path("esys_robust/", views.EsysRobust.as_view(), name="esys_robust"),
     path("results/", views.Results.as_view(), name="results"),
-    path("chart/flow_chart/", views.Results.as_view(), name="flow_chart"),
-    path("cost_capacity_chart/", views.Results.as_view(), name="cost_capacity_chart"),
+    path("chart/flow_chart/", views.flow_chart, name="flow_chart"),
+    path("cost_capacity_chart/", views.cost_capacity_chart, name="cost_capacity_chart"),
 ]
 
 htmx_urlpatterns = [

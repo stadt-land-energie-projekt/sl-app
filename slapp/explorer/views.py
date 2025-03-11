@@ -6,7 +6,7 @@ import csv
 from typing import TYPE_CHECKING, Any
 
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseBase, JsonResponse
+from django.http import HttpResponse, JsonResponse
 
 from . import models
 
@@ -23,7 +23,14 @@ from django_mapengine import views
 
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
-from .regions import all_charts, build_table_data, cost_capacity_chart, flow_chart, get_dataframes
+from .regions import (
+    build_table_data,
+    get_basic_charts_data,
+    get_case_studies_charts_data,
+    get_cost_capacity_data,
+    get_dataframes,
+    get_energy_data,
+)
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
 
@@ -489,13 +496,6 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
 
     template_name = "pages/case_studies.html"
 
-    def dispatch(self, request: HttpRequest, *args: object, **kwargs: object) -> HttpResponse:
-        """Return charts."""
-        if request.resolver_match.url_name == "all_charts":
-            return all_charts(request)
-
-        return super().dispatch(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs) -> dict:
         """Manage context data."""
         context = super().get_context_data(**kwargs)
@@ -526,6 +526,18 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
         return context
 
 
+def all_charts(request: HttpRequest) -> HttpResponse:
+    """Build all charts."""
+    if request.method != "GET":
+        return HttpResponse(status=405)
+
+    region_name = request.GET.get("region", "")
+
+    charts_data = get_case_studies_charts_data(region_name)
+
+    return JsonResponse(charts_data)
+
+
 class EsysRobust(TemplateView):
     """Display the Esys page with energy system and robustness."""
 
@@ -544,49 +556,11 @@ class Results(TemplateView):
 
     template_name = "pages/results.html"
 
-    def dispatch(self, request: HttpRequest, *args: object, **kwargs: object) -> HttpResponseBase:
-        """Return electricity flow charts."""
-        if request.resolver_match.url_name == "flow_chart":
-            return flow_chart(request)
-        if request.resolver_match.url_name == "cost_capacity_chart":
-            return cost_capacity_chart(request)
-
-        return super().dispatch(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs) -> dict:
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
-        chart_data = {
-            "electricity": {
-                "categories": ["Jan", "Feb", "Mar"],
-                "series": {
-                    "Generation": [120, 200, 150],
-                    "Consumption": [90, 50, 110],
-                },
-            },
-            "heat": {
-                "categories": ["Jan", "Feb", "Mar"],
-                "series": {
-                    "Generation": [80, 60, 90],
-                    "Consumption": [40, 30, 55],
-                },
-            },
-            "capacity": {
-                "categories": ["Wind", "Solar", "Biomass"],
-                "series": {
-                    "Existing": [300, 200, 100],
-                    "Addition": [30, 20, 10],
-                },
-            },
-            "costs": {
-                "categories": ["Project A", "Project B", "Project C"],
-                "series": {
-                    "Variable costs": [50000, 30000, 45000],
-                    "Investment": [200000, 150000, 250000],
-                },
-            },
-        }
+        basic_charts_data = get_basic_charts_data()
 
         df1, df2, scale = get_dataframes()
 
@@ -597,6 +571,24 @@ class Results(TemplateView):
 
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
-        context["chart_data"] = json.dumps(chart_data)
+        context["basic_charts_data"] = json.dumps(basic_charts_data)
         context["range"] = range_tbl
         return context
+
+
+def flow_chart(request: HttpRequest) -> JsonResponse:
+    """Return requested data."""
+    chart_type = request.GET.get("type", "")
+
+    response_data = {"data": get_energy_data(chart_type)}
+
+    return JsonResponse(response_data)
+
+
+def cost_capacity_chart(request: HttpRequest) -> JsonResponse:
+    """Return chosen data for cost capacity chart."""
+    data_type = request.GET.get("type", "")
+
+    cost_cap_data = get_cost_capacity_data(data_type)
+
+    return JsonResponse(cost_cap_data)

@@ -3,16 +3,11 @@ from __future__ import annotations
 
 import re
 import secrets
-from typing import TYPE_CHECKING
 
 import pandas as pd
 from django.contrib.gis.db.models.functions import Envelope
 from django.db.models import Sum
 from django.db.models.functions import Round
-from django.http import HttpResponse, JsonResponse
-
-if TYPE_CHECKING:
-    from django.http.request import HttpRequest
 
 from .models import Municipality, Region
 
@@ -103,13 +98,43 @@ def get_regions_data() -> list:
     ]
 
 
-def all_charts(request: HttpRequest) -> HttpResponse:
-    """Build all charts."""
-    if request.method != "GET":
-        return HttpResponse(status=405)
+def get_basic_charts_data() -> dict:
+    """Return basic chart data."""
+    chart_data = {
+        "electricity": {
+            "categories": ["Jan", "Feb", "Mar"],
+            "series": {
+                "Generation": [120, 200, 150],
+                "Consumption": [90, 50, 110],
+            },
+        },
+        "heat": {
+            "categories": ["Jan", "Feb", "Mar"],
+            "series": {
+                "Generation": [80, 60, 90],
+                "Consumption": [40, 30, 55],
+            },
+        },
+        "capacity": {
+            "categories": ["Wind", "Solar", "Biomass"],
+            "series": {
+                "Existing": [300, 200, 100],
+                "Addition": [30, 20, 10],
+            },
+        },
+        "costs": {
+            "categories": ["Project A", "Project B", "Project C"],
+            "series": {
+                "Variable costs": [50000, 30000, 45000],
+                "Investment": [200000, 150000, 250000],
+            },
+        },
+    }
+    return chart_data
 
-    region_name = request.GET.get("region", "")
 
+def get_case_studies_charts_data(region_name: str) -> dict:
+    """Get data for all case studies charts."""
     regions = get_regions_data()
 
     selected_region = None
@@ -124,7 +149,7 @@ def all_charts(request: HttpRequest) -> HttpResponse:
     plans = selected_region["plans"]
     x_axis_data = list(plans.keys())
 
-    response_data = {
+    charts_data = {
         "production": {
             "x_data": x_axis_data,
             "y_data": {
@@ -170,7 +195,7 @@ def all_charts(request: HttpRequest) -> HttpResponse:
         },
     }
 
-    return JsonResponse(response_data)
+    return charts_data
 
 
 def municipalities_details(ids: list[int]) -> list[Municipality]:
@@ -376,7 +401,7 @@ def get_energy_data(region: str) -> list:
                 ],
             },
         ]
-    elif region == "Kiel":
+    elif region == "kiel":
         energy_data = [
             {
                 "title": "Stromaustausch (Kiel)",
@@ -390,7 +415,7 @@ def get_energy_data(region: str) -> list:
                 ],
             },
             {
-                "title": "Stromaustausch (Kiel)",
+                "title": "Wasserstoffaustausch (Kiel)",
                 "energyData": [
                     {"source": "Kiel", "target": "Netz", "value": 120},
                     {"source": "Netz", "target": "Kiel", "value": 20},
@@ -404,32 +429,8 @@ def get_energy_data(region: str) -> list:
     return energy_data
 
 
-def flow_chart(request: HttpRequest) -> JsonResponse:
-    """Return requested data."""
-    chart_type = request.GET.get("type", "verbu")
-
-    if chart_type == "verbu":
-        flow_data = get_energy_data("verbu")
-    elif chart_type == "einzeln":
-        flow_data = get_energy_data("einzeln")
-    elif chart_type == "kiel":
-        flow_data = get_energy_data("Kiel")
-    else:
-        flow_data = {
-            "title": "Unbekannter Typ",
-            "energyData": [],
-            "nodes": [],
-        }
-
-    response_data = {"data": flow_data}
-
-    return JsonResponse(response_data)
-
-
-def cost_capacity_chart(request: HttpRequest) -> JsonResponse:
-    """Return chosen data for cost capacity chart."""
-    data_type = request.GET.get("type", "")
-
+def get_cost_capacity_data(data_type: str) -> dict:
+    """Return cost capacity data."""
     if data_type == "Technologie":
         cost_capacity_data = {
             "line_data": [
@@ -483,7 +484,7 @@ def cost_capacity_chart(request: HttpRequest) -> JsonResponse:
             "bar_data": [],
         }
 
-    return JsonResponse(cost_capacity_data)
+    return cost_capacity_data
 
 
 def random_pastel_color() -> str:

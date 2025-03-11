@@ -11,22 +11,19 @@
     {% for keyfact in keyfacts %}
       <div class="fact-item">
         <h3>
-          <img src="{{ keyfact.icon }}" alt="{{ keyfact.title }} icon" class="fact-icon">
+          <img src="{{ keyfact.icon }}"
+               alt="{{ keyfact.title }} icon"
+               class="fact-icon" />
           {{ keyfact.title }}
         </h3>
         <p>{{ keyfact.fact }}</p>
       </div>
     {% endfor %}
   </div>
-
   <p class="cs__cta-row">
-    <!-- Not sure what that is ? -->
-    <!-- <span class="left-text">...</span> -->
-    <span class="center-button">
-      <button class="select-button"
-              onclick="regionSelected(this, '{{ region.title }}');selectRegion([[{{ bbox.extent.0 | floatformat:'10u' }}, {{ bbox.extent.1 | floatformat:'10u' }}], [{{ bbox.extent.2 | floatformat:'10u' }}, {{ bbox.extent.3 | floatformat:'10u' }}]]);">
-        Auswählen
-      </button>
-    </span>
+    <button class="select-button"
+            onclick="regionSelected(this, '{{ region.title }}');selectRegion([[{{ bbox.extent.0 | floatformat:'10u' }}, {{ bbox.extent.1 | floatformat:'10u' }}], [{{ bbox.extent.2 | floatformat:'10u' }}, {{ bbox.extent.3 | floatformat:'10u' }}]]);">
+      Auswählen
+    </button>
   </p>
 </div>

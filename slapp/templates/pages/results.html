@@ -179,11 +179,11 @@
 {% block javascript %}
   {{ block.super }}
   <script>
-    var chartData = JSON.parse('{{ chart_data|safe }}');
-    var electricityChartData = chartData.electricity;
-    var heatChartData = chartData.heat;
-    var capacityChartData = chartData.capacity;
-    var costsChartData = chartData.costs;
+    var basicChartsData = JSON.parse('{{ basic_charts_data|safe }}');
+    var electricityChartData = basicChartsData.electricity;
+    var heatChartData = basicChartsData.heat;
+    var capacityChartData = basicChartsData.capacity;
+    var costsChartData = basicChartsData.costs;
   </script>
   <script src="{% static 'js/results.js' %}" defer></script>
 {% endblock javascript %}
