@@ -21,6 +21,7 @@ urlpatterns = [
     path("results/", views.Results.as_view(), name="results"),
     path("chart/flow_chart/", views.flow_chart, name="flow_chart"),
     path("cost_capacity_chart/", views.cost_capacity_chart, name="cost_capacity_chart"),
+    path("basic_charts/", views.basic_charts, name="basic_charts"),
 ]
 
 htmx_urlpatterns = [

@@ -1,3 +1,17 @@
+function showHiddenDiv(region, button) {
+    let allButtons = document.querySelectorAll(".select-button");
+    allButtons.forEach(b => b.classList.remove("selected"));
+
+    button.classList.add("selected");
+
+    let hiddenDiv = document.querySelector(".hidden-div");
+    hiddenDiv.style.display = "block";
+
+    loadFlowsChart(region, "electricity");
+    loadFlowsChart(region, "hydrogen");
+    loadBasicData(region);
+    }
+
 function getOrCreateChart(domElement) {
     let chart = echarts.getInstanceByDom(domElement);
     if (chart) {
@@ -125,20 +139,6 @@ function createFlowChart(domElement, chartData, resource) {
     chart.setOption(option);
     chart.resize();
 }
-
-function showHiddenDiv(chartType, button) {
-    let allButtons = document.querySelectorAll(".select-button");
-    allButtons.forEach(b => b.classList.remove("selected"));
-
-    button.classList.add("selected");
-
-    let hiddenDiv = document.querySelector(".hidden-div");
-    hiddenDiv.style.display = "block";
-
-    loadFlowsChart(chartType, "electricity");
-    loadFlowsChart(chartType, "hydrogen");
-    loadBasicCharts();
-    }
 
 function loadElectricityChart(data) {
     let el = document.getElementById("basic-electricity");
@@ -284,11 +284,28 @@ function loadCostsChart(data) {
     chart.resize();
 }
 
-function loadBasicCharts() {
-    loadElectricityChart(electricityChartData);
-    loadHeatChart(heatChartData);
-    loadCapacityChart(capacityChartData);
-    loadCostsChart(costsChartData);
+function loadBasicData(region) {
+    fetch(`/explorer/basic_charts/?type=${encodeURIComponent(region)}`, {
+        method: 'GET',
+        headers: {
+            "Accept": "application/json",
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Netzwerkfehler: " + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        loadElectricityChart(data.electricity);
+        loadHeatChart(data.heat);
+        loadCapacityChart(data.capacity);
+        loadCostsChart(data.costs);
+    })
+    .catch(error => {
+        console.error("Fehler beim Laden der Basislösung-Daten:", error);
+    });
 }
 
 function loadCostCapacityLineChart(data) {

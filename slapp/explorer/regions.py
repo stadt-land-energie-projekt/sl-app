@@ -98,38 +98,104 @@ def get_regions_data() -> list:
     ]
 
 
-def get_basic_charts_data() -> dict:
+def get_basic_charts_data(region: str) -> dict:
     """Return basic chart data."""
-    chart_data = {
-        "electricity": {
-            "categories": ["Jan", "Feb", "Mar"],
-            "series": {
-                "Generation": [120, 200, 150],
-                "Consumption": [90, 50, 110],
+    if region == "verbu":
+        chart_data = {
+            "electricity": {
+                "categories": ["Jan", "Feb", "Mar"],
+                "series": {
+                    "Generation": [120, 200, 150],
+                    "Consumption": [90, 50, 110],
+                },
             },
-        },
-        "heat": {
-            "categories": ["Jan", "Feb", "Mar"],
-            "series": {
-                "Generation": [80, 60, 90],
-                "Consumption": [40, 30, 55],
+            "heat": {
+                "categories": ["Jan", "Feb", "Mar"],
+                "series": {
+                    "Generation": [80, 60, 90],
+                    "Consumption": [40, 30, 55],
+                },
             },
-        },
-        "capacity": {
-            "categories": ["Wind", "Solar", "Biomass"],
-            "series": {
-                "Existing": [300, 200, 100],
-                "Addition": [30, 20, 10],
+            "capacity": {
+                "categories": ["Wind", "Solar", "Biomass"],
+                "series": {
+                    "Existing": [300, 200, 100],
+                    "Addition": [30, 20, 10],
+                },
             },
-        },
-        "costs": {
-            "categories": ["Project A", "Project B", "Project C"],
-            "series": {
-                "Variable costs": [50000, 30000, 45000],
-                "Investment": [200000, 150000, 250000],
+            "costs": {
+                "categories": ["Project A", "Project B", "Project C"],
+                "series": {
+                    "Variable costs": [50000, 30000, 45000],
+                    "Investment": [200000, 150000, 250000],
+                },
             },
-        },
-    }
+        }
+    elif region == "einzeln":
+        chart_data = {
+            "electricity": {
+                "categories": ["Jan", "Feb", "Mar"],
+                "series": {
+                    "Generation": [100, 190, 150],
+                    "Consumption": [80, 40, 110],
+                },
+            },
+            "heat": {
+                "categories": ["Jan", "Feb", "Mar"],
+                "series": {
+                    "Generation": [100, 80, 90],
+                    "Consumption": [60, 45, 55],
+                },
+            },
+            "capacity": {
+                "categories": ["Wind", "Solar", "Biomass"],
+                "series": {
+                    "Existing": [200, 150, 100],
+                    "Addition": [20, 10, 5],
+                },
+            },
+            "costs": {
+                "categories": ["Project A", "Project B", "Project C"],
+                "series": {
+                    "Variable costs": [40000, 30000, 45000],
+                    "Investment": [180000, 150000, 250000],
+                },
+            },
+        }
+    elif region == "kiel":
+        chart_data = {
+            "electricity": {
+                "categories": ["Jan", "Feb", "Mar"],
+                "series": {
+                    "Generation": [200, 290, 150],
+                    "Consumption": [100, 60, 110],
+                },
+            },
+            "heat": {
+                "categories": ["Jan", "Feb", "Mar"],
+                "series": {
+                    "Generation": [100, 120, 40],
+                    "Consumption": [80, 55, 50],
+                },
+            },
+            "capacity": {
+                "categories": ["Wind", "Solar", "Biomass"],
+                "series": {
+                    "Existing": [400, 300, 100],
+                    "Addition": [40, 20, 5],
+                },
+            },
+            "costs": {
+                "categories": ["Project A", "Project B", "Project C"],
+                "series": {
+                    "Variable costs": [80000, 30000, 48000],
+                    "Investment": [190000, 160000, 270000],
+                },
+            },
+        }
+    else:
+        chart_data = {}
+
     return chart_data
 
 

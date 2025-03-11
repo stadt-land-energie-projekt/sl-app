@@ -560,8 +560,6 @@ class Results(TemplateView):
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
-        basic_charts_data = get_basic_charts_data()
-
         df1, df2, scale = get_dataframes()
 
         range_tbl = {
@@ -571,13 +569,12 @@ class Results(TemplateView):
 
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
-        context["basic_charts_data"] = json.dumps(basic_charts_data)
         context["range"] = range_tbl
         return context
 
 
 def flow_chart(request: HttpRequest) -> JsonResponse:
-    """Return requested data."""
+    """Return requested data for flow charts on results page."""
     chart_type = request.GET.get("type", "")
 
     response_data = {"data": get_energy_data(chart_type)}
@@ -586,9 +583,18 @@ def flow_chart(request: HttpRequest) -> JsonResponse:
 
 
 def cost_capacity_chart(request: HttpRequest) -> JsonResponse:
-    """Return chosen data for cost capacity chart."""
+    """Return chosen data for cost capacity chart on results page."""
     data_type = request.GET.get("type", "")
 
     cost_cap_data = get_cost_capacity_data(data_type)
 
     return JsonResponse(cost_cap_data)
+
+
+def basic_charts(request: HttpRequest) -> JsonResponse:
+    """Return data for basic charts on results page."""
+    region = request.GET.get("type", "")
+
+    basic_charts_data = get_basic_charts_data(region)
+
+    return JsonResponse(basic_charts_data)

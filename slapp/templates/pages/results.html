@@ -178,12 +178,5 @@
 {% endblock content_no_sidebar %}
 {% block javascript %}
   {{ block.super }}
-  <script>
-    var basicChartsData = JSON.parse('{{ basic_charts_data|safe }}');
-    var electricityChartData = basicChartsData.electricity;
-    var heatChartData = basicChartsData.heat;
-    var capacityChartData = basicChartsData.capacity;
-    var costsChartData = basicChartsData.costs;
-  </script>
   <script src="{% static 'js/results.js' %}" defer></script>
 {% endblock javascript %}
