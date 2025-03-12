@@ -30,6 +30,7 @@ function regionSelected(buttonElement, regionTitle) {
     }
 
     load_charts(regionTitle);
+    console.log("region titel: " + regionTitle);
     display_details(regionTitle);
 }
 
@@ -71,17 +72,6 @@ function load_charts(regionTitle) {
         console.error("Error loading charts:", error);
     });
 }
-
-function on_load() {
-    load_charts(window.regionTitle);
-    display_details(window.regionTitle);
-    let firstButton = document.querySelector(".select-button");
-    if (firstButton) {
-      firstButton.classList.add("selected");
-    }
-}
-
-on_load();
 
 /**
  * Helper function to either create a new ECharts instance or clear the old one.

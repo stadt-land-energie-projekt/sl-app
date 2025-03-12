@@ -23,7 +23,14 @@ from django_mapengine import views
 
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
-from .regions import all_charts
+from .regions import (
+    build_table_data,
+    get_basic_charts_data,
+    get_case_studies_charts_data,
+    get_cost_capacity_data,
+    get_dataframes,
+    get_energy_data,
+)
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
 
@@ -489,13 +496,6 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
 
     template_name = "pages/case_studies.html"
 
-    def dispatch(self, request: HttpRequest, *args: object, **kwargs: object) -> HttpResponse:
-        """Return charts."""
-        if request.resolver_match.url_name == "all_charts":
-            return all_charts(request)
-
-        return super().dispatch(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs) -> dict:
         """Manage context data."""
         context = super().get_context_data(**kwargs)
@@ -526,6 +526,18 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
         return context
 
 
+def all_charts(request: HttpRequest) -> HttpResponse:
+    """Build all charts."""
+    if request.method != "GET":
+        return HttpResponse(status=405)
+
+    region_name = request.GET.get("region", "")
+
+    charts_data = get_case_studies_charts_data(region_name)
+
+    return JsonResponse(charts_data)
+
+
 class EsysRobust(TemplateView):
     """Display the Esys page with energy system and robustness."""
 
@@ -548,19 +560,41 @@ class Results(TemplateView):
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
+        df1, df2, scale = get_dataframes()
+
+        range_tbl = {
+            "table_1": build_table_data(df1, scale),
+            "table_2": build_table_data(df2, scale),
+        }
+
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
+        context["range"] = range_tbl
         return context
 
 
-class Calculator(TemplateView):
-    """Display the Calculator page with value creation and the calculator."""
+def flow_chart(request: HttpRequest) -> JsonResponse:
+    """Return requested data for flow charts on results page."""
+    chart_type = request.GET.get("type", "")
 
-    template_name = "pages/calculator.html"
+    response_data = {"data": get_energy_data(chart_type)}
 
-    def get_context_data(self, **kwargs) -> dict:
-        """Manage context data."""
-        context = super().get_context_data(**kwargs)
+    return JsonResponse(response_data)
 
-        context["next_url"] = reverse("explorer:home")
-        return context
+
+def cost_capacity_chart(request: HttpRequest) -> JsonResponse:
+    """Return chosen data for cost capacity chart on results page."""
+    data_type = request.GET.get("type", "")
+
+    cost_cap_data = get_cost_capacity_data(data_type)
+
+    return JsonResponse(cost_cap_data)
+
+
+def basic_charts(request: HttpRequest) -> JsonResponse:
+    """Return data for basic charts on results page."""
+    region = request.GET.get("type", "")
+
+    basic_charts_data = get_basic_charts_data(region)
+
+    return JsonResponse(basic_charts_data)
