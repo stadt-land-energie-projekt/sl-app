@@ -4,7 +4,179 @@
 
 {% block content_no_sidebar %}
   <div class="flex-container">
+    <div class="container" id="header">
+      <h1>Zentrale Ergebnisse</h1>
+      <p>Wähle eine Case Study</p>
+    </div>
+    <div id="regions-container">
+      <div class="region-box">
+        <h2>Oderland-Spree (Verbund)</h2>
+        <img src="{% static 'images/Oderland-Spree.png' %}"
+             alt="Karte Oderland-Spree Verbund" />
+        <button class="select-button" onclick="showHiddenDiv('verbu', this)">Auswählen</button>
+      </div>
+      <div class="region-box">
+        <h2>Oderland-Spree (Einzeln)</h2>
+        <img src="{% static 'images/Oderland-Spree-single.png' %}"
+             alt="Karte Oderland-Spree Einzeln" />
+        <button class="select-button" onclick="showHiddenDiv('einzeln', this)">Auswählen</button>
+      </div>
+      <div class="region-box">
+        <h2>Kiel</h2>
+        <img src="{% static 'images/Kiel.png' %}" alt="Karte Kiel" />
+        <button class="select-button" onclick="showHiddenDiv('kiel', this)">Auswählen</button>
+      </div>
+    </div>
+    <div class="hidden-div">
+      <div class="flex-container">
+        <div id="electricity-chart"></div>
+        <div id="hydrogen-chart"></div>
+      </div>
+      <div class="container" id="basic-solution">
+        <h1>Basislösung</h1>
+        <div class="flex-container" id="basic-charts">
+          <div id="basic-electricity" class="chart-container"></div>
+          <div id="basic-heat" class="chart-container"></div>
+          <div id="basic-capacity" class="chart-container"></div>
+          <div id="basic-costs" class="chart-container"></div>
+        </div>
+      </div>
+      <div class="container">
+        <h1>Sensitivitäten</h1>
+        <p>Hier kommt auch noch ein Intro-Text dazu.</p>
+        <div class="dropdown">
+          <button class="dropdown-button">Bitte auswählen</button>
+          <div class="dropdown-content">
+            <a href="#" type="Technologie">Technologie</a>
+            <a href="#" type="Etwas anderes">Etwas anderes</a>
+            <a href="#" type="Sonstiges">Sonstiges</a>
+          </div>
+        </div>
+        <div id="cost-cap-container">
+          <div class="cost-capacity-chart" id="line-chart"></div>
+          <div class="cost-capacity-chart" id="bar-chart">another chart</div>
+        </div>
+      </div>
+      <div class="container">
+        <h1>Alternative Lösungen erkunden</h1>
+        <p>
+          Neben der obigen Basislösung haben wir zahlreiche alternative Wege zu einem erneuerbaren Energiesystem berechnet.
+          Dafür haben wir den sogenannten Ansatz <span>Modelling to Generate Alternatives</span> (MGA) verwendet.
+          Das bedeutet, dass für jede Technologie <span>verschiedene Ausbaumöglichkeiten</span> existieren, ohne dass die Gesamtsystemkosten
+          stark von den Kosten der (optimalen) Basislösung abweichen. Die Alternativen sollten nicht mehr als <span>1-2 %
+          günstiger oder teurer als die Basislösung</span> sein.
+          Der verstärkte Ausbau einer Technologie bei nahezu
+          gleichbleibenden Kosten funktioniert natürlich nur, wenn andere Technologien dafür weniger stark wachsen.
+          Das bedeutet, dass sich die Zusammensetzung des künftigen Energiesystems mit dem Fokus auf eine oder mehrere
+          Technologien mehr oder weniger stark ändern muss, um im Kostenrahmen zu bleiben.
+        </p>
+        <div id="example">
+          <h2>Beispiel</h2>
+          <div class="flex-container">
+            <img src="{% static '/images/icons/battery.svg' %}"
+                 alt="battery icon"
+                 id="battery-icon" />
+            <div>
+              <span>Batteriespeicher:</span> Statt X MWh in der Basislösung können Sie zusätzliche Speicherkapazitäten installieren.
+              Das kostet Sie für diese Anlagen zwar mehr, kann jedoch an anderer Stelle Kosten sparen, da z.B. mehr am
+              Tage gewonnene Energie in die Nachtstunden verschoben werden kann und damit weniger Photovoltaik und
+              Windenergieanlagen erforderlich werden, um den Energiebedarf zu decken.
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="scope-chart">
+            <div class="flex-container">
+              <div class="plus-minus-container">
+                <img src="{% static '/images/icons/plus_minus.svg' %}"
+                     alt="plus-minus icon"
+                     class="plus-minus-icon" />
+                1 %
+              </div>
+              Wenn Sie innerhalb von <span>+/- 1% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
+              folgende Spielräume:
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Technologie</th>
+                  <th></th>
+                  <th>Leistung/Kapazität</th>
+                  <th>Technisches Potential</th>
+                  <th>Kosten</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in range.table_1 %}
+                  <tr>
+                    <td>{{ row.technologie }}</td>
+                    <td>
+                      <div class="bar-container">
+                        <div class="bar"
+                             style="left: {{ row.offset_pct }}%;
+                                    width: {{ row.width_pct }}%;
+                                    background-color: {{ row.color }}"></div>
+                      </div>
+                    </td>
+                    <td>{{ row.per_cap }}</td>
+                    <td>{{ row.pot }}</td>
+                    <td>{{ row.cost }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="scope-chart">
+          <div class="flex-container">
+            <div class="plus-minus-container">
+              <img src="{% static '/images/icons/plus_minus.svg' %}"
+                   alt="plus-minus icon"
+                   class="plus-minus-icon" />
+              2 %
+            </div>
+            Wenn Sie innerhalb von <span>+/- 2% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
+            folgende Spielräume:
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Technologie</th>
+                <th></th>
+                <th>Leistung/Kapazität</th>
+                <th>Technisches Potential</th>
+                <th>Kosten</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in range.table_2 %}
+                <tr>
+                  <td>{{ row.technologie }}</td>
+                  <td>
+                    <div class="bar-container">
+                      <div class="bar"
+                           style="left: {{ row.offset_pct }}%;
+                                  width: {{ row.width_pct }}%;
+                                  background-color: {{ row.color }}"></div>
+                    </div>
+                  </td>
+                  <td>{{ row.per_cap }}</td>
+                  <td>{{ row.pot }}</td>
+                  <td>{{ row.cost }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
     <a href="{{ home_url }}" class="btn btn-primary mt-3">Zur Hauptseite</a>
     <a href="{{ added_value_url }}" class="btn btn-primary mt-3">Zum Wertschöpfungsrechner</a>
   </div>
 {% endblock content_no_sidebar %}
+{% block javascript %}
+  {{ block.super }}
+  <script src="{% static 'js/results.js' %}" defer></script>
+{% endblock javascript %}
