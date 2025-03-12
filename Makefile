@@ -1,5 +1,5 @@
 
-.PHONY : load_regions load_data empty_data dump_fixtures load_fixtures distill check_distill_coordinates
+.PHONY : load_regions load_data load_zib_data empty_data dump_fixtures load_fixtures distill check_distill_coordinates
 
 DISTILL=True
 export
@@ -9,6 +9,9 @@ load_regions:
 
 load_data:
 	python manage.py shell --command="from slapp.utils import data_processing; data_processing.load_data()"
+
+load_zib_data:
+	python manage.py shell --command="from slapp.utils import data_processing; data_processing.load_sensitivities()"
 
 load_population:
 	python manage.py shell --command="from slapp.utils import data_processing; data_processing.load_population()"
