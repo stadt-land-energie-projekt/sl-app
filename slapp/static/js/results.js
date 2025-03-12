@@ -393,8 +393,8 @@ function loadHorizontalBarChart(data) {
     chart.resize();
 }
 
-function loadCostCapacityData(type) {
-    fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(type)}`, {
+function loadCostCapacityData(tech) {
+    fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(tech)}`, {
         method: 'GET',
         headers: {
             "Accept": "application/json",
@@ -444,11 +444,13 @@ document.querySelectorAll('.dropdown-content a').forEach(item => {
         event.preventDefault();
 
         const selectedType = this.getAttribute('type');
+        const selectedValue = this.textContent;
+
         loadCostCapacityData(selectedType);
         showCostCapData();
 
         document.querySelector('.dropdown-content').classList.remove('show');
 
-        document.querySelector('.dropdown-button').textContent = selectedType;
+        document.querySelector('.dropdown-button').textContent = selectedValue;
     });
 });

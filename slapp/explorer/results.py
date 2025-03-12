@@ -4,6 +4,29 @@ from __future__ import annotations
 
 from .models import Sensitivity
 
+TECHNOLOGIES = {
+    "wind-onshore": {
+        "name": "Windkraft an Land",
+        "color": "#1E90FF",
+    },
+    "solar-pv": {
+        "name": "PV-Solarenergie",
+        "color": "#FFD700",
+    },
+    "electricity-heatpump_small": {
+        "name": "Kleine elektrische Wärmepumpe",
+        "color": "#FF4500",
+    },
+    "heat_decentral_storage": {
+        "name": "Dezentrale Wärmespeicherung",
+        "color": "#8B0000",
+    },
+    "hydro-ror": {
+        "name": "Laufwasserkraftwerk",
+        "color": "#4682B4",
+    },
+}
+
 CAPACITIES = {
     "B-wind-onshore": "invest_out_electricity",
     "BB-wind-onshore": "invest_out_electricity",

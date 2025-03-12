@@ -33,7 +33,7 @@ from .regions import (
 )
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
-from .results import get_sensitivity_result
+from .results import TECHNOLOGIES, get_sensitivity_result
 
 MAX_MUNICIPALITY_COUNT = 3
 
@@ -572,6 +572,7 @@ class Results(TemplateView):
         context["added_value_url"] = reverse("added_value:index")
         context["range"] = range_tbl
         context["sensitivity"] = get_sensitivity_result("CapacityCosts", "onshore")
+        context["technologies"] = TECHNOLOGIES
         return context
 
 

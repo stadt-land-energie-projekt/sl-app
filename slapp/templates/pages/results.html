@@ -45,11 +45,9 @@
         <h1>Sensitivitäten</h1>
         <p>Hier kommt auch noch ein Intro-Text dazu.</p>
         <div class="dropdown">
-          <button class="dropdown-button">Bitte auswählen</button>
+          <button class="dropdown-button">Technologie</button>
           <div class="dropdown-content">
-            <a href="#" type="Technologie">Technologie</a>
-            <a href="#" type="Etwas anderes">Etwas anderes</a>
-            <a href="#" type="Sonstiges">Sonstiges</a>
+            {% for key, data in technologies.items %}<a href="#" type="{{ key }}">{{ data.name }}</a>{% endfor %}
           </div>
         </div>
         <div id="cost-cap-container">
