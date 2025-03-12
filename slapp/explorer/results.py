@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
-from .models import Sensitivity
+from functools import reduce
+from operator import or_
+
+from django.db.models import Prefetch, Q
+
+from .models import Result, Sensitivity
 
 CAPACITIES = {
     "B-wind-onshore": "invest_out_electricity",
@@ -40,17 +45,23 @@ CAPACITIES = {
 }
 
 
-def get_sensitivity_result(sensitivity: str, technology: str) -> dict[float, dict[str, float]]:
+def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> dict[float, dict[str, float]]:
     """Return resulting capacities for given sensitivity."""
-    sensitivities = Sensitivity.objects.filter(attribute=sensitivity, component=technology)
+    capacity_query = reduce(
+        or_,
+        [Q(name=technology, var_name=capacity_name) for technology, capacity_name in CAPACITIES.items()],
+    )
+    sensitivities = (
+        Sensitivity.objects.filter(attribute=sensitivity, component=technology, region=region)
+        .select_related("scenario")
+        .prefetch_related(
+            Prefetch("scenario__result_set", queryset=Result.objects.filter(capacity_query), to_attr="results"),
+        )
+        .all()
+    )
+
     results = {
-        sensitivity.perturbation_parameter: sensitivity.scenario.result_set.filter(name__in=CAPACITIES)
+        sensitivity.perturbation_parameter: {result.name: result.var_value for result in sensitivity.scenario.results}
         for sensitivity in sensitivities
     }
-    return {
-        sensitivity: {
-            technology: queryset.filter(name=technology, var_name=capacity).values("var_value").first()["var_value"]
-            for technology, capacity in CAPACITIES.items()
-        }
-        for sensitivity, queryset in results.items()
-    }
+    return results

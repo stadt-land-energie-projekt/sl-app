@@ -551,7 +551,7 @@ class Results(TemplateView):
 
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
-        context["sensitivity"] = get_sensitivity_result("CapacityCosts", "onshore")
+        context["sensitivity"] = get_sensitivity_result("CapacityCosts", "B", "pv")
         return context
 
 
