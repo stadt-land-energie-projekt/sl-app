@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
+import json
 import logging
 import pathlib
 from typing import TYPE_CHECKING
 
+import pandas as pd
+
 if TYPE_CHECKING:
     from django.db.models import Model
 
-from config.settings.base import GEODATA_DIR
+from config.settings.base import GEODATA_DIR, ZIB_DATA
 from slapp.explorer import models
 from slapp.utils.ogr_layer_mapping import RelatedModelLayerMapping
 
@@ -111,3 +114,41 @@ def empty_data(models: list[Model] | None = None) -> None:
     models = models or MODELS
     for model in models:
         model.objects.all().delete()
+
+
+def load_sensitivities() -> None:
+    """Import data from sensitivity runs at ZIB."""
+    for sensitivity, sensitivity_lookup in (("capacities", "CapacityCosts"), ("marginal", "MarginalCosts")):
+        for folder in (pathlib.Path(ZIB_DATA) / sensitivity).iterdir():
+            if not folder.is_dir():
+                continue
+            if len(folder.name.split("_")) != 2:  # noqa: PLR2004
+                # Skip folders which do not follow schema "x_y"
+                continue
+
+            logging.info(f"Upload data for sensitivity '{sensitivity}' from folder '{folder.name}'.")
+
+            # Create Scenario for current sensitivity results
+            scenario_name = f"{sensitivity}_{folder.name}"
+            with (folder / "scenario.json").open("r", encoding="utf-8") as f:
+                scenario_details = json.load(f)
+            scenario = models.Scenario(name=scenario_name, parameters=scenario_details)
+            scenario.save()
+
+            # Create Sensitivity instance
+            sensitivity_data = scenario_details["CostPerturbations"][sensitivity_lookup][0]
+            models.Sensitivity(
+                scenario=scenario,
+                attribute=sensitivity_lookup,
+                component=sensitivity_data["VariableName"],
+                region=sensitivity_data.get("Region", None),
+                perturbation_method=sensitivity_data["PerturbationMethod"],
+                # Only one (first) parameter is taken into account
+                perturbation_parameter=sensitivity_data["PerturbationParameter"][0],
+            ).save()
+
+            # Add results to Scenario
+            results_df = pd.read_csv(folder / "scalars.csv", delimiter=";", encoding="utf-8")
+            results_df = results_df.drop("scenario", axis=1)
+            results = [models.Result(scenario=scenario, **result) for result in results_df.to_dict(orient="records")]
+            models.Result.objects.bulk_create(results)
