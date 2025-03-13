@@ -27,7 +27,6 @@ from .regions import (
     build_table_data,
     get_basic_charts_data,
     get_case_studies_charts_data,
-    get_cost_capacity_data,
     get_dataframes,
     get_energy_data,
 )
@@ -571,21 +570,8 @@ class Results(TemplateView):
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
         context["range"] = range_tbl
-        context["sensitivity"] = get_sensitivity_result("CapacityCosts", "onshore")
+        context["sensitivity"] = get_sensitivity_result("CapacityCosts", "B", "pv")
         context["technologies"] = TECHNOLOGIES
-        return context
-
-
-class Calculator(TemplateView):
-    """Display the Calculator page with value creation and the calculator."""
-
-    template_name = "pages/calculator.html"
-
-    def get_context_data(self, **kwargs) -> dict:
-        """Manage context data."""
-        context = super().get_context_data(**kwargs)
-
-        context["next_url"] = reverse("explorer:home")
         return context
 
 
@@ -600,10 +586,10 @@ def flow_chart(request: HttpRequest) -> JsonResponse:
 
 def cost_capacity_chart(request: HttpRequest) -> JsonResponse:
     """Return chosen data for cost capacity chart on results page."""
-    data_type = request.GET.get("type", "")
-
-    cost_cap_data = get_cost_capacity_data(data_type)
-
+    tech = request.GET.get("type", "")
+    region = "BB"
+    sensitivity_data = get_sensitivity_result("CapacityCosts", region, tech)
+    cost_cap_data = {x: value for x, y in sensitivity_data.items() for key, value in y.items() if tech in key}
     return JsonResponse(cost_cap_data)
 
 
