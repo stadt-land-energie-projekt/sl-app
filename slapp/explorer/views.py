@@ -32,7 +32,13 @@ from .regions import (
 )
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
-from .results import TECHNOLOGIES, get_sensitivity_result
+from .results import (
+    TECHNOLOGIES,
+    add_baseline_results,
+    build_cost_cap_data,
+    build_tech_comp_data,
+    get_sensitivity_result,
+)
 
 MAX_MUNICIPALITY_COUNT = 3
 
@@ -584,13 +590,33 @@ def flow_chart(request: HttpRequest) -> JsonResponse:
     return JsonResponse(response_data)
 
 
-def cost_capacity_chart(request: HttpRequest) -> JsonResponse:
-    """Return chosen data for cost capacity chart on results page."""
+def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
+    """Return either line_data or bar_data."""
     tech = request.GET.get("type", "")
-    region = "BB"
+
+    selected_region = request.GET.get("region")
+    region = "B" if selected_region == "kiel" else "BB"
+
     sensitivity_data = get_sensitivity_result("CapacityCosts", region, tech)
-    cost_cap_data = {x: value for x, y in sensitivity_data.items() for key, value in y.items() if tech in key}
-    return JsonResponse(cost_cap_data)
+    sensitivity_data.update(get_sensitivity_result("CapacityCosts", "ALL", tech))
+
+    add_baseline_results(sensitivity_data)
+    # If an "x" parameter is provided, return tech comparison chart data.
+    selected_x = request.GET.get("x")
+    if selected_x is not None:
+        try:
+            selected_x = float(selected_x)
+        except ValueError:
+            return JsonResponse({"error": "Invalid x value"}, status=400)
+        if selected_x not in sensitivity_data:
+            return JsonResponse({"error": "x value not found"}, status=404)
+
+        tech_comp_data_list = build_tech_comp_data(sensitivity_data[selected_x], region, tech)
+        return JsonResponse({"bar_data": tech_comp_data_list})
+
+    # Without "x": Create line chart data for the selected technology.
+    cost_cap_data = build_cost_cap_data(sensitivity_data, tech)
+    return JsonResponse({"line_data": cost_cap_data})
 
 
 def basic_charts(request: HttpRequest) -> JsonResponse:

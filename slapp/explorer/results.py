@@ -18,13 +18,13 @@ TECHNOLOGIES = {
         "name": "Photovoltaik",
         "color": "#FFD700",
     },
-    "heatpump_small": {
-        "name": "Kleine Wärmepumpe",
-        "color": "#FF4500",
+    "boiler_large": {
+        "name": "Großer Erdgas-Kessel",
+        "color": "#FF8C00",
     },
-    "heat_decentral_storage": {
-        "name": "Dezentrale Wärmespeicherung",
-        "color": "#8B0000",
+    "boiler_small": {
+        "name": "Kleiner Erdgas-Kessel",
+        "color": "#B22222",
     },
     "ror": {
         "name": "Laufwasserkraftwerk",
@@ -73,7 +73,7 @@ def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> di
     capacity_query = reduce(
         or_,
         [Q(name=technology, var_name=capacity_name) for technology, capacity_name in CAPACITIES.items()],
-    ) & Q(region=region)
+    )
     sensitivities = (
         Sensitivity.objects.filter(attribute=sensitivity, component=technology, region=region)
         .select_related("scenario")
@@ -88,3 +88,68 @@ def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> di
         for sensitivity in sensitivities
     }
     return results
+
+
+def add_baseline_results(sensitivity_data: dict) -> None:
+    """Add a baseline scenario (with cost 0) to sensitivity_data."""
+    baseline_cost = 0.0
+    if baseline_cost not in sensitivity_data:
+        sorted_costs = sorted(sensitivity_data.keys())
+        baseline_result = {}
+        # Assume that all inner dictionaries have the same keys.
+        if sorted_costs:
+            for inner_key in sensitivity_data[sorted_costs[0]]:
+                # Collect (cost, value) pairs for the current inner_key where the key exists.
+                values = [
+                    (cost, sensitivity_data[cost][inner_key])
+                    for cost in sorted_costs
+                    if inner_key in sensitivity_data[cost]
+                ]
+                negatives = [(cost, val) for cost, val in values if cost < 0]
+                positives = [(cost, val) for cost, val in values if cost > 0]
+                if negatives and positives:
+                    cost_neg, val_neg = negatives[-1]  # Largest negative cost
+                    cost_pos, val_pos = positives[0]  # Smallest positive cost
+                    baseline_result[inner_key] = (val_neg + val_pos) / 2
+        sensitivity_data[baseline_cost] = baseline_result
+
+
+def get_tech_category(full_key: str) -> str | None:
+    """DCheck the full_key against the keys in TECHNOLOGIES."""
+    for tech_key in TECHNOLOGIES:
+        if tech_key in full_key:
+            return tech_key
+    return None
+
+
+def build_tech_comp_data(bar_entry: dict, region: str, current_tech: str) -> list:
+    """Build a list of dictionaries for tech comparison chart."""
+    bar_data_list = []
+    for full_key, value in bar_entry.items():
+        if full_key.split("-")[0] not in [region, "ALL"]:
+            continue
+        category = get_tech_category(full_key)
+        if category is None or category == current_tech:
+            continue
+        if category in TECHNOLOGIES:
+            display_name = TECHNOLOGIES[category]["name"]
+            color = TECHNOLOGIES[category]["color"]
+            bar_data_list.append(
+                {
+                    "name": display_name,
+                    "value": value,
+                    "color": color,
+                },
+            )
+    return bar_data_list
+
+
+def build_cost_cap_data(sensitivity_data: dict, current_tech: str) -> dict:
+    """Build a dictionary for the cost capacity chart data for the selected technology."""
+    cost_cap_data = {}
+    for x, inner_dict in sensitivity_data.items():
+        for key in inner_dict:
+            if current_tech in key:
+                cost_cap_data[x] = inner_dict[key]
+                break
+    return cost_cap_data

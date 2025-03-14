@@ -1,3 +1,5 @@
+let currentRegion = "";
+
 function showHiddenDiv(region, button) {
     let allButtons = document.querySelectorAll(".select-button");
     allButtons.forEach(b => b.classList.remove("selected"));
@@ -10,6 +12,8 @@ function showHiddenDiv(region, button) {
     loadFlowsChart(region, "electricity");
     loadFlowsChart(region, "hydrogen");
     loadBasicData(region);
+    hideTechData();
+    currentRegion = region;
     }
 
 function getOrCreateChart(domElement) {
@@ -20,6 +24,13 @@ function getOrCreateChart(domElement) {
         chart = echarts.init(domElement, null, { renderer: "svg" });
     }
     return chart;
+}
+
+function removeChart(domElement) {
+    let chart = echarts.getInstanceByDom(domElement);
+    if (chart) {
+        chart.clear();
+    }
 }
 
 function loadFlowsChart(chartType) {
@@ -308,74 +319,207 @@ function loadBasicData(region) {
     });
 }
 
-function loadCostCapacityLineChart(data) {
-    let el = document.getElementById("line-chart");
-    if (!el) return;
-
-    let chart = getOrCreateChart(el);
-
-    let lineData = data.line_data || [];
-
-    let option = {
-        title: {
-            text: "Kosten vs. Installierte Leistung",
-            left: "center"
-        },
-        tooltip: {
-            trigger: "axis",
-            formatter: (params) => {
-                let value = params[0].value;
-                let xVal = value[0];
-                let yVal = value[1];
-                return `Kosten: ${xVal} €<br/>Leistung: ${yVal} MW`;
-            }
-        },
-        xAxis: {
-            type: "value",
-            name: "Kosten (€)"
-        },
-        yAxis: {
-            type: "value",
-            name: "Installierte Leistung (MW)"
-        },
-        series: [
-            {
-                type: "line",
-                data: lineData,
-                smooth: true
-            }
-        ]
-    };
-
-    chart.setOption(option);
-    chart.resize();
+function showErrorMessage(el, message) {
+    let errorMsg = el.querySelector('.error-message');
+    if (!errorMsg) {
+        errorMsg = document.createElement('div');
+        errorMsg.className = 'error-message';
+        errorMsg.style.position = "absolute";
+        errorMsg.style.top = "10px";
+        errorMsg.style.left = "0";
+        errorMsg.style.width = "100%";
+        errorMsg.style.textAlign = 'center';
+        errorMsg.style.padding = '20px';
+        el.appendChild(errorMsg);
+    }
+    errorMsg.textContent = message;
 }
 
-function loadHorizontalBarChart(data) {
-    let el = document.getElementById("bar-chart");
+function removeErrorMessage(el) {
+    let errorMsg = el.querySelector('.error-message');
+    if (errorMsg) {
+        errorMsg.parentNode.removeChild(errorMsg);
+    }
+}
+
+let currentTech = "";
+
+function loadCostCapacityData(tech) {
+    currentTech = tech;
+    fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(tech)}&region=${encodeURIComponent(currentRegion)}`, {
+        method: 'GET',
+        headers: { "Accept": "application/json" }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network error: " + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        loadCostCapacityLineChart(data.line_data);
+        let xValues = Object.keys(data.line_data)
+            .map(key => parseFloat(key))
+            .sort((a, b) => a - b);
+        if (xValues.includes(0)) {
+            updateTechComparisonChart(0, tech);
+        } else if (xValues.length > 0) {
+            updateTechComparisonChart(xValues[0], tech);
+        }
+    })
+    .catch(error => {
+        console.error("Error loading cost capacity data:", error);
+    });
+}
+
+function loadCostCapacityLineChart(lineData) {
+    let techCompChart = document.getElementById("tech-comparison-chart");
+    let el = document.getElementById("cost-capacity-chart");
     if (!el) return;
+
+    if (!lineData || Object.keys(lineData).length === 0) {
+        removeChart(el);
+        el.style.display = "relative";
+        showErrorMessage(el, "Keine Daten verfügbar");
+        if (techCompChart) {
+             techCompChart.style.display = "none";
+        }
+    return;
+    }else {
+        removeErrorMessage(el);
+        el.style.display = "block";
+        techCompChart.style.display = "block";
+    }
+
+    let points = Object.entries(lineData)
+        .map(([key, value]) => [parseFloat(key), value])
+        .sort((a, b) => a[0] - b[0]);
+
+    let xValues = points.map(point => point[0]);
+    let yValues = points.map(point => point[1]);
 
     let chart = getOrCreateChart(el);
 
+    let defaultIndex = (xValues.includes(0)) ? xValues.indexOf(0) : 0;
+    let seriesData = yValues.map((val, index) => {
+         if (index === defaultIndex) {
+             return { value: val, itemStyle: { color: "#FF0000" } };
+         }
+         return { value: val };
+    });
+
+    let option = {
+         title: {
+             text: "Kosten vs. Installierte Leistung",
+             left: "center"
+         },
+         tooltip: {
+             trigger: "axis",
+             formatter: (params) => {
+                 let idx = params[0].dataIndex;
+                 let xVal = xValues[idx];
+                 let yVal = yValues[idx];
+                 return `Kosten: ${xVal} €<br/>Leistung: ${yVal} MW`;
+             }
+         },
+         xAxis: {
+             type: "category",
+             name: "Kosten (€)",
+             data: xValues
+         },
+         yAxis: {
+             type: "value",
+             name: "Installierte Leistung (MW)"
+         },
+         series: [
+             {
+                 type: "line",
+                 data: seriesData,
+                 smooth: true,
+                 symbol: "circle",
+                 symbolSize: 8
+             }
+         ]
+    };
+    chart.setOption(option);
+    chart.resize();
+
+   chart.off('click');
+    chart.on('click', function (e) {
+        let idx = e.dataIndex;
+        if (idx === undefined || idx < 0 || idx >= xValues.length) {
+            return;
+        }
+        const highlightColor = "#FF0000";
+        let newSeriesData = yValues.map((value, index) => {
+            if (index === idx) {
+                return { value: value, itemStyle: { color: highlightColor } };
+            } else {
+                return value;
+            }
+        });
+        chart.setOption({
+            series: [{
+                data: newSeriesData
+            }]
+        });
+        let selectedX = xValues[idx];
+        updateTechComparisonChart(selectedX, currentTech);
+    });
+}
+
+function updateTechComparisonChart(selectedX, tech) {
+    fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(tech)}&x=${encodeURIComponent(selectedX)}`, {
+        method: 'GET',
+        headers: { "Accept": "application/json" }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network error: " + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        loadTechComparisonChart(data, selectedX);
+    })
+    .catch(error => {
+        console.error("Error updating the tech comparison chart:", error);
+    });
+}
+
+function loadTechComparisonChart(data, selectedX) {
+    let el = document.getElementById("tech-comparison-chart");
+    if (!el) return;
+
+    let chart = getOrCreateChart(el);
     let barData = data.bar_data || [];
+    if (barData.length === 0) {
+         removeChart(el);
+         showErrorMessage(el, "Keine Daten verfügbar");
+         return;
+    }else {
+    removeErrorMessage(el);
+    el.style.display = "block";
+    }
 
     let categories = barData.map(item => item.name);
-    let values = barData.map(item => item.value);
+    let values = barData.map(item => ({
+        value: item.value,
+        itemStyle: { color: item.color }
+    }));
 
     let option = {
         title: {
-            text: "Horizontales Balkendiagramm",
+            text: "Technologievergleich bei Kosten von " + selectedX + " €",
             left: "center"
         },
         tooltip: {
             trigger: "item",
-            formatter: (params) => {
-                return `${params.name}<br/>Wert: ${params.value}`;
-            }
+            formatter: (params) => `${params.name}<br/>Value: ${params.value}`
         },
         xAxis: {
             type: "value",
-            name: "Wert"
+            name: "Leistung"
         },
         yAxis: {
             type: "category",
@@ -393,27 +537,24 @@ function loadHorizontalBarChart(data) {
     chart.resize();
 }
 
-function loadCostCapacityData(tech) {
-    fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(tech)}`, {
-        method: 'GET',
-        headers: {
-            "Accept": "application/json",
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Netzwerkfehler: " + response.status);
-        }
-        return response.json();
-    })
-    .then(data => {
-        loadCostCapacityLineChart(data);
-        loadHorizontalBarChart(data);
-    })
-    .catch(error => {
-        console.error("Fehler beim Laden der Cost-Capacity-Daten:", error);
+/**
+ * Dropdown integration:
+ * When a dropdown item is clicked, the selected technology type is retrieved and the charts are reloaded.
+ */
+document.querySelectorAll('.dropdown-content a').forEach(item => {
+    item.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        const selectedType = this.getAttribute('type');
+        const selectedValue = this.textContent;
+
+        loadCostCapacityData(selectedType);
+        showTechData();
+
+        document.querySelector('.dropdown-content').classList.remove('show');
+        document.querySelector('.dropdown-button').textContent = selectedValue;
     });
-}
+});
 
 
 document.querySelector('.dropdown-button').addEventListener('click', function() {
@@ -432,25 +573,20 @@ window.onclick = function(event) {
     }
 };
 
-function showCostCapData() {
-    costCapContainer = document.getElementById("cost-cap-container")
-    if (costCapContainer) {
-        costCapContainer.classList.add("active");
+function showTechData() {
+    techContainer = document.getElementById("tech-container")
+    if (techContainer) {
+        techContainer.classList.remove("hide");
+        techContainer.classList.add("active");
     }
 }
 
-document.querySelectorAll('.dropdown-content a').forEach(item => {
-    item.addEventListener('click', function(event) {
-        event.preventDefault();
-
-        const selectedType = this.getAttribute('type');
-        const selectedValue = this.textContent;
-
-        loadCostCapacityData(selectedType);
-        showCostCapData();
-
-        document.querySelector('.dropdown-content').classList.remove('show');
-
-        document.querySelector('.dropdown-button').textContent = selectedValue;
-    });
-});
+function hideTechData() {
+    document.querySelector('.dropdown-content').classList.remove('show');
+    document.querySelector('.dropdown-button').textContent = "Technologie";
+    techContainer = document.getElementById("tech-container")
+    if (techContainer) {
+        techContainer.classList.remove("active");
+        techContainer.classList.add("hide");
+    }
+}
