@@ -87,21 +87,28 @@
   display: block;
 }
 
-.cost-capacity-chart {
-  width: 550px;
-  height: 400px;
+.technology-charts {
+  flex: 1;
+  height: 500px;
   border: 1px solid #ccc;
+  margin: 50px;
+  padding: 30px;
+  box-sizing: border-box;
 }
 
-#cost-cap-container {
+#tech-container {
   display: none;
   width: 100%;
   text-align: center;
   margin-top: 20px;
 }
 
-#cost-cap-container.active {
+#tech-container.active {
   display: flex;
+  }
+
+#tech-container.hide {
+  display: none;
   }
 
 #example {

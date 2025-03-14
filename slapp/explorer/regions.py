@@ -497,7 +497,7 @@ def get_energy_data(region: str) -> list:
 
 def get_cost_capacity_data(data_type: str) -> dict:
     """Return cost capacity data."""
-    if data_type == "Technologie":
+    if data_type == "wind-onshore":
         cost_capacity_data = {
             "line_data": [
                 [0, 0],
@@ -513,7 +513,7 @@ def get_cost_capacity_data(data_type: str) -> dict:
                 {"name": "Kategorie D", "value": 90},
             ],
         }
-    elif data_type == "Etwas anderes":
+    elif data_type == "solar-pv":
         cost_capacity_data = {
             "line_data": [
                 [0, 0],
@@ -528,7 +528,7 @@ def get_cost_capacity_data(data_type: str) -> dict:
                 {"name": "Andere C", "value": 110},
             ],
         }
-    elif data_type == "Sonstiges":
+    elif data_type == "electricity-heatpump_small":
         cost_capacity_data = {
             "line_data": [
                 [0, 0],
