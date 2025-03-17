@@ -476,7 +476,7 @@ function loadCostCapacityLineChart(lineData) {
 }
 
 function updateTechComparisonChart(selectedX, tech) {
-    fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(tech)}&x=${encodeURIComponent(selectedX)}`, {
+    fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(tech)}&x=${encodeURIComponent(selectedX)}&region=${encodeURIComponent(currentRegion)}`, {
         method: 'GET',
         headers: { "Accept": "application/json" }
     })
