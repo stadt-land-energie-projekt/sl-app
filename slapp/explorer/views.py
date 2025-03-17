@@ -37,6 +37,7 @@ from .results import (
     add_baseline_results,
     build_cost_cap_data,
     build_tech_comp_data,
+    filter_region_and_tech,
     get_sensitivity_result,
 )
 
@@ -600,7 +601,8 @@ def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
     sensitivity_data = get_sensitivity_result("CapacityCosts", region, tech)
     sensitivity_data.update(get_sensitivity_result("CapacityCosts", "ALL", tech))
 
-    add_baseline_results(sensitivity_data)
+    sensitivity_data = filter_region_and_tech(sensitivity_data, region)
+    sensitivity_data = add_baseline_results(sensitivity_data)
     # If an "x" parameter is provided, return tech comparison chart data.
     selected_x = request.GET.get("x")
     if selected_x is not None:
@@ -611,7 +613,7 @@ def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
         if selected_x not in sensitivity_data:
             return JsonResponse({"error": "x value not found"}, status=404)
 
-        tech_comp_data_list = build_tech_comp_data(sensitivity_data[selected_x], region, tech)
+        tech_comp_data_list = build_tech_comp_data(sensitivity_data[selected_x], tech)
         return JsonResponse({"bar_data": tech_comp_data_list})
 
     # Without "x": Create line chart data for the selected technology.

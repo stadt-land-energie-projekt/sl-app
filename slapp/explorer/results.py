@@ -90,16 +90,14 @@ def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> di
     return results
 
 
-def add_baseline_results(sensitivity_data: dict) -> None:
+def add_baseline_results(sensitivity_data: dict) -> dict:
     """Add a baseline scenario (with cost 0) to sensitivity_data."""
     baseline_cost = 0.0
     if baseline_cost not in sensitivity_data:
         sorted_costs = sorted(sensitivity_data.keys())
         baseline_result = {}
-        # Assume that all inner dictionaries have the same keys.
         if sorted_costs:
             for inner_key in sensitivity_data[sorted_costs[0]]:
-                # Collect (cost, value) pairs for the current inner_key where the key exists.
                 values = [
                     (cost, sensitivity_data[cost][inner_key])
                     for cost in sorted_costs
@@ -107,11 +105,18 @@ def add_baseline_results(sensitivity_data: dict) -> None:
                 ]
                 negatives = [(cost, val) for cost, val in values if cost < 0]
                 positives = [(cost, val) for cost, val in values if cost > 0]
+
                 if negatives and positives:
-                    cost_neg, val_neg = negatives[-1]  # Largest negative cost
-                    cost_pos, val_pos = positives[0]  # Smallest positive cost
-                    baseline_result[inner_key] = (val_neg + val_pos) / 2
+                    cost_neg, val_neg = negatives[-1]
+                    cost_pos, val_pos = positives[0]
+
+                    interpolated_value = val_neg + (val_pos - val_neg) * (
+                        (baseline_cost - cost_neg) / (cost_pos - cost_neg)
+                    )
+                    baseline_result[inner_key] = interpolated_value
+
         sensitivity_data[baseline_cost] = baseline_result
+    return sensitivity_data
 
 
 def get_tech_category(full_key: str) -> str | None:
@@ -122,12 +127,10 @@ def get_tech_category(full_key: str) -> str | None:
     return None
 
 
-def build_tech_comp_data(bar_entry: dict, region: str, current_tech: str) -> list:
+def build_tech_comp_data(bar_entry: dict, current_tech: str) -> list:
     """Build a list of dictionaries for tech comparison chart."""
     bar_data_list = []
     for full_key, value in bar_entry.items():
-        if full_key.split("-")[0] not in [region, "ALL"]:
-            continue
         category = get_tech_category(full_key)
         if category is None or category == current_tech:
             continue
@@ -153,3 +156,21 @@ def build_cost_cap_data(sensitivity_data: dict, current_tech: str) -> dict:
                 cost_cap_data[x] = inner_dict[key]
                 break
     return cost_cap_data
+
+
+def filter_region_and_tech(sensitivity_data: dict, region: str) -> dict:
+    """Filter data with region."""
+    filtered_data = {}
+
+    for cost, inner_dict in sensitivity_data.items():
+        filtered_inner_dict = {}
+        for full_key, value in inner_dict.items():
+            for tech_key in TECHNOLOGIES:
+                if tech_key in full_key:
+                    parts = full_key.split("-", 1)
+                    if parts[0] == region:
+                        filtered_inner_dict[full_key] = value
+        if filtered_inner_dict:
+            filtered_data[cost] = filtered_inner_dict
+
+    return filtered_data

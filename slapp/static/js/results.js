@@ -422,6 +422,13 @@ function loadCostCapacityLineChart(lineData) {
                  return `Kosten: ${xVal} €<br/>Leistung: ${yVal} MW`;
              }
          },
+          grid: {
+            left: '10%',
+            right: '20%',
+            top: '25%',
+            bottom: '15%',
+            containLabel: true
+          },
          xAxis: {
              type: "category",
              name: "Kosten (€)",
@@ -437,7 +444,7 @@ function loadCostCapacityLineChart(lineData) {
                  data: seriesData,
                  smooth: true,
                  symbol: "circle",
-                 symbolSize: 8
+                 symbolSize: 8,
              }
          ]
     };
@@ -517,6 +524,13 @@ function loadTechComparisonChart(data, selectedX) {
             trigger: "item",
             formatter: (params) => `${params.name}<br/>Value: ${params.value}`
         },
+         grid: {
+            left: '10%',
+            right: '20%',
+            top: '25%',
+            bottom: '15%',
+            containLabel: true
+          },
         xAxis: {
             type: "value",
             name: "Leistung"
