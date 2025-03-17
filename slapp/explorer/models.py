@@ -602,3 +602,39 @@ class PotentialareaWindSTP2027SearchAreaOpenArea(StaticRegionModel):  # noqa: D1
 class PotentialareaWindSTP2027VR(StaticRegionModel):  # noqa: D101
     data_file = "potentialarea_wind_stp_2027_vr"
     layer = "potentialarea_wind_stp_2027_vr"
+
+
+class Scenario(models.Model):
+    """Model to store scenario details related to oemof results."""
+
+    name = models.CharField(max_length=255, unique=True)
+    parameters = models.JSONField()
+
+
+class Result(models.Model):
+    """Model to store oemof results from scalars.csv."""
+
+    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    var_name = models.CharField(max_length=255)
+    carrier = models.CharField(max_length=255)
+    region = models.CharField(max_length=255)
+    tech = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
+    var_value = models.FloatField()
+
+
+class Sensitivity(models.Model):
+    """Model to store sensitivity runs from ZIB."""
+
+    attribute = models.CharField(max_length=255)
+    component = models.CharField(max_length=255)
+    region = models.CharField(max_length=255, null=True)
+    perturbation_method = models.CharField(max_length=255)
+    perturbation_parameter = models.FloatField()
+    scenario = models.ForeignKey(Scenario, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        """Metadata for model."""
+
+        unique_together = ("attribute", "component", "region", "perturbation_method", "perturbation_parameter")
