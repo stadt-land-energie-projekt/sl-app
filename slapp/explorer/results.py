@@ -134,20 +134,19 @@ def build_tech_comp_data(bar_entry: dict, current_tech: str) -> list:
         category = get_tech_category(full_key)
         if category is None or category == current_tech:
             continue
-        if category in TECHNOLOGIES:
-            display_name = TECHNOLOGIES[category]["name"]
-            color = TECHNOLOGIES[category]["color"]
-            bar_data_list.append(
-                {
-                    "name": display_name,
-                    "value": value,
-                    "color": color,
-                },
-            )
+        display_name = TECHNOLOGIES[category]["name"]
+        color = TECHNOLOGIES[category]["color"]
+        bar_data_list.append(
+            {
+                "name": display_name,
+                "value": value,
+                "color": color,
+            },
+        )
     return bar_data_list
 
 
-def build_cost_cap_data(sensitivity_data: dict, current_tech: str) -> dict:
+def build_cost_cap_data(sensitivity_data: dict, current_tech: str) -> [float, float]:
     """Build a dictionary for the cost capacity chart data for the selected technology."""
     cost_cap_data = {}
     for x, inner_dict in sensitivity_data.items():
@@ -155,7 +154,13 @@ def build_cost_cap_data(sensitivity_data: dict, current_tech: str) -> dict:
             if current_tech in key:
                 cost_cap_data[x] = inner_dict[key]
                 break
-    return cost_cap_data
+
+    array_data = sorted(
+        ([float(k), v] for k, v in cost_cap_data.items()),
+        key=lambda item: item[0],
+    )
+
+    return array_data
 
 
 def filter_region_and_tech(sensitivity_data: dict, region: str) -> dict:
