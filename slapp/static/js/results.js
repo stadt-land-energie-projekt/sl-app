@@ -343,24 +343,6 @@ function removeErrorMessage(el) {
 
 let currentTech = "";
 
-function getNearestIndex(chart, xValues, params) {
-    const clickX = params.event.offsetX;
-    const clickY = params.event.offsetY;
-
-    const [dataX] = chart.convertFromPixel({ seriesIndex: 0 }, [clickX, clickY]);
-
-    let minDist = Infinity;
-    let nearestIdx = -1;
-    xValues.forEach((val, i) => {
-        const dist = Math.abs(val - dataX);
-        if (dist < minDist) {
-            minDist = dist;
-            nearestIdx = i;
-        }
-    });
-
-    return nearestIdx;
-}
 
 function loadCostCapacityData(tech) {
     currentTech = tech;
@@ -388,39 +370,33 @@ function loadCostCapacityData(tech) {
     });
 }
 
-function loadCostCapacityLineChart(lineData) {
-    let techCompChart = document.getElementById("tech-comparison-chart");
-    let el = document.getElementById("cost-capacity-chart");
-    if (!el) return;
+/**
+ * Wandelt lineData (Array von [x, y]) in xValues, yValues, seriesData um.
+ * Hebt optional den Standard-Index (z. B. x=0) farblich hervor.
+ */
+function transformLineData(lineData) {
+    const xValues = lineData.map(item => item[0]);
+    const yValues = lineData.map(item => item[1]);
 
-    if (!lineData || lineData.length === 0) {
-        removeChart(el);
-        el.style.display = "relative";
-        showErrorMessage(el, "Keine Daten verfügbar");
-        if (techCompChart) {
-            techCompChart.style.display = "none";
-        }
-        return;
-    } else {
-        removeErrorMessage(el);
-        el.style.display = "block";
-        techCompChart.style.display = "block";
-    }
+    const defaultIndex = xValues.includes(0) ? xValues.indexOf(0) : 0;
+    const highlightColor = "#FF0000";
 
-    let xValues = lineData.map(data => data[0]);
-    let yValues = lineData.map(data => data[1]);
-
-    let chart = getOrCreateChart(el);
-
-    let defaultIndex = (xValues.includes(0)) ? xValues.indexOf(0) : 0;
-    let seriesData = yValues.map((val, index) => {
+    const seriesData = yValues.map((val, index) => {
         if (index === defaultIndex) {
-            return { value: val, itemStyle: { color: "#FF0000" } };
+            return { value: val, itemStyle: { color: highlightColor } };
         }
         return { value: val };
     });
 
-    let option = {
+    return { xValues, yValues, seriesData };
+}
+
+/**
+ * Erstellt das ECharts-Options-Objekt für den Line-Chart.
+ * - Konfiguriert 'trigger: axis' + 'snap: true' für den Axis-Pointer.
+ */
+function createLineChartOption(xValues, yValues, seriesData) {
+    return {
         title: {
             text: "Kosten vs. Installierte Leistung",
             left: "center"
@@ -435,16 +411,19 @@ function loadCostCapacityLineChart(lineData) {
             }
         },
         grid: {
-          left: '10%',
-          right: '20%',
-          top: '25%',
-          bottom: '15%',
-          containLabel: true
+            left: '10%',
+            right: '20%',
+            top: '25%',
+            bottom: '15%',
+            containLabel: true
         },
         xAxis: {
             type: "category",
             name: "Kosten (€)",
-            data: xValues
+            data: xValues,
+            axisPointer: {
+                snap: true
+            }
         },
         yAxis: {
             type: "value",
@@ -460,32 +439,78 @@ function loadCostCapacityLineChart(lineData) {
             }
         ]
     };
-    chart.setOption(option);
-    chart.resize();
+}
 
-   chart.off('click');
-    chart.on('click', function (e) {
-        let idx = e.dataIndex;
-        if (idx === undefined || idx < 0 || idx >= xValues.length) {
+function registerAxisPointerListener(chart, lastDataIndexRef) {
+    chart.on('updateAxisPointer', function (event) {
+        if (event.axesInfo && event.axesInfo.length > 0) {
+            const axisInfo = event.axesInfo[0];
+            lastDataIndexRef.value = axisInfo.value;
+        }
+    });
+}
+
+function registerGlobalChartClick(chart, xValues, yValues, lastDataIndexRef) {
+    chart.getZr().off('click');
+    chart.getZr().on('click', function () {
+        if (lastDataIndexRef.value == null) {
             return;
         }
+
         const highlightColor = "#FF0000";
-        let newSeriesData = yValues.map((value, index) => {
-            if (index === idx) {
+        const newSeriesData = yValues.map((value, index) => {
+            if (index === lastDataIndexRef.value) {
                 return { value: value, itemStyle: { color: highlightColor } };
             } else {
                 return value;
             }
         });
+
         chart.setOption({
             series: [{
                 data: newSeriesData
             }]
         });
-        let selectedX = xValues[idx];
+
+        const selectedX = xValues[lastDataIndexRef.value];
         updateTechComparisonChart(selectedX, currentTech);
     });
 }
+
+
+function loadCostCapacityLineChart(lineData) {
+    const techCompChart = document.getElementById("tech-comparison-chart");
+    const el = document.getElementById("cost-capacity-chart");
+    if (!el) return;
+
+    // Kein oder leeres data -> Fehlermeldung
+    if (!lineData || lineData.length === 0) {
+        removeChart(el);
+        el.style.display = "relative";
+        showErrorMessage(el, "Keine Daten verfügbar");
+        if (techCompChart) {
+            techCompChart.style.display = "none";
+        }
+        return;
+    } else {
+        removeErrorMessage(el);
+        el.style.display = "block";
+        techCompChart.style.display = "block";
+    }
+
+    const { xValues, yValues, seriesData } = transformLineData(lineData);
+
+    const chart = getOrCreateChart(el);
+
+    const option = createLineChartOption(xValues, yValues, seriesData);
+    chart.setOption(option);
+    chart.resize();
+
+    let lastDataIndexRef = { value: null };
+    registerAxisPointerListener(chart, lastDataIndexRef);
+    registerGlobalChartClick(chart, xValues, yValues, lastDataIndexRef);
+}
+
 
 function updateTechComparisonChart(selectedX, tech) {
     fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(tech)}&x=${encodeURIComponent(selectedX)}&region=${encodeURIComponent(currentRegion)}`, {
