@@ -45,7 +45,6 @@
         <h1>Sensitivitäten</h1>
         <p>Hier kommt auch noch ein Intro-Text dazu.</p>
         <select id="technologySelect" name="technology" autocomplete="off">
-          <option disabled selected>Bitte Technologie wählen</option>
           {% for key, data in technologies.items %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
         </select>
         <div id="tech-container">

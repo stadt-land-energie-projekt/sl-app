@@ -48,10 +48,6 @@
   border: 1px solid #ccc;
 }
 
-.show {
-  display: block;
-}
-
 .technology-charts {
   flex: 1;
   height: 300px;
@@ -61,19 +57,11 @@
 }
 
 #tech-container {
-  display: none;
+  display: flex;
   width: 100%;
   text-align: center;
   margin-top: 20px;
 }
-
-#tech-container.active {
-  display: flex;
-  }
-
-#tech-container.hide {
-  display: none;
-  }
 
 #example {
   background-color: #aff4c6;

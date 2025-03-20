@@ -34,10 +34,10 @@ from .regions import get_regions_data as get_data
 from .regions import municipalities_details
 from .results import (
     TECHNOLOGIES,
-    add_baseline_results,
     build_cost_cap_data,
     build_tech_comp_data,
     filter_region_and_tech,
+    get_base_scenario,
     get_sensitivity_result,
 )
 
@@ -601,8 +601,10 @@ def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
     sensitivity_data = get_sensitivity_result("CapacityCosts", region, tech)
     sensitivity_data.update(get_sensitivity_result("CapacityCosts", "ALL", tech))
 
+    base_scenario = get_base_scenario()
+    sensitivity_data[0.0] = base_scenario
+
     sensitivity_data = filter_region_and_tech(sensitivity_data, region)
-    sensitivity_data = add_baseline_results(sensitivity_data)
     # If an "x" parameter is provided, return tech comparison chart data.
     selected_x = request.GET.get("x")
     if selected_x is not None:

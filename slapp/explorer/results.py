@@ -7,7 +7,7 @@ from operator import or_
 
 from django.db.models import Prefetch, Q
 
-from .models import Result, Sensitivity
+from .models import Result, Scenario, Sensitivity
 
 TECHNOLOGIES = {
     "electrolyzer": {
@@ -90,33 +90,21 @@ def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> di
     return results
 
 
-def add_baseline_results(sensitivity_data: dict) -> dict:
-    """Add a baseline scenario (with cost 0) to sensitivity_data."""
-    baseline_cost = 0.0
-    if baseline_cost not in sensitivity_data:
-        sorted_costs = sorted(sensitivity_data.keys())
-        baseline_result = {}
-        if sorted_costs:
-            for inner_key in sensitivity_data[sorted_costs[0]]:
-                values = [
-                    (cost, sensitivity_data[cost][inner_key])
-                    for cost in sorted_costs
-                    if inner_key in sensitivity_data[cost]
-                ]
-                negatives = [(cost, val) for cost, val in values if cost < 0]
-                positives = [(cost, val) for cost, val in values if cost > 0]
+def get_base_scenario() -> dict:
+    """Return base_scenarios."""
+    try:
+        scenario = Scenario.objects.get(name="base_scenario")
+    except Scenario.DoesNotExist:
+        return {}
 
-                if negatives and positives:
-                    cost_neg, val_neg = negatives[-1]
-                    cost_pos, val_pos = positives[0]
+    base_scenario = {}
 
-                    interpolated_value = val_neg + (val_pos - val_neg) * (
-                        (baseline_cost - cost_neg) / (cost_pos - cost_neg)
-                    )
-                    baseline_result[inner_key] = interpolated_value
+    for tech, cap in CAPACITIES.items():
+        result = scenario.result_set.filter(name=tech, var_name=cap).first()
+        if result:
+            base_scenario[tech] = result.var_value
 
-        sensitivity_data[baseline_cost] = baseline_result
-    return sensitivity_data
+    return base_scenario
 
 
 def get_tech_category(full_key: str) -> str | None:

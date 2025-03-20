@@ -116,6 +116,24 @@ def empty_data(models: list[Model] | None = None) -> None:
         model.objects.all().delete()
 
 
+def load_base_scenario() -> None:
+    """Import base data from ZIB."""
+    scenario, created = models.Scenario.objects.get_or_create(
+        name="base_scenario",
+        defaults={"parameters": {}},
+    )
+    if not created:
+        scenario.result_set.all().delete()
+
+    base_file = pathlib.Path(ZIB_DATA) / "capacities/base" / "scalars.csv"
+    results_df = pd.read_csv(base_file, delimiter=";", encoding="utf-8")
+    if "scenario" in results_df.columns:
+        results_df = results_df.drop("scenario", axis=1)
+
+    results = [models.Result(scenario=scenario, **record) for record in results_df.to_dict(orient="records")]
+    models.Result.objects.bulk_create(results)
+
+
 def load_sensitivities() -> None:
     """Import data from sensitivity runs at ZIB."""
     for sensitivity, sensitivity_lookup in (("capacities", "CapacityCosts"), ("marginal", "MarginalCosts")):
