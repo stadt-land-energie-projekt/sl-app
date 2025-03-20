@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+from collections import namedtuple
 from functools import reduce
 from operator import or_
 
 from django.db.models import Prefetch, Q
 
 from .models import Result, Sensitivity
+
+ResultEntry = namedtuple("ResultEntry", ["name", "var_name"])  # noqa: PYI024
 
 CAPACITIES = {
     "B-wind-onshore": "invest_out_electricity",

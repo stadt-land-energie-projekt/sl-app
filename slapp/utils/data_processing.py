@@ -5,9 +5,12 @@ from __future__ import annotations
 import json
 import logging
 import pathlib
+import re
 from typing import TYPE_CHECKING
 
 import pandas as pd
+
+from slapp.explorer.models import Scenario
 
 if TYPE_CHECKING:
     from django.db.models import Model
@@ -15,6 +18,9 @@ if TYPE_CHECKING:
 from config.settings.base import GEODATA_DIR, ZIB_DATA
 from slapp.explorer import models
 from slapp.utils.ogr_layer_mapping import RelatedModelLayerMapping
+
+ALTERNATIVES_FILENAME = "mga_converted.json"
+ALTERNATIVES_REGIONS = ("B", "BB")
 
 REGIONS = [models.Region, models.Municipality]
 
@@ -126,10 +132,15 @@ def load_sensitivities() -> None:
                 # Skip folders which do not follow schema "x_y"
                 continue
 
-            logging.info(f"Upload data for sensitivity '{sensitivity}' from folder '{folder.name}'.")
-
             # Create Scenario for current sensitivity results
             scenario_name = f"{sensitivity}_{folder.name}"
+
+            if Scenario.objects.filter(name=scenario_name).exists():
+                logging.info("Sensitivity scenario '{scenario_name}' already exists. Skipping.")
+                continue
+
+            logging.info(f"Upload data for sensitivity '{sensitivity}' from folder '{folder.name}'.")
+
             with (folder / "scenario.json").open("r", encoding="utf-8") as f:
                 scenario_details = json.load(f)
             scenario = models.Scenario(name=scenario_name, parameters=scenario_details)
@@ -152,3 +163,103 @@ def load_sensitivities() -> None:
             results_df = results_df.drop("scenario", axis=1)
             results = [models.Result(scenario=scenario, **result) for result in results_df.to_dict(orient="records")]
             models.Result.objects.bulk_create(results)
+
+
+def load_alternatives() -> None:
+    """Import data for alternative results into related models."""
+
+    def get_region_carrier_component(raw_component: str) -> tuple[str, str, str | None]:
+        # Unfortunately composed component name is incompatible with name in results
+        # (compare "BB_electricity_liion_battery" with BB-electricity-liion_battery)
+        region_ = raw_component.split("_")[0]
+        carrier_ = raw_component.split("_")[1]
+        if carrier_ == "heat":
+            carrier_ += "_" + raw_component.split("_")[2]
+        if len(raw_component) == len(region_) + len(carrier_) + 1:
+            # In this case component is only a bus:
+            return region_, carrier_, None
+        # Strip region and carrier from component name to get component
+        component_ = raw_component[len(region_) + len(carrier_) + 2 :]
+        return region_, carrier_, component_
+
+    with (pathlib.Path(ZIB_DATA) / ALTERNATIVES_FILENAME).open("r", encoding="utf-8") as f:
+        alternative_data = json.load(f)
+
+    for divergence, components in alternative_data.items():
+        if models.Alternative.objects.filter(divergence=divergence).exists():
+            logging.info("Alternative scenario '{divergence}' already exists. Skipping.")
+            continue
+
+        alternative = models.Alternative(divergence=divergence)
+        alternative.save()
+        for component_raw, result in components.items():
+            if component_raw.startswith("GenericInvestmentStorageBlock"):
+                component_type = "storage capacity"
+                # In this case we have an investment of storage capacity
+                # Extract component between brackets (i.e. extract "BB_electricity_liion_battery_0" from
+                # "GenericInvestmentStorageBlock_invest(BB_electricity_liion_battery_0)")
+                composed_component = re.findall(
+                    rf"\w*\(((?:{'|'.join(ALTERNATIVES_REGIONS)})\w*)_0\)",
+                    component_raw,
+                )[0]
+                region, carrier, component = get_region_carrier_component(composed_component)
+                var_name = "invest_costs"
+            else:
+                component_type = "capacity"
+                # In this case a flow with two components is given
+                # i.e. "InvestmentFlowBlock_invest(Brandenburg_heat_decentral_Bayern_heat_decentral_storage_0)"
+                matches = re.findall(
+                    rf"\w*\(((?:{'|'.join(ALTERNATIVES_REGIONS)})_\w*)_"
+                    rf"(((?:{'|'.join(ALTERNATIVES_REGIONS)})\w*))_0\)",
+                    component_raw,
+                )
+                first_component = get_region_carrier_component(matches[0][0])
+                second_component = get_region_carrier_component(matches[0][1])
+                if first_component[2] is None:
+                    region, carrier, component = second_component
+                    var_name = f"invest_costs_in_{first_component[1]}"
+                else:
+                    region, carrier, component = first_component
+                    var_name = f"invest_costs_out_{second_component[1]}"
+
+            min_capacity = result["min_obj"]
+            max_capacity = result["max_obj"]
+
+            if min_capacity is None or max_capacity is None:
+                continue
+
+            min_file = result["min_results"]
+            min_results = pd.read_csv(pathlib.Path(ZIB_DATA) / min_file, delimiter=";", encoding="utf-8")
+            min_cost = float(
+                min_results.loc[
+                    (min_results["region"] == region)
+                    & (min_results["carrier"] == carrier)
+                    & (min_results["tech"] == component)
+                    & (min_results["var_name"] == var_name),
+                    "var_value",
+                ].iloc[0],
+            )
+
+            max_file = result["max_results"]
+            max_results = pd.read_csv(pathlib.Path(ZIB_DATA) / max_file, delimiter=";", encoding="utf-8")
+            max_cost = float(
+                max_results.loc[
+                    (max_results["region"] == region)
+                    & (max_results["carrier"] == carrier)
+                    & (max_results["tech"] == component)
+                    & (max_results["var_name"] == var_name),
+                    "var_value",
+                ].iloc[0],
+            )
+
+            models.AlternativeResult(
+                alternative=alternative,
+                region=region,
+                component=component,
+                type=component_type,
+                carrier=carrier,
+                min_capacity=min_capacity,
+                max_capacity=max_capacity,
+                min_cost=min_cost,
+                max_cost=max_cost,
+            ).save()
