@@ -600,3 +600,9 @@ def basic_charts(request: HttpRequest) -> JsonResponse:
     basic_charts_data = get_basic_charts_data(region)
 
     return JsonResponse(basic_charts_data)
+
+
+class RobustExample(TemplateView):
+    """Robust example view."""
+
+    template_name = "robust_example.html"
