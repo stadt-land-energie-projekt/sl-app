@@ -33,6 +33,7 @@ from .regions import (
 )
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
+from .results import get_sensitivity_result
 
 MAX_MUNICIPALITY_COUNT = 3
 
@@ -570,6 +571,7 @@ class Results(TemplateView):
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
         context["range"] = range_tbl
+        context["sensitivity"] = get_sensitivity_result("CapacityCosts", "B", "pv")
         return context
 
 
@@ -598,3 +600,9 @@ def basic_charts(request: HttpRequest) -> JsonResponse:
     basic_charts_data = get_basic_charts_data(region)
 
     return JsonResponse(basic_charts_data)
+
+
+class RobustExample(TemplateView):
+    """Robust example view."""
+
+    template_name = "robust_example.html"
