@@ -1,24 +1,31 @@
-{% extends "base.html" %} {% load humanize %} {% block sidebar_content %}
-<h4 class="text-center">Informationen zur Wertschöpfung</h4>
-<p class="text-center">
-    Dies ist ein Tool zur Berechnung der direkten kommunalen Wertschöpfung durch
-    Windenergie-, Freiflächen-Photovoltaik und Agri-Photovoltaik-Anlagen in
-    brandenburgischen Gemeinden. Es liefert eine Einschätzung des
-    Wertschöpfungspotenzials basierend auf den eingegebenen Daten. Der Rechner
-    ermittelt die möglichen Einnahmen durch die EEG-Beteiligung, den Wind- und
-    Solar-Euro sowie Pachteinnahmen. Es ist wichtig zu beachten, dass die
-    tatsächliche Wertschöpfung deutlich höher ausfallen kann, wenn lokale
-    Unternehmen einbezogen werden, Bürger-Beteiligungen erfolgen und induzierte
-    Effekte berücksichtigt werden. Dieses Tool bietet Kommunen die Möglichkeit,
-    die direkten wirtschaftlichen Vorteile des Ausbaus erneuerbarer Energien
-    abzuschätzen und fundierte Entscheidungen für eine nachhaltige Entwicklung
-    zu treffen.
-</p>
+{% extends "base.html" %} {% load humanize %} 
+{% block sidebar_content %}
+<aside class="av-sidebar">
+    <a href="/" class="av-sidebar__back">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" height="16" width="16">
+            <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+            <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" fill="#15803D" />
+        </svg>
+        <span>Startseite</span>
+    </a>
+    <h1 class="av-sidebar__heading">Wertschöpfung</h1>
+    <p class="av-sidebar__content">
+        Dies ist ein Tool zur Berechnung der direkten kommunalen Wertschöpfung durch
+        Windenergie-, Freiflächen-Photovoltaik und Agri-Photovoltaik-Anlagen in
+        brandenburgischen Gemeinden. Es liefert eine Einschätzung des
+        Wertschöpfungspotenzials basierend auf den eingegebenen Daten. Der Rechner
+        ermittelt die möglichen Einnahmen durch die EEG-Beteiligung, den Wind- und
+        Solar-Euro sowie Pachteinnahmen. Es ist wichtig zu beachten, dass die
+        tatsächliche Wertschöpfung deutlich höher ausfallen kann, wenn lokale
+        Unternehmen einbezogen werden, Bürger-Beteiligungen erfolgen und induzierte
+        Effekte berücksichtigt werden. Dieses Tool bietet Kommunen die Möglichkeit,
+        die direkten wirtschaftlichen Vorteile des Ausbaus erneuerbarer Energien
+        abzuschätzen und fundierte Entscheidungen für eine nachhaltige Entwicklung
+        zu treffen.
+    </p>
+</aside>
 {% endblock sidebar_content %} {% block content %}
-<div class="container mt-1 addedValueCalc">
-    <h1 class="mt-3">Wertschöpfung</h1>
-
-    <hr />
+<div class="av-content addedValueCalc">
     <div class="row">
         <div class="col-md-12">
             <div class="alert alert-info mb-0">
