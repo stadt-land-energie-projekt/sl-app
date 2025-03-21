@@ -5,10 +5,13 @@
 @import 'base/fonts.scss';
 @import 'base/mixins.scss';
 @import 'base/variables.scss';
+@import 'components/alerts.scss';
+@import 'components/forms.scss';
 @import 'components/navbar.scss';
 @import 'components/link_buttons';
 @import 'components/sliders';
 @import 'components/wizard';
+@import 'layouts/added_value.scss';
 @import 'layouts/general.scss';
 @import 'layouts/home.scss';
 @import 'layouts/case_studies.scss';

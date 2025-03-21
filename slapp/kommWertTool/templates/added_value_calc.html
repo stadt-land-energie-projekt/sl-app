@@ -1,28 +1,35 @@
-{% extends "base.html" %} {% load humanize %} {% block sidebar_content %}
-<h4 class="text-center">Informationen zur Wertschöpfung</h4>
-<p class="text-center">
-    Dies ist ein Tool zur Berechnung der direkten kommunalen Wertschöpfung durch
-    Windenergie-, Freiflächen-Photovoltaik und Agri-Photovoltaik-Anlagen in
-    brandenburgischen Gemeinden. Es liefert eine Einschätzung des
-    Wertschöpfungspotenzials basierend auf den eingegebenen Daten. Der Rechner
-    ermittelt die möglichen Einnahmen durch die EEG-Beteiligung, den Wind- und
-    Solar-Euro sowie Pachteinnahmen. Es ist wichtig zu beachten, dass die
-    tatsächliche Wertschöpfung deutlich höher ausfallen kann, wenn lokale
-    Unternehmen einbezogen werden, Bürger-Beteiligungen erfolgen und induzierte
-    Effekte berücksichtigt werden. Dieses Tool bietet Kommunen die Möglichkeit,
-    die direkten wirtschaftlichen Vorteile des Ausbaus erneuerbarer Energien
-    abzuschätzen und fundierte Entscheidungen für eine nachhaltige Entwicklung
-    zu treffen.
-</p>
+{% extends "base.html" %} {% load humanize %} 
+{% block sidebar_content %}
+<div class="av-sidebar">
+    <a href="/" class="av-sidebar__back">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" height="16" width="16">
+            <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+            <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" fill="#15803D" />
+        </svg>
+        <span>Startseite</span>
+    </a>
+    <h1 class="av-sidebar__heading">Wertschöpfung</h1>
+    <p class="av-sidebar__content">
+        Dies ist ein Tool zur Berechnung der direkten kommunalen Wertschöpfung durch
+        Windenergie-, Freiflächen-Photovoltaik und Agri-Photovoltaik-Anlagen in
+        brandenburgischen Gemeinden. Es liefert eine Einschätzung des
+        Wertschöpfungspotenzials basierend auf den eingegebenen Daten. Der Rechner
+        ermittelt die möglichen Einnahmen durch die EEG-Beteiligung, den Wind- und
+        Solar-Euro sowie Pachteinnahmen. Es ist wichtig zu beachten, dass die
+        tatsächliche Wertschöpfung deutlich höher ausfallen kann, wenn lokale
+        Unternehmen einbezogen werden, Bürger-Beteiligungen erfolgen und induzierte
+        Effekte berücksichtigt werden. Dieses Tool bietet Kommunen die Möglichkeit,
+        die direkten wirtschaftlichen Vorteile des Ausbaus erneuerbarer Energien
+        abzuschätzen und fundierte Entscheidungen für eine nachhaltige Entwicklung
+        zu treffen.
+    </p>
+</div>
 {% endblock sidebar_content %} {% block content %}
-<div class="container mt-1 addedValueCalc">
-    <h1 class="mt-3">Wertschöpfung</h1>
-
-    <hr />
+<div class="av-content addedValueCalc">
     <div class="row">
         <div class="col-md-12">
-            <div class="alert alert-info mb-0">
-                <p><b>Anwendungshinweis:</b></p>
+            <div class="alert alert-info">
+                <p class="alert-heading">Anwendungshinweis:</p>
                 <p>
                     Es reicht die Angabe der Potenzialfläche oder der maximal
                     installierbaren Leistung, insofern Sie keine weiteren
@@ -32,204 +39,209 @@
             </div>
         </div>
     </div>
-    <hr />
 
     <form action="{% url 'kommWertTool:submit' %}" method="POST">
         {% csrf_token %}
 
-        <div class="row">
-            <div class="col-md-6">
-                <label for="choosen_mun" class="mb-2">
-                    <b
-                        >Ich möchte für folgende Gemeinde die Wertschöpfung
-                        berechnen:</b
-                    >
-                </label>
-                <select class="form-select" id="choosen_mun" name="choosen_mun">
-                    <option>Bitte wählen:</option>
-
-                    {% for municipality in municipalities %}
-
-                    <option
-                        value="{{ municipality.id }}"
-                        data-name="{{ municipality.name }}"
-                    >
-                        {{ municipality.name }}
-                    </option>
-                    {% endfor %}
-                    <option value="own_county" data-name="own_county">
-                        Eigener Landkreis
-                    </option>
-                </select>
+        <section class="av-section">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label for="choosen_mun" class="label label--large">
+                        Ich möchte für folgende Gemeinde die Wertschöpfung berechnen*
+                    </label>
+                    <select class="form-select form-select--large" id="choosen_mun" name="choosen_mun">
+                        <option>Gemeinde wählen</option>
+    
+                        {% for municipality in municipalities %}
+    
+                        <option
+                            value="{{ municipality.id }}"
+                            data-name="{{ municipality.name }}"
+                        >
+                            {{ municipality.name }}
+                        </option>
+                        {% endfor %}
+                        <option value="own_county" data-name="own_county">
+                            Eigener Landkreis
+                        </option>
+                    </select>
+                </div>
+                <div id="check_county" class="col-md-6">
+                    <p>
+                        <b>In welchem Bundesland befindet sich der Landkreis?*</b>
+                    </p>
+                    <div class="row">
+                        <div>
+                            <input
+                                class="form-check-input"
+                                id="check_county_bb"
+                                name="check_county"
+                                data-name="check_county_bb"
+                                value="check_county_bb"
+                                type="radio"
+                            />
+                            <label class="form-check-label" for="check_county_bb">
+                                Brandenburg
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                class="form-check-input"
+                                id="check_county_sh"
+                                data-name="check_county_sh"
+                                value="check_county_sh"
+                                name="check_county"
+                                type="radio"
+                            />
+                            <label class="form-check-label" for="check_county_sh">
+                                Schleswig-Holstein
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="check_county" class="col-md-6">
-                <p>
-                    <b>In welchem Bundesland befindet sich der Landkreis:</b>
-                </p>
-                <div class="row">
-                    <div class="col-md-6">
+            <div class="optional-separator">
+                <div class="line"></div>
+                <p>Optional</p>
+                <div class="line"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="levy_rate" class="label">
+                        Gewerbesteuer-Hebesatz der Gemeinde (<i>optional</i>):
+    
+                        <i
+                            class="fas fa-info-circle"
+                            data-placement="right"
+                            data-toggle="tooltip"
+                            title="Falls nicht bekannt, wird der durchschnittliche Hebesatz für DE im Jahr 2023 angenommen (407 %)."
+                        ></i>
+                    </label>
+                    <input
+                        class="form-control"
+                        id="levy_rate"
+                        name="levy_rate"
+                        type="number"
+                    />
+                </div>
+                <div class="col-md-6">
+                    <label for="mun_key_num">
+                        Schlüsselzahl der Gemeinde (<i>optional</i>):
+                        <i
+                            class="fas fa-info-circle"
+                            data-placement="right"
+                            data-toggle="tooltip"
+                            title="Falls nicht bekannt, wird eine Schlüsselzahl von 0,003 angenommen."
+                        ></i>
+                    </label>
+                    <input
+                        class="form-control"
+                        id="mun_key_num"
+                        name="mun_key_num"
+                        type="number"
+                    />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="levy_rate_a">
+                        Hebesatz Grundsteuer A der Gemeinde (<i>optional</i>):
+    
+                        <i
+                            class="fas fa-info-circle"
+                            data-placement="right"
+                            data-toggle="tooltip"
+                            title="Falls nicht bekannt, wird ein durchschnittlicher Hebesatz von 310 % angenommen."
+                        ></i>
+                    </label>
+                    <input
+                        class="form-control"
+                        id="levy_rate_a"
+                        name="levy_rate_a"
+                        type="number"
+                    />
+                </div>
+                <div class="col-md-6">
+                    <label for="grassland_number">
+                        Acker-/Grünlandzahl (<i>optional</i>):
+    
+                        <i
+                            class="fas fa-info-circle"
+                            data-placement="right"
+                            data-toggle="tooltip"
+                            title="Falls nicht bekannt, wird eine durchschnittliche Ackerzahl von 30 angenommen."
+                        ></i>
+                    </label>
+                    <input
+                        class="form-control"
+                        id="grassland_number"
+                        name="grassland_number"
+                        type="text"
+                    />
+                </div>
+            </div>
+        </section>
+        <section class="av-section">
+            <p class="av-section__heading">In meiner Gemeinde gibt es Potenzial für:</p>
+            <div class="av-section__select">
+                <div>
+                    <div class="form-check">
                         <input
                             class="form-check-input"
-                            id="check_county_bb"
-                            name="check_county"
-                            data-name="check_county_bb"
-                            value="check_county_bb"
-                            type="radio"
+                            id="checkboxWind"
+                            onclick="toggleAccordions()"
+                            type="checkbox"
                         />
-                        <label class="form-check-label" for="check_county_bb">
-                            Brandenburg
+                        <label class="form-check-label" for="checkboxWind">
+                            Windenergie (WEA)
                         </label>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div>
+                    <div class="form-check">
                         <input
                             class="form-check-input"
-                            id="check_county_sh"
-                            data-name="check_county_sh"
-                            value="check_county_sh"
-                            name="check_county"
-                            type="radio"
+                            id="checkboxPV"
+                            onclick="toggleAccordions()"
+                            type="checkbox"
                         />
-                        <label class="form-check-label" for="check_county_sh">
-                            Schleswig-Holstein
+                        <label class="form-check-label" for="checkboxPV">
+                            Freiflächen-Photovoltaik (FF-PV)
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-check">
+                        <input
+                            class="form-check-input"
+                            id="checkboxAPVV"
+                            onclick="toggleAccordions()"
+                            type="checkbox"
+                        />
+                        <label class="form-check-label" for="checkboxAPVV">
+                            Agri-Photovoltaik ver. (APVV)
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-check">
+                        <input
+                            class="form-check-input"
+                            id="checkboxAPVH"
+                            onclick="toggleAccordions()"
+                            type="checkbox"
+                        />
+                        <label class="form-check-label" for="checkboxAPVH">
+                            Agri-Photovoltaik hor. (APVH)
                         </label>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-md-6">
-                <label for="levy_rate">
-                    Gewerbesteuer-Hebesatz der Gemeinde (<i>optional</i>):
-
-                    <i
-                        class="fas fa-info-circle"
-                        data-placement="right"
-                        data-toggle="tooltip"
-                        title="Falls nicht bekannt, wird der durchschnittliche Hebesatz für DE im Jahr 2023 angenommen (407 %)."
-                    ></i>
-                </label>
-                <input
-                    class="form-control"
-                    id="levy_rate"
-                    name="levy_rate"
-                    type="number"
-                />
-            </div>
-            <div class="col-md-6">
-                <label for="mun_key_num">
-                    Schlüsselzahl der Gemeinde (<i>optional</i>):
-                    <i
-                        class="fas fa-info-circle"
-                        data-placement="right"
-                        data-toggle="tooltip"
-                        title="Falls nicht bekannt, wird eine Schlüsselzahl von 0,003 angenommen."
-                    ></i>
-                </label>
-                <input
-                    class="form-control"
-                    id="mun_key_num"
-                    name="mun_key_num"
-                    type="number"
-                />
-            </div>
-        </div>
-            <div class="row mt-2">
-            <div class="col-md-6">
-                <label for="levy_rate_a">
-                    Hebesatz Grundsteuer A der Gemeinde (<i>optional</i>):
-
-                    <i
-                        class="fas fa-info-circle"
-                        data-placement="right"
-                        data-toggle="tooltip"
-                        title="Falls nicht bekannt, wird ein durchschnittlicher Hebesatz von 310 % angenommen."
-                    ></i>
-                </label>
-                <input
-                    class="form-control"
-                    id="levy_rate_a"
-                    name="levy_rate_a"
-                    type="number"
-                />
-            </div>
-            <div class="col-md-6">
-                <label for="grassland_number">
-                    Acker-/Grünlandzahl (<i>optional</i>):
-
-                    <i
-                        class="fas fa-info-circle"
-                        data-placement="right"
-                        data-toggle="tooltip"
-                        title="Falls nicht bekannt, wird eine durchschnittliche Ackerzahl von 30 angenommen."
-                    ></i>
-                </label>
-                <input
-                    class="form-control"
-                    id="grassland_number"
-                    name="grassland_number"
-                    type="text"
-                />
-            </div>
-        </div>
-        <hr />
-        <p><b>In meiner Gemeinde gibt es Potenzial für:</b></p>
-        <div class="row mt-3 mb-3">
-            <div class="col-md-3">
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        id="checkboxWind"
-                        onclick="toggleAccordions()"
-                        type="checkbox"
-                    />
-                    <label class="form-check-label" for="checkboxWind">
-                        Windenergie (WEA)
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        id="checkboxPV"
-                        onclick="toggleAccordions()"
-                        type="checkbox"
-                    />
-                    <label class="form-check-label" for="checkboxPV">
-                        Freiflächen-Photovoltaik (FF-PV)
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        id="checkboxAPVV"
-                        onclick="toggleAccordions()"
-                        type="checkbox"
-                    />
-                    <label class="form-check-label" for="checkboxAPVV">
-                        Agri-Photovoltaik ver. (APVV)
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        id="checkboxAPVH"
-                        onclick="toggleAccordions()"
-                        type="checkbox"
-                    />
-                    <label class="form-check-label" for="checkboxAPVH">
-                        Agri-Photovoltaik hor. (APVH)
-                    </label>
-                </div>
-            </div>
-        </div>
-        <hr />
+        </section>
+        
+        
         <div class="accordion" id="accordionValueAdded">
-            <div class="accordion-item">
+            <div class="accordion-item d-none">
                 <h2 class="accordion-header" id="headingOne">
                     <button
                         disabled
@@ -255,7 +267,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="wea_area_max">
-                                        Größe der Potenzialfläche in ha:
+                                        Größe der Potenzialfläche in ha*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -293,7 +305,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="wea_p_max">
-                                        Maximal installierbare Leistung in MW:
+                                        Maximal installierbare Leistung in MW*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -311,16 +323,10 @@
                                 </div>
                             </div>
 
-                            <div class="row align-items-center my-4 green">
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
-                                <div class="col-auto">
-                                    <h6 class="mb-0"><b>Optional</b></h6>
-                                </div>
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
+                            <div class="optional-separator">
+                                <div class="line"></div>
+                                <p>Optional</p>
+                                <div class="line"></div>
                             </div>
                             <div id="flaecheneigentuemer-container-wea">
                                 <div
@@ -329,7 +335,7 @@
                                 >
                                     <div class="col-md-6">
                                         <label for="wea_area_ownertype1"
-                                            >Flächeneigentum:
+                                            >Flächeneigentum
                                             <i
                                                 class="fas fa-info-circle"
                                                 data-placement="right"
@@ -363,7 +369,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="wea_anteil_flaeche1"
-                                            >Anteil an Fläche in %:</label
+                                            >Anteil an Fläche in %</label
                                         >
                                         <input
                                             class="form-control"
@@ -375,26 +381,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <button
-                                class="btn btn-secondary mt-3 btn-sm"
-                                id="addMoreBtn-wea"
-                                type="button"
-                            >
-                                + Flächeneigentümer hinzufügen
-                            </button>
-                            <button
-                                class="btn btn-danger mt-3 btn-sm"
-                                id="removeLastBtn-wea"
-                                style="display: none"
-                                type="button"
-                            >
-                                - Weniger Flächeneigentümer
-                            </button>
+                            <div class="accordion-buttons">
+                                <button
+                                    class="btn btn--add mt-3 btn-sm"
+                                    id="addMoreBtn-wea"
+                                    type="button"
+                                >
+                                    + Flächeneigentümer hinzufügen
+                                </button>
+                                <button
+                                    class="btn btn--tertiary mt-3 btn-sm"
+                                    id="removeLastBtn-wea"
+                                    style="display: none"
+                                    type="button"
+                                >
+                                    - Weniger Flächeneigentümer
+                                </button>
+                            </div>
                             <hr />
                             <div class="row mt-3">
                                 <div class="col-md-6">
                                     <label for="rotor_diameter"
-                                        >Rotordurchmesser:</label
+                                        >Rotordurchmesser</label
                                     >
                                     <i
                                         class="fas fa-info-circle"
@@ -416,7 +424,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="system_output"
-                                        >Anlagenleistung:</label
+                                        >Anlagenleistung</label
                                     >
                                     <i
                                         class="fas fa-info-circle"
@@ -442,7 +450,7 @@
                             <div class="row mt-3">
                                 <div class="col-md-6">
                                     <label for="wea_eeg_share">
-                                        Prozentualer Anteil an EEG-Beteiligung:
+                                        Prozentualer Anteil an EEG-Beteiligung
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -461,7 +469,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="wind_euro_share">
-                                        Prozentualer Anteil am Wind-Euro:
+                                        Prozentualer Anteil am Wind-Euro
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -483,7 +491,7 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion-item">
+            <div class="accordion-item d-none">
                 <h2 class="accordion-header" id="headingTwo">
                     <button
                         disabled
@@ -509,7 +517,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="ffpv_area_max">
-                                        Größe der Potenzialfläche in ha:
+                                        Größe der Potenzialfläche in ha*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -565,16 +573,10 @@
                                 </div>
                             </div>
 
-                            <div class="row align-items-center my-4 green">
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
-                                <div class="col-auto">
-                                    <h6 class="mb-0"><b>Optional</b></h6>
-                                </div>
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
+                            <div class="optional-separator">
+                                <div class="line"></div>
+                                <p>Optional</p>
+                                <div class="line"></div>
                             </div>
 
                             <div id="flaecheneigentuemer-container-ffpv">
@@ -584,7 +586,7 @@
                                 >
                                     <div class="col-md-6">
                                         <label for="ffpv_area_ownertype1"
-                                            >Flächeneigentum:
+                                            >Flächeneigentum
                                             <i
                                                 class="fas fa-info-circle"
                                                 data-placement="right"
@@ -618,7 +620,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="ffpv_anteil_flaeche1"
-                                            >Anteil an Fläche in %:</label
+                                            >Anteil an Fläche in %</label
                                         >
                                         <input
                                             class="form-control"
@@ -630,26 +632,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <button
-                                class="btn btn-secondary mt-3 btn-sm"
-                                id="addMoreBtn-ffpv"
-                                type="button"
-                            >
-                                + Flächeneigentümer hinzufügen
-                            </button>
-                            <button
-                                class="btn btn-danger mt-3 btn-sm"
-                                id="removeLastBtn-ffpv"
-                                style="display: none"
-                                type="button"
-                            >
-                                - Weniger Flächeneigentümer
-                            </button>
+                            <div class="accordion-buttons">
+                                <button
+                                    class="btn btn--add mt-3 btn-sm"
+                                    id="addMoreBtn-ffpv"
+                                    type="button"
+                                >
+                                    + Flächeneigentümer hinzufügen
+                                </button>
+                                <button
+                                    class="btn btn--tertiary mt-3 btn-sm"
+                                    id="removeLastBtn-ffpv"
+                                    style="display: none"
+                                    type="button"
+                                >
+                                    - Weniger Flächeneigentümer
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="accordion-item">
+            <div class="accordion-item d-none">
                 <h2 class="accordion-header" id="headingThree">
                     <button
                         disabled
@@ -675,7 +679,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="apvv_area_max">
-                                        Größe der Potenzialfläche in ha:
+                                        Größe der Potenzialfläche in ha*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -699,7 +703,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="apv_ver_p_max">
-                                        Maximal installierbare Leistung in MW:
+                                        Maximal installierbare Leistung in MW*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -716,16 +720,10 @@
                                     />
                                 </div>
                             </div>
-                            <div class="row align-items-center my-4 green">
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
-                                <div class="col-auto">
-                                    <h6 class="mb-0"><b>Optional</b></h6>
-                                </div>
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
+                            <div class="optional-separator">
+                                <div class="line"></div>
+                                <p>Optional</p>
+                                <div class="line"></div>
                             </div>
                             <div id="flaecheneigentuemer-container-apvv">
                                 <div
@@ -734,7 +732,7 @@
                                 >
                                     <div class="col-md-6">
                                         <label for="apvv_area_ownertype1"
-                                            >Flächeneigentum:
+                                            >Flächeneigentum
                                             <i
                                                 class="fas fa-info-circle"
                                                 data-placement="right"
@@ -768,7 +766,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="apvv_anteil_flaeche1"
-                                            >Anteil an Fläche in %:</label
+                                            >Anteil an Fläche in %</label
                                         >
                                         <input
                                             class="form-control"
@@ -780,26 +778,29 @@
                                     </div>
                                 </div>
                             </div>
-                            <button
-                                class="btn btn-secondary mt-3 btn-sm"
-                                id="addMoreBtn-apvv"
-                                type="button"
-                            >
-                                + Flächeneigentümer hinzufügen
-                            </button>
-                            <button
-                                class="btn btn-danger mt-3 btn-sm"
-                                id="removeLastBtn-apvv"
-                                style="display: none"
-                                type="button"
-                            >
-                                - Weniger Flächeneigentümer
-                            </button>
+                            <div class="accordion-buttons">
+                                <button
+                                    class="btn btn--add mt-3 btn-sm"
+                                    id="addMoreBtn-apvv"
+                                    type="button"
+                                >
+                                    + Flächeneigentümer hinzufügen
+                                </button>
+                                <button
+                                    class="btn btn--tertiary mt-3 btn-sm"
+                                    id="removeLastBtn-apvv"
+                                    style="display: none"
+                                    type="button"
+                                >
+                                    - Weniger Flächeneigentümer
+                                </button>
+                            </div>
+                            <hr />
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="accordion-item">
+            <div class="accordion-item d-none">
                 <h2 class="accordion-header" id="headingFour">
                     <button
                         disabled
@@ -825,7 +826,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="apvh_area_max">
-                                        Größe der Potenzialfläche in ha:
+                                        Größe der Potenzialfläche in ha*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -849,7 +850,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="apv_hor_p_max">
-                                        Maximal installierbare Leistung in MW:
+                                        Maximal installierbare Leistung in MW*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -866,16 +867,10 @@
                                     />
                                 </div>
                             </div>
-                            <div class="row align-items-center my-4 green">
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
-                                <div class="col-auto">
-                                    <h6 class="mb-0"><b>Optional</b></h6>
-                                </div>
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
+                            <div class="optional-separator">
+                                <div class="line"></div>
+                                <p>Optional</p>
+                                <div class="line"></div>
                             </div>
 
                             <div id="flaecheneigentuemer-container-apvh">
@@ -885,7 +880,7 @@
                                 >
                                     <div class="col-md-6">
                                         <label for="apvh_area_ownertype1"
-                                            >Flächeneigentum:
+                                            >Flächeneigentum
                                             <i
                                                 class="fas fa-info-circle"
                                                 data-placement="right"
@@ -919,7 +914,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="apvh_anteil_flaeche1"
-                                            >Anteil an Fläche in %:</label
+                                            >Anteil an Fläche in %</label
                                         >
                                         <input
                                             class="form-control"
@@ -931,21 +926,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <button
-                                class="btn btn-secondary mt-3 btn-sm"
-                                id="addMoreBtn-apvh"
-                                type="button"
-                            >
-                                + Flächeneigentümer hinzufügen
-                            </button>
-                            <button
-                                class="btn btn-danger mt-3 btn-sm"
-                                id="removeLastBtn-apvh"
-                                style="display: none"
-                                type="button"
-                            >
-                                - Weniger Flächeneigentümer
-                            </button>
+                            <div class="accordion-buttons">
+                                <button
+                                    class="btn btn--add mt-3 btn-sm"
+                                    id="addMoreBtn-apvh"
+                                    type="button"
+                                >
+                                    + Flächeneigentümer hinzufügen
+                                </button>
+                                <button
+                                    class="btn btn--tertiary mt-3 btn-sm"
+                                    id="removeLastBtn-apvh"
+                                    style="display: none"
+                                    type="button"
+                                >
+                                    - Weniger Flächeneigentümer
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -975,41 +972,69 @@
         });
 
         function toggleAccordions() {
-            // All checkboxes and the associated accordion areass
-            let checkboxes = [
-                {checkbox: $("#checkboxWind"), collapse: "#collapseWind", link: "#linkWind"},
-                {checkbox: $("#checkboxPV"), collapse: "#collapsePV", link: "#linkPV"},
-                {checkbox: $("#checkboxAPVV"), collapse: "#collapseAPVV", link: "#linkAPVV"},
-                {checkbox: $("#checkboxAPVH"), collapse: "#collapseAPVH", link: "#linkAPVH"}
+            const checkboxSelectors = [
+                "#checkboxWind",
+                "#checkboxPV",
+                "#checkboxAPVV",
+                "#checkboxAPVH"
             ];
-    checkboxes.forEach(item => {
-
-                item.checkbox.on('change', function() {
-            // Find the corresponding accordion button using the link selector.
-            const accordionButton = $(item.link);
-            let collapseElement = $(item.collapse);
-
-            if (this.checked) {
-                // Remove the disabled attribute if the checkbox is checked
-                accordionButton.prop('disabled', false);
-                accordionButton.removeClass('disabled collapsed bg-light');
-               collapseElement.addClass('show');
-                    collapseElement.find('input').prop('disabled', false);
-            } else {
-                // Add the disabled attribute if the checkbox is unchecked
-                accordionButton.prop('disabled', true);
-                accordionButton.addClass('disabled collapsed bg-light');
-
-              collapseElement.removeClass('show');
-                    collapseElement.find('input').prop('disabled', true);
+            const technologyToContent = {
+                "Wind": "#collapseWind",
+                "PV": "#collapsePV",
+                "APVV": "#collapseAPVV",
+                "APVH": "#collapseAPVH"
+            };
+            
+            // Process each checkbox
+            checkboxSelectors.forEach(checkboxSelector => {
+                const $checkbox = $(checkboxSelector);
+                
+                if ($checkbox.length === 0) {
+                    console.error(`Checkbox ${checkboxSelector} not found`);
+                    return;
+                }
+                
+                // Extract technology name from checkbox ID
+                const technology = checkboxSelector.replace("#checkbox", "");
+                const contentSelector = technologyToContent[technology];
+                const $accordionContent = $(contentSelector);
+                const $accordionItem = $accordionContent.closest('.accordion-item');
+                
+                // Set initial state
+                updateVisibility($checkbox, $accordionItem, $accordionContent);
+                
+                // Add event listener
+                $checkbox.on('change', function() {
+                    updateVisibility($(this), $accordionItem, $accordionContent);
+                });
+            });
+            
+            function updateVisibility($checkbox, $accordionItem, $accordionContent) {
+                if ($checkbox.prop('checked')) {
+                    // Show accordion item
+                    $accordionItem.removeClass('d-none');
+                    
+                    // Enable button and expand content
+                    const $button = $accordionItem.find('.accordion-button');
+                    $button.prop('disabled', false);
+                    $button.removeClass('disabled collapsed bg-light');
+                    $accordionContent.addClass('show');
+                } else {
+                    // Hide accordion item
+                    $accordionItem.addClass('d-none');
+                    
+                    // Disable button and collapse content
+                    const $button = $accordionItem.find('.accordion-button');
+                    $button.prop('disabled', true);
+                    $button.addClass('disabled collapsed bg-light');
+                    $accordionContent.removeClass('show');
+                }
             }
-        });
-    });
-
         }
 
         function expandAllAccordions() {
-            $('#accordion .collapsed').collapse('show');
+            // Only expand visible accordions
+            $('#accordion .accordion-item:not(.d-none) .accordion-button.collapsed').click();
         }
 
         const counters = {
@@ -1025,7 +1050,7 @@
 
             let newFieldset = `<div class="row mt-3" id="flaecheneigentuemer-${type}-${counters[type]}">
                     <div class="col-md-6">
-                        <label for="${type}_area_ownertype${counters[type]}">Flächeneigentum:
+                        <label for="${type}_area_ownertype${counters[type]}">Flächeneigentum
                             <i class="fas fa-info-circle" data-placement="right" data-toggle="tooltip"
                                title="Als Gemeinde erhalten Sie Einnahmen durch die Pachterlöse. Dies kann direkt erfolgen oder durch Steuereinnahmen je nach Eigentumsstruktur. Falls die Eigentümer nicht bekannt sind, werden die Pachteinnahmen nicht berücksichtigt."></i>
                         </label>
@@ -1050,7 +1075,7 @@
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label for="${type}_anteil_flaeche${counters[type]}">Anteil an Fläche in %:</label>
+                        <label for="${type}_anteil_flaeche${counters[type]}">Anteil an Fläche in %</label>
                         <input class="form-control" id="${type}_anteil_flaeche${counters[type]}" name="${type}_anteil_flaeche${counters[type]}" type="number" oninput="validateAnteilFlaeche('${type}')">
                         <small id="${type}_error_msg${counters[type]}" class="text-danger d-none">Die Summe der Flächenanteile liegt über 100 %. Bitte reduzieren sie die Anteile.</small>
                     </div>
