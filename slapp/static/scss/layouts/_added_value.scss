@@ -26,5 +26,47 @@
 
 .av-content {
   @extend .container;
-  margin-top: 8rem;
+  margin-top: 7rem;
+
+  .av-section {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    background-color: $bg-color-light;
+    border-radius: $border-radius;
+
+    &__heading {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    &__select {
+      display: flex;
+      flex-direction: row;
+      gap: 1.5rem;
+    }
+  }
+
+  .optional-separator {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+
+    .line {
+      flex: 1;
+      height: 1px;
+      background-color: $border-color;
+    }
+
+    p {
+      width: auto;
+      margin-bottom: 0;
+      padding: 0 1rem;
+      color: $font-color-secondary;
+      font-weight: 700;
+      font-size: 0.875rem;
+      letter-spacing: 0.025rem;
+    }
+  }
 }

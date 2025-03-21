@@ -92,14 +92,14 @@
     <div class="main-container">
       {% if has_sidepanel %}
         <div class="row">
-          <div class="col-3 sidebar pt-5">
+          <aside class="col-3 sidebar pt-5">
             {% block sidebar_content %}
             {% endblock sidebar_content %}
-          </div>
-          <div class="col-9">
+          </aside>
+          <main class="col-9">
             {% block content %}
             {% endblock content %}
-          </div>
+          </main>
         </div>
       {% else %}
         {% block content_no_sidebar %}

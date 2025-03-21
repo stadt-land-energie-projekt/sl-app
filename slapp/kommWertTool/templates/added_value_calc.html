@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% load humanize %} 
 {% block sidebar_content %}
-<aside class="av-sidebar">
+<div class="av-sidebar">
     <a href="/" class="av-sidebar__back">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" height="16" width="16">
             <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
@@ -23,13 +23,13 @@
         abzuschätzen und fundierte Entscheidungen für eine nachhaltige Entwicklung
         zu treffen.
     </p>
-</aside>
+</div>
 {% endblock sidebar_content %} {% block content %}
 <div class="av-content addedValueCalc">
     <div class="row">
         <div class="col-md-12">
-            <div class="alert alert-info mb-0">
-                <p><b>Anwendungshinweis:</b></p>
+            <div class="alert alert-info">
+                <p class="alert-heading">Anwendungshinweis:</p>
                 <p>
                     Es reicht die Angabe der Potenzialfläche oder der maximal
                     installierbaren Leistung, insofern Sie keine weiteren
@@ -39,202 +39,207 @@
             </div>
         </div>
     </div>
-    <hr />
 
     <form action="{% url 'kommWertTool:submit' %}" method="POST">
         {% csrf_token %}
 
-        <div class="row">
-            <div class="col-md-6">
-                <label for="choosen_mun" class="mb-2">
-                    <b
-                        >Ich möchte für folgende Gemeinde die Wertschöpfung
-                        berechnen:</b
-                    >
-                </label>
-                <select class="form-select" id="choosen_mun" name="choosen_mun">
-                    <option>Bitte wählen:</option>
-
-                    {% for municipality in municipalities %}
-
-                    <option
-                        value="{{ municipality.id }}"
-                        data-name="{{ municipality.name }}"
-                    >
-                        {{ municipality.name }}
-                    </option>
-                    {% endfor %}
-                    <option value="own_county" data-name="own_county">
-                        Eigener Landkreis
-                    </option>
-                </select>
+        <section class="av-section">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label for="choosen_mun" class="label label--large">
+                        Ich möchte für folgende Gemeinde die Wertschöpfung berechnen*
+                    </label>
+                    <select class="form-select form-select--large" id="choosen_mun" name="choosen_mun">
+                        <option>Gemeinde wählen</option>
+    
+                        {% for municipality in municipalities %}
+    
+                        <option
+                            value="{{ municipality.id }}"
+                            data-name="{{ municipality.name }}"
+                        >
+                            {{ municipality.name }}
+                        </option>
+                        {% endfor %}
+                        <option value="own_county" data-name="own_county">
+                            Eigener Landkreis
+                        </option>
+                    </select>
+                </div>
+                <div id="check_county" class="col-md-6">
+                    <p>
+                        <b>In welchem Bundesland befindet sich der Landkreis?*</b>
+                    </p>
+                    <div class="row">
+                        <div>
+                            <input
+                                class="form-check-input"
+                                id="check_county_bb"
+                                name="check_county"
+                                data-name="check_county_bb"
+                                value="check_county_bb"
+                                type="radio"
+                            />
+                            <label class="form-check-label" for="check_county_bb">
+                                Brandenburg
+                            </label>
+                        </div>
+                        <div>
+                            <input
+                                class="form-check-input"
+                                id="check_county_sh"
+                                data-name="check_county_sh"
+                                value="check_county_sh"
+                                name="check_county"
+                                type="radio"
+                            />
+                            <label class="form-check-label" for="check_county_sh">
+                                Schleswig-Holstein
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="check_county" class="col-md-6">
-                <p>
-                    <b>In welchem Bundesland befindet sich der Landkreis:</b>
-                </p>
-                <div class="row">
-                    <div class="col-md-6">
+            <div class="optional-separator">
+                <div class="line"></div>
+                <p>Optional</p>
+                <div class="line"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="levy_rate" class="label">
+                        Gewerbesteuer-Hebesatz der Gemeinde (<i>optional</i>):
+    
+                        <i
+                            class="fas fa-info-circle"
+                            data-placement="right"
+                            data-toggle="tooltip"
+                            title="Falls nicht bekannt, wird der durchschnittliche Hebesatz für DE im Jahr 2023 angenommen (407 %)."
+                        ></i>
+                    </label>
+                    <input
+                        class="form-control"
+                        id="levy_rate"
+                        name="levy_rate"
+                        type="number"
+                    />
+                </div>
+                <div class="col-md-6">
+                    <label for="mun_key_num">
+                        Schlüsselzahl der Gemeinde (<i>optional</i>):
+                        <i
+                            class="fas fa-info-circle"
+                            data-placement="right"
+                            data-toggle="tooltip"
+                            title="Falls nicht bekannt, wird eine Schlüsselzahl von 0,003 angenommen."
+                        ></i>
+                    </label>
+                    <input
+                        class="form-control"
+                        id="mun_key_num"
+                        name="mun_key_num"
+                        type="number"
+                    />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="levy_rate_a">
+                        Hebesatz Grundsteuer A der Gemeinde (<i>optional</i>):
+    
+                        <i
+                            class="fas fa-info-circle"
+                            data-placement="right"
+                            data-toggle="tooltip"
+                            title="Falls nicht bekannt, wird ein durchschnittlicher Hebesatz von 310 % angenommen."
+                        ></i>
+                    </label>
+                    <input
+                        class="form-control"
+                        id="levy_rate_a"
+                        name="levy_rate_a"
+                        type="number"
+                    />
+                </div>
+                <div class="col-md-6">
+                    <label for="grassland_number">
+                        Acker-/Grünlandzahl (<i>optional</i>):
+    
+                        <i
+                            class="fas fa-info-circle"
+                            data-placement="right"
+                            data-toggle="tooltip"
+                            title="Falls nicht bekannt, wird eine durchschnittliche Ackerzahl von 30 angenommen."
+                        ></i>
+                    </label>
+                    <input
+                        class="form-control"
+                        id="grassland_number"
+                        name="grassland_number"
+                        type="text"
+                    />
+                </div>
+            </div>
+        </section>
+        <section class="av-section">
+            <p class="av-section__heading">In meiner Gemeinde gibt es Potenzial für:</p>
+            <div class="av-section__select">
+                <div>
+                    <div class="form-check">
                         <input
                             class="form-check-input"
-                            id="check_county_bb"
-                            name="check_county"
-                            data-name="check_county_bb"
-                            value="check_county_bb"
-                            type="radio"
+                            id="checkboxWind"
+                            onclick="toggleAccordions()"
+                            type="checkbox"
                         />
-                        <label class="form-check-label" for="check_county_bb">
-                            Brandenburg
+                        <label class="form-check-label" for="checkboxWind">
+                            Windenergie (WEA)
                         </label>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div>
+                    <div class="form-check">
                         <input
                             class="form-check-input"
-                            id="check_county_sh"
-                            data-name="check_county_sh"
-                            value="check_county_sh"
-                            name="check_county"
-                            type="radio"
+                            id="checkboxPV"
+                            onclick="toggleAccordions()"
+                            type="checkbox"
                         />
-                        <label class="form-check-label" for="check_county_sh">
-                            Schleswig-Holstein
+                        <label class="form-check-label" for="checkboxPV">
+                            Freiflächen-Photovoltaik (FF-PV)
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-check">
+                        <input
+                            class="form-check-input"
+                            id="checkboxAPVV"
+                            onclick="toggleAccordions()"
+                            type="checkbox"
+                        />
+                        <label class="form-check-label" for="checkboxAPVV">
+                            Agri-Photovoltaik ver. (APVV)
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-check">
+                        <input
+                            class="form-check-input"
+                            id="checkboxAPVH"
+                            onclick="toggleAccordions()"
+                            type="checkbox"
+                        />
+                        <label class="form-check-label" for="checkboxAPVH">
+                            Agri-Photovoltaik hor. (APVH)
                         </label>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-md-6">
-                <label for="levy_rate">
-                    Gewerbesteuer-Hebesatz der Gemeinde (<i>optional</i>):
-
-                    <i
-                        class="fas fa-info-circle"
-                        data-placement="right"
-                        data-toggle="tooltip"
-                        title="Falls nicht bekannt, wird der durchschnittliche Hebesatz für DE im Jahr 2023 angenommen (407 %)."
-                    ></i>
-                </label>
-                <input
-                    class="form-control"
-                    id="levy_rate"
-                    name="levy_rate"
-                    type="number"
-                />
-            </div>
-            <div class="col-md-6">
-                <label for="mun_key_num">
-                    Schlüsselzahl der Gemeinde (<i>optional</i>):
-                    <i
-                        class="fas fa-info-circle"
-                        data-placement="right"
-                        data-toggle="tooltip"
-                        title="Falls nicht bekannt, wird eine Schlüsselzahl von 0,003 angenommen."
-                    ></i>
-                </label>
-                <input
-                    class="form-control"
-                    id="mun_key_num"
-                    name="mun_key_num"
-                    type="number"
-                />
-            </div>
-        </div>
-            <div class="row mt-2">
-            <div class="col-md-6">
-                <label for="levy_rate_a">
-                    Hebesatz Grundsteuer A der Gemeinde (<i>optional</i>):
-
-                    <i
-                        class="fas fa-info-circle"
-                        data-placement="right"
-                        data-toggle="tooltip"
-                        title="Falls nicht bekannt, wird ein durchschnittlicher Hebesatz von 310 % angenommen."
-                    ></i>
-                </label>
-                <input
-                    class="form-control"
-                    id="levy_rate_a"
-                    name="levy_rate_a"
-                    type="number"
-                />
-            </div>
-            <div class="col-md-6">
-                <label for="grassland_number">
-                    Acker-/Grünlandzahl (<i>optional</i>):
-
-                    <i
-                        class="fas fa-info-circle"
-                        data-placement="right"
-                        data-toggle="tooltip"
-                        title="Falls nicht bekannt, wird eine durchschnittliche Ackerzahl von 30 angenommen."
-                    ></i>
-                </label>
-                <input
-                    class="form-control"
-                    id="grassland_number"
-                    name="grassland_number"
-                    type="text"
-                />
-            </div>
-        </div>
-        <hr />
-        <p><b>In meiner Gemeinde gibt es Potenzial für:</b></p>
-        <div class="row mt-3 mb-3">
-            <div class="col-md-3">
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        id="checkboxWind"
-                        onclick="toggleAccordions()"
-                        type="checkbox"
-                    />
-                    <label class="form-check-label" for="checkboxWind">
-                        Windenergie (WEA)
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        id="checkboxPV"
-                        onclick="toggleAccordions()"
-                        type="checkbox"
-                    />
-                    <label class="form-check-label" for="checkboxPV">
-                        Freiflächen-Photovoltaik (FF-PV)
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        id="checkboxAPVV"
-                        onclick="toggleAccordions()"
-                        type="checkbox"
-                    />
-                    <label class="form-check-label" for="checkboxAPVV">
-                        Agri-Photovoltaik ver. (APVV)
-                    </label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        id="checkboxAPVH"
-                        onclick="toggleAccordions()"
-                        type="checkbox"
-                    />
-                    <label class="form-check-label" for="checkboxAPVH">
-                        Agri-Photovoltaik hor. (APVH)
-                    </label>
-                </div>
-            </div>
-        </div>
-        <hr />
+        </section>
+        
+        
         <div class="accordion" id="accordionValueAdded">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
