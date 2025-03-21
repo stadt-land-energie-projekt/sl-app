@@ -241,7 +241,7 @@
         
         
         <div class="accordion" id="accordionValueAdded">
-            <div class="accordion-item">
+            <div class="accordion-item d-none">
                 <h2 class="accordion-header" id="headingOne">
                     <button
                         disabled
@@ -495,7 +495,7 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion-item">
+            <div class="accordion-item d-none">
                 <h2 class="accordion-header" id="headingTwo">
                     <button
                         disabled
@@ -661,7 +661,7 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion-item">
+            <div class="accordion-item d-none">
                 <h2 class="accordion-header" id="headingThree">
                     <button
                         disabled
@@ -811,7 +811,7 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion-item">
+            <div class="accordion-item d-none">
                 <h2 class="accordion-header" id="headingFour">
                     <button
                         disabled
@@ -987,41 +987,69 @@
         });
 
         function toggleAccordions() {
-            // All checkboxes and the associated accordion areass
-            let checkboxes = [
-                {checkbox: $("#checkboxWind"), collapse: "#collapseWind", link: "#linkWind"},
-                {checkbox: $("#checkboxPV"), collapse: "#collapsePV", link: "#linkPV"},
-                {checkbox: $("#checkboxAPVV"), collapse: "#collapseAPVV", link: "#linkAPVV"},
-                {checkbox: $("#checkboxAPVH"), collapse: "#collapseAPVH", link: "#linkAPVH"}
+            const checkboxSelectors = [
+                "#checkboxWind",
+                "#checkboxPV",
+                "#checkboxAPVV",
+                "#checkboxAPVH"
             ];
-    checkboxes.forEach(item => {
-
-                item.checkbox.on('change', function() {
-            // Find the corresponding accordion button using the link selector.
-            const accordionButton = $(item.link);
-            let collapseElement = $(item.collapse);
-
-            if (this.checked) {
-                // Remove the disabled attribute if the checkbox is checked
-                accordionButton.prop('disabled', false);
-                accordionButton.removeClass('disabled collapsed bg-light');
-               collapseElement.addClass('show');
-                    collapseElement.find('input').prop('disabled', false);
-            } else {
-                // Add the disabled attribute if the checkbox is unchecked
-                accordionButton.prop('disabled', true);
-                accordionButton.addClass('disabled collapsed bg-light');
-
-              collapseElement.removeClass('show');
-                    collapseElement.find('input').prop('disabled', true);
+            const technologyToContent = {
+                "Wind": "#collapseWind",
+                "PV": "#collapsePV",
+                "APVV": "#collapseAPVV",
+                "APVH": "#collapseAPVH"
+            };
+            
+            // Process each checkbox
+            checkboxSelectors.forEach(checkboxSelector => {
+                const $checkbox = $(checkboxSelector);
+                
+                if ($checkbox.length === 0) {
+                    console.error(`Checkbox ${checkboxSelector} not found`);
+                    return;
+                }
+                
+                // Extract technology name from checkbox ID
+                const technology = checkboxSelector.replace("#checkbox", "");
+                const contentSelector = technologyToContent[technology];
+                const $accordionContent = $(contentSelector);
+                const $accordionItem = $accordionContent.closest('.accordion-item');
+                
+                // Set initial state
+                updateVisibility($checkbox, $accordionItem, $accordionContent);
+                
+                // Add event listener
+                $checkbox.on('change', function() {
+                    updateVisibility($(this), $accordionItem, $accordionContent);
+                });
+            });
+            
+            function updateVisibility($checkbox, $accordionItem, $accordionContent) {
+                if ($checkbox.prop('checked')) {
+                    // Show accordion item
+                    $accordionItem.removeClass('d-none');
+                    
+                    // Enable button and expand content
+                    const $button = $accordionItem.find('.accordion-button');
+                    $button.prop('disabled', false);
+                    $button.removeClass('disabled collapsed bg-light');
+                    $accordionContent.addClass('show');
+                } else {
+                    // Hide accordion item
+                    $accordionItem.addClass('d-none');
+                    
+                    // Disable button and collapse content
+                    const $button = $accordionItem.find('.accordion-button');
+                    $button.prop('disabled', true);
+                    $button.addClass('disabled collapsed bg-light');
+                    $accordionContent.removeClass('show');
+                }
             }
-        });
-    });
-
         }
 
         function expandAllAccordions() {
-            $('#accordion .collapsed').collapse('show');
+            // Only expand visible accordions
+            $('#accordion .accordion-item:not(.d-none) .accordion-button.collapsed').click();
         }
 
         const counters = {
