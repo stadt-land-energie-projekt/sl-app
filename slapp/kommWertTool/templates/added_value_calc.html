@@ -267,7 +267,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="wea_area_max">
-                                        Größe der Potenzialfläche in ha:
+                                        Größe der Potenzialfläche in ha*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -305,7 +305,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="wea_p_max">
-                                        Maximal installierbare Leistung in MW:
+                                        Maximal installierbare Leistung in MW*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -323,16 +323,10 @@
                                 </div>
                             </div>
 
-                            <div class="row align-items-center my-4 green">
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
-                                <div class="col-auto">
-                                    <h6 class="mb-0"><b>Optional</b></h6>
-                                </div>
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
+                            <div class="optional-separator">
+                                <div class="line"></div>
+                                <p>Optional</p>
+                                <div class="line"></div>
                             </div>
                             <div id="flaecheneigentuemer-container-wea">
                                 <div
@@ -341,7 +335,7 @@
                                 >
                                     <div class="col-md-6">
                                         <label for="wea_area_ownertype1"
-                                            >Flächeneigentum:
+                                            >Flächeneigentum
                                             <i
                                                 class="fas fa-info-circle"
                                                 data-placement="right"
@@ -375,7 +369,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="wea_anteil_flaeche1"
-                                            >Anteil an Fläche in %:</label
+                                            >Anteil an Fläche in %</label
                                         >
                                         <input
                                             class="form-control"
@@ -387,26 +381,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <button
-                                class="btn btn-secondary mt-3 btn-sm"
-                                id="addMoreBtn-wea"
-                                type="button"
-                            >
-                                + Flächeneigentümer hinzufügen
-                            </button>
-                            <button
-                                class="btn btn-danger mt-3 btn-sm"
-                                id="removeLastBtn-wea"
-                                style="display: none"
-                                type="button"
-                            >
-                                - Weniger Flächeneigentümer
-                            </button>
+                            <div class="accordion-buttons">
+                                <button
+                                    class="btn btn--add mt-3 btn-sm"
+                                    id="addMoreBtn-wea"
+                                    type="button"
+                                >
+                                    + Flächeneigentümer hinzufügen
+                                </button>
+                                <button
+                                    class="btn btn--tertiary mt-3 btn-sm"
+                                    id="removeLastBtn-wea"
+                                    style="display: none"
+                                    type="button"
+                                >
+                                    - Weniger Flächeneigentümer
+                                </button>
+                            </div>
                             <hr />
                             <div class="row mt-3">
                                 <div class="col-md-6">
                                     <label for="rotor_diameter"
-                                        >Rotordurchmesser:</label
+                                        >Rotordurchmesser</label
                                     >
                                     <i
                                         class="fas fa-info-circle"
@@ -428,7 +424,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="system_output"
-                                        >Anlagenleistung:</label
+                                        >Anlagenleistung</label
                                     >
                                     <i
                                         class="fas fa-info-circle"
@@ -454,7 +450,7 @@
                             <div class="row mt-3">
                                 <div class="col-md-6">
                                     <label for="wea_eeg_share">
-                                        Prozentualer Anteil an EEG-Beteiligung:
+                                        Prozentualer Anteil an EEG-Beteiligung
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -473,7 +469,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="wind_euro_share">
-                                        Prozentualer Anteil am Wind-Euro:
+                                        Prozentualer Anteil am Wind-Euro
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -521,7 +517,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="ffpv_area_max">
-                                        Größe der Potenzialfläche in ha:
+                                        Größe der Potenzialfläche in ha*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -577,16 +573,10 @@
                                 </div>
                             </div>
 
-                            <div class="row align-items-center my-4 green">
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
-                                <div class="col-auto">
-                                    <h6 class="mb-0"><b>Optional</b></h6>
-                                </div>
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
+                            <div class="optional-separator">
+                                <div class="line"></div>
+                                <p>Optional</p>
+                                <div class="line"></div>
                             </div>
 
                             <div id="flaecheneigentuemer-container-ffpv">
@@ -596,7 +586,7 @@
                                 >
                                     <div class="col-md-6">
                                         <label for="ffpv_area_ownertype1"
-                                            >Flächeneigentum:
+                                            >Flächeneigentum
                                             <i
                                                 class="fas fa-info-circle"
                                                 data-placement="right"
@@ -630,7 +620,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="ffpv_anteil_flaeche1"
-                                            >Anteil an Fläche in %:</label
+                                            >Anteil an Fläche in %</label
                                         >
                                         <input
                                             class="form-control"
@@ -642,21 +632,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <button
-                                class="btn btn-secondary mt-3 btn-sm"
-                                id="addMoreBtn-ffpv"
-                                type="button"
-                            >
-                                + Flächeneigentümer hinzufügen
-                            </button>
-                            <button
-                                class="btn btn-danger mt-3 btn-sm"
-                                id="removeLastBtn-ffpv"
-                                style="display: none"
-                                type="button"
-                            >
-                                - Weniger Flächeneigentümer
-                            </button>
+                            <div class="accordion-buttons">
+                                <button
+                                    class="btn btn--add mt-3 btn-sm"
+                                    id="addMoreBtn-ffpv"
+                                    type="button"
+                                >
+                                    + Flächeneigentümer hinzufügen
+                                </button>
+                                <button
+                                    class="btn btn--tertiary mt-3 btn-sm"
+                                    id="removeLastBtn-ffpv"
+                                    style="display: none"
+                                    type="button"
+                                >
+                                    - Weniger Flächeneigentümer
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -687,7 +679,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="apvv_area_max">
-                                        Größe der Potenzialfläche in ha:
+                                        Größe der Potenzialfläche in ha*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -711,7 +703,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="apv_ver_p_max">
-                                        Maximal installierbare Leistung in MW:
+                                        Maximal installierbare Leistung in MW*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -728,16 +720,10 @@
                                     />
                                 </div>
                             </div>
-                            <div class="row align-items-center my-4 green">
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
-                                <div class="col-auto">
-                                    <h6 class="mb-0"><b>Optional</b></h6>
-                                </div>
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
+                            <div class="optional-separator">
+                                <div class="line"></div>
+                                <p>Optional</p>
+                                <div class="line"></div>
                             </div>
                             <div id="flaecheneigentuemer-container-apvv">
                                 <div
@@ -746,7 +732,7 @@
                                 >
                                     <div class="col-md-6">
                                         <label for="apvv_area_ownertype1"
-                                            >Flächeneigentum:
+                                            >Flächeneigentum
                                             <i
                                                 class="fas fa-info-circle"
                                                 data-placement="right"
@@ -780,7 +766,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="apvv_anteil_flaeche1"
-                                            >Anteil an Fläche in %:</label
+                                            >Anteil an Fläche in %</label
                                         >
                                         <input
                                             class="form-control"
@@ -792,21 +778,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <button
-                                class="btn btn-secondary mt-3 btn-sm"
-                                id="addMoreBtn-apvv"
-                                type="button"
-                            >
-                                + Flächeneigentümer hinzufügen
-                            </button>
-                            <button
-                                class="btn btn-danger mt-3 btn-sm"
-                                id="removeLastBtn-apvv"
-                                style="display: none"
-                                type="button"
-                            >
-                                - Weniger Flächeneigentümer
-                            </button>
+                            <div class="accordion-buttons">
+                                <button
+                                    class="btn btn--add mt-3 btn-sm"
+                                    id="addMoreBtn-apvv"
+                                    type="button"
+                                >
+                                    + Flächeneigentümer hinzufügen
+                                </button>
+                                <button
+                                    class="btn btn--tertiary mt-3 btn-sm"
+                                    id="removeLastBtn-apvv"
+                                    style="display: none"
+                                    type="button"
+                                >
+                                    - Weniger Flächeneigentümer
+                                </button>
+                            </div>
+                            <hr />
                         </div>
                     </div>
                 </div>
@@ -837,7 +826,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="apvh_area_max">
-                                        Größe der Potenzialfläche in ha:
+                                        Größe der Potenzialfläche in ha*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -861,7 +850,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="apv_hor_p_max">
-                                        Maximal installierbare Leistung in MW:
+                                        Maximal installierbare Leistung in MW*
                                         <i
                                             class="fas fa-info-circle"
                                             data-placement="right"
@@ -878,16 +867,10 @@
                                     />
                                 </div>
                             </div>
-                            <div class="row align-items-center my-4 green">
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
-                                <div class="col-auto">
-                                    <h6 class="mb-0"><b>Optional</b></h6>
-                                </div>
-                                <div class="col">
-                                    <hr class="border-2 border-dark" />
-                                </div>
+                            <div class="optional-separator">
+                                <div class="line"></div>
+                                <p>Optional</p>
+                                <div class="line"></div>
                             </div>
 
                             <div id="flaecheneigentuemer-container-apvh">
@@ -897,7 +880,7 @@
                                 >
                                     <div class="col-md-6">
                                         <label for="apvh_area_ownertype1"
-                                            >Flächeneigentum:
+                                            >Flächeneigentum
                                             <i
                                                 class="fas fa-info-circle"
                                                 data-placement="right"
@@ -931,7 +914,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="apvh_anteil_flaeche1"
-                                            >Anteil an Fläche in %:</label
+                                            >Anteil an Fläche in %</label
                                         >
                                         <input
                                             class="form-control"
@@ -943,21 +926,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <button
-                                class="btn btn-secondary mt-3 btn-sm"
-                                id="addMoreBtn-apvh"
-                                type="button"
-                            >
-                                + Flächeneigentümer hinzufügen
-                            </button>
-                            <button
-                                class="btn btn-danger mt-3 btn-sm"
-                                id="removeLastBtn-apvh"
-                                style="display: none"
-                                type="button"
-                            >
-                                - Weniger Flächeneigentümer
-                            </button>
+                            <div class="accordion-buttons">
+                                <button
+                                    class="btn btn--add mt-3 btn-sm"
+                                    id="addMoreBtn-apvh"
+                                    type="button"
+                                >
+                                    + Flächeneigentümer hinzufügen
+                                </button>
+                                <button
+                                    class="btn btn--tertiary mt-3 btn-sm"
+                                    id="removeLastBtn-apvh"
+                                    style="display: none"
+                                    type="button"
+                                >
+                                    - Weniger Flächeneigentümer
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1065,7 +1050,7 @@
 
             let newFieldset = `<div class="row mt-3" id="flaecheneigentuemer-${type}-${counters[type]}">
                     <div class="col-md-6">
-                        <label for="${type}_area_ownertype${counters[type]}">Flächeneigentum:
+                        <label for="${type}_area_ownertype${counters[type]}">Flächeneigentum
                             <i class="fas fa-info-circle" data-placement="right" data-toggle="tooltip"
                                title="Als Gemeinde erhalten Sie Einnahmen durch die Pachterlöse. Dies kann direkt erfolgen oder durch Steuereinnahmen je nach Eigentumsstruktur. Falls die Eigentümer nicht bekannt sind, werden die Pachteinnahmen nicht berücksichtigt."></i>
                         </label>
@@ -1090,7 +1075,7 @@
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label for="${type}_anteil_flaeche${counters[type]}">Anteil an Fläche in %:</label>
+                        <label for="${type}_anteil_flaeche${counters[type]}">Anteil an Fläche in %</label>
                         <input class="form-control" id="${type}_anteil_flaeche${counters[type]}" name="${type}_anteil_flaeche${counters[type]}" type="number" oninput="validateAnteilFlaeche('${type}')">
                         <small id="${type}_error_msg${counters[type]}" class="text-danger d-none">Die Summe der Flächenanteile liegt über 100 %. Bitte reduzieren sie die Anteile.</small>
                     </div>

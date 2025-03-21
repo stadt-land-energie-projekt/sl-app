@@ -69,4 +69,44 @@
       letter-spacing: 0.025rem;
     }
   }
+
+  .accordion {
+    &-item {
+      margin-bottom: 1.5rem;
+      border: none;
+    }
+
+    &-header {
+      button {
+        background-color: #e2e8f0;
+        color: $font-color-main;
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+    }
+
+    &-collapse {
+      background-color: $bg-color-light;
+    }
+
+    &-buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      padding-top: 0.5rem;
+      padding-bottom: 2rem;
+    }
+
+    .btn.btn--add {
+      @include button-secondary;
+      font-size: 0.875rem;
+      letter-spacing: 0.025rem;
+    }
+
+    .btn.btn--tertiary {
+      @include button-tertiary;
+      font-size: 0.875rem;
+      letter-spacing: 0.025rem;
+    }
+  }
 }
