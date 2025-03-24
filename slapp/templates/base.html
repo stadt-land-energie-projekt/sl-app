@@ -91,12 +91,12 @@
     </header>
     <div class="main-container">
       {% if has_sidepanel %}
-        <div class="row">
-          <aside class="col-3 sidebar pt-5">
+        <div class="main-container__wrap">
+          <aside class="main-container__aside sidebar">
             {% block sidebar_content %}
             {% endblock sidebar_content %}
           </aside>
-          <main class="col-9">
+          <main class="main-container__main">
             {% block content %}
             {% endblock content %}
           </main>
