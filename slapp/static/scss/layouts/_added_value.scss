@@ -115,6 +115,14 @@
   }
 }
 
+.av-sliders {
+  output {
+    display: block;
+    text-align: right;
+    font-weight: 700;
+  }
+}
+
 .av-send {
   display: flex;
   flex-direction: row;

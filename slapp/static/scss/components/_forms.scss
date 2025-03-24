@@ -28,11 +28,11 @@ form {
   }
 }
 
-input:focus,
-textarea:focus,
-select:focus,
-button:focus,
-[contenteditable="true"]:focus {
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible,
+[contenteditable="true"]:focus-visible {
   outline: 2px solid #86efac !important;
   border-color: #86efac !important;
   outline-offset: 2px !important;
