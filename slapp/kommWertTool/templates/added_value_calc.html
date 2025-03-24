@@ -974,69 +974,60 @@
         });
 
         function toggleAccordions() {
-            const checkboxSelectors = [
-                "#checkboxWind",
-                "#checkboxPV",
-                "#checkboxAPVV",
-                "#checkboxAPVH"
+            const mappings = [
+                { checkbox: "#checkboxWind", accordion: "#collapseWind" },
+                { checkbox: "#checkboxPV", accordion: "#collapsePV" },
+                { checkbox: "#checkboxAPVV", accordion: "#collapseAPVV" },
+                { checkbox: "#checkboxAPVH", accordion: "#collapseAPVH" }
             ];
-            const technologyToContent = {
-                "Wind": "#collapseWind",
-                "PV": "#collapsePV",
-                "APVV": "#collapseAPVV",
-                "APVH": "#collapseAPVH"
-            };
             
-            // Process each checkbox
-            checkboxSelectors.forEach(checkboxSelector => {
-                const $checkbox = $(checkboxSelector);
+            // Disable the parent behavior where clicking one accordion closes others
+            $(".accordion-collapse").each(function() {
+                $(this).attr("data-bs-parent", "");
+            });
+            
+            mappings.forEach(mapping => {
+                const $checkbox = $(mapping.checkbox);
+                const $content = $(mapping.accordion);
+                const $item = $content.closest('.accordion-item');
+                const $button = $item.find('.accordion-button');
                 
-                if ($checkbox.length === 0) {
-                    console.error(`Checkbox ${checkboxSelector} not found`);
-                    return;
-                }
+
+                updateAccordionState($checkbox, $item, $button, $content);
                 
-                // Extract technology name from checkbox ID
-                const technology = checkboxSelector.replace("#checkbox", "");
-                const contentSelector = technologyToContent[technology];
-                const $accordionContent = $(contentSelector);
-                const $accordionItem = $accordionContent.closest('.accordion-item');
-                
-                // Set initial state
-                updateVisibility($checkbox, $accordionItem, $accordionContent);
-                
-                // Add event listener
+                // Handle checkbox changes
                 $checkbox.on('change', function() {
-                    updateVisibility($(this), $accordionItem, $accordionContent);
+                    updateAccordionState($(this), $item, $button, $content);
                 });
             });
             
-            function updateVisibility($checkbox, $accordionItem, $accordionContent) {
+            function updateAccordionState($checkbox, $item, $button, $content) {
                 if ($checkbox.prop('checked')) {
-                    // Show accordion item
-                    $accordionItem.removeClass('d-none');
-                    
-                    // Enable button and expand content
-                    const $button = $accordionItem.find('.accordion-button');
+                    $item.removeClass('d-none');
                     $button.prop('disabled', false);
-                    $button.removeClass('disabled collapsed bg-light');
-                    $accordionContent.addClass('show');
-                } else {
-                    // Hide accordion item
-                    $accordionItem.addClass('d-none');
+                    $button.removeClass('disabled bg-light');
                     
-                    // Disable button and collapse content
-                    const $button = $accordionItem.find('.accordion-button');
+                    // Don't automatically expand the content
+                    if (!$item.data('been-shown')) {
+                        $content.addClass('show');
+                        $button.removeClass('collapsed');
+                        $item.data('been-shown', true);
+                    }
+                } else {
+                    $item.addClass('d-none');
                     $button.prop('disabled', true);
-                    $button.addClass('disabled collapsed bg-light');
-                    $accordionContent.removeClass('show');
+                    $button.addClass('disabled bg-light');
+                    $content.removeClass('show');
+                    $button.addClass('collapsed');
                 }
             }
         }
 
         function expandAllAccordions() {
-            // Only expand visible accordions
-            $('#accordion .accordion-item:not(.d-none) .accordion-button.collapsed').click();
+            // Expand all visible (but collapsed) accordions
+            $('.accordion-item:not(.d-none) .accordion-button.collapsed').each(function() {
+                $(this).click();
+            });
         }
 
         const counters = {
