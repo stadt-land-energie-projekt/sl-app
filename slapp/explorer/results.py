@@ -8,29 +8,7 @@ from operator import or_
 from django.db.models import Prefetch, Q
 
 from .models import Result, Scenario, Sensitivity
-
-TECHNOLOGIES = {
-    "electrolyzer": {
-        "name": "Wasserstoff-Elektrolyseur",
-        "color": "#1E90FF",
-    },
-    "pv": {
-        "name": "Photovoltaik",
-        "color": "#FFD700",
-    },
-    "boiler_large": {
-        "name": "Großer Erdgas-Kessel",
-        "color": "#FF8C00",
-    },
-    "boiler_small": {
-        "name": "Kleiner Erdgas-Kessel",
-        "color": "#B22222",
-    },
-    "ror": {
-        "name": "Laufwasserkraftwerk",
-        "color": "#4682B4",
-    },
-}
+from .settings import TECHNOLOGIES
 
 CAPACITIES = {
     "B-wind-onshore": "invest_out_electricity",
@@ -131,6 +109,7 @@ def build_tech_comp_data(bar_entry: dict, current_tech: str) -> list:
                 "color": color,
             },
         )
+    bar_data_list = sorted(bar_data_list, key=lambda tech: tech["value"])
     return bar_data_list
 
 

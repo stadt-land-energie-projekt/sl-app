@@ -33,13 +33,13 @@ from .regions import (
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
 from .results import (
-    TECHNOLOGIES,
     build_cost_cap_data,
     build_tech_comp_data,
     filter_region_and_tech,
     get_base_scenario,
     get_sensitivity_result,
 )
+from .settings import TECHNOLOGIES
 
 MAX_MUNICIPALITY_COUNT = 3
 
@@ -574,11 +574,13 @@ class Results(TemplateView):
             "table_2": build_table_data(df2, scale),
         }
 
+        technologies = sorted(TECHNOLOGIES.items(), key=lambda tech: tech[1]["name"])
+
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
         context["range"] = range_tbl
         context["sensitivity"] = get_sensitivity_result("CapacityCosts", "B", "pv")
-        context["technologies"] = TECHNOLOGIES
+        context["technologies"] = technologies
         return context
 
 
@@ -601,8 +603,9 @@ def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
     sensitivity_data = get_sensitivity_result("CapacityCosts", region, tech)
     sensitivity_data.update(get_sensitivity_result("CapacityCosts", "ALL", tech))
 
-    base_scenario = get_base_scenario()
-    sensitivity_data[0.0] = base_scenario
+    if bool(sensitivity_data):
+        base_scenario = get_base_scenario()
+        sensitivity_data[0.0] = base_scenario
 
     sensitivity_data = filter_region_and_tech(sensitivity_data, region)
     # If an "x" parameter is provided, return tech comparison chart data.

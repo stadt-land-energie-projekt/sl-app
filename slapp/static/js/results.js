@@ -362,16 +362,35 @@ function loadTechComparisonChart(data, selectedX) {
     }
     let categories = barData.map(item => item.name);
     let values = barData.map(item => ({ value: item.value, itemStyle: { color: item.color } }));
+
+    let storedZoomStart = localStorage.getItem('chartZoomStart');
+    let storedZoomEnd = localStorage.getItem('chartZoomEnd');
+
     let option = {
         title: { text: "Technologievergleich bei Kosten von " + selectedX + " €", left: "center" },
         tooltip: { trigger: "item", formatter: (params) => `${params.name}<br/>Wert: ${params.value}` },
         grid: { left: '10%', right: '20%', top: '25%', bottom: '15%', containLabel: true },
         xAxis: { type: "value", name: "Leistung" },
         yAxis: { type: "category", data: categories },
+        dataZoom: [
+            {
+                type: 'slider',
+                show: true,
+                orient: 'horizontal',
+                start: storedZoomStart !== null ? parseFloat(storedZoomStart) : 0,
+                end: storedZoomEnd !== null ? parseFloat(storedZoomEnd) : 100
+            }
+        ],
         series: [{ type: "bar", data: values }]
     };
     chart.setOption(option);
     chart.resize();
+
+    chart.on('datazoom', function(params) {
+        const zoomState = chart.getOption().dataZoom[0];
+        localStorage.setItem('chartZoomStart', zoomState.start);
+        localStorage.setItem('chartZoomEnd', zoomState.end);
+    });
 }
 
 function showErrorMessage(el, message) {
