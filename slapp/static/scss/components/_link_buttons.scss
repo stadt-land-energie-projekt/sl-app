@@ -31,14 +31,12 @@
 
   &:focus {
     outline: 2px solid #86efac;
-    outline-offset: 2px;
   }
 
   &:focus-visible {
     background-color: #4ade80;
     color: $font-color-main;
     outline: 2px solid #86efac;
-    outline-offset: 2px;
   }
 
   &:disabled {
@@ -75,15 +73,15 @@
   }
 
   &:focus {
-    outline: 2px solid #86efac;
-    outline-offset: 2px;
+    outline: 2px solid #101828 !important;
+    box-shadow: none !important;
   }
 
   &:focus-visible {
     background-color: lighten(#101828, 10%);
     color: $white;
-    outline: 2px solid #86efac;
-    outline-offset: 2px;
+    outline: 2px solid #101828 !important;
+    box-shadow: none !important;
   }
 
   &:disabled {
@@ -120,15 +118,16 @@
   }
 
   &:focus {
-    outline: 2px solid #86efac;
-    outline-offset: 2px;
+    outline: 2px solid #101828 !important;
+    box-shadow: none !important;
+    border-color: #E2E8F0 !important;
   }
 
   &:focus-visible {
     background-color: darken(#E2E8F0, 5%);
-    color: darken(#101828, 10%);
-    outline: 2px solid #86efac;
-    outline-offset: 2px;
+    outline: 2px solid #101828 !important;
+    box-shadow: none !important;
+    border-color: #E2E8F0 !important;
   }
 
   &:disabled {

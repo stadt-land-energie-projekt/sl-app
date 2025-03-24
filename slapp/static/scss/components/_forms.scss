@@ -27,3 +27,14 @@ form {
     border-color: $color-active;
   }
 }
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus,
+[contenteditable="true"]:focus {
+  outline: 2px solid #86efac !important;
+  border-color: #86efac !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 4px 8px rgba(134, 239, 172, 0.3) !important;
+}
