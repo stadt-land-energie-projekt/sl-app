@@ -137,3 +137,11 @@
     box-shadow: none;
   }
 }
+
+@mixin button-small {
+  padding: 0.25rem 1rem;
+}
+
+@mixin button-large {
+  padding: 1rem 2rem;
+}

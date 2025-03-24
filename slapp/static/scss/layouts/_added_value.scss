@@ -99,14 +99,28 @@
 
     .btn.btn--add {
       @include button-secondary;
+      @include button-small;
       font-size: 0.875rem;
       letter-spacing: 0.025rem;
     }
 
     .btn.btn--tertiary {
       @include button-tertiary;
+      @include button-small;
       font-size: 0.875rem;
       letter-spacing: 0.025rem;
     }
+  }
+}
+
+.av-send {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  .btn {
+    @include button-primary;
+    @include button-large;
+    width: auto;
   }
 }
