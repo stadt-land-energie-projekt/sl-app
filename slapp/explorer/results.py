@@ -8,8 +8,8 @@ from operator import or_
 
 from django.db.models import Prefetch, Q
 
-from .models import Result, Scenario, Sensitivity
-from .settings import TECHNOLOGIES
+from .models import AlternativeResult, Result, Scenario, Sensitivity
+from .settings import TECHNOLOGIES, TECHNOLOGIES_RANGES
 
 ResultEntry = namedtuple("ResultEntry", ["name", "var_name"])  # noqa: PYI024
 
@@ -69,6 +69,28 @@ def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> di
         for sensitivity in sensitivities
     }
     return results
+
+
+def get_alternative_result_for_region(region: str) -> dict:
+    """Return Alternative Results for ranges by region."""
+    results = AlternativeResult.objects.filter(region=region).select_related("alternative")
+
+    data_for_region = {}
+    for r in results:
+        divergence = r.alternative.divergence
+        if divergence not in data_for_region:
+            data_for_region[divergence] = {}
+
+        data_for_region[divergence][r.component] = {
+            "min_capacity": r.min_capacity,
+            "max_capacity": r.max_capacity,
+            "min_cost": r.min_cost,
+            "max_cost": r.max_cost,
+            "carrier": r.carrier,
+            "type": r.type,
+        }
+
+    return data_for_region
 
 
 def get_base_scenario() -> dict:
@@ -149,3 +171,13 @@ def filter_region_and_tech(sensitivity_data: dict, region: str) -> dict:
             filtered_data[cost] = filtered_inner_dict
 
     return filtered_data
+
+
+def get_potential(technology: str) -> str:
+    """Return potential per technology."""
+    return TECHNOLOGIES_RANGES.get(technology, {}).get("potential", "-")
+
+
+def get_technology_color(technology: str) -> str:
+    """Return color per technology."""
+    return TECHNOLOGIES.get(technology, {}).get("color", "#000000")
