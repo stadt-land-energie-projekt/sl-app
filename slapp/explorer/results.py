@@ -8,7 +8,8 @@ from operator import or_
 
 from django.db.models import Prefetch, Q
 
-from .models import Result, Sensitivity
+from .models import Result, Scenario, Sensitivity
+from .settings import TECHNOLOGIES
 
 ResultEntry = namedtuple("ResultEntry", ["name", "var_name"])  # noqa: PYI024
 
@@ -68,3 +69,83 @@ def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> di
         for sensitivity in sensitivities
     }
     return results
+
+
+def get_base_scenario() -> dict:
+    """Return base_scenarios."""
+    try:
+        scenario = Scenario.objects.get(name="base_scenario")
+    except Scenario.DoesNotExist:
+        return {}
+
+    base_scenario = {}
+
+    for tech, cap in CAPACITIES.items():
+        result = scenario.result_set.filter(name=tech, var_name=cap).first()
+        if result:
+            base_scenario[tech] = result.var_value
+
+    return base_scenario
+
+
+def get_tech_category(full_key: str) -> str | None:
+    """DCheck the full_key against the keys in TECHNOLOGIES."""
+    for tech_key in TECHNOLOGIES:
+        if tech_key in full_key:
+            return tech_key
+    return None
+
+
+def build_tech_comp_data(bar_entry: dict, current_tech: str) -> list:
+    """Build a list of dictionaries for tech comparison chart."""
+    bar_data_list = []
+    for full_key, value in bar_entry.items():
+        category = get_tech_category(full_key)
+        if category is None or category == current_tech:
+            continue
+        display_name = TECHNOLOGIES[category]["name"]
+        color = TECHNOLOGIES[category]["color"]
+        bar_data_list.append(
+            {
+                "name": display_name,
+                "value": value,
+                "color": color,
+            },
+        )
+    bar_data_list = sorted(bar_data_list, key=lambda tech: tech["value"])
+    return bar_data_list
+
+
+def build_cost_cap_data(sensitivity_data: dict, current_tech: str) -> [float, float]:
+    """Build a dictionary for the cost capacity chart data for the selected technology."""
+    cost_cap_data = {}
+    for x, inner_dict in sensitivity_data.items():
+        for key in inner_dict:
+            if current_tech in key:
+                cost_cap_data[x] = inner_dict[key]
+                break
+
+    array_data = sorted(
+        ([float(k), v] for k, v in cost_cap_data.items()),
+        key=lambda item: item[0],
+    )
+
+    return array_data
+
+
+def filter_region_and_tech(sensitivity_data: dict, region: str) -> dict:
+    """Filter data with region."""
+    filtered_data = {}
+
+    for cost, inner_dict in sensitivity_data.items():
+        filtered_inner_dict = {}
+        for full_key, value in inner_dict.items():
+            for tech_key in TECHNOLOGIES:
+                if tech_key in full_key:
+                    parts = full_key.split("-", 1)
+                    if parts[0] == region:
+                        filtered_inner_dict[full_key] = value
+        if filtered_inner_dict:
+            filtered_data[cost] = filtered_inner_dict
+
+    return filtered_data

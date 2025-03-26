@@ -1,4 +1,8 @@
-function showHiddenDiv(region, button) {
+let currentRegion = "";
+let currentTech = "";
+
+// Called when a region button is clicked
+async function showHiddenDiv(region, button) {
     let allButtons = document.querySelectorAll(".select-button");
     allButtons.forEach(b => b.classList.remove("selected"));
 
@@ -7,10 +11,31 @@ function showHiddenDiv(region, button) {
     let hiddenDiv = document.querySelector(".hidden-div");
     hiddenDiv.style.display = "block";
 
-    loadFlowsChart(region, "electricity");
-    loadFlowsChart(region, "hydrogen");
-    loadBasicData(region);
+    try {
+        await loadFlowsChart(region, "electricity");
+        await loadFlowsChart(region, "hydrogen");
+        await loadBasicData(region);
+    } catch (error) {
+        console.error("Error in showHiddenDiv:", error);
     }
+
+    currentRegion = region;
+    await initializeTechnologySelect();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const dropdown = document.getElementById("technologySelect");
+    if (dropdown) {
+        dropdown.addEventListener("change", function () {
+            const selectedType = this.value;
+            loadCostCapacityData(selectedType);
+        });
+        if (dropdown.options.length > 0) {
+            currentTech = dropdown.options[0].value;
+            loadCostCapacityData(currentTech);
+        }
+    }
+});
 
 function getOrCreateChart(domElement) {
     let chart = echarts.getInstanceByDom(domElement);
@@ -22,98 +47,63 @@ function getOrCreateChart(domElement) {
     return chart;
 }
 
-function loadFlowsChart(chartType) {
-    let url = window.location.origin + "/explorer/chart/flow_chart?type=" + encodeURIComponent(chartType);
+function removeChart(domElement) {
+    let chart = echarts.getInstanceByDom(domElement);
+    if (chart) {
+        chart.clear();
+    }
+}
 
-    fetch(url, {
-        method: "GET",
-        mode: "cors",
-        headers: { "Accept": "application/json" },
-        credentials: "same-origin"
-    })
-    .then(response => response.json())
-    .then(jsonObj => {
+async function loadFlowsChart(chartType, region) {
+    const url = `${window.location.origin}/explorer/chart/flow_chart?type=${encodeURIComponent(chartType)}&region=${encodeURIComponent(region)}`;
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            mode: "cors",
+            headers: { "Accept": "application/json" },
+            credentials: "same-origin"
+        });
+        if (!response.ok) throw new Error("Network error: " + response.status);
+        const jsonObj = await response.json();
         let dataArray = jsonObj.data;
-
         if (!Array.isArray(dataArray) || dataArray.length < 2) {
             console.error("Unerwartetes Datenformat:", dataArray);
             return;
         }
-
-        let electricityData = dataArray[0];
-        createFlowChart(
-            document.getElementById("electricity-chart"),
-            electricityData,
-            "electricity"
-        );
-
-        let hydrogenData = dataArray[1];
-        createFlowChart(
-            document.getElementById("hydrogen-chart"),
-            hydrogenData,
-            "hydrogen"
-        );
-    })
-    .catch(error => {
+        createFlowChart(document.getElementById("electricity-chart"), dataArray[0], "electricity");
+        createFlowChart(document.getElementById("hydrogen-chart"), dataArray[1], "hydrogen");
+    } catch (error) {
         console.error("Error loading flow chart:", error);
-    });
+    }
 }
 
 function createFlowChart(domElement, chartData, resource) {
     if (!domElement || !chartData) return;
-
     let chart = getOrCreateChart(domElement);
-
     let values = chartData.energyData.map(d => d.value);
     let minEnergy = Math.min(...values);
     let maxEnergy = Math.max(...values);
-
     function scaleLineWidth(value) {
         let diff = maxEnergy - minEnergy;
-        if (diff === 0) {
-            return 4;
-        }
-        return 1 + ((value - minEnergy) / diff) * 7;
+        return diff === 0 ? 4 : 1 + ((value - minEnergy) / diff) * 7;
     }
-
-    let gradientColors = [
-      { offset: 0, color: "#a2edbd" },
-      { offset: 1, color: "#20a54f" }
-    ];
-
-    if (resource === "hydrogen") {
-      gradientColors = [
-        { offset: 0, color: "#feb1b1" },
-        { offset: 1, color: "#c34747" }
-      ];
-    }
-
+    let gradientColors = resource === "hydrogen" ?
+        [{ offset: 0, color: "#feb1b1" }, { offset: 1, color: "#c34747" }] :
+        [{ offset: 0, color: "#a2edbd" }, { offset: 1, color: "#20a54f" }];
     let option = {
-        title: {
-            text: chartData.title || "Flussdiagramm",
-            left: "center"
-        },
+        title: { text: chartData.title || "Flussdiagramm", left: "center" },
         tooltip: {
             trigger: "item",
             formatter: function (params) {
-                if (params.dataType === "edge") {
-                    return `${params.data.source} → ${params.data.target}: ${params.data.value} MWh`;
-                }
-                return params.name;
+                return params.dataType === "edge" ?
+                    `${params.data.source} → ${params.data.target}: ${params.data.value} MWh` : params.name;
             }
         },
         series: [{
             type: "graph",
-            force: {
-                repulsion: 300,
-                edgeLength: [50, 200]
-            },
+            force: { repulsion: 300, edgeLength: [50, 200] },
             roam: true,
-            label: {
-                show: true,
-                position: "right",
-                fontSize: 20
-            },
+            label: { show: true, position: "right", fontSize: 20 },
             edgeSymbol: ["none", "arrow"],
             edgeSymbolSize: 10,
             lineStyle: {
@@ -126,52 +116,70 @@ function createFlowChart(domElement, chartData, resource) {
                 source: d.source,
                 target: d.target,
                 value: d.value,
-                lineStyle: {
-                    width: scaleLineWidth(d.value)
-                }
+                lineStyle: { width: scaleLineWidth(d.value) }
             })),
-            emphasis: {
-                focus: "adjacency"
-            }
+            emphasis: { focus: "adjacency" }
         }]
     };
-
     chart.setOption(option);
     chart.resize();
+}
+
+async function loadBasicData(region) {
+    const url = `/explorer/basic_charts/?type=${encodeURIComponent(region)}`;
+    try {
+        const response = await fetch(url, { method: 'GET', headers: { "Accept": "application/json" } });
+        if (!response.ok) throw new Error("Netzwerkfehler: " + response.status);
+        const data = await response.json();
+        loadElectricityChart(data.electricity);
+        loadHeatChart(data.heat);
+        loadCapacityChart(data.capacity);
+        loadCostsChart(data.costs);
+    } catch (error) {
+        console.error("Fehler beim Laden der Basisdaten:", error);
+    }
+}
+
+async function loadCostCapacityData(tech) {
+    currentTech = tech;
+    const url = `/explorer/cost_capacity_chart/?type=${encodeURIComponent(tech)}&region=${encodeURIComponent(currentRegion)}`;
+    try {
+        const response = await fetch(url, { method: 'GET', headers: { "Accept": "application/json" } });
+        if (!response.ok) throw new Error("Network error: " + response.status);
+        const data = await response.json();
+        loadCostCapacityLineChart(data.line_data);
+        const xValues = data.line_data.map(item => item[0]);
+        if (xValues.includes(0)) {
+            updateTechComparisonChart(0, tech);
+        } else if (xValues.length > 0) {
+            updateTechComparisonChart(xValues[0], tech);
+        }
+    } catch (error) {
+        console.error("Error loading cost capacity data:", error);
+    }
 }
 
 function loadElectricityChart(data) {
     let el = document.getElementById("basic-electricity");
     if (!el) return;
-
     let chart = getOrCreateChart(el);
-
     let categories = data.categories || [];
     let seriesData = data.series || {};
-
-    let series = [];
-    Object.keys(seriesData).forEach((key) => {
-        series.push({
-            name: key,
-            type: "bar",
-            stack: "electricityStack",
-            data: seriesData[key]
-        });
-    });
-
+    let series = Object.keys(seriesData).map(key => ({
+        name: key,
+        type: "bar",
+        stack: "electricityStack",
+        data: seriesData[key]
+    }));
     let option = {
-        title: { text: "Electricity (GWh)", left: "center" },
+        title: { text: "Elektrizität (GWh)", left: "center" },
         tooltip: { trigger: "axis" },
         legend: { top: 30 },
         grid: { left: "10%", right: "10%", bottom: "10%" },
         xAxis: { type: "value" },
-        yAxis: {
-            type: "category",
-            data: categories
-        },
+        yAxis: { type: "category", data: categories },
         series: series
     };
-
     chart.setOption(option);
     chart.resize();
 }
@@ -179,35 +187,24 @@ function loadElectricityChart(data) {
 function loadHeatChart(data) {
     let el = document.getElementById("basic-heat");
     if (!el) return;
-
     let chart = getOrCreateChart(el);
-
     let categories = data.categories || [];
     let seriesData = data.series || {};
-
-    let series = [];
-    Object.keys(seriesData).forEach((key) => {
-        series.push({
-            name: key,
-            type: "bar",
-            stack: "heatStack",
-            data: seriesData[key]
-        });
-    });
-
+    let series = Object.keys(seriesData).map(key => ({
+        name: key,
+        type: "bar",
+        stack: "heatStack",
+        data: seriesData[key]
+    }));
     let option = {
-        title: { text: "Heat (GWh)", left: "center" },
+        title: { text: "Wärme (GWh)", left: "center" },
         tooltip: { trigger: "axis" },
         legend: { top: 30 },
         grid: { left: "10%", right: "10%", bottom: "10%" },
         xAxis: { type: "value" },
-        yAxis: {
-            type: "category",
-            data: categories
-        },
+        yAxis: { type: "category", data: categories },
         series: series
     };
-
     chart.setOption(option);
     chart.resize();
 }
@@ -215,35 +212,24 @@ function loadHeatChart(data) {
 function loadCapacityChart(data) {
     let el = document.getElementById("basic-capacity");
     if (!el) return;
-
     let chart = getOrCreateChart(el);
-
     let categories = data.categories || [];
     let seriesData = data.series || {};
-
-    let series = [];
-    Object.keys(seriesData).forEach((key) => {
-        series.push({
-            name: key,
-            type: "bar",
-            stack: "capacityStack",
-            data: seriesData[key]
-        });
-    });
-
+    let series = Object.keys(seriesData).map(key => ({
+        name: key,
+        type: "bar",
+        stack: "capacityStack",
+        data: seriesData[key]
+    }));
     let option = {
-        title: { text: "Capacity (MW)", left: "center" },
+        title: { text: "Kapazität (MW)", left: "center" },
         tooltip: { trigger: "axis" },
         legend: { top: 30 },
         grid: { left: "10%", right: "10%", bottom: "10%" },
         xAxis: { type: "value" },
-        yAxis: {
-            type: "category",
-            data: categories
-        },
+        yAxis: { type: "category", data: categories },
         series: series
     };
-
     chart.setOption(option);
     chart.resize();
 }
@@ -251,204 +237,190 @@ function loadCapacityChart(data) {
 function loadCostsChart(data) {
     let el = document.getElementById("basic-costs");
     if (!el) return;
-
     let chart = getOrCreateChart(el);
-
     let categories = data.categories || [];
     let seriesData = data.series || {};
-
-    let series = [];
-    Object.keys(seriesData).forEach((key) => {
-        series.push({
-            name: key,
-            type: "bar",
-            stack: "costsStack",
-            data: seriesData[key]
-        });
-    });
-
+    let series = Object.keys(seriesData).map(key => ({
+        name: key,
+        type: "bar",
+        stack: "costsStack",
+        data: seriesData[key]
+    }));
     let option = {
-        title: { text: "Costs (€)", left: "center" },
+        title: { text: "Kosten (€)", left: "center" },
         tooltip: { trigger: "axis" },
         legend: { top: 30 },
         grid: { left: "10%", right: "10%", bottom: "10%" },
         xAxis: { type: "value" },
-        yAxis: {
-            type: "category",
-            data: categories
-        },
+        yAxis: { type: "category", data: categories },
         series: series
     };
-
     chart.setOption(option);
     chart.resize();
 }
 
-function loadBasicData(region) {
-    fetch(`/explorer/basic_charts/?type=${encodeURIComponent(region)}`, {
-        method: 'GET',
-        headers: {
-            "Accept": "application/json",
+function transformLineData(lineData) {
+    const xValues = lineData.map(item => item[0]);
+    const yValues = lineData.map(item => item[1]);
+    const defaultIndex = xValues.includes(0) ? xValues.indexOf(0) : 0;
+    const highlightColor = "#FF0000";
+    const seriesData = yValues.map((val, index) =>
+        index === defaultIndex ? { value: val, itemStyle: { color: highlightColor } } : { value: val }
+    );
+    return { xValues, yValues, seriesData };
+}
+
+function registerAxisPointerListener(chart, lastDataIndexRef) {
+    chart.on('updateAxisPointer', function (event) {
+        if (event.axesInfo && event.axesInfo.length > 0) {
+            lastDataIndexRef.value = event.axesInfo[0].value;
         }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Netzwerkfehler: " + response.status);
-        }
-        return response.json();
-    })
-    .then(data => {
-        loadElectricityChart(data.electricity);
-        loadHeatChart(data.heat);
-        loadCapacityChart(data.capacity);
-        loadCostsChart(data.costs);
-    })
-    .catch(error => {
-        console.error("Fehler beim Laden der Basislösung-Daten:", error);
     });
 }
 
-function loadCostCapacityLineChart(data) {
-    let el = document.getElementById("line-chart");
+function registerGlobalChartClick(chart, xValues, yValues, lastDataIndexRef) {
+    chart.getZr().off('click');
+    chart.getZr().on('click', function () {
+        if (lastDataIndexRef.value == null) return;
+        const highlightColor = "#FF0000";
+        const newSeriesData = yValues.map((value, index) =>
+            index === lastDataIndexRef.value ? { value: value, itemStyle: { color: highlightColor } } : value
+        );
+        chart.setOption({ series: [{ data: newSeriesData }] });
+        const selectedX = xValues[lastDataIndexRef.value];
+        updateTechComparisonChart(selectedX, currentTech);
+    });
+}
+
+function loadCostCapacityLineChart(lineData) {
+    const techCompChart = document.getElementById("tech-comparison-chart");
+    const el = document.getElementById("cost-capacity-chart");
     if (!el) return;
-
-    let chart = getOrCreateChart(el);
-
-    let lineData = data.line_data || [];
-
-    let option = {
-        title: {
-            text: "Kosten vs. Installierte Leistung",
-            left: "center"
-        },
+    if (!lineData || lineData.length === 0) {
+        removeChart(el);
+        el.style.display = "relative";
+        showErrorMessage(el, "Keine Daten verfügbar");
+        if (techCompChart) techCompChart.style.display = "none";
+        return;
+    } else {
+        removeErrorMessage(el);
+        el.style.display = "block";
+        techCompChart.style.display = "block";
+    }
+    const { xValues, yValues, seriesData } = transformLineData(lineData);
+    const chart = getOrCreateChart(el);
+    const option = {
+        title: { text: "Kosten vs. installierte Leistung", left: "center" },
         tooltip: {
             trigger: "axis",
             formatter: (params) => {
-                let value = params[0].value;
-                let xVal = value[0];
-                let yVal = value[1];
-                return `Kosten: ${xVal} €<br/>Leistung: ${yVal} MW`;
+                let idx = params[0].dataIndex;
+                return `Kosten: ${xValues[idx]} €<br/>Leistung: ${yValues[idx]} MW`;
             }
         },
-        xAxis: {
-            type: "value",
-            name: "Kosten (€)"
-        },
-        yAxis: {
-            type: "value",
-            name: "Installierte Leistung (MW)"
-        },
-        series: [
-            {
-                type: "line",
-                data: lineData,
-                smooth: true
-            }
-        ]
+        grid: { left: '10%', right: '20%', top: '25%', bottom: '15%', containLabel: true },
+        xAxis: { type: "category", name: "Kosten (€)", data: xValues, axisPointer: { snap: true } },
+        yAxis: { type: "value", name: "Installierte Leistung (MW)" },
+        series: [{ type: "line", data: seriesData, smooth: true, showAllSymbol: true, symbol: "circle", symbolSize: 8 }]
     };
-
     chart.setOption(option);
     chart.resize();
+    let lastDataIndexRef = { value: null };
+    registerAxisPointerListener(chart, lastDataIndexRef);
+    registerGlobalChartClick(chart, xValues, yValues, lastDataIndexRef);
 }
 
-function loadHorizontalBarChart(data) {
-    let el = document.getElementById("bar-chart");
-    if (!el) return;
-
-    let chart = getOrCreateChart(el);
-
-    let barData = data.bar_data || [];
-
-    let categories = barData.map(item => item.name);
-    let values = barData.map(item => item.value);
-
-    let option = {
-        title: {
-            text: "Horizontales Balkendiagramm",
-            left: "center"
-        },
-        tooltip: {
-            trigger: "item",
-            formatter: (params) => {
-                return `${params.name}<br/>Wert: ${params.value}`;
-            }
-        },
-        xAxis: {
-            type: "value",
-            name: "Wert"
-        },
-        yAxis: {
-            type: "category",
-            data: categories
-        },
-        series: [
-            {
-                type: "bar",
-                data: values
-            }
-        ]
-    };
-
-    chart.setOption(option);
-    chart.resize();
-}
-
-function loadCostCapacityData(type) {
-    fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(type)}`, {
+function updateTechComparisonChart(selectedX, tech) {
+    fetch(`/explorer/cost_capacity_chart/?type=${encodeURIComponent(tech)}&x=${encodeURIComponent(selectedX)}&region=${encodeURIComponent(currentRegion)}`, {
         method: 'GET',
-        headers: {
-            "Accept": "application/json",
-        }
+        headers: { "Accept": "application/json" }
     })
     .then(response => {
-        if (!response.ok) {
-            throw new Error("Netzwerkfehler: " + response.status);
-        }
+        if (!response.ok) throw new Error("Network error: " + response.status);
         return response.json();
     })
     .then(data => {
-        loadCostCapacityLineChart(data);
-        loadHorizontalBarChart(data);
+        loadTechComparisonChart(data, selectedX);
     })
     .catch(error => {
-        console.error("Fehler beim Laden der Cost-Capacity-Daten:", error);
+        console.error("Error updating the tech comparison chart:", error);
     });
 }
 
+function loadTechComparisonChart(data, selectedX) {
+    let el = document.getElementById("tech-comparison-chart");
+    if (!el) return;
+    let chart = getOrCreateChart(el);
+    let barData = data.bar_data || [];
+    if (barData.length === 0) {
+         removeChart(el);
+         showErrorMessage(el, "Keine Daten verfügbar");
+         return;
+    } else {
+        removeErrorMessage(el);
+        el.style.display = "block";
+    }
+    let categories = barData.map(item => item.name);
+    let values = barData.map(item => ({ value: item.value, itemStyle: { color: item.color } }));
 
-document.querySelector('.dropdown-button').addEventListener('click', function() {
-        document.querySelector('.dropdown-content').classList.toggle('show');
-    });
+    let storedZoomStart = localStorage.getItem('chartZoomStart');
+    let storedZoomEnd = localStorage.getItem('chartZoomEnd');
 
-window.onclick = function(event) {
-    if (!event.target.matches('.dropdown-button')) {
-        let dropdowns = document.getElementsByClassName("dropdown-content");
-        for (let i = 0; i < dropdowns.length; i++) {
-            let openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
+    let option = {
+        title: { text: "Technologievergleich bei Kosten von " + selectedX + " €", left: "center" },
+        tooltip: { trigger: "item", formatter: (params) => `${params.name}<br/>Wert: ${params.value}` },
+        grid: { left: '10%', right: '20%', top: '25%', bottom: '15%', containLabel: true },
+        xAxis: { type: "value", name: "Leistung" },
+        yAxis: { type: "category", data: categories },
+        dataZoom: [
+            {
+                type: 'slider',
+                show: true,
+                orient: 'horizontal',
+                start: storedZoomStart !== null ? parseFloat(storedZoomStart) : 0,
+                end: storedZoomEnd !== null ? parseFloat(storedZoomEnd) : 100
             }
-        }
-    }
-};
+        ],
+        series: [{ type: "bar", data: values }]
+    };
+    chart.setOption(option);
+    chart.resize();
 
-function showCostCapData() {
-    costCapContainer = document.getElementById("cost-cap-container")
-    if (costCapContainer) {
-        costCapContainer.classList.add("active");
+    chart.on('datazoom', function(params) {
+        const zoomState = chart.getOption().dataZoom[0];
+        localStorage.setItem('chartZoomStart', zoomState.start);
+        localStorage.setItem('chartZoomEnd', zoomState.end);
+    });
+}
+
+function showErrorMessage(el, message) {
+    let errorMsg = el.querySelector('.error-message');
+    if (!errorMsg) {
+        errorMsg = document.createElement('div');
+        errorMsg.className = 'error-message';
+        errorMsg.style.position = "absolute";
+        errorMsg.style.top = "10px";
+        errorMsg.style.left = "0";
+        errorMsg.style.width = "100%";
+        errorMsg.style.textAlign = 'center';
+        errorMsg.style.padding = '20px';
+        el.appendChild(errorMsg);
+    }
+    errorMsg.textContent = message;
+}
+
+function removeErrorMessage(el) {
+    let errorMsg = el.querySelector('.error-message');
+    if (errorMsg) {
+        errorMsg.parentNode.removeChild(errorMsg);
     }
 }
 
-document.querySelectorAll('.dropdown-content a').forEach(item => {
-    item.addEventListener('click', function(event) {
-        event.preventDefault();
 
-        const selectedType = this.getAttribute('type');
-        loadCostCapacityData(selectedType);
-        showCostCapData();
-
-        document.querySelector('.dropdown-content').classList.remove('show');
-
-        document.querySelector('.dropdown-button').textContent = selectedType;
-    });
-});
+function initializeTechnologySelect() {
+    const dropdown = document.getElementById("technologySelect");
+    if (dropdown && dropdown.options.length > 0) {
+        const firstOptionValue = dropdown.options[0].value;
+        loadCostCapacityData(firstOptionValue);
+    }
+}
