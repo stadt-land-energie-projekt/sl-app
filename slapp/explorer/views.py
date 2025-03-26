@@ -36,6 +36,7 @@ from .results import (
     build_cost_cap_data,
     build_tech_comp_data,
     filter_region_and_tech,
+    get_alternative_result_for_region,
     get_base_scenario,
     get_sensitivity_result,
 )
@@ -633,6 +634,15 @@ def basic_charts(request: HttpRequest) -> JsonResponse:
     basic_charts_data = get_basic_charts_data(region)
 
     return JsonResponse(basic_charts_data)
+
+
+def ranges(request: HttpRequest) -> JsonResponse:
+    """Return requested data for ranges on results page."""
+    region = request.GET.get("region", "")
+
+    alternatives = get_alternative_result_for_region(region)
+
+    return JsonResponse(alternatives)
 
 
 class RobustExample(TemplateView):

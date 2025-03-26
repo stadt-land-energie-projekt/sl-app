@@ -1,4 +1,4 @@
-"""Technologies for sensitivity data."""
+"""Technologies for sensitivity data and Ranges for alternatives."""
 TECHNOLOGIES = {
     "boiler_large": {
         "name": "Großer Erdgas-Kessel",
@@ -51,5 +51,47 @@ TECHNOLOGIES = {
     "ror": {
         "name": "Laufwasserkraftwerk",
         "color": "#4682B4",
+    },
+}
+
+TECHNOLOGIES_RANGES = {
+    "boiler_large": {
+        "potential": "60 [MW]",
+    },
+    "h2-bpchp": {
+        "potential": "150 [MW]",
+    },
+    "cavern": {
+        "potential": "300 [MWh]",
+    },
+    "electrolyzer": {
+        "potential": "100 [MW]",
+    },
+    "extchp": {
+        "potential": "80 [MW]",
+    },
+    "h2-gt": {
+        "potential": "120 [MW]",
+    },
+    "heatpump_large": {
+        "potential": "50 [MW]",
+    },
+    "heatpump_small": {
+        "potential": "15 [MW]",
+    },
+    "liion_battery": {
+        "potential": "200 [MWh]",
+    },
+    "onshore": {
+        "potential": "400 [MW]",
+    },
+    "pth": {
+        "potential": "60 [MW]",
+    },
+    "pv": {
+        "potential": "300 [MW]",
+    },
+    "ror": {
+        "potential": "50 [MW]",
     },
 }
