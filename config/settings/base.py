@@ -8,6 +8,7 @@ ROOT_DIR = environ.Path(__file__) - 3  # (slapp/config/settings/base.py - 3 = sl
 APPS_DIR = ROOT_DIR.path("slapp")
 DATA_DIR = APPS_DIR.path("data")
 GEODATA_DIR = DATA_DIR.path("geodata")
+ZIB_DATA = DATA_DIR.path("zib")
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # slapp/
 APPS_DIR = BASE_DIR / "slapp"
