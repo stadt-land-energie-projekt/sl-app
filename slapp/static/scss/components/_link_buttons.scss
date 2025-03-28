@@ -31,14 +31,12 @@
 
   &:focus {
     outline: 2px solid #86efac;
-    outline-offset: 2px;
   }
 
   &:focus-visible {
     background-color: #4ade80;
     color: $font-color-main;
     outline: 2px solid #86efac;
-    outline-offset: 2px;
   }
 
   &:disabled {
@@ -47,4 +45,103 @@
     cursor: not-allowed;
     box-shadow: none;
   }
+}
+
+@mixin button-secondary {
+  background-color: #101828;
+  color: $white;
+  border: none;
+  border-radius: $border-radius;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: auto;
+  width: auto;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    background-color: lighten(#101828, 10%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: $white;
+  }
+
+  &:active {
+    background-color: lighten(#101828, 15%) !important;
+    transform: scale(0.98);
+    color: $white !important;
+  }
+
+  &:focus {
+    outline: 2px solid #101828 !important;
+    box-shadow: none !important;
+  }
+
+  &:focus-visible {
+    background-color: lighten(#101828, 10%);
+    color: $white;
+    outline: 2px solid #101828 !important;
+    box-shadow: none !important;
+  }
+
+  &:disabled {
+    background-color: #cbd5e1;
+    color: white;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+@mixin button-tertiary {
+  background-color: #E2E8F0;
+  color: #101828;
+  border: 1px solid #E2E8F0;
+  border-radius: $border-radius;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: auto;
+  width: auto;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    background-color: darken(#E2E8F0, 5%);
+    color: darken(#101828, 10%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  &:active {
+    background-color: darken(#E2E8F0, 10%) !important;
+    transform: scale(0.98);
+    color: darken(#101828, 15%) !important;
+  }
+
+  &:focus {
+    outline: 2px solid #101828 !important;
+    box-shadow: none !important;
+    border-color: #E2E8F0 !important;
+  }
+
+  &:focus-visible {
+    background-color: darken(#E2E8F0, 5%);
+    outline: 2px solid #101828 !important;
+    box-shadow: none !important;
+    border-color: #E2E8F0 !important;
+  }
+
+  &:disabled {
+    background-color: #F1F5F9;
+    color: lighten(#101828, 40%);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+@mixin button-small {
+  padding: 0.25rem 1rem;
+}
+
+@mixin button-large {
+  padding: 1rem 2rem;
 }

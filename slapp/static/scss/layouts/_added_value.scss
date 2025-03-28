@@ -1,0 +1,138 @@
+.av {
+  &__container {
+    @include container;
+    padding-bottom: 4rem;
+  }
+
+  header {
+    display: flex;
+    flex-direction: column;
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+
+    @media only screen and (min-width: 1400px) {
+      padding-top: 6rem;
+      padding-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: $font-color-main;
+      padding-bottom: 2rem;
+    }
+
+    p {
+      max-width: 64rem;
+      color: $font-color-secondary;
+      font-size: 1rem;
+      line-height: 170%;
+    }
+  }
+}
+
+.av-content {
+  .av-section {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    background-color: $bg-color-light;
+    border-radius: $border-radius;
+
+    &__heading {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    &__select {
+      display: flex;
+      flex-direction: row;
+      gap: 1.5rem;
+    }
+  }
+
+  .optional-separator {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+
+    .line {
+      flex: 1;
+      height: 1px;
+      background-color: $border-color;
+    }
+
+    p {
+      width: auto;
+      margin-bottom: 0;
+      padding: 0 1rem;
+      color: $font-color-secondary;
+      font-weight: 700;
+      font-size: 0.875rem;
+      letter-spacing: 0.025rem;
+    }
+  }
+
+  .accordion {
+    &-item {
+      margin-bottom: 1.5rem;
+      border: none;
+    }
+
+    &-header {
+      button {
+        background-color: #e2e8f0;
+        color: $font-color-main;
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+    }
+
+    &-collapse {
+      background-color: $bg-color-light;
+    }
+
+    &-buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      padding-top: 0.5rem;
+      padding-bottom: 2rem;
+    }
+
+    .btn.btn--add {
+      @include button-secondary;
+      @include button-small;
+      font-size: 0.875rem;
+      letter-spacing: 0.025rem;
+    }
+
+    .btn.btn--tertiary {
+      @include button-tertiary;
+      @include button-small;
+      font-size: 0.875rem;
+      letter-spacing: 0.025rem;
+    }
+  }
+}
+
+.av-sliders {
+  output {
+    display: block;
+    text-align: right;
+    font-weight: 700;
+  }
+}
+
+.av-send {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  .btn {
+    @include button-primary;
+    @include button-large;
+    width: auto;
+  }
+}
