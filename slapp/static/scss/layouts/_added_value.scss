@@ -1,35 +1,37 @@
-.av-sidebar {
-  padding-left: 2rem;
-  padding-right: 2rem;
+.av {
+  &__container {
+    @include container;
+    padding-bottom: 4rem;
+  }
 
-  &__back {
+  header {
     display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    color: $color-link;
-    text-decoration: none;
-    margin-bottom: 2rem;
-  }
+    flex-direction: column;
+    padding-top: 4rem;
+    padding-bottom: 2rem;
 
-  &__heading {
-    font-size: 2.5rem;
-    font-weight: 700;
-    padding-bottom: 1rem;
-  }
+    @media only screen and (min-width: 1400px) {
+      padding-top: 6rem;
+      padding-bottom: 3rem;
+    }
 
-  &__content {
-    font-size: 0.875rem;
-    color: $font-color-secondary;
-    line-height: 170%;
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: $font-color-main;
+      padding-bottom: 2rem;
+    }
+
+    p {
+      max-width: 64rem;
+      color: $font-color-secondary;
+      font-size: 1rem;
+      line-height: 170%;
+    }
   }
 }
 
 .av-content {
-  @extend .container;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  margin-top: 7rem;
-
   .av-section {
     padding: 1.5rem;
     margin-bottom: 1.5rem;

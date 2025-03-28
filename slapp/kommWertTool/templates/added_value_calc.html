@@ -3,652 +3,647 @@
 {% load humanize %}
 
 {% block content_no_sidebar %}
-  <div class="av-sidebar">
-    <a href="/" class="av-sidebar__back">
-      <svg xmlns="http://www.w3.org/2000/svg"
-           viewBox="0 0 320 512"
-           height="16"
-           width="16">
-        <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-        <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" fill="#15803D" />
-      </svg>
-      <span>Startseite</span>
-    </a>
-    <h1 class="av-sidebar__heading">Wertschöpfung</h1>
-    <p class="av-sidebar__content">
-      Dies ist ein Tool zur Berechnung der direkten kommunalen Wertschöpfung durch
-      Windenergie-, Freiflächen-Photovoltaik und Agri-Photovoltaik-Anlagen in
-      brandenburgischen Gemeinden. Es liefert eine Einschätzung des
-      Wertschöpfungspotenzials basierend auf den eingegebenen Daten. Der Rechner
-      ermittelt die möglichen Einnahmen durch die EEG-Beteiligung, den Wind- und
-      Solar-Euro sowie Pachteinnahmen. Es ist wichtig zu beachten, dass die
-      tatsächliche Wertschöpfung deutlich höher ausfallen kann, wenn lokale
-      Unternehmen einbezogen werden, Bürger-Beteiligungen erfolgen und induzierte
-      Effekte berücksichtigt werden. Dieses Tool bietet Kommunen die Möglichkeit,
-      die direkten wirtschaftlichen Vorteile des Ausbaus erneuerbarer Energien
-      abzuschätzen und fundierte Entscheidungen für eine nachhaltige Entwicklung
-      zu treffen.
-    </p>
-  </div>
-  <div class="av-content addedValueCalc">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="alert alert-info">
-          <p class="alert-heading">Anwendungshinweis:</p>
-          <p>
-            Es reicht die Angabe der Potenzialfläche oder der maximal
-            installierbaren Leistung, insofern Sie keine weiteren
-            Informationen vorliegen haben. Weitere benötigte Werte
-            werden mittels Standardverfahren und -werten berechnet.
-          </p>
-        </div>
-      </div>
-    </div>
-    <form action="{% url 'kommWertTool:submit' %}" method="POST">
-      {% csrf_token %}
-      <section class="av-section">
-        <div class="row mb-4">
-          <div class="col-md-6">
-            <label for="choosen_mun" class="label label--large">
-              Ich möchte für folgende Gemeinde die Wertschöpfung berechnen*
-            </label>
-            <select class="form-select form-select--large"
-                    id="choosen_mun"
-                    name="choosen_mun">
-              <option>Gemeinde wählen</option>
-              {% for municipality in municipalities %}
-                <option value="{{ municipality.id }}" data-name="{{ municipality.name }}">{{ municipality.name }}</option>
-              {% endfor %}
-              <option value="own_county" data-name="own_county">Eigener Landkreis</option>
-            </select>
-          </div>
-          <div id="check_county" class="col-md-6">
-            <p>
-              <b>In welchem Bundesland befindet sich der Landkreis?*</b>
+<div class="av">
+    <div class="av__container">
+        <header>
+            <h1 class="av-sidebar__heading">Wertschöpfung</h1>
+            <p class="av-sidebar__content">
+                Dies ist ein Tool zur Berechnung der direkten kommunalen Wertschöpfung durch
+                Windenergie-, Freiflächen-Photovoltaik und Agri-Photovoltaik-Anlagen in
+                brandenburgischen Gemeinden. Es liefert eine Einschätzung des
+                Wertschöpfungspotenzials basierend auf den eingegebenen Daten. Der Rechner
+                ermittelt die möglichen Einnahmen durch die EEG-Beteiligung, den Wind- und
+                Solar-Euro sowie Pachteinnahmen. Es ist wichtig zu beachten, dass die
+                tatsächliche Wertschöpfung deutlich höher ausfallen kann, wenn lokale
+                Unternehmen einbezogen werden, Bürger-Beteiligungen erfolgen und induzierte
+                Effekte berücksichtigt werden. Dieses Tool bietet Kommunen die Möglichkeit,
+                die direkten wirtschaftlichen Vorteile des Ausbaus erneuerbarer Energien
+                abzuschätzen und fundierte Entscheidungen für eine nachhaltige Entwicklung
+                zu treffen.
             </p>
-            <div class="row">
-              <div>
-                <input class="form-check-input"
-                       id="check_county_bb"
-                       name="check_county"
-                       data-name="check_county_bb"
-                       value="check_county_bb"
-                       type="radio" />
-                <label class="form-check-label" for="check_county_bb">Brandenburg</label>
-              </div>
-              <div>
-                <input class="form-check-input"
-                       id="check_county_sh"
-                       data-name="check_county_sh"
-                       value="check_county_sh"
-                       name="check_county"
-                       type="radio" />
-                <label class="form-check-label" for="check_county_sh">Schleswig-Holstein</label>
-              </div>
+        </header>
+        <div class="av-content addedValueCalc">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    <p class="alert-heading">Anwendungshinweis:</p>
+                    <p>
+                    Es reicht die Angabe der Potenzialfläche oder der maximal
+                    installierbaren Leistung, insofern Sie keine weiteren
+                    Informationen vorliegen haben. Weitere benötigte Werte
+                    werden mittels Standardverfahren und -werten berechnet.
+                    </p>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="optional-separator">
-          <div class="line"></div>
-          <p>Optional</p>
-          <div class="line"></div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="levy_rate" class="label">
-              Gewerbesteuer-Hebesatz der Gemeinde (<i>optional</i>):
-              <i class="fas fa-info-circle"
-                 data-placement="right"
-                 data-toggle="tooltip"
-                 title="Falls nicht bekannt, wird der durchschnittliche Hebesatz für DE im Jahr 2023 angenommen (407 %)."></i>
-            </label>
-            <input class="form-control" id="levy_rate" name="levy_rate" type="number" />
-          </div>
-          <div class="col-md-6">
-            <label for="mun_key_num">
-              Schlüsselzahl der Gemeinde (<i>optional</i>):
-              <i class="fas fa-info-circle"
-                 data-placement="right"
-                 data-toggle="tooltip"
-                 title="Falls nicht bekannt, wird eine Schlüsselzahl von 0,003 angenommen."></i>
-            </label>
-            <input class="form-control"
-                   id="mun_key_num"
-                   name="mun_key_num"
-                   type="number" />
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="levy_rate_a">
-              Hebesatz Grundsteuer A der Gemeinde (<i>optional</i>):
-              <i class="fas fa-info-circle"
-                 data-placement="right"
-                 data-toggle="tooltip"
-                 title="Falls nicht bekannt, wird ein durchschnittlicher Hebesatz von 310 % angenommen."></i>
-            </label>
-            <input class="form-control"
-                   id="levy_rate_a"
-                   name="levy_rate_a"
-                   type="number" />
-          </div>
-          <div class="col-md-6">
-            <label for="grassland_number">
-              Acker-/Grünlandzahl (<i>optional</i>):
-              <i class="fas fa-info-circle"
-                 data-placement="right"
-                 data-toggle="tooltip"
-                 title="Falls nicht bekannt, wird eine durchschnittliche Ackerzahl von 30 angenommen."></i>
-            </label>
-            <input class="form-control"
-                   id="grassland_number"
-                   name="grassland_number"
-                   type="text" />
-          </div>
-        </div>
-      </section>
-      <section class="av-section">
-        <p class="av-section__heading">In meiner Gemeinde gibt es Potenzial für:</p>
-        <div class="av-section__select">
-          <div>
-            <div class="form-check">
-              <input class="form-check-input"
-                     id="checkboxWind"
-                     onclick="toggleAccordions()"
-                     type="checkbox" />
-              <label class="form-check-label" for="checkboxWind">Windenergie (WEA)</label>
-            </div>
-          </div>
-          <div>
-            <div class="form-check">
-              <input class="form-check-input"
-                     id="checkboxPV"
-                     onclick="toggleAccordions()"
-                     type="checkbox" />
-              <label class="form-check-label" for="checkboxPV">Freiflächen-Photovoltaik (FF-PV)</label>
-            </div>
-          </div>
-          <div>
-            <div class="form-check">
-              <input class="form-check-input"
-                     id="checkboxAPVV"
-                     onclick="toggleAccordions()"
-                     type="checkbox" />
-              <label class="form-check-label" for="checkboxAPVV">Agri-Photovoltaik ver. (APVV)</label>
-            </div>
-          </div>
-          <div>
-            <div class="form-check">
-              <input class="form-check-input"
-                     id="checkboxAPVH"
-                     onclick="toggleAccordions()"
-                     type="checkbox" />
-              <label class="form-check-label" for="checkboxAPVH">Agri-Photovoltaik hor. (APVH)</label>
-            </div>
-          </div>
-        </div>
-      </section>
-      <div class="accordion" id="accordionValueAdded">
-        <div class="accordion-item d-none">
-          <h2 class="accordion-header" id="headingOne">
-            <button disabled
-                    id="linkWind"
-                    class="bg-light accordion-button collapsed disabled"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseWind"
-                    aria-expanded="true"
-                    aria-controls="collapseWind">Windenergie (WEA)</button>
-          </h2>
-          <div id="collapseWind"
-               class="accordion-collapse collapse"
-               aria-labelledby="headingOne"
-               data-bs-parent="#accordionValueAdded">
-            <div class="accordion-body">
-              <div class="form-group">
+        <form action="{% url 'kommWertTool:submit' %}" method="POST">
+            {% csrf_token %}
+            <section class="av-section">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                <label for="choosen_mun" class="label label--large">
+                    Ich möchte für folgende Gemeinde die Wertschöpfung berechnen*
+                </label>
+                <select class="form-select form-select--large"
+                        id="choosen_mun"
+                        name="choosen_mun">
+                    <option>Gemeinde wählen</option>
+                    {% for municipality in municipalities %}
+                    <option value="{{ municipality.id }}" data-name="{{ municipality.name }}">{{ municipality.name }}</option>
+                    {% endfor %}
+                    <option value="own_county" data-name="own_county">Eigener Landkreis</option>
+                </select>
+                </div>
+                <div id="check_county" class="col-md-6">
+                <p>
+                    <b>In welchem Bundesland befindet sich der Landkreis?*</b>
+                </p>
                 <div class="row">
-                  <div class="col-md-6">
-                    <label for="wea_area_max">
-                      Größe der Potenzialfläche in ha*
-                      <i class="fas fa-info-circle"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Die Fläche ist relevant für die Einnahmen durch Pachterlöse. Wenn nicht bekannt wird anhand der Anzahl der WEA eine Fläche berechnet."></i>
-                      <i class="fas fa-calculator"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Wenn die Fläche in m² vorliegt, teilen Sie diese durch 10.000. Bei km² nehmen Sie die Fläche mal 100."></i>
-                    </label>
-                    <input class="form-control"
-                           id="wea_area_max"
-                           name="wea_area_max"
-                           type="number" />
-                    <small><i>Die Potenzialfläche in ihrer
-                      Gemeinde können Sie auch mit dem
-                      <a href="https://wfr.agora-energiewende.de/"
-                         target="_blank"
-                         title="Zum Photovoltaik- und Windflächenrechner">Photovoltaik- und
-                      Windflächenrechner</a>
-                    ermitteln.</i></small>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="wea_p_max">
-                      Maximal installierbare Leistung in MW*
-                      <i class="fas fa-info-circle"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Geben Sie die Leistung in MW an, für die Sie die Wertschöpfung berechnen möchten. Alternativ wird die installierbare Leistung anhand der Potenzialfläche ermittelt."></i>
-                    </label>
-                    <input class="form-control" id="wea_p_max" name="wea_p_max" type="number" />
-                  </div>
-                </div>
-                <div class="optional-separator">
-                  <div class="line"></div>
-                  <p>Optional</p>
-                  <div class="line"></div>
-                </div>
-                <div id="flaecheneigentuemer-container-wea">
-                  <div class="row mt-3" id="flaecheneigentuemer-wea-1">
-                    <div class="col-md-6">
-                      <label for="wea_area_ownertype1">
-                        Flächeneigentum
-                        <i class="fas fa-info-circle"
-                           data-placement="right"
-                           data-toggle="tooltip"
-                           title="Als Gemeinde erhalten Sie Einnahmen durch die Pachterlöse. Dies kann direkt erfolgen oder durch Steuereinnahmen je nach Eigentumsstruktur. Falls die Eigentümer nicht bekannt sind, werden die Pachteinnahmen nicht berücksichtigt."></i>
-                      </label>
-                      <select class="form-select"
-                              id="wea_area_ownertype1"
-                              name="wea_area_ownertype1">
-                        <option>Bitte wählen:</option>
-                        <option value="Privateigentum">Privateigentum (Privatperson)</option>
-                        <option value="Gewerbliches Eigentum">Privateigentum (Unternehmen)</option>
-                        <option value="Gemeindeeigentum">Öffentlich (Gemeindeeigentum)</option>
-                        <option value="Landes-/Bundeseigentum">Öffentlich (Landes-/Bundeseigentum)</option>
-                      </select>
+                    <div>
+                    <input class="form-check-input"
+                            id="check_county_bb"
+                            name="check_county"
+                            data-name="check_county_bb"
+                            value="check_county_bb"
+                            type="radio" />
+                    <label class="form-check-label" for="check_county_bb">Brandenburg</label>
                     </div>
-                    <div class="col-md-6">
-                      <label for="wea_anteil_flaeche1">Anteil an Fläche in %</label>
-                      <input class="form-control"
-                             id="wea_anteil_flaeche1"
-                             name="wea_anteil_flaeche1"
-                             oninput="validateAnteilFlaeche('wea')"
-                             type="number" />
+                    <div>
+                    <input class="form-check-input"
+                            id="check_county_sh"
+                            data-name="check_county_sh"
+                            value="check_county_sh"
+                            name="check_county"
+                            type="radio" />
+                    <label class="form-check-label" for="check_county_sh">Schleswig-Holstein</label>
                     </div>
-                  </div>
                 </div>
-                <div class="accordion-buttons">
-                  <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-wea" type="button">+ Flächeneigentümer hinzufügen</button>
-                  <button class="btn btn--tertiary mt-3 btn-sm"
-                          id="removeLastBtn-wea"
-                          style="display: none"
-                          type="button">- Weniger Flächeneigentümer</button>
                 </div>
-                <hr />
-                <div class="av-sliders row mt-3">
-                  <div class="col-md-6">
-                    <label for="rotor_diameter">Rotordurchmesser</label>
+            </div>
+            <div class="optional-separator">
+                <div class="line"></div>
+                <p>Optional</p>
+                <div class="line"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                <label for="levy_rate" class="label">
+                    Gewerbesteuer-Hebesatz der Gemeinde (<i>optional</i>):
                     <i class="fas fa-info-circle"
-                       data-placement="right"
-                       data-toggle="tooltip"
-                       title="Insofern nur die Potenzialfläche bekannt ist, wird unter anderem anhand des Rotordurchmessers die maximale Anzahl an WEA berechnet."></i>
-                    <input class="form-control-range w-100"
-                           id="rotor_diameter"
-                           max="200"
-                           min="100"
-                           name="rotor_diameter"
-                           oninput="this.nextElementSibling.value = this.value"
-                           type="range"
-                           value="130" />
-                    <output>140</output>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="system_output">Anlagenleistung</label>
+                        data-placement="right"
+                        data-toggle="tooltip"
+                        title="Falls nicht bekannt, wird der durchschnittliche Hebesatz für DE im Jahr 2023 angenommen (407 %)."></i>
+                </label>
+                <input class="form-control" id="levy_rate" name="levy_rate" type="number" />
+                </div>
+                <div class="col-md-6">
+                <label for="mun_key_num">
+                    Schlüsselzahl der Gemeinde (<i>optional</i>):
                     <i class="fas fa-info-circle"
-                       data-placement="right"
-                       data-toggle="tooltip"
-                       title="Bitte geben Sie die Anlagenleistung in MW an, insofern bekannt."></i>
-                    <input class="form-control-range w-100"
-                           id="system_output"
-                           max="8"
-                           min="2"
-                           name="system_output"
-                           oninput="this.nextElementSibling.value = this.value"
-                           type="range"
-                           value="4" />
-                    <output>4</output>
-                  </div>
+                        data-placement="right"
+                        data-toggle="tooltip"
+                        title="Falls nicht bekannt, wird eine Schlüsselzahl von 0,003 angenommen."></i>
+                </label>
+                <input class="form-control"
+                        id="mun_key_num"
+                        name="mun_key_num"
+                        type="number" />
                 </div>
-                <hr />
-                <div class="row mt-3">
-                  <div class="col-md-6">
-                    <label for="wea_eeg_share">
-                      Prozentualer Anteil an EEG-Beteiligung
-                      <i class="fas fa-info-circle"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Die EEG-Beteiligung wird auf Gemeinden im 2,5-km-Umkreis verteilt, basierend auf ihrem Flächenanteil in diesem Radius."></i>
-                    </label>
-                    <input class="form-control"
-                           id="wea_eeg_share"
-                           name="wea_eeg_share"
-                           type="number"
-                           value="100" />
-                  </div>
-                  <div class="col-md-6">
-                    <label for="wind_euro_share">
-                      Prozentualer Anteil am Wind-Euro
-                      <i class="fas fa-info-circle"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Der Wind-Euro wird auf Gemeinden im 3-km-Umkreis verteilt, basierend auf ihrem Flächenanteil in diesem Radius."></i>
-                    </label>
-                    <input class="form-control"
-                           id="wind_euro_share"
-                           name="wind_euro_share"
-                           type="number"
-                           value="100" />
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
-        <div class="accordion-item d-none">
-          <h2 class="accordion-header" id="headingTwo">
-            <button disabled
-                    id="linkPV"
-                    class="bg-light accordion-button collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapsePV"
-                    aria-expanded="true"
-                    aria-controls="collapsePV">Freiflächen-Photovoltaik (FF-PV)</button>
-          </h2>
-          <div id="collapsePV"
-               class="accordion-collapse collapse"
-               aria-labelledby="headingTwo"
-               data-bs-parent="#accordionValueAdded">
-            <div class="accordion-body">
-              <div class="form-group">
-                <div class="row">
-                  <div class="col-md-6">
-                    <label for="ffpv_area_max">
-                      Größe der Potenzialfläche in ha*
-                      <i class="fas fa-info-circle"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Die Fläche in ha ist relevant für die Einnahmen durch Pachterlöse. Wenn nicht bekannt wird diese anhand der maximal installierbaren Leistung berechnet."></i>
-                      <i class="fas fa-calculator"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Wenn die Fläche in m² vorliegt, teilen Sie diese durch 10.000. Bei km² nehmen Sie die Fläche mal 100."></i>
-                    </label>
-                    <input class="form-control"
-                           id="ffpv_area_max"
-                           name="ffpv_area_max"
-                           type="number" />
-                    <small><i>Die Potenzialfläche in ihrer
-                      Gemeinde können Sie auch mit dem
-                      <a href="https://wfr.agora-energiewende.de/"
-                         target="_blank"
-                         title="Zum Photovoltaik- und Windflächenrechner">Photovoltaik- und
-                      Windflächenrechner</a>
-                    ermitteln.</i></small>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="pv_p_max">
-                      Maximal installierbare Leistung:
-                      <i class="fas fa-info-circle"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Geben Sie die Leistung in MW an, für die Sie die Wertschöpfung berechnen möchten. Alternativ wird die installierbare Leistung anhand der Potenzialfläche ermittelt."></i>
-                    </label>
-                    <input class="form-control" id="pv_p_max" name="pv_p_max" type="number" />
-                  </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                <label for="levy_rate_a">
+                    Hebesatz Grundsteuer A der Gemeinde (<i>optional</i>):
+                    <i class="fas fa-info-circle"
+                        data-placement="right"
+                        data-toggle="tooltip"
+                        title="Falls nicht bekannt, wird ein durchschnittlicher Hebesatz von 310 % angenommen."></i>
+                </label>
+                <input class="form-control"
+                        id="levy_rate_a"
+                        name="levy_rate_a"
+                        type="number" />
                 </div>
-                <div class="optional-separator">
-                  <div class="line"></div>
-                  <p>Optional</p>
-                  <div class="line"></div>
+                <div class="col-md-6">
+                <label for="grassland_number">
+                    Acker-/Grünlandzahl (<i>optional</i>):
+                    <i class="fas fa-info-circle"
+                        data-placement="right"
+                        data-toggle="tooltip"
+                        title="Falls nicht bekannt, wird eine durchschnittliche Ackerzahl von 30 angenommen."></i>
+                </label>
+                <input class="form-control"
+                        id="grassland_number"
+                        name="grassland_number"
+                        type="text" />
                 </div>
-                <div id="flaecheneigentuemer-container-ffpv">
-                  <div class="row mt-3" id="flaecheneigentuemer-ffpv-1">
-                    <div class="col-md-6">
-                      <label for="ffpv_area_ownertype1">
-                        Flächeneigentum
+            </div>
+            </section>
+            <section class="av-section">
+            <p class="av-section__heading">In meiner Gemeinde gibt es Potenzial für:</p>
+            <div class="av-section__select">
+                <div>
+                <div class="form-check">
+                    <input class="form-check-input"
+                            id="checkboxWind"
+                            onclick="toggleAccordions()"
+                            type="checkbox" />
+                    <label class="form-check-label" for="checkboxWind">Windenergie (WEA)</label>
+                </div>
+                </div>
+                <div>
+                <div class="form-check">
+                    <input class="form-check-input"
+                            id="checkboxPV"
+                            onclick="toggleAccordions()"
+                            type="checkbox" />
+                    <label class="form-check-label" for="checkboxPV">Freiflächen-Photovoltaik (FF-PV)</label>
+                </div>
+                </div>
+                <div>
+                <div class="form-check">
+                    <input class="form-check-input"
+                            id="checkboxAPVV"
+                            onclick="toggleAccordions()"
+                            type="checkbox" />
+                    <label class="form-check-label" for="checkboxAPVV">Agri-Photovoltaik ver. (APVV)</label>
+                </div>
+                </div>
+                <div>
+                <div class="form-check">
+                    <input class="form-check-input"
+                            id="checkboxAPVH"
+                            onclick="toggleAccordions()"
+                            type="checkbox" />
+                    <label class="form-check-label" for="checkboxAPVH">Agri-Photovoltaik hor. (APVH)</label>
+                </div>
+                </div>
+            </div>
+            </section>
+            <div class="accordion" id="accordionValueAdded">
+            <div class="accordion-item d-none">
+                <h2 class="accordion-header" id="headingOne">
+                <button disabled
+                        id="linkWind"
+                        class="bg-light accordion-button collapsed disabled"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseWind"
+                        aria-expanded="true"
+                        aria-controls="collapseWind">Windenergie (WEA)</button>
+                </h2>
+                <div id="collapseWind"
+                    class="accordion-collapse collapse"
+                    aria-labelledby="headingOne"
+                    data-bs-parent="#accordionValueAdded">
+                <div class="accordion-body">
+                    <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                        <label for="wea_area_max">
+                            Größe der Potenzialfläche in ha*
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Die Fläche ist relevant für die Einnahmen durch Pachterlöse. Wenn nicht bekannt wird anhand der Anzahl der WEA eine Fläche berechnet."></i>
+                            <i class="fas fa-calculator"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Wenn die Fläche in m² vorliegt, teilen Sie diese durch 10.000. Bei km² nehmen Sie die Fläche mal 100."></i>
+                        </label>
+                        <input class="form-control"
+                                id="wea_area_max"
+                                name="wea_area_max"
+                                type="number" />
+                        <small><i>Die Potenzialfläche in ihrer
+                            Gemeinde können Sie auch mit dem
+                            <a href="https://wfr.agora-energiewende.de/"
+                                target="_blank"
+                                title="Zum Photovoltaik- und Windflächenrechner">Photovoltaik- und
+                            Windflächenrechner</a>
+                        ermitteln.</i></small>
+                        </div>
+                        <div class="col-md-6">
+                        <label for="wea_p_max">
+                            Maximal installierbare Leistung in MW*
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Geben Sie die Leistung in MW an, für die Sie die Wertschöpfung berechnen möchten. Alternativ wird die installierbare Leistung anhand der Potenzialfläche ermittelt."></i>
+                        </label>
+                        <input class="form-control" id="wea_p_max" name="wea_p_max" type="number" />
+                        </div>
+                    </div>
+                    <div class="optional-separator">
+                        <div class="line"></div>
+                        <p>Optional</p>
+                        <div class="line"></div>
+                    </div>
+                    <div id="flaecheneigentuemer-container-wea">
+                        <div class="row mt-3" id="flaecheneigentuemer-wea-1">
+                        <div class="col-md-6">
+                            <label for="wea_area_ownertype1">
+                            Flächeneigentum
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Als Gemeinde erhalten Sie Einnahmen durch die Pachterlöse. Dies kann direkt erfolgen oder durch Steuereinnahmen je nach Eigentumsstruktur. Falls die Eigentümer nicht bekannt sind, werden die Pachteinnahmen nicht berücksichtigt."></i>
+                            </label>
+                            <select class="form-select"
+                                    id="wea_area_ownertype1"
+                                    name="wea_area_ownertype1">
+                            <option>Bitte wählen:</option>
+                            <option value="Privateigentum">Privateigentum (Privatperson)</option>
+                            <option value="Gewerbliches Eigentum">Privateigentum (Unternehmen)</option>
+                            <option value="Gemeindeeigentum">Öffentlich (Gemeindeeigentum)</option>
+                            <option value="Landes-/Bundeseigentum">Öffentlich (Landes-/Bundeseigentum)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="wea_anteil_flaeche1">Anteil an Fläche in %</label>
+                            <input class="form-control"
+                                    id="wea_anteil_flaeche1"
+                                    name="wea_anteil_flaeche1"
+                                    oninput="validateAnteilFlaeche('wea')"
+                                    type="number" />
+                        </div>
+                        </div>
+                    </div>
+                    <div class="accordion-buttons">
+                        <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-wea" type="button">+ Flächeneigentümer hinzufügen</button>
+                        <button class="btn btn--tertiary mt-3 btn-sm"
+                                id="removeLastBtn-wea"
+                                style="display: none"
+                                type="button">- Weniger Flächeneigentümer</button>
+                    </div>
+                    <hr />
+                    <div class="av-sliders row mt-3">
+                        <div class="col-md-6">
+                        <label for="rotor_diameter">Rotordurchmesser</label>
                         <i class="fas fa-info-circle"
-                           data-placement="right"
-                           data-toggle="tooltip"
-                           title="Als Gemeinde erhalten Sie Einnahmen durch die Pachterlöse. Dies kann direkt erfolgen oder durch Steuereinnahmen je nach Eigentumsstruktur. Falls die Eigentümer nicht bekannt sind, werden die Pachteinnahmen nicht berücksichtigt."></i>
-                      </label>
-                      <select class="form-select"
-                              id="ffpv_area_ownertype1"
-                              name="ffpv_area_ownertype1">
-                        <option>Bitte wählen:</option>
-                        <option value="Privateigentum">Privateigentum (Privatperson)</option>
-                        <option value="Gewerbliches Eigentum">Privateigentum (Unternehmen)</option>
-                        <option value="Gemeindeeigentum">Öffentlich (Gemeindeeigentum)</option>
-                        <option value="Landes-/Bundeseigentum">Öffentlich (Landes-/Bundeseigentum)</option>
-                      </select>
-                    </div>
-                    <div class="col-md-6">
-                      <label for="ffpv_anteil_flaeche1">Anteil an Fläche in %</label>
-                      <input class="form-control"
-                             id="ffpv_anteil_flaeche1"
-                             name="ffpv_anteil_flaeche1"
-                             oninput="validateAnteilFlaeche('ffpv')"
-                             type="number" />
-                    </div>
-                  </div>
-                </div>
-                <div class="accordion-buttons">
-                  <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-ffpv" type="button">+ Flächeneigentümer hinzufügen</button>
-                  <button class="btn btn--tertiary mt-3 btn-sm"
-                          id="removeLastBtn-ffpv"
-                          style="display: none"
-                          type="button">- Weniger Flächeneigentümer</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item d-none">
-          <h2 class="accordion-header" id="headingThree">
-            <button disabled
-                    id="linkAPVV"
-                    class="bg-light accordion-button collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseAPVV"
-                    aria-expanded="true"
-                    aria-controls="collapseAPVV">Agri-Photovoltaik vertikal (APVV)</button>
-          </h2>
-          <div id="collapseAPVV"
-               class="accordion-collapse collapse"
-               aria-labelledby="headingThree"
-               data-bs-parent="#accordionValueAdded">
-            <div class="accordion-body">
-              <div class="form-group">
-                <div class="row">
-                  <div class="col-md-6">
-                    <label for="apvv_area_max">
-                      Größe der Potenzialfläche in ha*
-                      <i class="fas fa-info-circle"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Die Fläche ist relevant für die Einnahmen durch Pachterlöse. Wenn nicht bekannt wird diese anhand der maximal installierbaren Leistung berechnet."></i>
-                      <i class="fas fa-calculator"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Wenn die Fläche in m² vorliegt, teilen Sie diese durch 10.000. Bei km² nehmen Sie die Fläche mal 100."></i>
-                    </label>
-                    <input class="form-control"
-                           id="apvv_area_max"
-                           name="apvv_area_max"
-                           type="number" />
-                  </div>
-                  <div class="col-md-6">
-                    <label for="apv_ver_p_max">
-                      Maximal installierbare Leistung in MW*
-                      <i class="fas fa-info-circle"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Geben Sie die Leistung in MW an, für die Sie die Wertschöpfung berechnen möchten. Alternativ wird die installierbare Leistung anhand der Potenzialfläche ermittelt."></i>
-                    </label>
-                    <input class="form-control"
-                           id="apv_ver_p_max"
-                           name="apv_ver_p_max"
-                           type="number" />
-                  </div>
-                </div>
-                <div class="optional-separator">
-                  <div class="line"></div>
-                  <p>Optional</p>
-                  <div class="line"></div>
-                </div>
-                <div id="flaecheneigentuemer-container-apvv">
-                  <div class="row mt-3" id="flaecheneigentuemer-apvv-1">
-                    <div class="col-md-6">
-                      <label for="apvv_area_ownertype1">
-                        Flächeneigentum
+                            data-placement="right"
+                            data-toggle="tooltip"
+                            title="Insofern nur die Potenzialfläche bekannt ist, wird unter anderem anhand des Rotordurchmessers die maximale Anzahl an WEA berechnet."></i>
+                        <input class="form-control-range w-100"
+                                id="rotor_diameter"
+                                max="200"
+                                min="100"
+                                name="rotor_diameter"
+                                oninput="this.nextElementSibling.value = this.value"
+                                type="range"
+                                value="130" />
+                        <output>140</output>
+                        </div>
+                        <div class="col-md-6">
+                        <label for="system_output">Anlagenleistung</label>
                         <i class="fas fa-info-circle"
-                           data-placement="right"
-                           data-toggle="tooltip"
-                           title="Als Gemeinde erhalten Sie Einnahmen durch die Pachterlöse. Dies kann direkt erfolgen oder durch Steuereinnahmen je nach Eigentumsstruktur. Falls die Eigentümer nicht bekannt sind, werden die Pachteinnahmen nicht berücksichtigt."></i>
-                      </label>
-                      <select class="form-select"
-                              id="apvv_area_ownertype1"
-                              name="apvv_area_ownertype1">
-                        <option>Bitte wählen:</option>
-                        <option value="Privateigentum">Privateigentum (Privatperson)</option>
-                        <option value="Gewerbliches Eigentum">Privateigentum (Unternehmen)</option>
-                        <option value="Gemeindeeigentum">Öffentlich (Gemeindeeigentum)</option>
-                        <option value="Landes-/Bundeseigentum">Öffentlich (Landes-/Bundeseigentum)</option>
-                      </select>
+                            data-placement="right"
+                            data-toggle="tooltip"
+                            title="Bitte geben Sie die Anlagenleistung in MW an, insofern bekannt."></i>
+                        <input class="form-control-range w-100"
+                                id="system_output"
+                                max="8"
+                                min="2"
+                                name="system_output"
+                                oninput="this.nextElementSibling.value = this.value"
+                                type="range"
+                                value="4" />
+                        <output>4</output>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                      <label for="apvv_anteil_flaeche1">Anteil an Fläche in %</label>
-                      <input class="form-control"
-                             id="apvv_anteil_flaeche1"
-                             name="apvv_anteil_flaeche1"
-                             oninput="validateAnteilFlaeche('apvv')"
-                             type="number" />
+                    <hr />
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                        <label for="wea_eeg_share">
+                            Prozentualer Anteil an EEG-Beteiligung
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Die EEG-Beteiligung wird auf Gemeinden im 2,5-km-Umkreis verteilt, basierend auf ihrem Flächenanteil in diesem Radius."></i>
+                        </label>
+                        <input class="form-control"
+                                id="wea_eeg_share"
+                                name="wea_eeg_share"
+                                type="number"
+                                value="100" />
+                        </div>
+                        <div class="col-md-6">
+                        <label for="wind_euro_share">
+                            Prozentualer Anteil am Wind-Euro
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Der Wind-Euro wird auf Gemeinden im 3-km-Umkreis verteilt, basierend auf ihrem Flächenanteil in diesem Radius."></i>
+                        </label>
+                        <input class="form-control"
+                                id="wind_euro_share"
+                                name="wind_euro_share"
+                                type="number"
+                                value="100" />
+                        </div>
                     </div>
-                  </div>
+                    </div>
                 </div>
-                <div class="accordion-buttons">
-                  <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-apvv" type="button">+ Flächeneigentümer hinzufügen</button>
-                  <button class="btn btn--tertiary mt-3 btn-sm"
-                          id="removeLastBtn-apvv"
-                          style="display: none"
-                          type="button">- Weniger Flächeneigentümer</button>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-        <div class="accordion-item d-none">
-          <h2 class="accordion-header" id="headingFour">
-            <button disabled
-                    id="linkAPVH"
-                    class="bg-light accordion-button collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseAPVH"
-                    aria-expanded="true"
-                    aria-controls="collapseAPVH">Agri-Photovoltaik horizontal (APVH)</button>
-          </h2>
-          <div id="collapseAPVH"
-               class="accordion-collapse collapse"
-               aria-labelledby="headingFour"
-               data-bs-parent="#accordionValueAdded">
-            <div class="accordion-body">
-              <div class="form-group">
-                <div class="row">
-                  <div class="col-md-6">
-                    <label for="apvh_area_max">
-                      Größe der Potenzialfläche in ha*
-                      <i class="fas fa-info-circle"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Die Fläche ist relevant für die Einnahmen durch Pachterlöse. Wenn nicht bekannt wird diese anhand der maximal installierbaren Leistung berechnet."></i>
-                      <i class="fas fa-calculator"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Wenn die Fläche in m² vorliegt, teilen Sie diese durch 10.000. Bei km² nehmen Sie die Fläche mal 100."></i>
-                    </label>
-                    <input class="form-control"
-                           id="apvh_area_max"
-                           name="apvh_area_max"
-                           type="number" />
-                  </div>
-                  <div class="col-md-6">
-                    <label for="apv_hor_p_max">
-                      Maximal installierbare Leistung in MW*
-                      <i class="fas fa-info-circle"
-                         data-placement="right"
-                         data-toggle="tooltip"
-                         title="Geben Sie die Leistung in MW an, für die Sie die Wertschöpfung berechnen möchten. Alternativ wird die installierbare Leistung anhand der Potenzialfläche ermittelt."></i>
-                    </label>
-                    <input class="form-control"
-                           id="apv_hor_p_max"
-                           name="apv_hor_p_max"
-                           type="number" />
-                  </div>
-                </div>
-                <div class="optional-separator">
-                  <div class="line"></div>
-                  <p>Optional</p>
-                  <div class="line"></div>
-                </div>
-                <div id="flaecheneigentuemer-container-apvh">
-                  <div class="row mt-3" id="flaecheneigentuemer-apvh-1">
-                    <div class="col-md-6">
-                      <label for="apvh_area_ownertype1">
-                        Flächeneigentum
-                        <i class="fas fa-info-circle"
-                           data-placement="right"
-                           data-toggle="tooltip"
-                           title="Als Gemeinde erhalten Sie Einnahmen durch die Pachterlöse. Dies kann direkt erfolgen oder durch Steuereinnahmen je nach Eigentumsstruktur. Falls die Eigentümer nicht bekannt sind, werden die Pachteinnahmen nicht berücksichtigt."></i>
-                      </label>
-                      <select class="form-select"
-                              id="apvh_area_ownertype1"
-                              name="apvh_area_ownertype1">
-                        <option>Bitte wählen:</option>
-                        <option value="Privateigentum">Privateigentum (Privatperson)</option>
-                        <option value="Gewerbliches Eigentum">Privateigentum (Unternehmen)</option>
-                        <option value="Gemeindeeigentum">Öffentlich (Gemeindeeigentum)</option>
-                        <option value="Landes-/Bundeseigentum">Öffentlich (Landes-/Bundeseigentum)</option>
-                      </select>
+            <div class="accordion-item d-none">
+                <h2 class="accordion-header" id="headingTwo">
+                <button disabled
+                        id="linkPV"
+                        class="bg-light accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapsePV"
+                        aria-expanded="true"
+                        aria-controls="collapsePV">Freiflächen-Photovoltaik (FF-PV)</button>
+                </h2>
+                <div id="collapsePV"
+                    class="accordion-collapse collapse"
+                    aria-labelledby="headingTwo"
+                    data-bs-parent="#accordionValueAdded">
+                <div class="accordion-body">
+                    <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                        <label for="ffpv_area_max">
+                            Größe der Potenzialfläche in ha*
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Die Fläche in ha ist relevant für die Einnahmen durch Pachterlöse. Wenn nicht bekannt wird diese anhand der maximal installierbaren Leistung berechnet."></i>
+                            <i class="fas fa-calculator"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Wenn die Fläche in m² vorliegt, teilen Sie diese durch 10.000. Bei km² nehmen Sie die Fläche mal 100."></i>
+                        </label>
+                        <input class="form-control"
+                                id="ffpv_area_max"
+                                name="ffpv_area_max"
+                                type="number" />
+                        <small><i>Die Potenzialfläche in ihrer
+                            Gemeinde können Sie auch mit dem
+                            <a href="https://wfr.agora-energiewende.de/"
+                                target="_blank"
+                                title="Zum Photovoltaik- und Windflächenrechner">Photovoltaik- und
+                            Windflächenrechner</a>
+                        ermitteln.</i></small>
+                        </div>
+                        <div class="col-md-6">
+                        <label for="pv_p_max">
+                            Maximal installierbare Leistung:
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Geben Sie die Leistung in MW an, für die Sie die Wertschöpfung berechnen möchten. Alternativ wird die installierbare Leistung anhand der Potenzialfläche ermittelt."></i>
+                        </label>
+                        <input class="form-control" id="pv_p_max" name="pv_p_max" type="number" />
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                      <label for="apvh_anteil_flaeche1">Anteil an Fläche in %</label>
-                      <input class="form-control"
-                             id="apvh_anteil_flaeche1"
-                             name="apvh_anteil_flaeche1"
-                             oninput="validateAnteilFlaeche('apvh')"
-                             type="number" />
+                    <div class="optional-separator">
+                        <div class="line"></div>
+                        <p>Optional</p>
+                        <div class="line"></div>
                     </div>
-                  </div>
+                    <div id="flaecheneigentuemer-container-ffpv">
+                        <div class="row mt-3" id="flaecheneigentuemer-ffpv-1">
+                        <div class="col-md-6">
+                            <label for="ffpv_area_ownertype1">
+                            Flächeneigentum
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Als Gemeinde erhalten Sie Einnahmen durch die Pachterlöse. Dies kann direkt erfolgen oder durch Steuereinnahmen je nach Eigentumsstruktur. Falls die Eigentümer nicht bekannt sind, werden die Pachteinnahmen nicht berücksichtigt."></i>
+                            </label>
+                            <select class="form-select"
+                                    id="ffpv_area_ownertype1"
+                                    name="ffpv_area_ownertype1">
+                            <option>Bitte wählen:</option>
+                            <option value="Privateigentum">Privateigentum (Privatperson)</option>
+                            <option value="Gewerbliches Eigentum">Privateigentum (Unternehmen)</option>
+                            <option value="Gemeindeeigentum">Öffentlich (Gemeindeeigentum)</option>
+                            <option value="Landes-/Bundeseigentum">Öffentlich (Landes-/Bundeseigentum)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ffpv_anteil_flaeche1">Anteil an Fläche in %</label>
+                            <input class="form-control"
+                                    id="ffpv_anteil_flaeche1"
+                                    name="ffpv_anteil_flaeche1"
+                                    oninput="validateAnteilFlaeche('ffpv')"
+                                    type="number" />
+                        </div>
+                        </div>
+                    </div>
+                    <div class="accordion-buttons">
+                        <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-ffpv" type="button">+ Flächeneigentümer hinzufügen</button>
+                        <button class="btn btn--tertiary mt-3 btn-sm"
+                                id="removeLastBtn-ffpv"
+                                style="display: none"
+                                type="button">- Weniger Flächeneigentümer</button>
+                    </div>
+                    </div>
                 </div>
-                <div class="accordion-buttons">
-                  <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-apvh" type="button">+ Flächeneigentümer hinzufügen</button>
-                  <button class="btn btn--tertiary mt-3 btn-sm"
-                          id="removeLastBtn-apvh"
-                          style="display: none"
-                          type="button">- Weniger Flächeneigentümer</button>
                 </div>
-              </div>
             </div>
-          </div>
+            <div class="accordion-item d-none">
+                <h2 class="accordion-header" id="headingThree">
+                <button disabled
+                        id="linkAPVV"
+                        class="bg-light accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseAPVV"
+                        aria-expanded="true"
+                        aria-controls="collapseAPVV">Agri-Photovoltaik vertikal (APVV)</button>
+                </h2>
+                <div id="collapseAPVV"
+                    class="accordion-collapse collapse"
+                    aria-labelledby="headingThree"
+                    data-bs-parent="#accordionValueAdded">
+                <div class="accordion-body">
+                    <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                        <label for="apvv_area_max">
+                            Größe der Potenzialfläche in ha*
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Die Fläche ist relevant für die Einnahmen durch Pachterlöse. Wenn nicht bekannt wird diese anhand der maximal installierbaren Leistung berechnet."></i>
+                            <i class="fas fa-calculator"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Wenn die Fläche in m² vorliegt, teilen Sie diese durch 10.000. Bei km² nehmen Sie die Fläche mal 100."></i>
+                        </label>
+                        <input class="form-control"
+                                id="apvv_area_max"
+                                name="apvv_area_max"
+                                type="number" />
+                        </div>
+                        <div class="col-md-6">
+                        <label for="apv_ver_p_max">
+                            Maximal installierbare Leistung in MW*
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Geben Sie die Leistung in MW an, für die Sie die Wertschöpfung berechnen möchten. Alternativ wird die installierbare Leistung anhand der Potenzialfläche ermittelt."></i>
+                        </label>
+                        <input class="form-control"
+                                id="apv_ver_p_max"
+                                name="apv_ver_p_max"
+                                type="number" />
+                        </div>
+                    </div>
+                    <div class="optional-separator">
+                        <div class="line"></div>
+                        <p>Optional</p>
+                        <div class="line"></div>
+                    </div>
+                    <div id="flaecheneigentuemer-container-apvv">
+                        <div class="row mt-3" id="flaecheneigentuemer-apvv-1">
+                        <div class="col-md-6">
+                            <label for="apvv_area_ownertype1">
+                            Flächeneigentum
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Als Gemeinde erhalten Sie Einnahmen durch die Pachterlöse. Dies kann direkt erfolgen oder durch Steuereinnahmen je nach Eigentumsstruktur. Falls die Eigentümer nicht bekannt sind, werden die Pachteinnahmen nicht berücksichtigt."></i>
+                            </label>
+                            <select class="form-select"
+                                    id="apvv_area_ownertype1"
+                                    name="apvv_area_ownertype1">
+                            <option>Bitte wählen:</option>
+                            <option value="Privateigentum">Privateigentum (Privatperson)</option>
+                            <option value="Gewerbliches Eigentum">Privateigentum (Unternehmen)</option>
+                            <option value="Gemeindeeigentum">Öffentlich (Gemeindeeigentum)</option>
+                            <option value="Landes-/Bundeseigentum">Öffentlich (Landes-/Bundeseigentum)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="apvv_anteil_flaeche1">Anteil an Fläche in %</label>
+                            <input class="form-control"
+                                    id="apvv_anteil_flaeche1"
+                                    name="apvv_anteil_flaeche1"
+                                    oninput="validateAnteilFlaeche('apvv')"
+                                    type="number" />
+                        </div>
+                        </div>
+                    </div>
+                    <div class="accordion-buttons">
+                        <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-apvv" type="button">+ Flächeneigentümer hinzufügen</button>
+                        <button class="btn btn--tertiary mt-3 btn-sm"
+                                id="removeLastBtn-apvv"
+                                style="display: none"
+                                type="button">- Weniger Flächeneigentümer</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="accordion-item d-none">
+                <h2 class="accordion-header" id="headingFour">
+                <button disabled
+                        id="linkAPVH"
+                        class="bg-light accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseAPVH"
+                        aria-expanded="true"
+                        aria-controls="collapseAPVH">Agri-Photovoltaik horizontal (APVH)</button>
+                </h2>
+                <div id="collapseAPVH"
+                    class="accordion-collapse collapse"
+                    aria-labelledby="headingFour"
+                    data-bs-parent="#accordionValueAdded">
+                <div class="accordion-body">
+                    <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                        <label for="apvh_area_max">
+                            Größe der Potenzialfläche in ha*
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Die Fläche ist relevant für die Einnahmen durch Pachterlöse. Wenn nicht bekannt wird diese anhand der maximal installierbaren Leistung berechnet."></i>
+                            <i class="fas fa-calculator"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Wenn die Fläche in m² vorliegt, teilen Sie diese durch 10.000. Bei km² nehmen Sie die Fläche mal 100."></i>
+                        </label>
+                        <input class="form-control"
+                                id="apvh_area_max"
+                                name="apvh_area_max"
+                                type="number" />
+                        </div>
+                        <div class="col-md-6">
+                        <label for="apv_hor_p_max">
+                            Maximal installierbare Leistung in MW*
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Geben Sie die Leistung in MW an, für die Sie die Wertschöpfung berechnen möchten. Alternativ wird die installierbare Leistung anhand der Potenzialfläche ermittelt."></i>
+                        </label>
+                        <input class="form-control"
+                                id="apv_hor_p_max"
+                                name="apv_hor_p_max"
+                                type="number" />
+                        </div>
+                    </div>
+                    <div class="optional-separator">
+                        <div class="line"></div>
+                        <p>Optional</p>
+                        <div class="line"></div>
+                    </div>
+                    <div id="flaecheneigentuemer-container-apvh">
+                        <div class="row mt-3" id="flaecheneigentuemer-apvh-1">
+                        <div class="col-md-6">
+                            <label for="apvh_area_ownertype1">
+                            Flächeneigentum
+                            <i class="fas fa-info-circle"
+                                data-placement="right"
+                                data-toggle="tooltip"
+                                title="Als Gemeinde erhalten Sie Einnahmen durch die Pachterlöse. Dies kann direkt erfolgen oder durch Steuereinnahmen je nach Eigentumsstruktur. Falls die Eigentümer nicht bekannt sind, werden die Pachteinnahmen nicht berücksichtigt."></i>
+                            </label>
+                            <select class="form-select"
+                                    id="apvh_area_ownertype1"
+                                    name="apvh_area_ownertype1">
+                            <option>Bitte wählen:</option>
+                            <option value="Privateigentum">Privateigentum (Privatperson)</option>
+                            <option value="Gewerbliches Eigentum">Privateigentum (Unternehmen)</option>
+                            <option value="Gemeindeeigentum">Öffentlich (Gemeindeeigentum)</option>
+                            <option value="Landes-/Bundeseigentum">Öffentlich (Landes-/Bundeseigentum)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="apvh_anteil_flaeche1">Anteil an Fläche in %</label>
+                            <input class="form-control"
+                                    id="apvh_anteil_flaeche1"
+                                    name="apvh_anteil_flaeche1"
+                                    oninput="validateAnteilFlaeche('apvh')"
+                                    type="number" />
+                        </div>
+                        </div>
+                    </div>
+                    <div class="accordion-buttons">
+                        <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-apvh" type="button">+ Flächeneigentümer hinzufügen</button>
+                        <button class="btn btn--tertiary mt-3 btn-sm"
+                                id="removeLastBtn-apvh"
+                                style="display: none"
+                                type="button">- Weniger Flächeneigentümer</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="av-send">
+            <button class="btn btn-primary mt-3 mb-5" type="submit">Absenden</button>
+            </div>
+        </form>
         </div>
-      </div>
-      <div class="av-send">
-        <button class="btn btn-primary mt-3 mb-5" type="submit">Absenden</button>
-      </div>
-    </form>
-  </div>
+    </div>
+</div>
+  
 {% endblock content_no_sidebar %}
 {% block inline_javascript %}
   <script>
