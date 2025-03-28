@@ -62,7 +62,10 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <a class="navbar-brand" href="{% url 'explorer:home' %}">
-            <img src="{% static '/images/SLE-App-Img-Only.png' %}" alt="SLE Logo" width="45" height="40" />
+            <img src="{% static 'images/SLE-App-Img-Only.png' %}"
+                 alt="SLE Logo"
+                 width="45"
+                 height="40" />
             <span class="ms-1">Stadt-Land-Energie</span>
           </a>
           <div class="collapse navbar-collapse d-flex justify-content-end"
@@ -88,15 +91,15 @@
     </header>
     <div class="main-container">
       {% if has_sidepanel %}
-        <div class="row">
-          <div class="col-3 sidebar pt-3 border-end border-2">
+        <div class="main-container__wrap">
+          <aside class="main-container__aside sidebar">
             {% block sidebar_content %}
             {% endblock sidebar_content %}
-          </div>
-          <div class="col-9">
+          </aside>
+          <main class="main-container__main">
             {% block content %}
             {% endblock content %}
-          </div>
+          </main>
         </div>
       {% else %}
         {% block content_no_sidebar %}

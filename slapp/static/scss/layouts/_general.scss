@@ -4,8 +4,39 @@ body {
 
 .main-container {
   padding-bottom: 4rem;
+
+  &__wrap {
+    display: flex;
+    flex-direction: column;
+    padding-top: 4rem;
+
+    @media only screen and (min-width: 992px) {
+      flex-direction: row;
+    }
+  }
+
+  &__aside {
+    width: 100%;
+
+    @media only screen and (min-width: 992px) {
+      max-width: 26rem;
+    }
+
+    @media only screen and (min-width: 1400px) {
+      max-width: 40rem;
+    }
+  }
+
+  &__main {
+    flex: 1;
+  }
 }
 
 .bg-light {
   background-color: $bg-color-light;
+}
+
+.fas.fa-info-circle,
+.fas.fa-calculator {
+  color: #475569;
 }

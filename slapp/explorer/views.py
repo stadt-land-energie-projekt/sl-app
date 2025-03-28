@@ -47,8 +47,8 @@ MAX_MUNICIPALITY_COUNT = 3
 def start_page(request: HttpRequest) -> HttpResponse:
     """Render the start page and handle form submissions from home.html."""
     if request.method == "POST":
-        if "go_to_case_studies" in request.POST:
-            return redirect("explorer:case_studies")
+        if "go_to_esys" in request.POST:
+            return redirect("explorer:esys_robust")
         if "go_to_added_value" in request.POST:
             return redirect("added_value:index")
     return render(request, "pages/home.html")
@@ -529,7 +529,7 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
         regions = get_data()
 
         context["regions"] = regions
-        context["next_url"] = reverse("explorer:esys_robust")
+        context["next_url"] = reverse("explorer:results")
         return context
 
 
@@ -554,7 +554,7 @@ class EsysRobust(TemplateView):
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
-        context["next_url"] = reverse("explorer:results")
+        context["next_url"] = reverse("explorer:case_studies")
         return context
 
 
