@@ -1,0 +1,40 @@
+form {
+  label {
+    font-size: 0.875rem;
+    padding-bottom: 0.5rem;
+
+    &.label--large {
+      font-size: 1rem;
+      font-weight: 700;
+      padding-bottom: 0.75rem;
+    }
+  }
+
+  select.form-select {
+    font-family: 0.875rem;
+
+    &--large {
+      padding: 0.75rem 1rem;
+    }
+  }
+
+  input.form-control {
+    font-size: 0.875rem;
+  }
+
+  .form-check-input:checked {
+    background-color: $color-active;
+    border-color: $color-active;
+  }
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible,
+[contenteditable="true"]:focus-visible {
+  outline: 2px solid #86efac !important;
+  border-color: #86efac !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 4px 8px rgba(134, 239, 172, 0.3) !important;
+}
