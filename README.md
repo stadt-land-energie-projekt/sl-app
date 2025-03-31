@@ -65,7 +65,20 @@ First you have to set up all tables in the database by runnning:
 python manage.py migrate
 ```
 
-Afterwards you have to load in data. To simplify data commands a _Makefile_ has been
+Afterwards you have to load in data.
+
+>**Only for server**
+>
+>If you want to do this on server, you have to upload data to server first.
+This can be done by using `scp` and copy data to you home folder on server.
+Form there, you must move data to data folder in the app (probably inside a docker volume).
+Last step is to give access rights to app data.
+As docker runs with its own user django, which is unknown to the server system, you first have to find out related system user ID.
+You can do so, by entering docker container and run `ls -ln` - this will show you files and owners (in numeric format).
+Outside the docker container use the numeric ID to change owner of app data to this user, via `chown -R <user_id>:<user_id> <data_folder>`.
+Now, you can enter container again and check if data belongs to docker user.
+
+To simplify data commands a _Makefile_ has been
 added, which can be used by command `make`.
 You can load all data by running (or you can run them one-by-one):
 
