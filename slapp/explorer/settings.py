@@ -54,44 +54,66 @@ TECHNOLOGIES = {
     },
 }
 
+
 TECHNOLOGIES_RANGES = {
     "boiler_large": {
-        "potential": "60 [MW]",
+        "potential": 60,
+        "unit": "MW",
     },
     "h2-bpchp": {
-        "potential": "150 [MW]",
+        "potential": 150,
+        "unit": "MW",
     },
     "cavern": {
-        "potential": "300 [MWh]",
+        "potential": 300,
+        "unit": "MWh",
     },
     "electrolyzer": {
-        "potential": "100 [MW]",
+        "potential": 100,
+        "unit": "MW",
     },
     "extchp": {
-        "potential": "80 [MW]",
+        "potential": 80,
+        "unit": "MW",
     },
     "h2-gt": {
-        "potential": "120 [MW]",
+        "potential": 120,
+        "unit": "MW",
     },
     "heatpump_large": {
-        "potential": "50 [MW]",
+        "potential": 50,
+        "unit": "MW",
     },
     "heatpump_small": {
-        "potential": "15 [MW]",
+        "potential": 15,
+        "unit": "MW",
     },
     "liion_battery": {
-        "potential": "200 [MWh]",
+        "potential": 200,
+        "unit": "MWh",
     },
     "onshore": {
-        "potential": "400 [MW]",
+        "potential": 400,
+        "unit": "MW",
     },
     "pth": {
-        "potential": "60 [MW]",
+        "potential": 60,
+        "unit": "MW",
     },
     "pv": {
-        "potential": "300 [MW]",
+        "potential": 300,
+        "unit": "MW",
     },
     "ror": {
-        "potential": "50 [MW]",
+        "potential": 50,
+        "unit": "MW",
     },
+}
+
+TECHNOLOGIES_SELECTED = {
+    "electrolyzer",
+    "heatpump_small",
+    "liion_battery",
+    "onshore",
+    "pv",
 }

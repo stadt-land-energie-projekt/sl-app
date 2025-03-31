@@ -71,17 +71,16 @@ def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> di
     return results
 
 
-def get_alternative_result_for_region(region: str) -> dict:
+def get_alternative_result(region: str, divergence: int) -> dict:
     """Return Alternative Results for ranges by region."""
-    results = AlternativeResult.objects.filter(region=region).select_related("alternative")
+    results = AlternativeResult.objects.filter(
+        region=region,
+        alternative_id=divergence,
+    )
 
-    data_for_region = {}
+    data_for_region_and_divergence = {}
     for r in results:
-        divergence = r.alternative.divergence
-        if divergence not in data_for_region:
-            data_for_region[divergence] = {}
-
-        data_for_region[divergence][r.component] = {
+        data_for_region_and_divergence[r.component] = {
             "min_capacity": r.min_capacity,
             "max_capacity": r.max_capacity,
             "min_cost": r.min_cost,
@@ -90,7 +89,7 @@ def get_alternative_result_for_region(region: str) -> dict:
             "type": r.type,
         }
 
-    return data_for_region
+    return data_for_region_and_divergence
 
 
 def get_base_scenario() -> dict:
@@ -111,7 +110,7 @@ def get_base_scenario() -> dict:
 
 
 def get_tech_category(full_key: str) -> str | None:
-    """DCheck the full_key against the keys in TECHNOLOGIES."""
+    """Check the full_key against the keys in TECHNOLOGIES."""
     for tech_key in TECHNOLOGIES:
         if tech_key in full_key:
             return tech_key
@@ -173,11 +172,67 @@ def filter_region_and_tech(sensitivity_data: dict, region: str) -> dict:
     return filtered_data
 
 
+def filter_alternatives(alternatives: dict, selected_tech: dict) -> dict:
+    """Filter alternatives with selected technologies in settings.py."""
+    selected = {}
+    for tech in alternatives:
+        if tech in selected_tech:
+            selected[tech] = alternatives[tech]
+    return selected
+
+
 def get_potential(technology: str) -> str:
     """Return potential per technology."""
-    return TECHNOLOGIES_RANGES.get(technology, {}).get("potential", "-")
+    return TECHNOLOGIES_RANGES.get(technology, {}).get("potential", None)
+
+
+def get_potential_unit(technology: str) -> str:
+    """Return potential unit per technology."""
+    return TECHNOLOGIES_RANGES.get(technology, {}).get("unit", "")
 
 
 def get_technology_color(technology: str) -> str:
     """Return color per technology."""
     return TECHNOLOGIES.get(technology, {}).get("color", "#000000")
+
+
+def prepare_table_data(alternatives: dict) -> dict:
+    """Return given dictionary prepared for table."""
+    for tech, data in alternatives.items():
+        data["tech_name"] = TECHNOLOGIES[tech]["name"]
+        data["cap_str"] = format_min_max(data["min_capacity"], data["max_capacity"], "cap")
+        data["cost_str"] = format_min_max(data["min_cost"], data["max_cost"], "cost")
+        data["pot_str"] = f"{data['potential']} {data['potential_unit']}"
+    return alternatives
+
+
+def format_min_max(min_value: float, max_value: float, unit: str) -> str:
+    """Return formatted string for table."""
+    # Decide if both values should be converted to millions:
+    million = 1_000_000
+    if min_value >= million or min_value == 0 and max_value >= million:
+        # Convert both to millions
+        converted_min = round(min_value / million)
+        converted_max = round(max_value / million)
+
+        if unit == "cost":
+            unit_str = "Mio €"
+        elif unit == "cap":
+            unit_str = "MW"
+        else:
+            unit_str = ""
+
+        return f"{converted_min} - {converted_max} {unit_str}"
+    # Otherwise, use thousands
+    thousand = 1_000
+    converted_min = round((min_value / thousand), 1)
+    converted_max = round((max_value / thousand), 1)
+
+    if unit == "cost":
+        unit_str = "k€"
+    elif unit == "cap":
+        unit_str = "kW"
+    else:
+        unit_str = ""
+
+    return f"{converted_min} - {converted_max} {unit_str}"

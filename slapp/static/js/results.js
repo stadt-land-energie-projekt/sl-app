@@ -21,6 +21,7 @@ async function showHiddenDiv(region, button) {
 
     currentRegion = region;
     await initializeTechnologySelect();
+    loadRanges();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -423,4 +424,228 @@ function initializeTechnologySelect() {
         const firstOptionValue = dropdown.options[0].value;
         loadCostCapacityData(firstOptionValue);
     }
+}
+
+function loadRanges() {
+    loadRangesData(1, 'ranges-chart-1', 'ranges-table-1');
+    loadRangesData(2, 'ranges-chart-2', 'ranges-table-2');
+  };
+
+/**
+ * Fetch data from /ranges endpoint and build the chart + table.
+ * @param {string} region
+ * @param {number} divergence
+ * @param {string} chartId
+ * @param {string} tableId
+ */
+function loadRangesData(divergence, chartId, tableId) {
+  const url = `/explorer/ranges/?region=${encodeURIComponent(currentRegion)}&divergence=${divergence}`;
+
+  fetch(url)
+    .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
+    }
+    return response.json();
+    })
+    .then(jsonData => {
+      // jsonData = { region, divergence, ranges: {...} }
+      const rangesDict = jsonData.ranges;
+
+      // Convert the dictionary to a list for eCharts
+      const chartData = buildChartData(rangesDict);
+      renderChart(chartId, chartData);
+
+      // Build table rows
+      const tableRows = buildTableRows(rangesDict);
+      renderTable(tableId, tableRows);
+      syncRowHeight(chartId, tableId, chartData.length);
+      window.addEventListener('resize', () => {
+      syncRowHeight(chartId, tableId, chartData.length);
+      });
+    })
+    .catch(err => console.error("Error fetching ranges data:", err));
+}
+
+/**
+ * Build data for eCharts from the server dictionary
+ * e.g. transforms { "boiler_large": {...}, "boiler_small": {...} } into an array
+ */
+function buildChartData(rangesDict) {
+  // We'll return an array of objects with: { technology, minCap, maxCap, diff, color }
+  const dataArray = [];
+
+  for (const [tech, vals] of Object.entries(rangesDict)) {
+    const minCap = vals.min_capacity || 0;
+    const maxCap = vals.max_capacity || 0;
+    const diff = Math.max(maxCap - minCap, 0);
+    const color = vals.color || "#3B82F6";  // or client-side fallback
+    dataArray.push({
+      technology: tech,
+      name: vals.tech_name || "",
+      minCap,
+      maxCap,
+      diff,
+      color,
+      potential: vals.potential || null,
+      potentialUnit: vals.potential_unit || "",
+      minCost: vals.min_cost || 0,
+      maxCost: vals.max_cost || 0
+    });
+  }
+
+  // Sort by something if you want, e.g. descending maxCap
+  dataArray.sort((a, b) => b.maxCost - a.maxCost);
+
+  return dataArray;
+}
+
+/**
+ * Render the horizontal range chart with stacked bars
+ */
+function renderChart(chartId, dataArray) {
+  const chartDom = document.getElementById(chartId);
+  if (!chartDom) return;
+  const myChart = echarts.init(chartDom);
+
+  // Build arrays for the 'offset' (minCap) and 'range' (diff)
+  const offsetData = dataArray.map(item => item.minCap);
+  const rangeData = dataArray.map(item => item.diff);
+  const colorList = dataArray.map(item => item.color);
+
+  // We also need the yAxis categories = technology
+  const yCategories = dataArray.map(item => item.name);
+
+  const option = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: function (params) {
+        // params is an array (since it's stacked)
+        // We only really want to show min-max
+        const rangeItem = params.find(p => p.seriesName === 'Capacity Range');
+        if (!rangeItem) return '';
+        const idx = rangeItem.dataIndex;
+        const item = dataArray[idx];
+        return `
+          <div>
+            <strong>${item.name}</strong><br/>
+            min: ${item.minCap.toFixed(0)} – max: ${item.maxCap.toFixed(0)}
+          </div>
+        `;
+      }
+    },
+    grid: {
+      left: '10%',
+      right: '10%',
+      bottom: '20px',
+      containLabel: false,
+    },
+    xAxis: {
+      type: 'value',
+      name: 'Capacity',
+      show : false,
+    },
+    yAxis: {
+      type: 'category',
+      data: yCategories,
+      axisTick: { show: false },
+      show : false,
+    },
+    series: [
+      // 1) Offset series (transparent)
+      {
+        name: 'Offset',
+        type: 'bar',
+        stack: 'Total',
+        data: offsetData,
+        itemStyle: { color: 'transparent' }
+      },
+      // 2) Range series (colored)
+      {
+        name: 'Capacity Range',
+        type: 'bar',
+        stack: 'Total',
+        data: rangeData.map((val, idx) => {
+          return {
+            value: val,
+            itemStyle: {
+              color: colorList[idx]
+            }
+          };
+        }),
+        barWidth: 30
+      }
+    ]
+  };
+
+  myChart.setOption(option);
+}
+
+/**
+ * Build the rows for the table
+ */
+function buildTableRows(rangesDict) {
+  // For each technology, build an object with the 4 columns:
+  // "Technologie", "Leistung/Kapazität", "Technisches Potential", "Kosten"
+  const rows = [];
+
+  for (const [tech, vals] of Object.entries(rangesDict)) {
+    const tech_name = vals.tech_name
+    const capStr = vals.cap_str || "";
+    const costStr = vals.cost_str || "";
+    const potStr = vals.pot_str || "";
+
+    rows.push({
+      technology: tech_name,
+      capacity: capStr,
+      potential: potStr,
+      cost: costStr
+    });
+  }
+
+  return rows;
+}
+
+/**
+ * Render the table
+ */
+function renderTable(tableId, rows) {
+  const tableElem = (document.querySelector(`#${tableId}`));
+  const tableBody = document.createElement('tbody');
+  tableElem.appendChild(tableBody);
+
+  // Clear old rows
+  tableBody.innerHTML = '';
+
+  rows.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${row.technology}</td>
+      <td>${row.capacity}</td>
+      <td>${row.potential}</td>
+      <td>${row.cost}</td>
+    `;
+    tableBody.appendChild(tr);
+  });
+}
+
+function syncRowHeight(chartId, tableId, dataLength) {
+  const chartElem = document.getElementById(chartId);
+  console.log("started syncRowHeight");
+  if (!chartElem) return;
+
+  // The total height of the chart container
+  const chartHeight = chartElem.clientHeight;
+
+  // Subtract 20 to allow for top grid space
+  const rowHeight = (chartHeight - 100) / dataLength;
+
+  // Select all <tr> within the table
+  const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+  rows.forEach(row => {
+    row.style.height = rowHeight + 'px';
+    console.log("roeHeight: " + rowHeight);
+  });
+  console.log("ended syncRowHeight");
 }
