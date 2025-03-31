@@ -44,17 +44,12 @@
       <div class="container">
         <h1>Sensitivitäten</h1>
         <p>Hier kommt auch noch ein Intro-Text dazu.</p>
-        <div class="dropdown">
-          <button class="dropdown-button">Bitte auswählen</button>
-          <div class="dropdown-content">
-            <a href="#" type="Technologie">Technologie</a>
-            <a href="#" type="Etwas anderes">Etwas anderes</a>
-            <a href="#" type="Sonstiges">Sonstiges</a>
-          </div>
-        </div>
-        <div id="cost-cap-container">
-          <div class="cost-capacity-chart" id="line-chart"></div>
-          <div class="cost-capacity-chart" id="bar-chart">another chart</div>
+        <select id="technologySelect" name="technology" autocomplete="off">
+          {% for key, data in technologies %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
+        </select>
+        <div id="tech-container">
+          <div class="technology-charts" id="cost-capacity-chart"></div>
+          <div class="technology-charts" id="tech-comparison-chart"></div>
         </div>
       </div>
       <div class="container">
