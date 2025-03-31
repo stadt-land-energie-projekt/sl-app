@@ -27,12 +27,19 @@ from .regions import (
     build_table_data,
     get_basic_charts_data,
     get_case_studies_charts_data,
-    get_cost_capacity_data,
     get_dataframes,
     get_energy_data,
 )
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
+from .results import (
+    build_cost_cap_data,
+    build_tech_comp_data,
+    filter_region_and_tech,
+    get_base_scenario,
+    get_sensitivity_result,
+)
+from .settings import TECHNOLOGIES
 
 MAX_MUNICIPALITY_COUNT = 3
 
@@ -567,9 +574,13 @@ class Results(TemplateView):
             "table_2": build_table_data(df2, scale),
         }
 
+        technologies = sorted(TECHNOLOGIES.items(), key=lambda tech: tech[1]["name"])
+
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
         context["range"] = range_tbl
+        context["sensitivity"] = get_sensitivity_result("CapacityCosts", "B", "pv")
+        context["technologies"] = technologies
         return context
 
 
@@ -582,13 +593,37 @@ def flow_chart(request: HttpRequest) -> JsonResponse:
     return JsonResponse(response_data)
 
 
-def cost_capacity_chart(request: HttpRequest) -> JsonResponse:
-    """Return chosen data for cost capacity chart on results page."""
-    data_type = request.GET.get("type", "")
+def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
+    """Return either line_data or bar_data."""
+    tech = request.GET.get("type", "")
 
-    cost_cap_data = get_cost_capacity_data(data_type)
+    selected_region = request.GET.get("region")
+    region = "B" if selected_region == "kiel" else "BB"
 
-    return JsonResponse(cost_cap_data)
+    sensitivity_data = get_sensitivity_result("CapacityCosts", region, tech)
+    sensitivity_data.update(get_sensitivity_result("CapacityCosts", "ALL", tech))
+
+    if bool(sensitivity_data):
+        base_scenario = get_base_scenario()
+        sensitivity_data[0.0] = base_scenario
+
+    sensitivity_data = filter_region_and_tech(sensitivity_data, region)
+    # If an "x" parameter is provided, return tech comparison chart data.
+    selected_x = request.GET.get("x")
+    if selected_x is not None:
+        try:
+            selected_x = float(selected_x)
+        except ValueError:
+            return JsonResponse({"error": "Invalid x value"}, status=400)
+        if selected_x not in sensitivity_data:
+            return JsonResponse({"error": "x value not found"}, status=404)
+
+        tech_comp_data_list = build_tech_comp_data(sensitivity_data[selected_x], tech)
+        return JsonResponse({"bar_data": tech_comp_data_list})
+
+    # Without "x": Create line chart data for the selected technology.
+    cost_cap_data = build_cost_cap_data(sensitivity_data, tech)
+    return JsonResponse({"line_data": cost_cap_data})
 
 
 def basic_charts(request: HttpRequest) -> JsonResponse:
