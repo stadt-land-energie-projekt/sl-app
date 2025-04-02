@@ -71,11 +71,11 @@ def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> di
     return results
 
 
-def get_alternative_result(region: str, divergence: int) -> dict:
+def get_alternative_result(region: str, divergence: float) -> dict:
     """Return Alternative Results for ranges by region."""
     results = AlternativeResult.objects.filter(
         region=region,
-        alternative_id=divergence,
+        alternative__divergence=divergence,
     )
 
     data_for_region_and_divergence = {}

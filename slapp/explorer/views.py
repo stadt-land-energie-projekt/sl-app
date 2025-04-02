@@ -633,7 +633,7 @@ def ranges(request: HttpRequest) -> JsonResponse:
     """Return requested data for ranges on results page."""
     selected_region = request.GET.get("region")
     region = "B" if selected_region == "kiel" else "BB"
-    divergence = int(request.GET.get("divergence", 1))
+    divergence = float(request.GET.get("divergence", 1)) / 100
 
     alternatives = get_alternative_result(region, divergence)
     alternatives = filter_alternatives(alternatives, TECHNOLOGIES_SELECTED)
