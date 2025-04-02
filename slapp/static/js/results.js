@@ -494,9 +494,6 @@ function buildChartData(rangesDict) {
     });
   }
 
-  // Sort by something if you want, e.g. descending maxCap
-  dataArray.sort((a, b) => b.maxCost - a.maxCost);
-
   return dataArray;
 }
 
@@ -536,21 +533,23 @@ function renderChart(chartId, dataArray) {
       }
     },
     grid: {
-      left: '10%',
+      left: '70%',
       right: '10%',
-      bottom: '20px',
+      top: 30,      // Must equal table header row height
+      bottom: 1,    // Must be non-zero, as otherwise last y-category tick is not drawn
       containLabel: false,
     },
     xAxis: {
       type: 'value',
       name: 'Capacity',
       show : false,
+      axisTick: { show: false }
     },
     yAxis: {
       type: 'category',
       data: yCategories,
-      axisTick: { show: false },
-      show : false,
+      axisTick: { show: true },
+      show : true,
     },
     series: [
       // 1) Offset series (transparent)
@@ -591,7 +590,7 @@ function buildTableRows(rangesDict) {
   const rows = [];
 
   for (const [tech, vals] of Object.entries(rangesDict)) {
-    const tech_name = vals.tech_name
+    const tech_name = vals.tech_name;
     const capStr = vals.cap_str || "";
     const costStr = vals.cost_str || "";
     const potStr = vals.pot_str || "";
@@ -638,8 +637,10 @@ function syncRowHeight(chartId, tableId, dataLength) {
   // The total height of the chart container
   const chartHeight = chartElem.clientHeight;
 
-  // Subtract 20 to allow for top grid space
-  const rowHeight = (chartHeight - 100) / dataLength;
+  console.log("clientHeight: " + chartHeight);
+
+  // Subtract table header height = chart.grid.top + chart.grid.bottom
+  const rowHeight = (chartHeight - 31) / dataLength;
 
   // Select all <tr> within the table
   const rows = document.querySelectorAll(`#${tableId} tbody tr`);
