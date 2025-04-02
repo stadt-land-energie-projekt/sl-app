@@ -533,7 +533,7 @@ function renderChart(chartId, dataArray) {
       }
     },
     grid: {
-      left: '70%',
+      left: '50%',
       right: '10%',
       top: 30,      // Must equal table header row height
       bottom: 1,    // Must be non-zero, as otherwise last y-category tick is not drawn
@@ -621,7 +621,6 @@ function renderTable(tableId, rows) {
   rows.forEach(row => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${row.technology}</td>
       <td>${row.capacity}</td>
       <td>${row.potential}</td>
       <td>${row.cost}</td>
