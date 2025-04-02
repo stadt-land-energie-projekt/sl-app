@@ -429,7 +429,7 @@ function initializeTechnologySelect() {
 function loadRanges() {
     loadRangesData(1, 'ranges-chart-1', 'ranges-table-1');
     loadRangesData(2, 'ranges-chart-2', 'ranges-table-2');
-  };
+  }
 
 /**
  * Fetch data from /ranges endpoint and build the chart + table.
@@ -612,6 +612,10 @@ function buildTableRows(rangesDict) {
  */
 function renderTable(tableId, rows) {
   const tableElem = (document.querySelector(`#${tableId}`));
+  const tbody = tableElem.querySelector("tbody");
+  if (tbody !== null) {
+      tbody.remove();
+  }
   const tableBody = document.createElement('tbody');
   tableElem.appendChild(tableBody);
 
