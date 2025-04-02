@@ -548,6 +548,7 @@ function renderChart(chartId, dataArray) {
     yAxis: {
       type: 'category',
       data: yCategories,
+      inverse: true,
       axisTick: { show: true },
       show : true,
     },
