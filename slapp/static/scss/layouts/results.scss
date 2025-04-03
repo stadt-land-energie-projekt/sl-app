@@ -353,7 +353,7 @@ span {
     &--alternatives {
       margin-top: 4rem;
     
-      h2 {
+      h3 {
         font-size: 1.5rem;
         font-weight: 700;
         text-align: center;
@@ -377,7 +377,7 @@ span {
         padding: 2rem;
         border-radius: $border-radius;
         text-align: center;
-        margin: 2rem auto 3rem;
+        margin: 2rem auto 6rem;
         position: relative;
     
         button {
@@ -394,8 +394,16 @@ span {
         &__text {
           display: none;
           margin-top: 1.5rem;
-          text-align: left;
-          line-height: 170%;
+
+          p {
+            text-align: left;
+            color: $font-color-secondary;
+            line-height: 170%;
+          }
+
+          span {
+            color: $font-color-secondary;
+          }
         }
     
         &.open .more-info-box__text {
@@ -406,7 +414,7 @@ span {
       .toggle-buttons {
         display: flex;
         justify-content: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
     
         .toggle-button {
           padding: 0.75rem 1.25rem;
@@ -440,15 +448,15 @@ span {
         margin-bottom: 3rem;
         border: none;
     
-        .flex-container {
+        .scope-chart__text {
           display: flex;
-          align-items: center;
-          gap: 1rem;
+          justify-content: center;
           margin-bottom: 1rem;
+          color: $font-color-secondary;
     
           span {
             font-weight: 700;
-            color: $font-color-main;
+            color: $font-color-secondary;
           }
         }
     
@@ -468,13 +476,18 @@ span {
             font-weight: 600;
             color: $font-color-main;
           }
+
+          tbody td {
+            background-color: $bg-color-light;
+          }
         }
     
         .bar-container {
           height: 1rem;
-          background-color: #f3f4f6;
+          background-color: $white;
           position: relative;
           border-radius: 0.25rem;
+          margin: 0 auto;
         }
     
         .bar {
@@ -494,32 +507,34 @@ span {
         margin-right: auto;
         border: none;
     
-        h2 {
+        h3 {
           color: $color-blue-dark;
           font-weight: 700;
-          margin-bottom: 1rem;
+          text-align: left;
+          margin-bottom: 0;
+          padding-bottom: 1rem;
         }
     
-        .flex-container {
+        .example__content {
           display: flex;
           align-items: flex-start;
           gap: 1rem;
     
-          img {
-            width: 2rem;
-            height: 2rem;
-            flex-shrink: 0;
-            margin-top: 0.2rem;
+          svg {
+            width: 10rem;
+            height: 4rem;
           }
     
           span {
-            font-weight: 600;
+            font-weight: 700;
             color: $color-blue-dark;
           }
     
-          div {
+          p {
             color: $color-blue-dark;
+            font-size: 0.875rem;
             line-height: 170%;
+            margin-bottom: 0;
           }
         }
       }
