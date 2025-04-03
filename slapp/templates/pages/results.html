@@ -91,84 +91,28 @@
               Wenn Sie innerhalb von <span>+/- 1% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
               folgende Spielräume:
             </div>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Technologie</th>
-                  <th></th>
-                  <th>Leistung/Kapazität</th>
-                  <th>Technisches Potential</th>
-                  <th>Kosten</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for row in range.table_1 %}
-                  <tr>
-                    <td>{{ row.technologie }}</td>
-                    <td>
-                      <div class="bar-container">
-                        <div class="bar"
-                             style="left: {{ row.offset_pct }}%;
-                                    width: {{ row.width_pct }}%;
-                                    background-color: {{ row.color }}"></div>
-                      </div>
-                    </td>
-                    <td>{{ row.per_cap }}</td>
-                    <td>{{ row.pot }}</td>
-                    <td>{{ row.cost }}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+            {% include 'pages/partials/ranges_chart_table.html' with divergence=1 %}
           </div>
-        </div>
-        <div class="scope-chart">
-          <div class="flex-container">
-            <div class="plus-minus-container">
-              <img src="{% static 'images/icons/plus_minus.svg' %}"
-                   alt="plus-minus icon"
-                   class="plus-minus-icon" />
-              2 %
+          <div class="scope-chart">
+            <div class="flex-container">
+              <div class="plus-minus-container">
+                <img src="{% static 'images/icons/plus_minus.svg' %}"
+                     alt="plus-minus icon"
+                     class="plus-minus-icon" />
+                2 %
+              </div>
+              Wenn Sie innerhalb von <span>+/- 2% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
+              folgende Spielräume:
             </div>
-            Wenn Sie innerhalb von <span>+/- 2% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
-            folgende Spielräume:
+            {% include 'pages/partials/ranges_chart_table.html' with divergence=2 %}
           </div>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Technologie</th>
-                <th></th>
-                <th>Leistung/Kapazität</th>
-                <th>Technisches Potential</th>
-                <th>Kosten</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for row in range.table_2 %}
-                <tr>
-                  <td>{{ row.technologie }}</td>
-                  <td>
-                    <div class="bar-container">
-                      <div class="bar"
-                           style="left: {{ row.offset_pct }}%;
-                                  width: {{ row.width_pct }}%;
-                                  background-color: {{ row.color }}"></div>
-                    </div>
-                  </td>
-                  <td>{{ row.per_cap }}</td>
-                  <td>{{ row.pot }}</td>
-                  <td>{{ row.cost }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
-  </div>
-  <div>
-    <a href="{{ home_url }}" class="btn btn-primary mt-3">Zur Hauptseite</a>
-    <a href="{{ added_value_url }}" class="btn btn-primary mt-3">Zum Wertschöpfungsrechner</a>
+    <div>
+      <a href="{{ home_url }}" class="btn btn-primary mt-3">Zur Hauptseite</a>
+      <a href="{{ added_value_url }}" class="btn btn-primary mt-3">Zum Wertschöpfungsrechner</a>
+    </div>
   </div>
 {% endblock content_no_sidebar %}
 {% block javascript %}

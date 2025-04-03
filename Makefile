@@ -13,6 +13,7 @@ load_data:
 load_zib_data:
 	python manage.py shell --command="from slapp.utils import data_processing; data_processing.load_sensitivities()"
 	python manage.py shell --command="from slapp.utils import data_processing; data_processing.load_base_scenario()"
+	python manage.py shell --command="from slapp.utils import data_processing; data_processing.load_alternatives()"
 
 load_population:
 	python manage.py shell --command="from slapp.utils import data_processing; data_processing.load_population()"
