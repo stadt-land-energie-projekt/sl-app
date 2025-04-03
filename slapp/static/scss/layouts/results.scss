@@ -317,6 +317,221 @@ span {
   .tab-content {
     display: none;
     padding: 20px;
+
+    &--exchange > div {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 8rem;
+      margin-top: 4rem;
+
+      #electricity-chart,
+      #hydrogen-chart {
+        background-color: $white;
+      }
+    }
+
+    &--basic #basic-charts {
+      margin-top: 4rem;
+      ;
+      & > div {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding-bottom: 2rem;
+      
+        @media only screen and (min-width: 1400px) {
+          flex-direction: row;
+        }
+  
+        .chart-container {
+          background-color: $white;
+        }
+      }
+    }
+
+    &--alternatives {
+      margin-top: 4rem;
+    
+      h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-align: center;
+        padding-bottom: 2rem;
+      }
+    
+      p {
+        max-width: 60rem;
+        margin: 0 auto 3rem;
+        line-height: 1.7;
+        color: $font-color-main;
+    
+        span {
+          font-weight: 600;
+          color: $font-color-main;
+        }
+      }
+    
+      .more-info-box {
+        background-color: $white;
+        padding: 2rem;
+        border-radius: $border-radius;
+        text-align: center;
+        margin: 2rem auto 3rem;
+        position: relative;
+    
+        button {
+          background: none;
+          border: none;
+          color: $color-selected;
+          font-weight: 700;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+    
+        &__text {
+          display: none;
+          margin-top: 1.5rem;
+          text-align: left;
+          line-height: 170%;
+        }
+    
+        &.open .more-info-box__text {
+          display: block;
+        }
+      }
+    
+      .toggle-buttons {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+    
+        .toggle-button {
+          padding: 0.75rem 1.25rem;
+          border: 1px solid $white;
+          font-weight: 700;
+          background-color: $white;
+          cursor: pointer;
+          transition: 0.2s ease;
+
+          &:first-of-type {
+            border-top-left-radius: $border-radius;
+            border-bottom-left-radius: $border-radius;
+          }
+
+          &:last-of-type {
+            border-top-right-radius: $border-radius;
+            border-bottom-right-radius: $border-radius;
+          }
+    
+          &.active {
+            background-color: $color-secondary;
+            border-color: $color-secondary;
+            color: $font-color-main;
+          }
+        }
+      }
+    
+      .scope-chart {
+        background-color: $bg-color-light;
+        border-radius: $border-radius;
+        margin-bottom: 3rem;
+        border: none;
+    
+        .flex-container {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-bottom: 1rem;
+    
+          span {
+            font-weight: 700;
+            color: $font-color-main;
+          }
+        }
+    
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 0.875rem;
+    
+          th,
+          td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+          }
+    
+          th {
+            font-weight: 600;
+            color: $font-color-main;
+          }
+        }
+    
+        .bar-container {
+          height: 1rem;
+          background-color: #f3f4f6;
+          position: relative;
+          border-radius: 0.25rem;
+        }
+    
+        .bar {
+          position: absolute;
+          top: 0;
+          height: 100%;
+          border-radius: 0.25rem;
+        }
+      }
+    
+      #example {
+        background-color: $white;
+        padding: 1.5rem 2rem;
+        margin-bottom: 3rem;
+        max-width: 60rem;
+        margin-left: auto;
+        margin-right: auto;
+        border: none;
+    
+        h2 {
+          color: $color-blue-dark;
+          font-weight: 700;
+          margin-bottom: 1rem;
+        }
+    
+        .flex-container {
+          display: flex;
+          align-items: flex-start;
+          gap: 1rem;
+    
+          img {
+            width: 2rem;
+            height: 2rem;
+            flex-shrink: 0;
+            margin-top: 0.2rem;
+          }
+    
+          span {
+            font-weight: 600;
+            color: $color-blue-dark;
+          }
+    
+          div {
+            color: $color-blue-dark;
+            line-height: 170%;
+          }
+        }
+      }
+
+      .scope-wrapper {
+        display: none;
+        &.active {
+          display: block;
+        }
+      }
+      
+    }    
   }
 
   .tab-content.active {

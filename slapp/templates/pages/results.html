@@ -49,25 +49,25 @@
           <button class="tab-button" data-tab="alternatives">Alternative Lösungen erkunden</button>
         </div>
         <div class="results__tabs-content">
-          <div id="exchange" class="tab-content active">
-            <div class="tab-content__container">
+          <div id="exchange" class="tab-content tab-content--exchange active">
+            <div>
               <div id="electricity-chart"></div>
               <div id="hydrogen-chart"></div>
             </div>
           </div>
-          <div class="tab-content" id="basic-solution">
-            <h1>Basislösung</h1>
-            <div class="tab-content__container">
-              <div class="flex-container" id="basic-charts">
+          <div class="tab-content tab-content--basic" id="basic-solution">
+            <div id="basic-charts">
+              <div>
                 <div id="basic-electricity" class="chart-container"></div>
                 <div id="basic-heat" class="chart-container"></div>
+              </div>
+              <div>
                 <div id="basic-capacity" class="chart-container"></div>
                 <div id="basic-costs" class="chart-container"></div>
               </div>
             </div>
           </div>
           <div class="tab-content" id="sensitivity">
-            <h1>Sensitivitäten</h1>
             <p>Hier kommt auch noch ein Intro-Text dazu.</p>
             <select id="technologySelect" name="technology" autocomplete="off">
               {% for key, data in technologies %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
@@ -77,27 +77,39 @@
               <div class="technology-charts" id="tech-comparison-chart"></div>
             </div>
           </div>
-          <div class="tab-content" id="alternatives">
-            <h1>Alternative Lösungen erkunden</h1>
-            <p>
-              Neben der obigen Basislösung haben wir zahlreiche alternative Wege zu einem erneuerbaren Energiesystem berechnet.
-              Dafür haben wir den sogenannten Ansatz <span>Modelling to Generate Alternatives</span> (MGA) verwendet.
-              Das bedeutet, dass für jede Technologie <span>verschiedene Ausbaumöglichkeiten</span> existieren, ohne dass die Gesamtsystemkosten
-              stark von den Kosten der (optimalen) Basislösung abweichen. Die Alternativen sollten nicht mehr als <span>1-2 %
-              günstiger oder teurer als die Basislösung</span> sein.
-              Der verstärkte Ausbau einer Technologie bei nahezu
-              gleichbleibenden Kosten funktioniert natürlich nur, wenn andere Technologien dafür weniger stark wachsen.
-              Das bedeutet, dass sich die Zusammensetzung des künftigen Energiesystems mit dem Fokus auf eine oder mehrere
-              Technologien mehr oder weniger stark ändern muss, um im Kostenrahmen zu bleiben.
-            </p>
+          <div class="tab-content tab-content--alternatives" id="alternatives">
+            <h3>Modelling to Generate Alternatives (MGA)</h3>
+            <div class="more-info-box" id="more-info-box">
+              <button onclick="toggleMoreInfo()">
+                <span>Mehr Infos</span>
+                <span id="info-arrow" class="arrow-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                  </svg>
+                </span>
+              </button>
+              <div class="more-info-box__text" id="more-info-text">
+                <p>
+                  Neben der obigen Basislösung haben wir zahlreiche alternative Wege zu einem erneuerbaren Energiesystem berechnet.
+                  Dafür haben wir den sogenannten Ansatz <span>Modelling to Generate Alternatives</span> (MGA) verwendet.
+                  Das bedeutet, dass für jede Technologie <span>verschiedene Ausbaumöglichkeiten</span> existieren, ohne dass die Gesamtsystemkosten
+                  stark von den Kosten der (optimalen) Basislösung abweichen. Die Alternativen sollten nicht mehr als <span>1-2 %
+                  günstiger oder teurer als die Basislösung</span> sein.
+                  Der verstärkte Ausbau einer Technologie bei nahezu
+                  gleichbleibenden Kosten funktioniert natürlich nur, wenn andere Technologien dafür weniger stark wachsen.
+                  Das bedeutet, dass sich die Zusammensetzung des künftigen Energiesystems mit dem Fokus auf eine oder mehrere
+                  Technologien mehr oder weniger stark ändern muss, um im Kostenrahmen zu bleiben.
+                </p>
+              </div>
+            </div>
             <div id="example">
-              <h2>Beispiel</h2>
+              <h2>Beispiel: Batteriespeicher</h2>
               <div class="flex-container">
                 <img src="{% static 'images/icons/battery.svg' %}"
                       alt="battery icon"
                       id="battery-icon" />
                 <div>
-                  <span>Batteriespeicher:</span> Statt X MWh in der Basislösung können Sie zusätzliche Speicherkapazitäten installieren.
+                  Statt X MWh in der Basislösung können Sie zusätzliche Speicherkapazitäten installieren.
                   Das kostet Sie für diese Anlagen zwar mehr, kann jedoch an anderer Stelle Kosten sparen, da z.B. mehr am
                   Tage gewonnene Energie in die Nachtstunden verschoben werden kann und damit weniger Photovoltaik und
                   Windenergieanlagen erforderlich werden, um den Energiebedarf zu decken.
@@ -105,88 +117,84 @@
               </div>
             </div>
             <div>
-              <div class="scope-chart">
-                <div class="flex-container">
-                  <div class="plus-minus-container">
-                    <img src="{% static 'images/icons/plus_minus.svg' %}"
-                          alt="plus-minus icon"
-                          class="plus-minus-icon" />
-                    1 %
+              <div class="toggle-buttons">
+                <button class="toggle-button active" onclick="toggleScope('scope-1')">± 1 % Gesamtkosten</button>
+                <button class="toggle-button" onclick="toggleScope('scope-2')">± 2 % Gesamtkosten</button>
+              </div>
+              <div id="scope-1" class="scope-wrapper active">
+                <div class="scope-chart">
+                  <div class="flex-container">
+                    Wenn Sie innerhalb von <span>+/- 1% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
+                    folgende Spielräume:
                   </div>
-                  Wenn Sie innerhalb von <span>+/- 1% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
-                  folgende Spielräume:
-                </div>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Technologie</th>
-                      <th></th>
-                      <th>Leistung/Kapazität</th>
-                      <th>Technisches Potential</th>
-                      <th>Kosten</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for row in range.table_1 %}
+                  <table class="table">
+                    <thead>
                       <tr>
-                        <td>{{ row.technologie }}</td>
-                        <td>
-                          <div class="bar-container">
-                            <div class="bar"
-                                  style="left: {{ row.offset_pct }}%;
-                                        width: {{ row.width_pct }}%;
-                                        background-color: {{ row.color }}"></div>
-                          </div>
-                        </td>
-                        <td>{{ row.per_cap }}</td>
-                        <td>{{ row.pot }}</td>
-                        <td>{{ row.cost }}</td>
+                        <th>Technologie</th>
+                        <th></th>
+                        <th>Leistung/Kapazität</th>
+                        <th>Technisches Potential</th>
+                        <th>Kosten</th>
                       </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="scope-chart">
-              <div class="flex-container">
-                <div class="plus-minus-container">
-                  <img src="{% static 'images/icons/plus_minus.svg' %}"
-                        alt="plus-minus icon"
-                        class="plus-minus-icon" />
-                  2 %
+                    </thead>
+                    <tbody>
+                      {% for row in range.table_1 %}
+                        <tr>
+                          <td>{{ row.technologie }}</td>
+                          <td>
+                            <div class="bar-container">
+                              <div class="bar"
+                                    style="left: {{ row.offset_pct }}%;
+                                          width: {{ row.width_pct }}%;
+                                          background-color: {{ row.color }}"></div>
+                            </div>
+                          </td>
+                          <td>{{ row.per_cap }}</td>
+                          <td>{{ row.pot }}</td>
+                          <td>{{ row.cost }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
                 </div>
-                Wenn Sie innerhalb von <span>+/- 2% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
-                folgende Spielräume:
               </div>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Technologie</th>
-                    <th></th>
-                    <th>Leistung/Kapazität</th>
-                    <th>Technisches Potential</th>
-                    <th>Kosten</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for row in range.table_2 %}
-                    <tr>
-                      <td>{{ row.technologie }}</td>
-                      <td>
-                        <div class="bar-container">
-                          <div class="bar"
-                                style="left: {{ row.offset_pct }}%;
-                                      width: {{ row.width_pct }}%;
-                                      background-color: {{ row.color }}"></div>
-                        </div>
-                      </td>
-                      <td>{{ row.per_cap }}</td>
-                      <td>{{ row.pot }}</td>
-                      <td>{{ row.cost }}</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+              <div id="scope-2" class="scope-wrapper">
+                <div class="scope-chart">
+                  <div class="flex-container">
+                    Wenn Sie innerhalb von <span>+/- 2% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
+                    folgende Spielräume:
+                  </div>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Technologie</th>
+                        <th></th>
+                        <th>Leistung/Kapazität</th>
+                        <th>Technisches Potential</th>
+                        <th>Kosten</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for row in range.table_2 %}
+                        <tr>
+                          <td>{{ row.technologie }}</td>
+                          <td>
+                            <div class="bar-container">
+                              <div class="bar"
+                                    style="left: {{ row.offset_pct }}%;
+                                          width: {{ row.width_pct }}%;
+                                          background-color: {{ row.color }}"></div>
+                            </div>
+                          </td>
+                          <td>{{ row.per_cap }}</td>
+                          <td>{{ row.pot }}</td>
+                          <td>{{ row.cost }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -230,5 +238,34 @@
         });
       });
     });
+
+    // Toggle content about MGA
+    function toggleMoreInfo() {
+      const box = document.getElementById("more-info-box");
+      const arrow = document.getElementById("info-arrow");
+
+      box.classList.toggle("open");
+
+      const isOpen = box.classList.contains("open");
+
+      arrow.innerHTML = isOpen
+        ? `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
+          </svg>`
+        : `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+          </svg>`;
+    }
+
+
+    // Tabs between 1% and 2% scope
+    function toggleScope(id) {
+      document.querySelectorAll('.scope-wrapper').forEach(div => div.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+
+      document.querySelectorAll('.toggle-button').forEach(btn => btn.classList.remove('active'));
+      const idx = id === 'scope-1' ? 0 : 1;
+      document.querySelectorAll('.toggle-button')[idx].classList.add('active');
+    }
   </script>
 {% endblock inline_javascript %}
