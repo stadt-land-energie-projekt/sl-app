@@ -128,3 +128,150 @@ span {
   position: absolute;
   height: 100%;
 }
+
+// Results
+.results {
+  &__container {
+    @include container;
+    padding-bottom: 4rem;
+  }
+
+  header {
+    display: flex;
+    flex-direction: column;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+
+    @media only screen and (min-width: 1400px) {
+      padding-top: 6rem;
+      padding-bottom: 6rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: $font-color-main;
+      padding-bottom: 2rem;
+    }
+
+    p {
+      max-width: 64rem;
+      color: $font-color-secondary;
+      font-size: 1rem;
+      line-height: 170%;
+    }
+  }
+
+  &__selection {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+
+    @media only screen and (min-width: 1200px) {
+      flex-direction: row;
+    }
+  }
+
+  &__region-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    background-color: #fff;
+    border-radius: $border-radius;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  &__region-image {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 7rem;
+    height: 7rem;
+    border-radius: 1rem;
+  }
+
+  &__top-row {
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $font-color-main;
+      text-align: center;
+    }
+  }
+
+  &__info-box {
+    display: block;
+    font-size: 0.875rem;
+    color: $font-color-secondary;
+    text-align: center;
+
+    span {
+      margin: 0;
+    }
+  }
+
+  &__region-text {
+    color: $font-color-secondary;
+    font-size: 1rem;
+    line-height: 170%;
+    padding-bottom: 2rem;
+  }
+
+  &__cta-row {
+    margin-bottom: 0;
+
+    button {
+      @include button-primary;
+    }
+  }
+
+  &__region-container.selected {
+    background-color: #eff6ff;
+    border: 2px solid $color-selected;
+
+    .cs__info-box {
+      span {
+        border: 1px solid $color-selected;
+        color: $color-selected;
+      }
+    }
+
+    .cs__region-text {
+      color: $font-color-main;
+    }
+
+    .cs__keyfacts {
+      .fact-item {
+        background-color: #dbeafe;
+      }
+
+      img {
+        filter: brightness(0) saturate(100%) invert(24%) sepia(14%) saturate(6397%) hue-rotate(204deg) brightness(86%) contrast(103%);
+      }
+
+      h3,
+      p {
+        color: #1E3A8A;
+      }
+    }
+
+    .cs__cta-row {
+      button {
+        background-color: #eff6ff;
+        color: $color-selected;
+        border: 1px solid $color-selected;
+        pointer-events: none;
+      }
+    }
+  }
+}
