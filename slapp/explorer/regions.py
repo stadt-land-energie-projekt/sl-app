@@ -49,10 +49,11 @@ def get_regions_data() -> list:
                     "icon": "/static/images/icons/case-study-challenge.svg",
                 },
             ],
-            "plans": {
-                "2023": {"wind": 40, "pv": 80, "moor": 1},
-                "2030": {"wind": 70, "pv": 100, "moor": 2},
-                "2040": {"wind": 80, "pv": 120, "moor": 4},
+            "capacity": {
+                "Rüderdorf": {"wind": 40, "pv": 80, "bio": 10, "conv": 10, "moor": 1},
+                "Strausberg": {"wind": 70, "pv": 100, "bio": 10, "conv": 10,  "moor": 2},
+                "Erkner": {"wind": 80, "pv": 120, "bio": 10, "conv": 10,  "moor": 4},
+                "Grünheide": {"wind": 80, "pv": 120, "bio": 10, "conv": 10,  "moor": 4},
             },
             "area": "5.5%",
             "co2": 1500.81,
@@ -87,7 +88,7 @@ def get_regions_data() -> list:
                     "icon": "/static/images/icons/case-study-challenge.svg",
                 },
             ],
-            "plans": {
+            "capacity": {
                 "2023": {"wind": 60, "pv": 80, "moor": 0},
                 "2030": {"wind": 100, "pv": 120, "moor": 1},
                 "2040": {"wind": 150, "pv": 140, "moor": 2},
@@ -212,39 +213,41 @@ def get_case_studies_charts_data(region_name: str) -> dict:
     if not selected_region:
         selected_region = regions[0]
 
-    plans = selected_region["plans"]
-    x_axis_data = list(plans.keys())
+    capacity = selected_region["capacity"]
+    x_axis_data = list(capacity.keys())
 
     charts_data = {
-        "production": {
-            "x_data": x_axis_data,
-            "y_data": {
-                "Production": [p["wind"] + p["pv"] for p in plans.values()],
-                "Consumption": [p["wind"] * 1.5 for p in plans.values()],
-            },
-            "y_label": "kWh",
-        },
         "tech": {
             "x_data": x_axis_data,
             "y_data": {
-                "Wind": [p["wind"] for p in plans.values()],
-                "PV": [p["pv"] for p in plans.values()],
+                "Wind": [p["wind"] for p in capacity.values()],
+                "PV": [p["pv"] for p in capacity.values()],
+                "Biomasse": [p["bio"] for p in capacity.values()],
+                "Konventionell": [p["conv"] for p in capacity.values()],
             },
             "y_label": "MW",
-            "target": {"Target 2040": 100},
+            "target": {"Regionalziel 2032": 100},
+        },
+        "production": {
+            "x_data": x_axis_data,
+            "y_data": {
+                "Production": [p["wind"] + p["pv"] for p in capacity.values()],
+                "Consumption": [p["wind"] * 1.5 for p in capacity.values()],
+            },
+            "y_label": "kWh",
         },
         "another": {
             "x_data": x_axis_data,
             "y_data": {
-                "Moor": [p["moor"] for p in plans.values()],
+                "Moor": [p["moor"] for p in capacity.values()],
             },
             "y_label": "Moor KPI [dummy]",
         },
         "demand": {
             "x_data": x_axis_data,
             "y_data": {
-                "Households": [p["pv"] / 2 for p in plans.values()],
-                "Industry": [p["wind"] / 2 for p in plans.values()],
+                "Households": [p["pv"] / 2 for p in capacity.values()],
+                "Industry": [p["wind"] / 2 for p in capacity.values()],
             },
             "y_label": "Energy Demand [GWh]",
         },
