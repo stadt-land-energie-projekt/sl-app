@@ -67,7 +67,7 @@
               </div>
             </div>
           </div>
-          <div class="tab-content" id="sensitivity">
+          <div class="tab-content tab-content--sensitivity" id="sensitivity">
             <p>Hier kommt auch noch ein Intro-Text dazu.</p>
             <select id="technologySelect" name="technology" autocomplete="off">
               {% for key, data in technologies %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
@@ -204,9 +204,9 @@
       </div>
     </section>
   </div>
-  <div>
-    <a href="{{ home_url }}" class="btn btn-primary mt-3">Zur Hauptseite</a>
-    <a href="{{ added_value_url }}" class="btn btn-primary mt-3">Zum Wertschöpfungsrechner</a>
+  <div class="results__buttons">
+    <a href="{{ home_url }}" class="button--tertiary">Zur Hauptseite</a>
+    <a href="{{ added_value_url }}" class="button--primary">Zum Wertschöpfungsrechner</a>
   </div>
 </main>
   
