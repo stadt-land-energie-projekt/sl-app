@@ -638,3 +638,33 @@ class Sensitivity(models.Model):
         """Metadata for model."""
 
         unique_together = ("attribute", "component", "region", "perturbation_method", "perturbation_parameter")
+
+
+class Alternative(models.Model):
+    """Model to gather results for alternative solution."""
+
+    divergence = models.FloatField()
+
+    class Meta:
+        """Metadata for model."""
+
+        unique_together = ("divergence",)
+
+
+class AlternativeResult(models.Model):
+    """Model to store min/max capacity and costs for alternative solution."""
+
+    alternative = models.ForeignKey(Alternative, on_delete=models.CASCADE)
+    region = models.CharField(max_length=255)
+    component = models.CharField(max_length=255)
+    carrier = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
+    min_capacity = models.FloatField()
+    max_capacity = models.FloatField()
+    min_cost = models.FloatField()
+    max_cost = models.FloatField()
+
+    class Meta:
+        """Metadata for model."""
+
+        unique_together = ("alternative", "region", "component", "carrier", "type")

@@ -23,23 +23,23 @@ from django_mapengine import views
 
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
-from .regions import (
-    build_table_data,
-    get_basic_charts_data,
-    get_case_studies_charts_data,
-    get_dataframes,
-    get_energy_data,
-)
+from .regions import get_basic_charts_data, get_case_studies_charts_data, get_energy_data
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
 from .results import (
     build_cost_cap_data,
     build_tech_comp_data,
+    filter_alternatives,
     filter_region_and_tech,
+    get_alternative_result,
     get_base_scenario,
+    get_potential,
+    get_potential_unit,
     get_sensitivity_result,
+    get_technology_color,
+    prepare_table_data,
 )
-from .settings import TECHNOLOGIES
+from .settings import TECHNOLOGIES, TECHNOLOGIES_SELECTED
 
 MAX_MUNICIPALITY_COUNT = 3
 
@@ -567,20 +567,14 @@ class Results(TemplateView):
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
-        df1, df2, scale = get_dataframes()
-
-        range_tbl = {
-            "table_1": build_table_data(df1, scale),
-            "table_2": build_table_data(df2, scale),
-        }
-
         technologies = sorted(TECHNOLOGIES.items(), key=lambda tech: tech[1]["name"])
+        alternatives = get_alternative_result("B", 1)
 
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
-        context["range"] = range_tbl
         context["sensitivity"] = get_sensitivity_result("CapacityCosts", "B", "pv")
         context["technologies"] = technologies
+        context["alternatives"] = alternatives
         return context
 
 
@@ -633,3 +627,27 @@ def basic_charts(request: HttpRequest) -> JsonResponse:
     basic_charts_data = get_basic_charts_data(region)
 
     return JsonResponse(basic_charts_data)
+
+
+def ranges(request: HttpRequest) -> JsonResponse:
+    """Return requested data for ranges on results page."""
+    selected_region = request.GET.get("region")
+    region = "B" if selected_region == "kiel" else "BB"
+    divergence = float(request.GET.get("divergence", 1)) / 100
+
+    alternatives = get_alternative_result(region, divergence)
+    alternatives = filter_alternatives(alternatives, TECHNOLOGIES_SELECTED)
+    for tech, vals in alternatives.items():
+        vals["color"] = get_technology_color(tech)
+        vals["potential"] = get_potential(tech) or 0
+        vals["potential_unit"] = get_potential_unit(tech)
+
+    alternatives = prepare_table_data(alternatives)
+    alternatives = dict(sorted(alternatives.items(), key=lambda item: item[1]["max_cost"]))
+
+    return JsonResponse(
+        {
+            "divergence": divergence,
+            "ranges": alternatives,
+        },
+    )
