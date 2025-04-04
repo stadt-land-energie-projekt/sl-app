@@ -101,7 +101,7 @@ function load_production_chart(chartData) {
     }
 
     let options = {
-        title: { text: "Production" },
+        title: { text: "Energieerzeugung" },
         tooltip: {},
         legend: {},
         xAxis: { type: "category", data: chartData.x_data },
@@ -142,7 +142,7 @@ function load_tech_chart(chartData) {
     }
 
     let options = {
-        title: { text: "Tech Chart" },
+        title: { text: "Installierte Leistung (Strom)" },
         tooltip: {},
         legend: {},
         xAxis: { type: "category", data: chartData.x_data },
@@ -169,7 +169,7 @@ function load_another_chart(chartData) {
     }
 
     let options = {
-        title: { text: "Another Chart" },
+        title: { text: "Energiebedarf" },
         tooltip: {},
         legend: {},
         xAxis: { type: "category", data: chartData.x_data },
@@ -201,7 +201,7 @@ function load_demand_chart(chartData) {
     }
 
     let options = {
-        title: { text: "Demand Chart" },
+        title: { text: "Energiebedarf" },
         tooltip: { trigger: 'axis' },
         legend: {},
         xAxis: { type: "category", data: chartData.x_data },
@@ -230,7 +230,7 @@ function load_area_chart(chartData) {
     }
 
     let options = {
-        title: { text: "Area Chart", left: 'center' },
+        title: { text: "Flächenbedarf", left: 'center' },
         tooltip: { trigger: 'item' },
         legend: {
             orient: 'horizontal',
