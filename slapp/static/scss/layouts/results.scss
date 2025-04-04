@@ -74,10 +74,6 @@ span {
   font-weight: bold;
   }
 
-.container__ranges {
-  display: flex;
-}
-
 .container__chart {
   width: 500px;
   height: 300px;
@@ -90,18 +86,6 @@ span {
 
 table {
   border-collapse: collapse;
-}
-
-th,
-td {
-  border: 1px solid black;
-  text-align: left;
-  background: #fff;
-}
-
-th {
-  background-color: #f2f2f2;
-  height: 30px;
 }
 
 // Results
@@ -366,7 +350,7 @@ th {
     }
 
     &--alternatives {
-      margin-top: 4rem;
+      margin-top: 2rem;
     
       h3 {
         font-size: 1.5rem;
@@ -387,11 +371,10 @@ th {
       }
     
       .more-info-box {
-        background-color: $white;
         padding: 2rem;
         border-radius: $border-radius;
         text-align: center;
-        margin: 2rem auto 6rem;
+        margin: 2rem auto 4rem;
         position: relative;
     
         button {
@@ -455,69 +438,57 @@ th {
           }
         }
       }
-    
-      .scope-chart {
-        background-color: $bg-color-light;
+
+      .scope-wrapper {
+        background-color: $white;
+        padding: 2rem;
         border-radius: $border-radius;
-        margin-bottom: 3rem;
-        border: none;
-    
-        .scope-chart__text {
+
+        .container__ranges {
           display: flex;
           justify-content: center;
-          margin-bottom: 1rem;
-          color: $font-color-secondary;
-    
-          span {
-            font-weight: 700;
-            color: $font-color-secondary;
-          }
+          align-items: center;
+          gap: 4rem;
         }
-    
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          font-size: 0.875rem;
-    
-          th,
-          td {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #e5e7eb;
-            text-align: left;
-          }
-    
-          th {
-            font-weight: 600;
-            color: $font-color-main;
-          }
+      }
 
-          tbody td {
-            background-color: $bg-color-light;
-          }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+
+        thead tr th {
+          background-color: $bg-color-light;
+          font-weight: 700;
         }
-    
-        .bar-container {
-          height: 1rem;
+
+        tbody tr td {
           background-color: $white;
-          position: relative;
-          border-radius: 0.25rem;
-          margin: 0 auto;
         }
-    
-        .bar {
-          position: absolute;
-          top: 0;
-          height: 100%;
-          border-radius: 0.25rem;
+  
+        th,
+        td {
+          padding: 0.75rem 1rem;
+          border-bottom: 1px solid $border-color;
+          text-align: left;
+        }
+  
+        th {
+          font-weight: 600;
+          color: $font-color-main;
+        }
+
+        tbody td {
+          background-color: $bg-color-light;
         }
       }
     
       #example {
-        background-color: $white;
+        background-color: #eff6ff;
         padding: 1.5rem 2rem;
         margin-bottom: 3rem;
         max-width: 60rem;
-        margin-top: 4rem;
+        margin-top: 6rem;
         margin-left: auto;
         margin-right: auto;
         border: none;
