@@ -83,13 +83,13 @@ added, which can be used by command `make`.
 You can load all data by running (or you can run them one-by-one):
 
 ```
-make load_regions load_data
+make load_regions load_data load_zib_data
 ```
 
 And you can empty all data by running:
 
 ```
-make empty_data empty_regions
+make empty_data
 ```
 
 ## Deployment

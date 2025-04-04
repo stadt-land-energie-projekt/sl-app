@@ -1,10 +1,6 @@
 """Charts and Data for Regions."""
 from __future__ import annotations
 
-import re
-import secrets
-
-import pandas as pd
 from django.contrib.gis.db.models.functions import Envelope
 from django.db.models import Sum
 from django.db.models.functions import Round
@@ -560,7 +556,7 @@ def get_dataframes() -> tuple[pd.DataFrame, pd.DataFrame, float]:
 def build_table_data(dataframe: pd.DataFrame, scale: float) -> list[dict]:
     """Convert the given DataFrame into a list of dictionaries for templating."""
     # Fixed colors for first three rows
-    fixed_colors = ["#FFED6F", "#FFCA89", "#FE9797"]
+    fixed_colors = ["#cdf4d3", "#ffe0c2", "#ffcdc2"]
 
     # Reset index so we have a column "index"
     dataframe = dataframe.reset_index()
