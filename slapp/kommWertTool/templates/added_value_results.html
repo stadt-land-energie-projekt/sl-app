@@ -510,7 +510,6 @@
       const addedValueContent = document.querySelectorAll(".av-results .tab-content");
   
       addedValueButtons.forEach((button) => {
-        console.log(button);
         button.addEventListener("click", () => {
           // Remove active class from all buttons and contents
           addedValueButtons.forEach((btn) => btn.classList.remove("active"));
@@ -519,6 +518,15 @@
           // Add active class to clicked button and corresponding content
           button.classList.add("active");
           document.getElementById(button.dataset.tab).classList.add("active");
+
+          // Resize chart correctly
+          if (button.dataset.tab === "revenue") {
+            console.log("test");
+            const totalIncomeChart = echarts.getInstanceByDom(document.getElementById("total_income_chart"));
+            setTimeout(() => {
+              totalIncomeChart.resize();
+            }, 50);
+          }
         });
       });
     });
