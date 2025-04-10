@@ -98,12 +98,12 @@ table {
   header {
     display: flex;
     flex-direction: column;
-    padding-top: 3rem;
+    padding-top: 2rem;
     padding-bottom: 4rem;
     margin-top: 0 !important;
 
     @media only screen and (min-width: 1400px) {
-      padding-top: 6rem;
+      padding-top: 3rem;
       padding-bottom: 6rem;
     }
 
