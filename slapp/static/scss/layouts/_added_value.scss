@@ -243,5 +243,26 @@
   &__details {
     font-size: 0.875rem;
     color: $font-color-secondary;
+
+    .title h3 {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: $font-color-main;
+      padding-bottom: 0.5rem;
+    }
+
+    .list {
+      font-size: 0.875rem;
+    }
+
+    .more {
+      font-size: 0.875rem;
+
+      a {
+        color: $color-link;
+        font-weight: 700;
+        text-decoration: underline;
+      }
+    }
   }
 }

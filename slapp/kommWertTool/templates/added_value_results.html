@@ -59,18 +59,18 @@
                     </tbody>
                   </table>
                   <div class="av-results__details">
-                    <p>
-                      <b>Annahmen:</b>
-                    </p>
-                    <ul class="mb-0">
+                    <div class="title">
+                      <h3>Annahmen:</h3>
+                    </div>
+                    <ul class="list">
                       <li>Es findet keine Eigennutzung der erzeugten Strommmenge statt</li>
                       <li>Beteiligung von 0,2 Cent pro kWh</li>
                     </ul>
-                    <span>
+                    <div class="more">
                       <p>
                         Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
                       </p>
-                    </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -104,19 +104,19 @@
                       </tbody>
                     </table>
                     <div class="av-results__details">
-                      <p>
-                        <b>Annahmen:</b>
-                      </p>
-                      <ul>
+                      <div class="title">
+                        <h3>Annahmen:</h3>
+                      </div>
+                      <ul class="list">
                         <li>
                           Die bisher geltende Regelung von 10.000,00 pro WEA wird nicht berücksichtigt. Es wird davon ausgegangen, dass alle WEA erst ab 2026 in Betrieb gehen.
                         </li>
                       </ul>
-                      <span>
+                      <div class="more">
                         <p>
                           Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
                         </p>
-                      </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -161,38 +161,36 @@
                     </tbody>
                   </table>
                   <div class="av-results__details">
-                    <p>
-                      <b>Allgemeine Annahmen:</b>
-                    </p>
-                    <ul>
+                    <div class="title">
+                      <h3>Allgemeine Annahmen:</h3>
+                    </div>
+                    <ul class="list">
                       <li>Zugrundeliegende Pachtpreise: WEA = 16.000,00 € pro MW; FF-PV = 3.000,00 € pro ha; APV = 830,00 € pro ha</li>
                     </ul>
-                    <span class="collapse">
-                      <p>
-                        <b>Annahmen ESt.-Berechnung:</b>
-                      </p>
-                      <ul>
+                    <div class="title">
+                      <h3>Annahmen ESt.-Berechnung:</h3>
+                      <ul class="list">
                         <li>
                           Durchschnittliches DE-weites Brutto-Jahreseinkommen von 59.094,00 € <a href="https://www.destatis.de/DE/Themen/Arbeit/Verdienste/Verdienste-Branche-Berufe/Tabellen/bruttojahresverdienst.html"
-            title="Statistisches Bundesamt"
-            target="_blank"><i class="fas fa-link"></i></a>
+                          title="Statistisches Bundesamt"
+                          target="_blank"><i class="fas fa-link"></i></a>
                         </li>
                         <li>ledige Person</li>
                       </ul>
-                      <p class="mb-0">
-                        <b>Annahmen GewSt.-Berechnung:</b>
-                      </p>
-                      <ul>
+                      <div class="title">
+                        <h3>Annahmen GewSt.-Berechnung:</h3>
+                      </div>
+                      <ul class="list">
                         <li>Kein Steuerfreibetrag aufgrund von Unternehmensform</li>
                         <li>
                           Berücksichtigung der Gewerbesteuerumlage laut Gemeindefinanzreformgesetz <a href="https://www.bundesfinanzministerium.de/Content/DE/Standardartikel/Themen/Oeffentliche_Finanzen/Foederale_Finanzbeziehungen/Kommunalfinanzen/Gemeindefinanzreform/entwicklung-gewerbesteuerumlage.pdf"
-            target="_blank"
-            title="Gewerbesteuerumlage"><i class="fas fa-link"></i></a>
+                          target="_blank"
+                          title="Gewerbesteuerumlage"><i class="fas fa-link"></i></a>
                         </li>
                       </ul>
-                      <p>
+                      <div class="more">
                         Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
-                      </p>
+                      </div>
                     </span>
                   </div>
                 </div>
@@ -228,17 +226,17 @@
               </tbody>
             </table>
             <div class="av-results__details">
-              <p>
-                <b>Annahmen:</b>
-              </p>
-              <ul>
+              <div class="title">
+                <h3>Annahmen:</h3>
+              </div>
+              <ul class="list">
                 <li>Abgrenzende Standortfläche pro WEA beträgt 0,4 ha</li>
               </ul>
-              <span>
+              <div class="more">
                 <p>
                   Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
                 </p>
-              </span>
+              </div>
             </div>
           </div>
         {% else %}
@@ -250,79 +248,79 @@
         <div id="revenue" class="tab-content">
           <div class="av-results__section">
             <h2 class="rowHeader">Gewerbesteuereinnahmen durch Anlagengewinne</h2>
-            <div class="av-results__section">
-              {% if results.total_trade_tax_3 != "0,00" %}
-                <div class="col-md-6">
-                  <div id="trade_tax_wind_loader" class="loader"></div>
-                  <div id="trade_tax_wind_chart" style="width: 100%; height: 400px;"></div>
+            {% if results.total_trade_tax_3 != "0,00" %}
+              <div class="col-md-6">
+                <div id="trade_tax_wind_loader" class="loader"></div>
+                <div id="trade_tax_wind_chart" style="width: 100%; height: 400px;"></div>
+              </div>
+            {% endif %}
+            {% if results.total_trade_tax_1 != "0,00" %}
+              <div class="col-md-6">
+                <div id="trade_tax_pv_loader" class="loader"></div>
+                <div id="trade_tax_pv_chart" style="width: 100%; height: 400px;"></div>
+              </div>
+            {% endif %}
+            {% if results.total_trade_tax_2 != "0,00" %}
+              <div class="col-md-6">
+                <div id="trade_tax_apv_loader" class="loader"></div>
+                <div id="trade_tax_apv_chart" style="width: 100%; height: 400px;"></div>
+              </div>
+            {% endif %}
+            <div class="col-md-6 m-auto">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>WEA</th>
+                    <th>FF-PV</th>
+                    <th>APV</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Max. jährl. GewSt.</td>
+                    <td>{{ results.max_tax_3 }} €</td>
+                    <td>{{ results.max_tax_1 }} €</td>
+                    <td>{{ results.max_tax_2 }} €</td>
+                  </tr>
+                  <tr>
+                    <td>Einnahmen über 25 Jahre</td>
+                    <td>{{ results.total_trade_tax_3 }} €</td>
+                    <td>{{ results.total_trade_tax_1 }} €</td>
+                    <td>{{ results.total_trade_tax_2 }} €</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="av-results__details">
+                <div class="title">
+                  <h3>Allgemeine Annahmen:</h3>
                 </div>
-              {% endif %}
-              {% if results.total_trade_tax_1 != "0,00" %}
-                <div class="col-md-6">
-                  <div id="trade_tax_pv_loader" class="loader"></div>
-                  <div id="trade_tax_pv_chart" style="width: 100%; height: 400px;"></div>
+                <ul class="list">
+                  <li>Zinssatz in Höhe von 5 %</li>
+                  <li>Eigenkapitalanteil von 80 %</li>
+                  <li>Tilgungsdauer von 15 Jahren</li>
+                </ul>
+                <div class="title">
+                  <h3>Annahmen WEA:</h3>
                 </div>
-              {% endif %}
-              {% if results.total_trade_tax_2 != "0,00" %}
-                <div class="col-md-6">
-                  <div id="trade_tax_apv_loader" class="loader"></div>
-                  <div id="trade_tax_apv_chart" style="width: 100%; height: 400px;"></div>
+                <ul class="list">
+                  <li>Angenommene Volllaststunden:</li>
+                  <li>Jährliche Leistungsdegradation von 0,6 %</li>
+                </ul>
+                <div class="title">
+                  <h3>Annahmen FF-PV:</h3>
                 </div>
-              {% endif %}
-              <div class="col-md-6 m-auto">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th>WEA</th>
-                      <th>FF-PV</th>
-                      <th>APV</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Max. jährl. GewSt.</td>
-                      <td>{{ results.max_tax_3 }} €</td>
-                      <td>{{ results.max_tax_1 }} €</td>
-                      <td>{{ results.max_tax_2 }} €</td>
-                    </tr>
-                    <tr>
-                      <td>Einnahmen über 25 Jahre</td>
-                      <td>{{ results.total_trade_tax_3 }} €</td>
-                      <td>{{ results.total_trade_tax_1 }} €</td>
-                      <td>{{ results.total_trade_tax_2 }} €</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div class="av-results__details">
-                  <p>
-                    <b>Allgemeine Annahmen:</b>
-                  </p>
-                  <ul>
-                    <li>Zinssatz in Höhe von 5 %</li>
-                    <li>Eigenkapitalanteil von 80 %</li>
-                    <li>Tilgungsdauer von 15 Jahren</li>
-                  </ul>
-                  <p>
-                    <b>Annahmen WEA:</b>
-                  </p>
-                  <ul>
-                    <li>Angenommene Volllaststunden:</li>
-                    <li>Jährliche Leistungsdegradation von 0,6 %</li>
-                  </ul>
-                  <p>
-                    <b>Annahmen FF-PV:</b>
-                  </p>
-                  <ul>
-                    <li>Angenommene Volllaststunden:</li>
-                    <li>Jährliche Leistungsdegradation von 0,5 %</li>
-                  </ul>
-                  <p>
-                    Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
-                  </p>
+                <ul class="list">
+                  <li>Angenommene Volllaststunden:</li>
+                  <li>Jährliche Leistungsdegradation von 0,5 %</li>
+                </ul>
+                <div class="more">
+                  Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
                 </div>
               </div>
             </div>
+          </div>
+          <div class="av-results__section">
             <h2 class="rowHeader">Gesamteinnahmen über 25 Jahre</h2>
             <div class="row">
               <div class="col-md-12">
