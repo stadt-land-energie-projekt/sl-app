@@ -136,3 +136,53 @@
     width: auto;
   }
 }
+
+.av-results {
+  &__tabs {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 0.5rem 0;
+    max-width: 40rem;
+    margin: 0 auto;
+  }
+
+  .tab-button {
+    flex: 1;
+    text-align: center;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $font-color-secondary;
+    cursor: pointer;
+    padding: 0.75rem 0;
+    position: relative;
+  }
+
+  .tab-button.active {
+    font-weight: 700;
+    color: $font-color-main;
+  }
+
+  .tab-button.active::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 4px;
+    background: $font-color-main;
+    border-radius: 2px;
+  }
+
+  .tab-content {
+    display: none;
+    padding: 20px;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+}
