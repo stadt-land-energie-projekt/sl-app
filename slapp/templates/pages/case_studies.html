@@ -12,7 +12,7 @@
       <section class="cs__selection">
         {% for region in regions %}
           {{ region.centroid }}
-          <c-regions title="{{ region.title }}" :bbox="region.bbox" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" :keyfacts="region.keyfacts">
+          <c-regions title="{{ region.title }}" data-region-title="{{ region.title }}" :bbox="region.bbox" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" :keyfacts="region.keyfacts">
           </c-regions>
         {% endfor %}
       </section>
@@ -91,6 +91,29 @@
       });
     });
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const allRegions = document.querySelectorAll('.cs__region-container');
+
+      allRegions.forEach(container => {
+        const titleEl = container.querySelector('h2');
+        if (titleEl && titleEl.textContent.trim() === 'Region Kiel') {
+          container.classList.add('disabled');
+          const button = container.querySelector('button');
+          if (button) {
+            button.disabled = true;
+            button.textContent = "Demnächst verfügbar";
+          }
+        } else {
+          container.classList.add('selected');
+          const button = container.querySelector('button');
+          if (button) {
+            button.textContent = "Ausgewählt";
+          }
+        }
+      });
+    });
+  </script>  
   {% include 'django_mapengine/map_json.html' %}
   {% compress js %}
     {% include 'django_mapengine/map_js.html' %}
