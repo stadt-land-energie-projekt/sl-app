@@ -223,13 +223,17 @@
     border-radius: $border-radius;
   }
 
+  &__text {
+    flex: 1;
+  }
+
   &__table {
     flex: 1;
   }
 
   table {
-    margin-top: 2rem;
     margin-bottom: 2rem;
+    font-size: 0.875rem;
   }
 
   thead tr th {
@@ -247,7 +251,7 @@
     .title h3 {
       font-size: 0.875rem;
       font-weight: 700;
-      color: $font-color-main;
+      color: $font-color-secondary;
       padding-bottom: 0.5rem;
     }
 
@@ -257,12 +261,12 @@
 
     .more {
       font-size: 0.875rem;
+    }
 
-      a {
-        color: $color-link;
-        font-weight: 700;
-        text-decoration: underline;
-      }
+    a {
+      color: $color-link;
+      font-weight: 700;
+      text-decoration: underline;
     }
   }
 }
