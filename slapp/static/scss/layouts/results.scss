@@ -145,6 +145,28 @@ table {
     border-radius: $border-radius;
     border: 2px solid #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    &.selected {
+      background-color: #eff6ff;
+      border: 2px solid $color-selected;
+  
+      h2 {
+        color: $font-color-main;
+      }
+  
+      .results__cta-row {
+        button {
+          background-color: $white;
+          color: $color-selected;
+          pointer-events: none;
+        }
+      }
+    }
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   }
 
   &__region-image {

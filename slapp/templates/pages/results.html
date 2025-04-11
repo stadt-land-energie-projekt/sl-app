@@ -37,7 +37,7 @@
           <h2>Oderland-Spree (Verbund)</h2>
         </div>
         <div class="results__cta-row">
-          <button onclick="showHiddenDiv('verbu', this)">Auswählen</button>
+          <button class="select-button" onclick="showHiddenDiv('verbu', this)">Auswählen</button>
         </div>
       </div>
       <div class="results__region-container">
@@ -46,16 +46,16 @@
           <h2>Oderland-Spree (Einzeln)</h2>
         </div>
         <div class="results__cta-row">
-          <button onclick="showHiddenDiv('einzeln', this)">Auswählen</button>
+          <button class="select-button" onclick="showHiddenDiv('einzeln', this)">Auswählen</button>
         </div>
       </div>
-      <div class="results__region-container">
+      <div class="results__region-container disabled">
         <div class="results__top-row">
           <img class="results__region-image" src="{% static 'images/Kiel.png' %}" alt="Karte Kiel" />
           <h2>Kiel</h2>
         </div>
         <div class="results__cta-row">
-          <button class="results__button" onclick="showHiddenDiv('kiel', this)">Auswählen</button>
+          <button class="results__button" onclick="showHiddenDiv('kiel', this)" disabled>Demnächst verfügbar</button>
         </div>
       </div>
     </div> 

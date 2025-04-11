@@ -3,12 +3,32 @@ let currentTech = "";
 
 // Called when a region button is clicked
 async function showHiddenDiv(region, button) {
-    let allButtons = document.querySelectorAll(".select-button");
-    allButtons.forEach(b => b.classList.remove("selected"));
+    const parentContainer = button.closest(".results__region-container");
+    const isAlreadySelected = parentContainer.classList.contains("selected");
 
+    // Deselect all containers and buttons
+    document.querySelectorAll(".results__region-container").forEach(container => {
+        container.classList.remove("selected");
+        const btn = container.querySelector(".select-button");
+        if (btn) {
+            btn.classList.remove("selected");
+            btn.textContent = "Auswählen";
+        }
+    });
+
+    const hiddenDiv = document.querySelector(".hidden-div");
+
+    if (isAlreadySelected) {
+        // If the same card is clicked again, toggle it off
+        hiddenDiv.style.display = "none";
+        currentRegion = null;
+        return;
+    }
+
+    // Select the clicked container and button
+    parentContainer.classList.add("selected");
     button.classList.add("selected");
-
-    let hiddenDiv = document.querySelector(".hidden-div");
+    button.textContent = "Ausgewählt";
     hiddenDiv.style.display = "block";
 
     try {
