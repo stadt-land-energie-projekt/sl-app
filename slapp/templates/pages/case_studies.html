@@ -7,7 +7,9 @@
     <div class="cs__container">
       <header>
         <h1>Case Studies</h1>
-        <p>Wie lassen sich interkommunale Energiewendeszenarien erfolgreich umsetzen? Zwei Fallstudien aus Deutschland zeigen praxisnahe Lösungen für eine nachhaltige und regionale Energiezukunft. Anhand konkreter Beispiele wird deutlich, welche Herausforderungen Städte und ländliche Regionen gemeinsam meistern müssen – und welche Chancen sich durch innovative Konzepte und Kooperationen ergeben.</p>
+        <p>
+          Wie lassen sich interkommunale Energiewendeszenarien erfolgreich umsetzen? Zwei Fallstudien aus Deutschland zeigen praxisnahe Lösungen für eine nachhaltige und regionale Energiezukunft. Anhand konkreter Beispiele wird deutlich, welche Herausforderungen Städte und ländliche Regionen gemeinsam meistern müssen – und welche Chancen sich durch innovative Konzepte und Kooperationen ergeben.
+        </p>
       </header>
       <section class="cs__selection">
         {% for region in regions %}
@@ -68,21 +70,25 @@
   {% endcompress %}
 {% endblock javascript %}
 {% block inline_javascript %}
+  {% include 'django_mapengine/map_json.html' %}
+  {% compress js %}
+    {% include 'django_mapengine/map_js.html' %}
+  {% endcompress %}
   <script>
     const eventTopics = {};
     window.regionTitle = "{{ regions.0.title|escapejs }}";
   </script>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
       const buttons = document.querySelectorAll(".tab-button");
       const contents = document.querySelectorAll(".tab-content");
-  
+
       buttons.forEach((button) => {
         button.addEventListener("click", () => {
           // Remove active class from all buttons and contents
           buttons.forEach((btn) => btn.classList.remove("active"));
           contents.forEach((content) => content.classList.remove("active"));
-  
+
           // Add active class to clicked button and corresponding content
           button.classList.add("active");
           document.getElementById(button.dataset.tab).classList.add("active");
@@ -92,7 +98,7 @@
     });
   </script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       const allRegions = document.querySelectorAll('.cs__region-container');
 
       allRegions.forEach(container => {
@@ -113,11 +119,12 @@
         }
       });
     });
-  </script>  
-  {% include 'django_mapengine/map_json.html' %}
-  {% compress js %}
-    {% include 'django_mapengine/map_js.html' %}
-  {% endcompress %}
+
+    // Activate first region at startup
+    map.on("load", async function() {
+      document.querySelector(".cs__cta-row").getElementsByClassName("select-button")[0].click();
+    });
+  </script>
 {% endblock inline_javascript %}
 {% block css %}
   {{ block.super }}
