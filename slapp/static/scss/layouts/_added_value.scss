@@ -212,8 +212,12 @@
   }
 
   &__wrapper {
-    display: flex;
+    display: column;
     gap: 4rem;
+
+    @media only screen and (min-width: 1200px) {
+      display: flex;
+    }
   }
 
   &__chart {
@@ -221,14 +225,29 @@
     background-color: $white;
     padding: 2rem;
     border-radius: $border-radius;
+    margin-bottom: 2rem;
+
+    @media only screen and (min-width: 1200px) {
+      margin-bottom: 0;
+    }
   }
 
   &__text {
     flex: 1;
+    margin-bottom: 2rem;
+
+    @media only screen and (min-width: 1200px) {
+      margin-bottom: 0;
+    }
   }
 
   &__table {
     flex: 1;
+    margin-bottom: 2rem;
+
+    @media only screen and (min-width: 1200px) {
+      margin-bottom: 0;
+    }
   }
 
   table {
