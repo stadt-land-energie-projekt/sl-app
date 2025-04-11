@@ -173,9 +173,8 @@
 
     .cs__cta-row {
       button {
-        background-color: #eff6ff;
+        background-color: $white;
         color: $color-selected;
-        border: 1px solid $color-selected;
         pointer-events: none;
       }
     }
