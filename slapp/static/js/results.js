@@ -4,9 +4,19 @@ let currentTech = "";
 // Called when a region button is clicked
 async function showHiddenDiv(region, button) {
     let allButtons = document.querySelectorAll(".select-button");
-    allButtons.forEach(b => b.classList.remove("selected"));
+    allButtons.forEach(b => {
+        b.classList.remove("selected");
+        b.textContent = "Auswählen";
+    });
+
+    let allContainers = document.querySelectorAll(".results__region-container");
+    allContainers.forEach(c => c.classList.remove("selected"));
+
+    const parentContainer = button.closest(".results__region-container");
+    parentContainer.classList.add("selected");
 
     button.classList.add("selected");
+    button.textContent = "Ausgewählt";
 
     let hiddenDiv = document.querySelector(".hidden-div");
     hiddenDiv.style.display = "block";
