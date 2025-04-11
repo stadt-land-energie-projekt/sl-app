@@ -4,7 +4,6 @@
     border: 1px solid #e3e3e3;
     border-radius: 10px;
     width: 95%;
-    margin: auto;
     margin-bottom: 50px;
     padding: 20px;
   }
@@ -143,3 +142,27 @@
 #robust-info {
     text-align: left;
     }
+
+.robustness {
+  &__container {
+    @include container;
+    padding-bottom: 4rem;
+  }
+
+  header {
+    display: flex;
+    flex-direction: column;
+    padding-top: 2rem;
+
+    @media only screen and (min-width: 1400px) {
+      padding-top: 3rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: $font-color-main;
+      padding-bottom: 2rem;
+    }
+  }
+}
