@@ -35,7 +35,7 @@
       <section class="cs__selection">
         {% for region in regions %}
           {{ region.centroid }}
-          <c-regions title="{{ region.title }}" data-region-title="{{ region.title }}" :bbox="region.bbox" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" :keyfacts="region.keyfacts">
+          <c-regions title="{{ region.title }}" :bbox="region.bbox" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" :keyfacts="region.keyfacts">
           </c-regions>
         {% endfor %}
       </section>
