@@ -131,7 +131,7 @@ def load_base_scenario() -> None:
     if not created:
         scenario.result_set.all().delete()
 
-    base_file = pathlib.Path(ZIB_DATA) / "capacities/base" / "scalars.csv"
+    base_file = pathlib.Path(ZIB_DATA) / "base" / "2045_scenario" / "postprocessed" / "scalars.csv"
     results_df = pd.read_csv(base_file, delimiter=";", encoding="utf-8")
     if "scenario" in results_df.columns:
         results_df = results_df.drop("scenario", axis=1)
@@ -142,42 +142,44 @@ def load_base_scenario() -> None:
 
 def load_sensitivities() -> None:
     """Import data from sensitivity runs at ZIB."""
-    for sensitivity, sensitivity_lookup in (("capacities", "CapacityCosts"), ("marginal", "MarginalCosts")):
-        for folder in (pathlib.Path(ZIB_DATA) / sensitivity).iterdir():
+    for folder_name, sensitivity_lookup in (("cost", "CostPerturbations"), ("demand", "DemandPerturbations")):
+        for folder in (pathlib.Path(ZIB_DATA) / folder_name).iterdir():
             if not folder.is_dir():
-                continue
-            if len(folder.name.split("_")) != 2:  # noqa: PLR2004
-                # Skip folders which do not follow schema "x_y"
                 continue
 
             # Create Scenario for current sensitivity results
-            scenario_name = f"{sensitivity}_{folder.name}"
+            scenario_name = f"{folder_name}_{folder.name}"
 
             if Scenario.objects.filter(name=scenario_name).exists():
                 logging.info("Sensitivity scenario '{scenario_name}' already exists. Skipping.")
                 continue
 
-            logging.info(f"Upload data for sensitivity '{sensitivity}' from folder '{folder.name}'.")
+            logging.info(f"Upload data for sensitivity '{folder_name}' from folder '{folder.name}'.")
 
             with (folder / "scenario.json").open("r", encoding="utf-8") as f:
                 scenario_details = json.load(f)
+
             scenario = models.Scenario(name=scenario_name, parameters=scenario_details)
             scenario.save()
 
             # Create Sensitivity instance
-            sensitivity_data = scenario_details["CostPerturbations"][sensitivity_lookup][0]
+            sensitivity_data = scenario_details[sensitivity_lookup]["Perturbation1"][0]
             models.Sensitivity(
                 scenario=scenario,
-                attribute=sensitivity_lookup,
-                component=sensitivity_data["VariableName"],
-                region=sensitivity_data.get("Region", None),
+                attribute=sensitivity_data["Column"],
+                component=sensitivity_data["FileName"],
+                region="ALL",
                 perturbation_method=sensitivity_data["PerturbationMethod"],
                 # Only one (first) parameter is taken into account
                 perturbation_parameter=sensitivity_data["PerturbationParameter"][0],
             ).save()
 
             # Add results to Scenario
-            results_df = pd.read_csv(folder / "scalars.csv", delimiter=";", encoding="utf-8")
+            results_df = pd.read_csv(
+                folder / "2045_scenario" / "postprocessed" / "scalars.csv",
+                delimiter=";",
+                encoding="utf-8",
+            )
             results_df = results_df.drop("scenario", axis=1)
             results = [models.Result(scenario=scenario, **result) for result in results_df.to_dict(orient="records")]
             models.Result.objects.bulk_create(results)
