@@ -52,7 +52,11 @@ def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> di
         Sensitivity.objects.filter(attribute=sensitivity, component=technology, region=region)
         .select_related("scenario")
         .prefetch_related(
-            Prefetch("scenario__result_set", queryset=Result.objects.filter(capacity_query), to_attr="results"),
+            Prefetch(
+                "scenario__result_set",
+                queryset=Result.objects.filter(capacity_query, var_value__gt=0),
+                to_attr="results",
+            ),
         )
         .all()
     )
@@ -110,7 +114,7 @@ def get_alternative_result(region: str, divergence: float) -> dict:
     return data_for_region_and_divergence
 
 
-def get_base_scenario() -> dict:
+def get_base_scenario(**result_filter) -> dict:
     """Return base_scenarios."""
     try:
         scenario = Scenario.objects.get(name="base_scenario")
@@ -121,7 +125,7 @@ def get_base_scenario() -> dict:
 
     investment_technologies = get_invests_in_results()
     for tech, cap in investment_technologies.items():
-        result = scenario.result_set.filter(name=tech, var_name=cap).first()
+        result = scenario.result_set.filter(name=tech, var_name=cap, **result_filter).first()
         if result:
             base_scenario[tech] = result.var_value
 

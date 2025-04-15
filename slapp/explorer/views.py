@@ -598,7 +598,7 @@ def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
     sensitivity_data = get_sensitivity_result("capacity_cost", "ALL", tech)
 
     if sensitivity_data:
-        base_scenario = get_base_scenario()
+        base_scenario = get_base_scenario(var_value__gt=0)
         sensitivity_data[0.0] = base_scenario
 
     # If an "x" parameter is provided, return tech comparison chart data.
