@@ -1,13 +1,3 @@
-.robust-box {
-    position: relative;
-    display: flex;
-    border: 1px solid #e3e3e3;
-    border-radius: 10px;
-    width: 95%;
-    margin-bottom: 50px;
-    padding: 20px;
-  }
-
 #header {
     position: relative;
     margin-top: 50px;
@@ -54,28 +44,6 @@
 
 .info-box:hover::after {
   opacity: 1;
-}
-
-.flex-box {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  margin-top: 60px;
-  margin-bottom: 20px;
-  font-size: 26px;
-  }
-
-.fact {
-  aspect-ratio : 1 / 1;
-  width: 15%;
-  background-color: #aff4c6;
-  border: 1px solid #aff4c6;
-  border-radius: 5px;
-  margin: 15px 15px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .btn.btn-transparent {
@@ -153,9 +121,11 @@
     display: flex;
     flex-direction: column;
     padding-top: 2rem;
+    padding-bottom: 2rem;
 
     @media only screen and (min-width: 1400px) {
       padding-top: 3rem;
+      padding-bottom: 4rem;
     }
 
     h1 {
@@ -164,5 +134,71 @@
       color: $font-color-main;
       padding-bottom: 2rem;
     }
+
+    p {
+      max-width: 64rem;
+      color: $font-color-secondary;
+      font-size: 1rem;
+      line-height: 170%;
+    }
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $font-color-main;
+    margin-bottom: 1rem;
+    padding-left: 8rem;
+  }
+
+  &__description {
+    font-size: 1rem;
+    color: $font-color-secondary;
+    line-height: 170%;
+    padding-bottom: 4rem;
+    padding-left: 8rem;
+    max-width: 60rem;
+  }
+
+  &__facts {
+    padding-bottom: 4rem;
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-bottom: 2rem;
+
+      @media only screen and (min-width: 1200px) {
+        flex-direction: row;
+      }
+    }
+
+    .fact {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      background-color: $color-accent-light;
+      padding: 1rem;
+      border-radius: $border-radius;
+
+      h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: $color-blue-dark;
+      }
+    }
+  }
+
+  &__more-btn {
+    display: flex;
+    gap: 1rem;
+    border: 1px solid $color-selected !important;
+    color: $color-selected !important;
+    font-size: 0.875rem !important;
+    background-color: $white !important;
   }
 }
