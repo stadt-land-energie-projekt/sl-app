@@ -1,14 +1,3 @@
-#header {
-    position: relative;
-    margin-top: 50px;
-}
-
-#header-icon {
-  position: relative;
-  height: 25%;
-  width: auto;
-}
-
 .info-box {
   display: inline-block;
   margin-left: 20px;
@@ -77,17 +66,6 @@
   width: 100%;
 }
 
-.hidden-image-container {
-  display: none;
-  width: 100%;
-  text-align: center;
-  margin-top: 20px;
-}
-
-.hidden-image-container.active {
-  display: block;
-}
-
 .toggle-img {
   width: 70vw;
   max-width: 1200px;
@@ -124,7 +102,7 @@
     padding-bottom: 2rem;
 
     @media only screen and (min-width: 1400px) {
-      padding-top: 3rem;
+      padding-top: 6rem;
       padding-bottom: 4rem;
     }
 
@@ -132,15 +110,19 @@
       font-size: 2.5rem;
       font-weight: 700;
       color: $font-color-main;
-      padding-bottom: 2rem;
+      padding-bottom: 1rem;
     }
 
     p {
-      max-width: 64rem;
       color: $font-color-secondary;
-      font-size: 1rem;
+      font-size: 1.25rem;
       line-height: 170%;
     }
+  }
+
+  &__section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 
   &__title {
@@ -148,7 +130,6 @@
     font-weight: 700;
     color: $font-color-main;
     margin-bottom: 1rem;
-    padding-left: 8rem;
   }
 
   &__description {
@@ -156,8 +137,7 @@
     color: $font-color-secondary;
     line-height: 170%;
     padding-bottom: 4rem;
-    padding-left: 8rem;
-    max-width: 60rem;
+    max-width: 54rem;
   }
 
   &__facts {
@@ -193,6 +173,18 @@
     }
   }
 
+  &__img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 4rem;
+
+    img {
+      width: fit-content;
+      max-width: 100%;
+    }
+  }
+
   &__more-btn {
     display: flex;
     gap: 1rem;
@@ -200,5 +192,29 @@
     color: $color-selected !important;
     font-size: 0.875rem !important;
     background-color: $white !important;
+  }
+
+  .hidden-image-container {
+    display: none;
+    width: 100%;
+    text-align: center;
+    margin-top: 4rem;
+
+    &.active {
+      display: block;
+    }
+  }
+
+  &__button {
+    display: flex;
+    justify-content: center;
+    padding: 4rem 2rem;
+
+    a {
+      @include button-primary;
+      display: inline-block;
+      width: auto;
+      text-decoration: none;
+    }
   }
 }

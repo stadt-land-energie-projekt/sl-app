@@ -99,66 +99,77 @@
                 </button>
               </div>
               <div class="hidden-image-container">
-                <img src="{% static 'images/robust_diagram.png' %}"
-                     alt="energy system diagram"
-                     class="toggle-img" />
+                <div class="robustness__img">
+                  <img src="{% static 'images/robust_diagram2.png' %}"
+                    alt="energy system diagram"
+                    lass="toggle-img"
+                  />
+                </div>
               </div>
             </div>
           </div>
-          <img src="{% static 'images/icons/robust_energy_system.svg' %}"
-               alt="energy system icon"
-               id="energy_system-icon" />
-        </div>
-        <div class="robust-box">
-          <div class="text">
-            <h2>Robuste Energieszenarien</h2>
-            <h2>Was ist das?</h2>
-            <p>
-              Robuste Energiesystem-Szenarien sind Modellierungsergebnisse, die auch unter veränderten Annahmen und
-              Unsicherheiten verlässlich bleiben. Das bedeutet, dass die getroffenen Aussagen und Schlussfolgerungen eines
-              Energiesystemmodells nicht stark von einzelnen Parametern oder unsicheren Eingangsgrößen abhängen.
-              Solche Szenarien basieren auf Sensitivitätsanalysen und berücksichtigen verschiedene zukünftige Entwicklungen,
-              um stabile und belastbare Empfehlungen für die Energiepolitik und -planung zu ermöglichen.
-            </p>
-            <div class="image-toggle-container">
-              <button class="btn btn-transparent">
-                <img src="{% static 'images/icons/dropdown.svg' %}"
-                     alt="dropdown"
-                     class="dropdown-icon" />
-                Mehr Infos
-              </button>
-            </div>
-            <div class="hidden-image-container" id="robust-info">
-              <h3>Warum ist das wichtig?</h3>
-              <p>
-                Die Robustheit von Energiesystem-Szenarien ist entscheidend, um fundierte und verlässliche Entscheidungen
-                für die zukünftige Energieversorgung zu treffen. Da Planungen und Investitionen oft langfristig angelegt
-                sind, müssen sie gegenüber Unsicherheiten wie technologischem Fortschritt, politischen Veränderungen oder
-                Marktpreisschwankungen belastbar sein. Ein robustes Szenario bietet Sicherheit für Entscheidungsträger,
-                da es tragfähige Lösungen aufzeigt, die auch unter variierenden Rahmenbedingungen funktionieren.
-                Dadurch lassen sich Fehlinvestitionen vermeiden, Risiken minimieren und eine nachhaltige, resiliente
-                Energiezukunft gezielt gestalten.
-              </p>
-              <h3>Wie funktioniert das?</h3>
-              <p>
-                Die Robustheit von Energiesystem-Szenarien ist entscheidend, um fundierte und verlässliche Entscheidungen
-                für die zukünftige Energieversorgung zu treffen. Da Planungen und Investitionen oft langfristig angelegt
-                sind, müssen sie gegenüber Unsicherheiten wie technologischem Fortschritt, politischen Veränderungen oder
-                Marktpreisschwankungen belastbar sein. Ein robustes Szenario bietet Sicherheit für Entscheidungsträger,
-                da es tragfähige Lösungen aufzeigt, die auch unter variierenden Rahmenbedingungen funktionieren. Dadurch
-                lassen sich Fehlinvestitionen vermeiden, Risiken minimieren und eine nachhaltige, resiliente Energiezukunft
-                gezielt gestalten.
-              </p>
-            </div>
-          </div>
-          <img src="{% static 'images/icons/robust_scenarios.svg' %}"
-               alt="scenarios icon"
-               id="scenarios-icon" />
-        </div>
-        <div class="next-step-button">
-          <a href="{{ next_url }}" class="btn btn-primary mt-3">Weiter zu den Case Studies</a>
         </div>
       </section>
+    </div>
+    <div style="background-color: #F8FAFC; padding-top: 4rem;">
+      <div class="robustness__container">
+        <section>
+          <div class="robustness__section">
+            <div class="text">
+              <h2 class="robustness__title">Robuste Energieszenarien: Was ist das?</h2>
+              <p class="robustness__description">
+                Robuste Energiesystem-Szenarien sind Modellierungsergebnisse, die auch unter veränderten Annahmen und
+                Unsicherheiten verlässlich bleiben. Das bedeutet, dass die getroffenen Aussagen und Schlussfolgerungen eines
+                Energiesystemmodells nicht stark von einzelnen Parametern oder unsicheren Eingangsgrößen abhängen.
+                Solche Szenarien basieren auf Sensitivitätsanalysen und berücksichtigen verschiedene zukünftige Entwicklungen,
+                um stabile und belastbare Empfehlungen für die Energiepolitik und -planung zu ermöglichen.
+              </p>
+              <div class="robustness__img">
+                <img 
+                src="{% static 'images/Robustness_Sensitivity.png' %}"
+                alt="Visuelle Erklärung für Robustheit und Sensitivität"
+                id="robustness-sensitivity-img"
+              />
+              </div>
+              <div class="image-toggle-container">
+                <button class="btn btn-transparent robustness__more-btn">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.10623 4.13683C1.50997 3.73746 2.16124 3.74182 2.5606 4.14621L7.99996 9.66365L13.4393 4.14621C13.8387 3.74184 14.4899 3.73745 14.8937 4.13683C15.2981 4.53683 15.3024 5.1887 14.9031 5.59371L8.73186 11.8537C8.53874 12.0493 8.27498 12.16 7.99999 12.16C7.725 12.16 7.46124 12.0493 7.26812 11.8537L1.09692 5.59371C0.697539 5.18872 0.701845 4.53683 1.10623 4.13683Z" fill="#1D4ED8"/>
+                  </svg>
+                  <span>
+                    Mehr Infos
+                  </span>
+                </button>
+              </div>
+              <div class="hidden-image-container" id="robust-info">
+                <h2 class="robustness__title">Warum ist das wichtig?</h2>
+                <p class="robustness__description">
+                  Die Robustheit von Energiesystem-Szenarien ist entscheidend, um fundierte und verlässliche Entscheidungen
+                  für die zukünftige Energieversorgung zu treffen. Da Planungen und Investitionen oft langfristig angelegt
+                  sind, müssen sie gegenüber Unsicherheiten wie technologischem Fortschritt, politischen Veränderungen oder
+                  Marktpreisschwankungen belastbar sein. Ein robustes Szenario bietet Sicherheit für Entscheidungsträger,
+                  da es tragfähige Lösungen aufzeigt, die auch unter variierenden Rahmenbedingungen funktionieren.
+                  Dadurch lassen sich Fehlinvestitionen vermeiden, Risiken minimieren und eine nachhaltige, resiliente
+                  Energiezukunft gezielt gestalten.
+                </p>
+                <h2 class="robustness__title">Wie funktioniert das?</h2>
+                <p class="robustness__description">
+                  Die Robustheit von Energiesystem-Szenarien ist entscheidend, um fundierte und verlässliche Entscheidungen
+                  für die zukünftige Energieversorgung zu treffen. Da Planungen und Investitionen oft langfristig angelegt
+                  sind, müssen sie gegenüber Unsicherheiten wie technologischem Fortschritt, politischen Veränderungen oder
+                  Marktpreisschwankungen belastbar sein. Ein robustes Szenario bietet Sicherheit für Entscheidungsträger,
+                  da es tragfähige Lösungen aufzeigt, die auch unter variierenden Rahmenbedingungen funktionieren. Dadurch
+                  lassen sich Fehlinvestitionen vermeiden, Risiken minimieren und eine nachhaltige, resiliente Energiezukunft
+                  gezielt gestalten.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="robustness__button">
+      <a href="{{ next_url }}" class="btn btn-primary mt-3">Weiter zu den Case Studies</a>
     </div>
   </main>
 {% endblock content_no_sidebar %}
