@@ -19,11 +19,6 @@ function regionSelected(buttonElement, regionTitle) {
         button.textContent = "Ausgewählt";
     }
 
-    const detailsElement = document.getElementById("cs-details");
-    if (detailsElement) {
-        detailsElement.style.display = "block";
-    }
-
     const selectedNameElement = document.querySelector("#cs-details #cs-selected-name");
     if (selectedNameElement) {
         selectedNameElement.textContent = regionTitle;

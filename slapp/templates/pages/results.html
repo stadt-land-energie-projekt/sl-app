@@ -3,6 +3,27 @@
 {% load static %}
 
 {% block content_no_sidebar %}
+<nav class="header-tabs">
+  <div class="tab">
+    <a href="/explorer/esys_robust">
+      Energiesystem & Robustheit
+    </a>
+  </div>
+  <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70772 7.70699L2.05072 13.364L0.636719 11.95L5.58672 6.99999L0.636719 2.04999L2.05072 0.635986L7.70772 6.29299C7.89519 6.48051 8.0005 6.73482 8.0005 6.99999C8.0005 7.26515 7.89519 7.51946 7.70772 7.70699Z" fill="#101828"/>
+  </svg>
+  <div class="tab">
+    <a href="/explorer/case_studies">
+      Case Studies
+    </a>
+  </div>
+  <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70772 7.70699L2.05072 13.364L0.636719 11.95L5.58672 6.99999L0.636719 2.04999L2.05072 0.635986L7.70772 6.29299C7.89519 6.48051 8.0005 6.73482 8.0005 6.99999C8.0005 7.26515 7.89519 7.51946 7.70772 7.70699Z" fill="#101828"/>
+  </svg>
+  <div class="tab selected">
+    Ergebnisse
+  </div>
+</nav>
 <main class="results">
   <div class="results__container">
     <header id="header">
@@ -16,7 +37,7 @@
           <h2>Oderland-Spree (Verbund)</h2>
         </div>
         <div class="results__cta-row">
-          <button onclick="showHiddenDiv('verbu', this)">Auswählen</button>
+          <button class="select-button" onclick="showHiddenDiv('verbu', this)">Auswählen</button>
         </div>
       </div>
       <div class="results__region-container">
@@ -25,16 +46,16 @@
           <h2>Oderland-Spree (Einzeln)</h2>
         </div>
         <div class="results__cta-row">
-          <button onclick="showHiddenDiv('einzeln', this)">Auswählen</button>
+          <button class="select-button" onclick="showHiddenDiv('einzeln', this)">Auswählen</button>
         </div>
       </div>
-      <div class="results__region-container">
+      <div class="results__region-container disabled">
         <div class="results__top-row">
           <img class="results__region-image" src="{% static 'images/Kiel.png' %}" alt="Karte Kiel" />
           <h2>Kiel</h2>
         </div>
         <div class="results__cta-row">
-          <button class="results__button" onclick="showHiddenDiv('kiel', this)">Auswählen</button>
+          <button class="results__button" onclick="showHiddenDiv('kiel', this)" disabled>Demnächst verfügbar</button>
         </div>
       </div>
     </div> 
