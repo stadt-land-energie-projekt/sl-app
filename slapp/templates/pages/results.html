@@ -170,31 +170,6 @@
 {% endblock javascript %}
 {% block inline_javascript %}
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const buttons = document.querySelectorAll(".results .tab-button");
-      const contents = document.querySelectorAll(".results .tab-content");
-
-      buttons.forEach((button) => {
-        button.addEventListener("click", () => {
-          // Remove active class
-          buttons.forEach((btn) => btn.classList.remove("active"));
-          contents.forEach((content) => content.classList.remove("active"));
-
-          // Add active class
-          button.classList.add("active");
-          const activeTab = document.getElementById(button.dataset.tab);
-          activeTab.classList.add("active");
-
-          // Trigger chart resize for all charts inside the activated tab, otherwise the charts won't be displayed correctly
-          const charts = activeTab.querySelectorAll(".chart-container");
-          charts.forEach((container) => {
-            const chart = echarts.getInstanceByDom(container);
-            if (chart) chart.resize();
-          });
-        });
-      });
-    });
-
     // Toggle content about MGA
     function toggleMoreInfo() {
       const box = document.getElementById("more-info-box");
@@ -227,20 +202,30 @@
     // Disable tabs for Oderland Einzeln
     function handleOderlandSpreeTabVisibility() {
       const oderlandSpreeRegion = document.querySelector('[data-region-name="oderland-spree-einzeln"]');
-      
       const sensitivityTab = document.querySelector('.tab-button[data-tab="sensitivity"]');
       const alternativesTab = document.querySelector('.tab-button[data-tab="alternatives"]');
+      const exchangeTab = document.querySelector('.tab-button[data-tab="exchange"]');
       
-      if (oderlandSpreeRegion && sensitivityTab && alternativesTab) {
+      if (oderlandSpreeRegion && sensitivityTab && alternativesTab && exchangeTab) {
         const isSelected = oderlandSpreeRegion.classList.contains('selected');
         
-        sensitivityTab.disabled = isSelected;
-        alternativesTab.disabled = isSelected;
-        
         if (isSelected) {
+          sensitivityTab.disabled = true;
+          alternativesTab.disabled = true;
           sensitivityTab.classList.add('disabled');
           alternativesTab.classList.add('disabled');
+          
+          const isSensitivityActive = sensitivityTab.classList.contains('active');
+          const isAlternativesActive = alternativesTab.classList.contains('active');
+          
+          // If a disabled tab is active, switch to the exchange tab
+          if (isSensitivityActive || isAlternativesActive) {
+            // Simulate a click on the exchange tab to properly trigger the event handler
+            exchangeTab.click();
+          }
         } else {
+          sensitivityTab.disabled = false;
+          alternativesTab.disabled = false;
           sensitivityTab.classList.remove('disabled');
           alternativesTab.classList.remove('disabled');
         }
@@ -268,7 +253,36 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', setupObserver);
+    // Show the hidden div and hide the selection
+    document.addEventListener('DOMContentLoaded', function() {
+      setupObserver();
+
+      const buttons = document.querySelectorAll(".results .tab-button");
+      const contents = document.querySelectorAll(".results .tab-content");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          // Don't process clicks on disabled buttons
+          if (button.disabled) {
+            return;
+          }
+          
+          buttons.forEach((btn) => btn.classList.remove("active"));
+          contents.forEach((content) => content.classList.remove("active"));
+          button.classList.add("active");
+          const activeTab = document.getElementById(button.dataset.tab);
+          activeTab.classList.add("active");
+
+          // Trigger chart resize for all charts inside the activated tab
+          const charts = activeTab.querySelectorAll(".chart-container");
+          charts.forEach((container) => {
+            const chart = echarts.getInstanceByDom(container);
+            if (chart) chart.resize();
+          });
+        });
+      });
+    });
+
 
   </script>
 {% endblock inline_javascript %}
