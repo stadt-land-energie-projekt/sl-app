@@ -40,7 +40,7 @@
           <button class="select-button" onclick="showHiddenDiv('verbu', this)">Auswählen</button>
         </div>
       </div>
-      <div class="results__region-container">
+      <div class="results__region-container" data-region-name="oderland-spree-einzeln">
         <div class="results__top-row">
           <img class="results__region-image" src="{% static 'images/Oderland-Spree-single.png' %}" alt="Karte Oderland-Spree Einzeln" />
           <h2>Oderland-Spree (Einzeln)</h2>
@@ -223,5 +223,52 @@
       const idx = id === 'scope-1' ? 0 : 1;
       document.querySelectorAll('.toggle-button')[idx].classList.add('active');
     }
+
+    // Disable tabs for Oderland Einzeln
+    function handleOderlandSpreeTabVisibility() {
+      const oderlandSpreeRegion = document.querySelector('[data-region-name="oderland-spree-einzeln"]');
+      
+      const sensitivityTab = document.querySelector('.tab-button[data-tab="sensitivity"]');
+      const alternativesTab = document.querySelector('.tab-button[data-tab="alternatives"]');
+      
+      if (oderlandSpreeRegion && sensitivityTab && alternativesTab) {
+        const isSelected = oderlandSpreeRegion.classList.contains('selected');
+        
+        sensitivityTab.disabled = isSelected;
+        alternativesTab.disabled = isSelected;
+        
+        if (isSelected) {
+          sensitivityTab.classList.add('disabled');
+          alternativesTab.classList.add('disabled');
+        } else {
+          sensitivityTab.classList.remove('disabled');
+          alternativesTab.classList.remove('disabled');
+        }
+      }
+    }
+
+    function updateTabState() {
+      handleOderlandSpreeTabVisibility();
+    }
+
+    function setupObserver() {
+      const oderlandSpreeRegion = document.querySelector('[data-region-name="oderland-spree-einzeln"]');
+      
+      if (oderlandSpreeRegion) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              updateTabState();
+            }
+          });
+        });
+        
+        observer.observe(oderlandSpreeRegion, { attributes: true });
+        updateTabState();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', setupObserver);
+
   </script>
 {% endblock inline_javascript %}

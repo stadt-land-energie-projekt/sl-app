@@ -295,6 +295,11 @@ table {
     border-radius: 2px;
   }
 
+  .tab-button.disabled {
+    pointer-events: none;
+    color: #c0c3ca;
+  }
+
   .tab-content {
     display: none;
     padding: 20px;
