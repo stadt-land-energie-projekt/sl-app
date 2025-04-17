@@ -315,8 +315,7 @@ function createTotalElectricityChart(data) {
 
     let option = {
         title: {
-            text: 'Referer of a Website',
-            subtext: 'Fake Data',
+            text: 'Stromversorgung je Technologie',
             left: 'center'
         },
         tooltip: {
@@ -324,13 +323,15 @@ function createTotalElectricityChart(data) {
         },
         legend: {
             orient: 'vertical',
-            left: 'left'
+            left: 'right',
+            top: 'bottom',
         },
         series: [
             {
                 name: 'Access From',
                 type: 'pie',
                 radius: '50%',
+                center: ['30%', '50%'],
                 data: data,
                 emphasis: {
                     itemStyle: {
