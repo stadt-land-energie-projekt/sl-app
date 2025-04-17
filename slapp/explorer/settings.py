@@ -50,19 +50,21 @@ TECHNOLOGIES_SELECTED = [
     "residual_waste-bpchp_heat_low_central",
 ]
 
+PREPROCESSED_DATA = chart_data.get_preprocessed_file_df()
+
+
+def remove_region(row: str) -> str:
+    """Remove region string from technology name."""
+    return row.split("-", 1)[1]
+
 
 def get_potentials(scenario: str) -> dict[str, float]:
     """Read through preprocessed datapackage and get all potentials."""
-
-    def remove_region(row: str) -> str:
-        return row.split("-", 1)[1]
-
     if scenario == "single":
         return {}  # Only potentials for ALL scenario are used currently
 
-    preprocessed_data = chart_data.get_preprocessed_file_df()
-    capacity_potentials = preprocessed_data.loc[
-        (~preprocessed_data["capacity_potential"].isna()) & (preprocessed_data["region"].isin(REGIONS)),
+    capacity_potentials = PREPROCESSED_DATA.loc[
+        (~PREPROCESSED_DATA["capacity_potential"].isna()) & (PREPROCESSED_DATA["region"].isin(REGIONS)),
         ["name", "capacity_potential"],
     ]
     capacity_potentials["name"] = capacity_potentials["name"].apply(remove_region)
@@ -71,3 +73,16 @@ def get_potentials(scenario: str) -> dict[str, float]:
 
 
 POTENTIALS = {scenario: get_potentials(scenario) for scenario in ("all", "single")}
+
+
+def get_capacity_cost_for_technology() -> dict[str, float]:
+    """Return capacity cost per technology from preprocessed data."""
+    capacity_cost = PREPROCESSED_DATA.loc[
+        (~PREPROCESSED_DATA["capacity_cost"].isna()) & (PREPROCESSED_DATA["region"] == REGIONS[0]),
+        ["name", "capacity_cost"],
+    ]
+    capacity_cost["name"] = capacity_cost["name"].apply(remove_region)
+    return capacity_cost.set_index("name").to_dict()["capacity_cost"]
+
+
+CAPACITY_COST = get_capacity_cost_for_technology()

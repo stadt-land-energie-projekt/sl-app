@@ -9,7 +9,7 @@ from operator import or_
 from django.db.models import Prefetch, Q
 
 from .models import AlternativeResult, Result, Scenario, Sensitivity
-from .settings import POTENTIALS, TECHNOLOGIES
+from .settings import CAPACITY_COST, POTENTIALS, TECHNOLOGIES
 
 INF_STRING = "Keine obere Grenze"
 
@@ -142,6 +142,16 @@ def get_tech_category(full_key: str) -> str | None:
     return None
 
 
+def calculate_capacity_cost_for_technology(technology: str, sensitivity_data: dict[float, dict]) -> dict[float, dict]:
+    """Multiply capacity cost for technology from preprocessed data with sensitivity data perturbations."""
+    base_technology_cost = CAPACITY_COST.get(technology, 0)
+    sensitivity_data = {
+        round(cost * base_technology_cost if cost != 0 else base_technology_cost): technologies
+        for cost, technologies in sensitivity_data.items()
+    }
+    return sensitivity_data
+
+
 def build_tech_comp_data(bar_entry: dict, current_tech: str) -> list:
     """Build a list of dictionaries for tech comparison chart."""
     bar_data_list = []
@@ -172,7 +182,7 @@ def build_cost_cap_data(sensitivity_data: dict, current_tech: str) -> [float, fl
                 break
 
     array_data = sorted(
-        ([float(k), v] for k, v in cost_cap_data.items()),
+        ([round(float(k)), v] for k, v in cost_cap_data.items()),
         key=lambda item: item[0],
     )
 
