@@ -146,21 +146,6 @@ function createFlowChart(domElement, chartData, resource) {
     chart.resize();
 }
 
-async function loadBasicData(region) {
-    const url = `/explorer/basic_charts/?type=${encodeURIComponent(region)}`;
-    try {
-        const response = await fetch(url, { method: 'GET', headers: { "Accept": "application/json" } });
-        if (!response.ok) throw new Error("Netzwerkfehler: " + response.status);
-        const data = await response.json();
-        loadElectricityChart(data.electricity);
-        loadHeatChart(data.heat);
-        loadCapacityChart(data.capacity);
-        loadCostsChart(data.costs);
-    } catch (error) {
-        console.error("Fehler beim Laden der Basisdaten:", error);
-    }
-}
-
 async function loadCostCapacityData(tech) {
     currentTech = tech;
     const url = `/explorer/cost_capacity_chart/?type=${encodeURIComponent(tech)}&region=${encodeURIComponent(currentRegion)}`;
@@ -481,7 +466,10 @@ function loadRangesData(divergence, chartId, tableId) {
       renderTable(tableId, tableRows);
       syncRowHeight(chartId, tableId, chartData.length);
       window.addEventListener('resize', () => {
-      syncRowHeight(chartId, tableId, chartData.length);
+        syncRowHeight(chartId, tableId, chartData.length);
+      });
+      document.querySelectorAll(".alternative").forEach((element, i) => {
+        element.addEventListener("click", () => syncRowHeight(chartId, tableId, chartData.length));
       });
     })
     .catch(err => console.error("Error fetching ranges data:", err));
@@ -555,7 +543,7 @@ function renderChart(chartId, dataArray) {
     grid: {
       left: '50%',
       right: '10%',
-      top: 30,      // Must equal table header row height
+      top: 45,      // Must equal table header row height
       bottom: 1,    // Must be non-zero, as otherwise last y-category tick is not drawn
       containLabel: false,
     },
@@ -655,13 +643,13 @@ function renderTable(tableId, rows) {
 
 function syncRowHeight(chartId, tableId, dataLength) {
   const chartElem = document.getElementById(chartId);
-  console.log("started syncRowHeight");
+  // console.log("started syncRowHeight");
   if (!chartElem) return;
 
   // The total height of the chart container
   const chartHeight = chartElem.clientHeight;
 
-  console.log("clientHeight: " + chartHeight);
+  // console.log("clientHeight: " + chartHeight);
 
   // Subtract table header height = chart.grid.top + chart.grid.bottom
   const rowHeight = (chartHeight - 31) / dataLength;
@@ -670,7 +658,7 @@ function syncRowHeight(chartId, tableId, dataLength) {
   const rows = document.querySelectorAll(`#${tableId} tbody tr`);
   rows.forEach(row => {
     row.style.height = rowHeight + 'px';
-    console.log("roeHeight: " + rowHeight);
+    // console.log("roeHeight: " + rowHeight);
   });
-  console.log("ended syncRowHeight");
+  // console.log("ended syncRowHeight");
 }
