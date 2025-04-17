@@ -116,7 +116,9 @@ exclude = [
   "slapp/contrib/*",
   "slapp/users/*",
   "merge_local_dotenvs_in_dotenv.py",
-  "slapp/utils/context_processors.py"
+  "slapp/utils/context_processors.py",
+  "slapp/explorer/charts.py",
+  "slapp/explorer/chart_data.py"
 ]
 lint.ignore = [
   "I001",    # Import block is un-sorted or un-formatted (done by isort)
