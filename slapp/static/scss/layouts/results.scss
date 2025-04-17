@@ -115,7 +115,6 @@ table {
     }
 
     p {
-      max-width: 64rem;
       color: $font-color-secondary;
       font-size: 1rem;
       line-height: 170%;
@@ -304,6 +303,11 @@ table {
     display: none;
     padding: 20px;
 
+    p {
+      color: $font-color-secondary;
+      text-align: center;
+    }
+
     &--exchange > div {
       display: flex;
       flex-direction: column;
@@ -327,10 +331,6 @@ table {
     }
 
     &--sensitivity {
-      p {
-        color: $font-color-secondary;
-        max-width: 50rem;
-      }
 
       select {
         padding: 0.5rem;
@@ -385,23 +385,23 @@ table {
         text-align: center;
       }
     
-      p {
-        max-width: 60rem;
-        margin: 0 auto 1rem;
-        line-height: 1.7;
-        color: $font-color-main;
-    
-        span {
-          font-weight: 600;
-          color: $font-color-main;
-        }
-      }
+      //p {
+      //  max-width: 60rem;
+      //  margin: 0 auto 1rem;
+      //  line-height: 1.7;
+      //  color: $font-color-main;
+      //
+      //  span {
+      //    font-weight: 600;
+      //    color: $font-color-main;
+      //  }
+      //}
     
       .more-info-box {
-        padding: 2rem;
+        //padding: 2rem;
         border-radius: $border-radius;
         text-align: center;
-        margin: 2rem auto 4rem;
+        margin:0rem auto 4rem;
         position: relative;
     
         button {
