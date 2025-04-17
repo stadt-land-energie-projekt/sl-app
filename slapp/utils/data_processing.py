@@ -20,7 +20,7 @@ from slapp.explorer import models
 from slapp.utils.ogr_layer_mapping import RelatedModelLayerMapping
 
 ALTERNATIVES_FILENAME = "mga_converted.json"
-ALTERNATIVES_REGIONS = ("B", "BB")
+ALTERNATIVES_REGIONS = ("r120640428428", "r120640472472", "r120670124124", "r120670201201")
 
 REGIONS = [models.Region, models.Municipality]
 
@@ -183,16 +183,19 @@ def load_sensitivities() -> None:
             models.Result.objects.bulk_create(results)
 
 
-def load_alternatives() -> None:
+def load_alternatives() -> None:  # noqa: C901, PLR0915
     """Import data for alternative results into related models."""
 
     def get_region_carrier_component(raw_component: str) -> tuple[str, str, str | None]:
         # Unfortunately composed component name is incompatible with name in results
         # (compare "BB_electricity_liion_battery" with BB-electricity-liion_battery)
         region_ = raw_component.split("_")[0]
-        carrier_ = raw_component.split("_")[1]
-        if carrier_ == "heat":
-            carrier_ += "_" + raw_component.split("_")[2]
+        carrier_names = []
+        carrier_underscores = 1
+        while not (min_results["carrier"] == "_".join(carrier_names)).any():
+            carrier_names.append(raw_component.split("_")[carrier_underscores])
+            carrier_underscores += 1
+        carrier_ = "_".join(carrier_names)
         if len(raw_component) == len(region_) + len(carrier_) + 1:
             # In this case component is only a bus:
             return region_, carrier_, None
@@ -211,6 +214,13 @@ def load_alternatives() -> None:
         alternative = models.Alternative(divergence=divergence)
         alternative.save()
         for component_raw, result in components.items():
+            if "min_results" not in result or "max_results" not in result:
+                continue
+            min_file = result["min_results"]
+            min_results = pd.read_csv(pathlib.Path(ZIB_DATA) / min_file, delimiter=";", encoding="utf-8")
+            max_file = result["max_results"]
+            max_results = pd.read_csv(pathlib.Path(ZIB_DATA) / max_file, delimiter=";", encoding="utf-8")
+
             if component_raw.startswith("GenericInvestmentStorageBlock"):
                 component_type = "storage capacity"
                 # In this case we have an investment of storage capacity
@@ -236,9 +246,13 @@ def load_alternatives() -> None:
                 if first_component[2] is None:
                     region, carrier, component = second_component
                     var_name = f"invest_costs_in_{first_component[1]}"
+                    if "storage" in component_raw:
+                        component_type = "capacity in"
                 else:
                     region, carrier, component = first_component
                     var_name = f"invest_costs_out_{second_component[1]}"
+                    if "storage" in component_raw:
+                        component_type = "capacity out"
 
             min_capacity = result["min_obj"]
             max_capacity = result["max_obj"]
@@ -246,8 +260,6 @@ def load_alternatives() -> None:
             if min_capacity is None or max_capacity is None:
                 continue
 
-            min_file = result["min_results"]
-            min_results = pd.read_csv(pathlib.Path(ZIB_DATA) / min_file, delimiter=";", encoding="utf-8")
             min_cost = float(
                 min_results.loc[
                     (min_results["region"] == region)
@@ -258,8 +270,6 @@ def load_alternatives() -> None:
                 ].iloc[0],
             )
 
-            max_file = result["max_results"]
-            max_results = pd.read_csv(pathlib.Path(ZIB_DATA) / max_file, delimiter=";", encoding="utf-8")
             max_cost = float(
                 max_results.loc[
                     (max_results["region"] == region)
