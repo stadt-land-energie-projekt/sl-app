@@ -44,8 +44,10 @@ def total_electricity_per_technology(scenario: str):
         ["name", "var_value"]
     ]
     filtered.columns = ["name", "value"]
-    filtered["value"] = (filtered["value"] / filtered["value"].sum() * 100).round()
-    return template, filtered.to_dict(orient="records")
+    filtered["name"] = filtered["name"].apply(lambda x: x.split("-", 1)[1])
+    filtered = filtered.groupby("name").sum()
+    filtered["value"] = (filtered["value"] / filtered["value"].sum() * 100).round(3)
+    return template, filtered.reset_index().to_dict(orient="records")
 
 
 def electricity_import(scenario: str):
