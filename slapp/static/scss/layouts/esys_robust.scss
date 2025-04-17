@@ -136,8 +136,14 @@
     font-size: 1rem;
     color: $font-color-secondary;
     line-height: 170%;
-    padding-bottom: 4rem;
-    max-width: 54rem;
+    padding-bottom: 1rem;
+  }
+
+  &__description_hidden {
+    font-size: 1rem;
+    color: $font-color-secondary;
+    line-height: 170%;
+    padding-bottom: 1rem;
   }
 
   &__facts {
@@ -202,6 +208,10 @@
 
     &.active {
       display: block;
+    }
+
+    p {
+      text-align: left;
     }
   }
 

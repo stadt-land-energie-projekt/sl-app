@@ -182,4 +182,16 @@
       line-height: 170%;
     }
   }
+
+  &__logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem 4rem;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      display: inline-block;
+    }
+  }
 }
