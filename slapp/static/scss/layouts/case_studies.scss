@@ -11,7 +11,7 @@
     padding-bottom: 4rem;
 
     @media only screen and (min-width: 1400px) {
-      padding-top: 3rem;
+      padding-top: 6rem;
       padding-bottom: 6rem;
     }
 
@@ -19,13 +19,12 @@
       font-size: 2.5rem;
       font-weight: 700;
       color: $font-color-main;
-      padding-bottom: 2rem;
+      padding-bottom: 1rem;
     }
 
     p {
-      max-width: 64rem;
       color: $font-color-secondary;
-      font-size: 1rem;
+      font-size: 1.25rem;
       line-height: 170%;
     }
   }
@@ -52,6 +51,11 @@
     border-radius: $border-radius;
     border: 2px solid #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   }
 
   &__region-image {
@@ -168,16 +172,15 @@
 
     .cs__cta-row {
       button {
-        background-color: #eff6ff;
+        background-color: $white;
         color: $color-selected;
-        border: 1px solid $color-selected;
         pointer-events: none;
       }
     }
   }
 
   #cs-details {
-    display: none;
+    display: block;
   }
 
   &__info {

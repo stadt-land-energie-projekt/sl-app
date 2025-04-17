@@ -23,9 +23,8 @@
     }
 
     p {
-      max-width: 64rem;
       color: $font-color-secondary;
-      font-size: 1rem;
+      font-size: 1.25rem;
       line-height: 170%;
     }
   }
@@ -134,5 +133,158 @@
     @include button-primary;
     @include button-large;
     width: auto;
+  }
+}
+
+.av-results {
+  background-color: $bg-color-light;
+
+  &__container {
+    @include container;
+    padding: 4rem 0;
+  }
+
+  &__tabs {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 0.5rem 0;
+    max-width: 40rem;
+    margin: 0 auto;
+  }
+
+  .tab-button {
+    flex: 1;
+    text-align: center;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $font-color-secondary;
+    cursor: pointer;
+    padding: 0.75rem 0;
+    position: relative;
+  }
+
+  .tab-button.active {
+    font-weight: 700;
+    color: $font-color-main;
+  }
+
+  .tab-button.active::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 4px;
+    background: $font-color-main;
+    border-radius: 2px;
+  }
+
+  .tab-content {
+    display: none;
+    padding: 20px;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  &__section {
+    @extend .row;
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+      padding-bottom: 1.5rem;
+    }
+
+    p {
+      font-size: 0.875rem;;
+      line-height: 1.6;
+    }
+  }
+
+  &__wrapper {
+    display: column;
+    gap: 4rem;
+
+    @media only screen and (min-width: 1200px) {
+      display: flex;
+    }
+  }
+
+  &__chart {
+    flex: 1;
+    background-color: $white;
+    padding: 2rem;
+    border-radius: $border-radius;
+    margin-bottom: 2rem;
+
+    @media only screen and (min-width: 1200px) {
+      margin-bottom: 0;
+    }
+  }
+
+  &__text {
+    flex: 1;
+    margin-bottom: 2rem;
+
+    @media only screen and (min-width: 1200px) {
+      margin-bottom: 0;
+    }
+  }
+
+  &__table {
+    flex: 1;
+    margin-bottom: 2rem;
+
+    @media only screen and (min-width: 1200px) {
+      margin-bottom: 0;
+    }
+  }
+
+  table {
+    margin-bottom: 2rem;
+    font-size: 0.875rem;
+  }
+
+  thead tr th {
+    background-color: $white;
+  }
+
+  tbody tr td {
+    background-color: transparent;
+  }
+  
+  &__details {
+    font-size: 0.875rem;
+    color: $font-color-secondary;
+
+    .title h3 {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: $font-color-secondary;
+      padding-bottom: 0.5rem;
+    }
+
+    .list {
+      font-size: 0.875rem;
+    }
+
+    .more {
+      font-size: 0.875rem;
+    }
+
+    a {
+      color: $color-link;
+      font-weight: 700;
+      text-decoration: underline;
+    }
   }
 }

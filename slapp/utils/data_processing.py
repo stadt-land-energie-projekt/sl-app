@@ -20,7 +20,7 @@ from slapp.explorer import models
 from slapp.utils.ogr_layer_mapping import RelatedModelLayerMapping
 
 ALTERNATIVES_FILENAME = "mga_converted.json"
-ALTERNATIVES_REGIONS = ("B", "BB")
+ALTERNATIVES_REGIONS = ("r120640428428", "r120640472472", "r120670124124", "r120670201201")
 
 REGIONS = [models.Region, models.Municipality]
 
@@ -131,7 +131,7 @@ def load_base_scenario() -> None:
     if not created:
         scenario.result_set.all().delete()
 
-    base_file = pathlib.Path(ZIB_DATA) / "capacities/base" / "scalars.csv"
+    base_file = pathlib.Path(ZIB_DATA) / "base" / "2045_scenario" / "postprocessed" / "scalars.csv"
     results_df = pd.read_csv(base_file, delimiter=";", encoding="utf-8")
     if "scenario" in results_df.columns:
         results_df = results_df.drop("scenario", axis=1)
@@ -142,63 +142,69 @@ def load_base_scenario() -> None:
 
 def load_sensitivities() -> None:
     """Import data from sensitivity runs at ZIB."""
-    for sensitivity, sensitivity_lookup in (("capacities", "CapacityCosts"), ("marginal", "MarginalCosts")):
-        for folder in (pathlib.Path(ZIB_DATA) / sensitivity).iterdir():
+    for folder_name, sensitivity_lookup in (("cost", "CostPerturbations"),):
+        for folder in (pathlib.Path(ZIB_DATA) / folder_name).iterdir():
             if not folder.is_dir():
-                continue
-            if len(folder.name.split("_")) != 2:  # noqa: PLR2004
-                # Skip folders which do not follow schema "x_y"
                 continue
 
             # Create Scenario for current sensitivity results
-            scenario_name = f"{sensitivity}_{folder.name}"
+            scenario_name = f"{folder_name}_{folder.name}"
 
             if Scenario.objects.filter(name=scenario_name).exists():
                 logging.info("Sensitivity scenario '{scenario_name}' already exists. Skipping.")
                 continue
 
-            logging.info(f"Upload data for sensitivity '{sensitivity}' from folder '{folder.name}'.")
+            logging.info(f"Upload data for sensitivity '{folder_name}' from folder '{folder.name}'.")
 
             with (folder / "scenario.json").open("r", encoding="utf-8") as f:
                 scenario_details = json.load(f)
+
             scenario = models.Scenario(name=scenario_name, parameters=scenario_details)
             scenario.save()
 
             # Create Sensitivity instance
-            sensitivity_data = scenario_details["CostPerturbations"][sensitivity_lookup][0]
+            sensitivity_data = scenario_details[sensitivity_lookup]["Perturbation1"][0]
             models.Sensitivity(
                 scenario=scenario,
-                attribute=sensitivity_lookup,
-                component=sensitivity_data["VariableName"],
-                region=sensitivity_data.get("Region", None),
+                attribute=sensitivity_data["Column"],
+                component=sensitivity_data["FileName"],
+                region="ALL",
                 perturbation_method=sensitivity_data["PerturbationMethod"],
                 # Only one (first) parameter is taken into account
                 perturbation_parameter=sensitivity_data["PerturbationParameter"][0],
             ).save()
 
             # Add results to Scenario
-            results_df = pd.read_csv(folder / "scalars.csv", delimiter=";", encoding="utf-8")
+            results_df = pd.read_csv(
+                folder / "2045_scenario" / "postprocessed" / "scalars.csv",
+                delimiter=";",
+                encoding="utf-8",
+            )
             results_df = results_df.drop("scenario", axis=1)
             results = [models.Result(scenario=scenario, **result) for result in results_df.to_dict(orient="records")]
             models.Result.objects.bulk_create(results)
 
 
-def load_alternatives() -> None:
+def load_alternatives() -> None:  # noqa: C901, PLR0915
     """Import data for alternative results into related models."""
 
     def get_region_carrier_component(raw_component: str) -> tuple[str, str, str | None]:
         # Unfortunately composed component name is incompatible with name in results
         # (compare "BB_electricity_liion_battery" with BB-electricity-liion_battery)
         region_ = raw_component.split("_")[0]
-        carrier_ = raw_component.split("_")[1]
-        if carrier_ == "heat":
-            carrier_ += "_" + raw_component.split("_")[2]
+        carrier_names = []
+        carrier_underscores = 1
+        while not (min_results["carrier"] == "_".join(carrier_names)).any():
+            carrier_names.append(raw_component.split("_")[carrier_underscores])
+            carrier_underscores += 1
+        carrier_ = "_".join(carrier_names)
         if len(raw_component) == len(region_) + len(carrier_) + 1:
             # In this case component is only a bus:
             return region_, carrier_, None
         # Strip region and carrier from component name to get component
         component_ = raw_component[len(region_) + len(carrier_) + 2 :]
-        return region_, carrier_, component_
+        store_component_ = f"{carrier_}-{component_}"
+        return region_, carrier_, component_, store_component_
 
     with (pathlib.Path(ZIB_DATA) / ALTERNATIVES_FILENAME).open("r", encoding="utf-8") as f:
         alternative_data = json.load(f)
@@ -211,6 +217,13 @@ def load_alternatives() -> None:
         alternative = models.Alternative(divergence=divergence)
         alternative.save()
         for component_raw, result in components.items():
+            if "min_results" not in result or "max_results" not in result:
+                continue
+            min_file = result["min_results"]
+            min_results = pd.read_csv(pathlib.Path(ZIB_DATA) / min_file, delimiter=";", encoding="utf-8")
+            max_file = result["max_results"]
+            max_results = pd.read_csv(pathlib.Path(ZIB_DATA) / max_file, delimiter=";", encoding="utf-8")
+
             if component_raw.startswith("GenericInvestmentStorageBlock"):
                 component_type = "storage capacity"
                 # In this case we have an investment of storage capacity
@@ -220,7 +233,7 @@ def load_alternatives() -> None:
                     rf"\w*\(((?:{'|'.join(ALTERNATIVES_REGIONS)})\w*)_0\)",
                     component_raw,
                 )[0]
-                region, carrier, component = get_region_carrier_component(composed_component)
+                region, carrier, component, store_component = get_region_carrier_component(composed_component)
                 var_name = "invest_costs"
             else:
                 component_type = "capacity"
@@ -234,11 +247,15 @@ def load_alternatives() -> None:
                 first_component = get_region_carrier_component(matches[0][0])
                 second_component = get_region_carrier_component(matches[0][1])
                 if first_component[2] is None:
-                    region, carrier, component = second_component
+                    region, carrier, component, store_component = second_component
                     var_name = f"invest_costs_in_{first_component[1]}"
+                    if "storage" in component_raw:
+                        component_type = "capacity in"
                 else:
-                    region, carrier, component = first_component
+                    region, carrier, component, store_component = first_component
                     var_name = f"invest_costs_out_{second_component[1]}"
+                    if "storage" in component_raw:
+                        component_type = "capacity out"
 
             min_capacity = result["min_obj"]
             max_capacity = result["max_obj"]
@@ -246,8 +263,6 @@ def load_alternatives() -> None:
             if min_capacity is None or max_capacity is None:
                 continue
 
-            min_file = result["min_results"]
-            min_results = pd.read_csv(pathlib.Path(ZIB_DATA) / min_file, delimiter=";", encoding="utf-8")
             min_cost = float(
                 min_results.loc[
                     (min_results["region"] == region)
@@ -258,8 +273,6 @@ def load_alternatives() -> None:
                 ].iloc[0],
             )
 
-            max_file = result["max_results"]
-            max_results = pd.read_csv(pathlib.Path(ZIB_DATA) / max_file, delimiter=";", encoding="utf-8")
             max_cost = float(
                 max_results.loc[
                     (max_results["region"] == region)
@@ -273,7 +286,7 @@ def load_alternatives() -> None:
             models.AlternativeResult(
                 alternative=alternative,
                 region=region,
-                component=component,
+                component=store_component,
                 type=component_type,
                 carrier=carrier,
                 min_capacity=min_capacity,
