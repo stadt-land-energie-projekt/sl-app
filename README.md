@@ -67,6 +67,9 @@ python manage.py migrate
 
 Afterwards you have to load in data.
 
+For ZIB data:
+Copy folders `base`, `cost` and `robust` into folder `slapp/data/zib/`.
+
 >**Only for server**
 >
 >If you want to do this on server, you have to upload data to server first.

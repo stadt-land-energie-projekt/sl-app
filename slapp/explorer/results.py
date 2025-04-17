@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections import namedtuple
+from collections import defaultdict
 from functools import reduce
 from operator import or_
 
@@ -11,55 +11,52 @@ from django.db.models import Prefetch, Q
 from .models import AlternativeResult, Result, Scenario, Sensitivity
 from .settings import TECHNOLOGIES, TECHNOLOGIES_RANGES
 
-ResultEntry = namedtuple("ResultEntry", ["name", "var_name"])  # noqa: PYI024
 
-CAPACITIES = {
-    "B-wind-onshore": "invest_out_electricity",
-    "BB-wind-onshore": "invest_out_electricity",
-    "BB-solar-pv": "invest_out_electricity",
-    "B-solar-pv": "invest_out_electricity",
-    "B-electricity-electrolyzer": "invest_out_h2",
-    "BB-electricity-electrolyzer": "invest_out_h2",
-    "B-electricity-heatpump_small": "invest_out_heat_decentral",
-    "BB-electricity-heatpump_small": "invest_out_heat_decentral",
-    "B-electricity-liion_battery": "invest",
-    "BB-electricity-liion_battery": "invest",
-    "B-electricity-pth": "invest_out_heat_central",
-    "BB-electricity-pth": "invest_out_heat_central",
-    "B-h2-bpchp": "invest_out_electricity",
-    "BB-h2-bpchp": "invest_out_electricity",
-    "B-h2-cavern": "invest",
-    "BB-h2-cavern": "invest",
-    "B-h2-gt": "invest_out_electricity",
-    "BB-h2-gt": "invest_out_electricity",
-    "B-heat_central-storage": "invest",
-    "BB-heat_central-storage": "invest",
-    "B-heat_decentral-storage": "invest",
-    "BB-heat_decentral-storage": "invest",
-    "B-hydro-ror": "invest_out_electricity",
-    "BB-hydro-ror": "invest_out_electricity",
-    "B-ch4-boiler_large": "invest_out_heat_central",
-    "BB-ch4-boiler_large": "invest_out_heat_central",
-    "B-ch4-boiler_small": "invest_out_heat_decentral",
-    "BB-ch4-boiler_small": "invest_out_heat_decentral",
-    "B-ch4-bpchp": "invest_out_electricity",
-    "BB-ch4-bpchp": "invest_out_electricity",
-    "B-ch4-gt": "invest_out_electricity",
-    "BB-ch4-gt": "invest_out_electricity",
-}
+def get_technologies() -> set[str]:
+    """
+    Get technologies from results.
+
+    Exclude transmissions and system.
+    """
+    technologies = Result.objects.distinct().values_list("name", flat=True)
+    return {
+        com.split("-", 1)[1] if len(com.split("-", 1)) > 1 else com
+        for com in technologies
+        if "transmission" not in com and com != "system"
+    }
+
+
+def get_invests_in_results() -> dict[str, str]:
+    """
+    Return technologies and related invest attributes.
+
+    For storages return "invest", otherwise return "invest_out_<bus_name>".
+    """
+    invests = Result.objects.filter(var_name__startswith="invest").distinct().values_list("name", "var_name")
+    return {
+        name: var_name
+        for (name, var_name) in invests
+        if ("storage" in name and var_name == "invest")
+        or ("storage" not in name and var_name.startswith("invest_out"))
+    }
 
 
 def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> dict[float, dict[str, float]]:
     """Return resulting capacities for given sensitivity."""
+    invest_technologies = get_invests_in_results()
     capacity_query = reduce(
         or_,
-        [Q(name=technology, var_name=capacity_name) for technology, capacity_name in CAPACITIES.items()],
+        [Q(name=technology, var_name=capacity_name) for technology, capacity_name in invest_technologies.items()],
     )
     sensitivities = (
         Sensitivity.objects.filter(attribute=sensitivity, component=technology, region=region)
         .select_related("scenario")
         .prefetch_related(
-            Prefetch("scenario__result_set", queryset=Result.objects.filter(capacity_query), to_attr="results"),
+            Prefetch(
+                "scenario__result_set",
+                queryset=Result.objects.filter(capacity_query, var_value__gt=0),
+                to_attr="results",
+            ),
         )
         .all()
     )
@@ -69,6 +66,31 @@ def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> di
         for sensitivity in sensitivities
     }
     return results
+
+
+def merge_sensitivity_results(results: dict[float, dict[str, float]]) -> dict[float, dict[str, float]]:
+    """Combine technologies, regions and central/decentral sensitivity results."""
+    merged_results = {}
+    for key in results:
+        merged_results[key] = defaultdict(float)
+        for technology_raw, value in results[key].items():
+            # Strip region
+            technology = technology_raw.split("-", 1)[1]
+            # Group technologies
+            if "pv" in technology:
+                technology = "electricity-pv"
+            if "heatpump" in technology:
+                technology = "electricity-heatpump"
+            if "storage" in technology and "electricity" in technology:
+                technology = "electricity-storage"
+            if "storage" in technology and "heat" in technology:
+                technology = "heat-storage"
+            if "bpchp" in technology and "h2" not in technology:
+                technology = "bpchp"
+            if "boiler" in technology and "h2" not in technology:
+                technology = "boiler"
+            merged_results[key][technology] += value
+    return merged_results
 
 
 def get_alternative_result(region: str, divergence: float) -> dict:
@@ -92,7 +114,7 @@ def get_alternative_result(region: str, divergence: float) -> dict:
     return data_for_region_and_divergence
 
 
-def get_base_scenario() -> dict:
+def get_base_scenario(**result_filter) -> dict:
     """Return base_scenarios."""
     try:
         scenario = Scenario.objects.get(name="base_scenario")
@@ -101,8 +123,9 @@ def get_base_scenario() -> dict:
 
     base_scenario = {}
 
-    for tech, cap in CAPACITIES.items():
-        result = scenario.result_set.filter(name=tech, var_name=cap).first()
+    investment_technologies = get_invests_in_results()
+    for tech, cap in investment_technologies.items():
+        result = scenario.result_set.filter(name=tech, var_name=cap, **result_filter).first()
         if result:
             base_scenario[tech] = result.var_value
 
@@ -152,24 +175,6 @@ def build_cost_cap_data(sensitivity_data: dict, current_tech: str) -> [float, fl
     )
 
     return array_data
-
-
-def filter_region_and_tech(sensitivity_data: dict, region: str) -> dict:
-    """Filter data with region."""
-    filtered_data = {}
-
-    for cost, inner_dict in sensitivity_data.items():
-        filtered_inner_dict = {}
-        for full_key, value in inner_dict.items():
-            for tech_key in TECHNOLOGIES:
-                if tech_key in full_key:
-                    parts = full_key.split("-", 1)
-                    if parts[0] == region:
-                        filtered_inner_dict[full_key] = value
-        if filtered_inner_dict:
-            filtered_data[cost] = filtered_inner_dict
-
-    return filtered_data
 
 
 def filter_alternatives(alternatives: dict, selected_tech: dict) -> dict:
