@@ -9,7 +9,9 @@ from operator import or_
 from django.db.models import Prefetch, Q
 
 from .models import AlternativeResult, Result, Scenario, Sensitivity
-from .settings import POTENTIALS, TECHNOLOGIES
+from .settings import CAPACITY_COST, POTENTIALS, TECHNOLOGIES
+
+INF_STRING = "Keine obere Grenze"
 
 
 def get_technologies() -> set[str]:
@@ -140,6 +142,16 @@ def get_tech_category(full_key: str) -> str | None:
     return None
 
 
+def calculate_capacity_cost_for_technology(technology: str, sensitivity_data: dict[float, dict]) -> dict[float, dict]:
+    """Multiply capacity cost for technology from preprocessed data with sensitivity data perturbations."""
+    base_technology_cost = CAPACITY_COST.get(technology, 0)
+    sensitivity_data = {
+        round(cost * base_technology_cost if cost != 0 else base_technology_cost): technologies
+        for cost, technologies in sensitivity_data.items()
+    }
+    return sensitivity_data
+
+
 def build_tech_comp_data(bar_entry: dict, current_tech: str) -> list:
     """Build a list of dictionaries for tech comparison chart."""
     bar_data_list = []
@@ -170,7 +182,7 @@ def build_cost_cap_data(sensitivity_data: dict, current_tech: str) -> [float, fl
                 break
 
     array_data = sorted(
-        ([float(k), v] for k, v in cost_cap_data.items()),
+        ([round(float(k)), v] for k, v in cost_cap_data.items()),
         key=lambda item: item[0],
     )
 
@@ -186,13 +198,18 @@ def filter_alternatives(alternatives: dict, selected_tech: dict) -> dict:
     return selected
 
 
-def get_potential(technology: str) -> str:
+def get_potential(technology: str) -> str | float:
     """Return potential per technology."""
-    return POTENTIALS["all"].get(technology, "inf")
+    potential = POTENTIALS["all"].get(technology, INF_STRING)
+    if isinstance(potential, float):
+        return round(potential, 1)
+    return potential
 
 
-def get_potential_unit(technology: str) -> str:
+def get_potential_unit(technology: str, value: str | float) -> str:
     """Return potential unit per technology."""
+    if value == INF_STRING:
+        return ""
     return "MWh" if "storage" in technology else "MW"
 
 
@@ -219,28 +236,42 @@ def format_min_max(min_value: float, max_value: float, unit: str) -> str:
     """Return formatted string for table."""
     # Decide if both values should be converted to millions:
     million = 1_000_000
-    if min_value >= million or (min_value == 0 and max_value >= million):
+    if max_value >= million:
         # Convert both to millions
-        converted_min = round(min_value / million)
-        converted_max = round(max_value / million)
+        converted_min = round(min_value / million, 1)
+        converted_max = round(max_value / million, 1)
 
         if unit == "cost":
             unit_str = "Mio €"
         elif unit == "cap":
-            unit_str = "MW"
+            unit_str = "TW"
         else:
             unit_str = ""
 
         return f"{converted_min} - {converted_max} {unit_str}"
+
     # Otherwise, use thousands
     thousand = 1_000
-    converted_min = round((min_value / thousand), 1)
-    converted_max = round((max_value / thousand), 1)
+    if max_value >= thousand:
+        converted_min = round((min_value / thousand), 1)
+        converted_max = round((max_value / thousand), 1)
+
+        if unit == "cost":
+            unit_str = "k€"
+        elif unit == "cap":
+            unit_str = "GW"
+        else:
+            unit_str = ""
+
+        return f"{converted_min} - {converted_max} {unit_str}"
+
+    converted_min = round(min_value, 1)
+    converted_max = round(max_value, 1)
 
     if unit == "cost":
         unit_str = "k€"
     elif unit == "cap":
-        unit_str = "kW"
+        unit_str = "MW"
     else:
         unit_str = ""
 

@@ -646,6 +646,8 @@ function syncRowHeight(chartId, tableId, dataLength) {
   // console.log("started syncRowHeight");
   if (!chartElem) return;
 
+  echarts.getInstanceByDom(chartElem).resize();
+
   // The total height of the chart container
   const chartHeight = chartElem.clientHeight;
 
