@@ -109,8 +109,8 @@
                 {% for key, data in technologies %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
               </select>
               <div id="tech-container">
-                <div class="technology-charts" id="cost-capacity-chart"></div>
-                <div class="technology-charts" id="tech-comparison-chart"></div>
+                <div class="technology-charts chart-container" id="cost-capacity-chart"></div>
+                <div class="technology-charts chart-container" id="tech-comparison-chart"></div>
               </div>
             </div>
             <div class="tab-content tab-content--alternatives" id="alternatives">
@@ -148,8 +148,9 @@
               </div>
               <div>
                 <div class="toggle-buttons">
-                  <button class="toggle-button active" onclick="toggleScope('scope-1')">± 1 % Gesamtkosten</button>
-                  <button class="toggle-button" onclick="toggleScope('scope-2')">± 2 % Gesamtkosten</button>
+                  <button class="alternative toggle-button active"
+                          onclick="toggleScope('scope-1')">± 1 % Gesamtkosten</button>
+                  <button class="alternative toggle-button" onclick="toggleScope('scope-2')">± 2 % Gesamtkosten</button>
                 </div>
                 <div id="scope-1" class="scope-wrapper active">
                   {% include 'pages/partials/ranges_chart_table.html' with divergence=1 %}

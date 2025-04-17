@@ -142,7 +142,7 @@ def load_base_scenario() -> None:
 
 def load_sensitivities() -> None:
     """Import data from sensitivity runs at ZIB."""
-    for folder_name, sensitivity_lookup in (("cost", "CostPerturbations"), ("demand", "DemandPerturbations")):
+    for folder_name, sensitivity_lookup in (("cost", "CostPerturbations"),):
         for folder in (pathlib.Path(ZIB_DATA) / folder_name).iterdir():
             if not folder.is_dir():
                 continue
@@ -203,7 +203,8 @@ def load_alternatives() -> None:  # noqa: C901, PLR0915
             return region_, carrier_, None
         # Strip region and carrier from component name to get component
         component_ = raw_component[len(region_) + len(carrier_) + 2 :]
-        return region_, carrier_, component_
+        store_component_ = f"{carrier_}-{component_}"
+        return region_, carrier_, component_, store_component_
 
     with (pathlib.Path(ZIB_DATA) / ALTERNATIVES_FILENAME).open("r", encoding="utf-8") as f:
         alternative_data = json.load(f)
@@ -232,7 +233,7 @@ def load_alternatives() -> None:  # noqa: C901, PLR0915
                     rf"\w*\(((?:{'|'.join(ALTERNATIVES_REGIONS)})\w*)_0\)",
                     component_raw,
                 )[0]
-                region, carrier, component = get_region_carrier_component(composed_component)
+                region, carrier, component, store_component = get_region_carrier_component(composed_component)
                 var_name = "invest_costs"
             else:
                 component_type = "capacity"
@@ -246,12 +247,12 @@ def load_alternatives() -> None:  # noqa: C901, PLR0915
                 first_component = get_region_carrier_component(matches[0][0])
                 second_component = get_region_carrier_component(matches[0][1])
                 if first_component[2] is None:
-                    region, carrier, component = second_component
+                    region, carrier, component, store_component = second_component
                     var_name = f"invest_costs_in_{first_component[1]}"
                     if "storage" in component_raw:
                         component_type = "capacity in"
                 else:
-                    region, carrier, component = first_component
+                    region, carrier, component, store_component = first_component
                     var_name = f"invest_costs_out_{second_component[1]}"
                     if "storage" in component_raw:
                         component_type = "capacity out"
@@ -285,7 +286,7 @@ def load_alternatives() -> None:  # noqa: C901, PLR0915
             models.AlternativeResult(
                 alternative=alternative,
                 region=region,
-                component=component,
+                component=store_component,
                 type=component_type,
                 carrier=carrier,
                 min_capacity=min_capacity,

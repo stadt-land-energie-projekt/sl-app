@@ -9,7 +9,7 @@ from operator import or_
 from django.db.models import Prefetch, Q
 
 from .models import AlternativeResult, Result, Scenario, Sensitivity
-from .settings import TECHNOLOGIES, TECHNOLOGIES_RANGES
+from .settings import POTENTIALS, TECHNOLOGIES
 
 
 def get_technologies() -> set[str]:
@@ -93,10 +93,10 @@ def merge_sensitivity_results(results: dict[float, dict[str, float]]) -> dict[fl
     return merged_results
 
 
-def get_alternative_result(region: str, divergence: float) -> dict:
+def get_alternative_result(region: str, divergence: float) -> dict:  # noqa: ARG001
     """Return Alternative Results for ranges by region."""
     results = AlternativeResult.objects.filter(
-        region=region,
+        # region=region,  # Not used currently, only Verbund available
         alternative__divergence=divergence,
     )
 
@@ -188,23 +188,27 @@ def filter_alternatives(alternatives: dict, selected_tech: dict) -> dict:
 
 def get_potential(technology: str) -> str:
     """Return potential per technology."""
-    return TECHNOLOGIES_RANGES.get(technology, {}).get("potential", None)
+    return POTENTIALS["all"].get(technology, "inf")
 
 
 def get_potential_unit(technology: str) -> str:
     """Return potential unit per technology."""
-    return TECHNOLOGIES_RANGES.get(technology, {}).get("unit", "")
+    return "MWh" if "storage" in technology else "MW"
 
 
 def get_technology_color(technology: str) -> str:
     """Return color per technology."""
-    return TECHNOLOGIES.get(technology, {}).get("color", "#000000")
+    if technology in TECHNOLOGIES:
+        return TECHNOLOGIES[technology]["color"]
+    if technology_stripped := technology.split("-", 1)[1] in TECHNOLOGIES:
+        return TECHNOLOGIES[technology_stripped]["color"]
+    return "#000000"
 
 
 def prepare_table_data(alternatives: dict) -> dict:
     """Return given dictionary prepared for table."""
     for tech, data in alternatives.items():
-        data["tech_name"] = TECHNOLOGIES[tech]["name"]
+        data["tech_name"] = TECHNOLOGIES.get(tech, {"name": tech})["name"]
         data["cap_str"] = format_min_max(data["min_capacity"], data["max_capacity"], "cap")
         data["cost_str"] = format_min_max(data["min_cost"], data["max_cost"], "cost")
         data["pot_str"] = f"{data['potential']} {data['potential_unit']}"
@@ -215,7 +219,7 @@ def format_min_max(min_value: float, max_value: float, unit: str) -> str:
     """Return formatted string for table."""
     # Decide if both values should be converted to millions:
     million = 1_000_000
-    if min_value >= million or min_value == 0 and max_value >= million:
+    if min_value >= million or (min_value == 0 and max_value >= million):
         # Convert both to millions
         converted_min = round(min_value / million)
         converted_max = round(max_value / million)
