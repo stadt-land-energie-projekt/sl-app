@@ -30,13 +30,13 @@ def get_regions_data() -> list:
                     "icon": "/static/images/icons/case-study-structure.svg",
                 },
                 {
-                    "title": "Besonderheit",
-                    "fact": "Tesla-Gigafactory als wirtschaftlicher Impulsgeber",
+                    "title": "Besonderheiten",
+                    "fact": "Tesla-Gigafactory als wirtschaftlicher Impulsgeber, Großes, erfolgreiches H2-Kavernen-Speicherprojekt",
                     "icon": "/static/images/icons/case-study-particularity.svg",
                 },
                 {
                     "title": "Erneuerbare Energien",
-                    "fact": "Hoher Anteil an Wind- und Solarenergie",
+                    "fact": "Hoher Anteil an Wind- und Solarenergie, Genehmigter Anschlusspunkt an das Wasserstoffkernnetz",
                     "icon": "/static/images/icons/case-study-renewable.svg",
                 },
                 {
