@@ -55,7 +55,7 @@ def get_potentials(scenario: str) -> dict[str, float]:
     """Read through preprocessed datapackage and get all potentials."""
 
     def remove_region(row: str) -> str:
-        return row.split("-", 2)[2]
+        return row.split("-", 1)[1]
 
     if scenario == "single":
         return {}  # Only potentials for ALL scenario are used currently

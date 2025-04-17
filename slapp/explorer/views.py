@@ -640,7 +640,7 @@ def ranges(request: HttpRequest) -> JsonResponse:
     for tech, vals in alternatives.items():
         vals["color"] = get_technology_color(tech)
         vals["potential"] = get_potential(tech) or 0
-        vals["potential_unit"] = get_potential_unit(tech)
+        vals["potential_unit"] = get_potential_unit(tech, vals["potential"])
 
     alternatives = prepare_table_data(alternatives)
     alternatives = dict(sorted(alternatives.items(), key=lambda item: item[1]["max_cost"]))
