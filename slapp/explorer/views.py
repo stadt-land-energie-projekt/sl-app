@@ -21,9 +21,10 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
 from django_mapengine import views
 
+from . import charts
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
-from .regions import get_basic_charts_data, get_case_studies_charts_data, get_energy_data
+from .regions import get_case_studies_charts_data, get_energy_data
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
 from .results import (
@@ -623,9 +624,8 @@ def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
 def basic_charts(request: HttpRequest) -> JsonResponse:
     """Return data for basic charts on results page."""
     region = request.GET.get("type", "")
-
-    basic_charts_data = get_basic_charts_data(region)
-
+    region = "all" if region == "verbu" else "single"
+    basic_charts_data = charts.get_all_base_charts(region)
     return JsonResponse(basic_charts_data)
 
 

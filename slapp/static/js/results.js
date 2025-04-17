@@ -146,21 +146,6 @@ function createFlowChart(domElement, chartData, resource) {
     chart.resize();
 }
 
-async function loadBasicData(region) {
-    const url = `/explorer/basic_charts/?type=${encodeURIComponent(region)}`;
-    try {
-        const response = await fetch(url, { method: 'GET', headers: { "Accept": "application/json" } });
-        if (!response.ok) throw new Error("Netzwerkfehler: " + response.status);
-        const data = await response.json();
-        loadElectricityChart(data.electricity);
-        loadHeatChart(data.heat);
-        loadCapacityChart(data.capacity);
-        loadCostsChart(data.costs);
-    } catch (error) {
-        console.error("Fehler beim Laden der Basisdaten:", error);
-    }
-}
-
 async function loadCostCapacityData(tech) {
     currentTech = tech;
     const url = `/explorer/cost_capacity_chart/?type=${encodeURIComponent(tech)}&region=${encodeURIComponent(currentRegion)}`;

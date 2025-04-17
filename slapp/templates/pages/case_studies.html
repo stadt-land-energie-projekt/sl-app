@@ -5,23 +5,25 @@
 {% block content_no_sidebar %}
   <nav class="header-tabs">
     <div class="tab">
-      <a href="/explorer/esys_robust">
-        Energiesystem & Robustheit
-      </a>
+      <a href="{% url 'explorer:esys_robust' %}">Energiesystem & Robustheit</a>
     </div>
-    <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70772 7.70699L2.05072 13.364L0.636719 11.95L5.58672 6.99999L0.636719 2.04999L2.05072 0.635986L7.70772 6.29299C7.89519 6.48051 8.0005 6.73482 8.0005 6.99999C8.0005 7.26515 7.89519 7.51946 7.70772 7.70699Z" fill="#101828"/>
+    <svg width="8"
+         height="14"
+         viewBox="0 0 8 14"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70772 7.70699L2.05072 13.364L0.636719 11.95L5.58672 6.99999L0.636719 2.04999L2.05072 0.635986L7.70772 6.29299C7.89519 6.48051 8.0005 6.73482 8.0005 6.99999C8.0005 7.26515 7.89519 7.51946 7.70772 7.70699Z" fill="#101828" />
     </svg>
-    <div class="tab selected">
-      Case Studies
-    </div>
-    <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70772 7.70699L2.05072 13.364L0.636719 11.95L5.58672 6.99999L0.636719 2.04999L2.05072 0.635986L7.70772 6.29299C7.89519 6.48051 8.0005 6.73482 8.0005 6.99999C8.0005 7.26515 7.89519 7.51946 7.70772 7.70699Z" fill="#101828"/>
+    <div class="tab selected">Case Studies</div>
+    <svg width="8"
+         height="14"
+         viewBox="0 0 8 14"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70772 7.70699L2.05072 13.364L0.636719 11.95L5.58672 6.99999L0.636719 2.04999L2.05072 0.635986L7.70772 6.29299C7.89519 6.48051 8.0005 6.73482 8.0005 6.99999C8.0005 7.26515 7.89519 7.51946 7.70772 7.70699Z" fill="#101828" />
     </svg>
     <div class="tab">
-      <a href="/explorer/results">
-        Ergebnisse
-      </a>
+      <a href="{% url 'explorer:results' %}">Ergebnisse</a>
     </div>
   </nav>
   <main class="cs">
@@ -54,12 +56,12 @@
             <div id="map" class="tab-content active"></div>
             <div id="charts" class="tab-content">
               <div class="charts-container">
-                <div id="chart-production" class="chart"></div>
-                <div id="chart-tech" class="chart"></div>
-                <div id="chart-another" class="chart"></div>
-                <div id="chart-demand" class="chart"></div>
-                <div id="chart-area" class="chart"></div>
-                <div id="co2-info" class="chart"></div>
+                <div id="electricityImportChart" class="chart"></div>
+                <div id="generationConsumptionChart" class="chart"></div>
+                <div id="optimizedCapacitiesChart" class="chart"></div>
+                <div id="selfGenerationPowerChart" class="chart"></div>
+                <div id="suppliedHoursChart" class="chart"></div>
+                <div id="totalElectricityChart" class="chart"></div>
               </div>
             </div>
             <div id="details" class="tab-content">
@@ -85,6 +87,7 @@
   {{ block.super }}
   {% compress js %}
     <script src="{% static 'js/case_studies.js' %}" defer></script>
+    <script src="{% static 'js/base_charts.js' %}" defer></script>
     <script src="{% static 'vendors/maplibre/js/maplibre-gl.js' %}"></script>
     <script src="{% static 'vendors/pubsub/js/pubsub.js' %}"></script>
     <script src="{% static 'js/region.js' %}"></script>

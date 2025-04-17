@@ -1,5 +1,35 @@
+
+async function loadBasicData(region) {
+    const url = `/explorer/basic_charts/?type=${encodeURIComponent(region)}`;
+    try {
+        const response = await fetch(url, { method: 'GET', headers: { "Accept": "application/json" } });
+        if (!response.ok) throw new Error("Netzwerkfehler: " + response.status);
+        const data = await response.json();
+        createElectricityImportChart(data.electricity_import);
+        createGenerationConsumptionChart(data.generation_consumption_per_sector);
+        createOptimizedCapacitiesChart(data.optimized_capacities);
+        createSelfGenerationPowerChart(data.self_generation_imports);
+        createSuppliedHoursChart(data.supplied_hours);
+        createTotalElectricityChart(data.total_electricity_per_technology);
+    } catch (error) {
+        console.error("Fehler beim Laden der Basisdaten:", error);
+    }
+}
+
+
+function getOrCreateChart(domElement) {
+    let chart = echarts.getInstanceByDom(domElement);
+    if (chart) {
+        chart.clear();
+    } else {
+        chart = echarts.init(domElement, null, { renderer: "svg" });
+    }
+    return chart;
+}
+
+
 function createElectricityImportChart(data) {
-        const chart = getOrCreateChart("electricityImportChart");
+        const chart = getOrCreateChart(document.getElementById("electricityImportChart"));
         var option = {
             title: {
                 text: 'Stromimport vs. Export',
@@ -29,7 +59,7 @@ function createElectricityImportChart(data) {
     }
 
 function createGenerationConsumptionChart(data) {
-    const chart = getOrCreateChart("generationConsumptionChart");
+    const chart = getOrCreateChart(document.getElementById("generationConsumptionChart"));
     const getSeries = ({data1, name, center}) => {
         let series = [];
         for (const [k, v] of Object.entries(data1)) {
@@ -128,7 +158,7 @@ function createGenerationConsumptionChart(data) {
 }
 
 function createOptimizedCapacitiesChart(data) {
-    const chart = getOrCreateChart("optimizedCapacitiesChart");
+    const chart = getOrCreateChart(document.getElementById("optimizedCapacitiesChart"));
 
     let option = {
         title: {
@@ -185,7 +215,7 @@ function createOptimizedCapacitiesChart(data) {
 }
 
 function createSelfGenerationPowerChart(data) {
-    const chart = getOrCreateChart("selfGenerationPowerChart");
+    const chart = getOrCreateChart(document.getElementById("selfGenerationPowerChart"));
 
     let option = {
         title: {
@@ -225,7 +255,7 @@ function createSelfGenerationPowerChart(data) {
 }
 
 function createSuppliedHoursChart(data) {
-    const chart = getOrCreateChart("suppliedHoursChart");
+    const chart = getOrCreateChart(document.getElementById("suppliedHoursChart"));
 
     let option = {
         title: {
@@ -281,7 +311,7 @@ function createSuppliedHoursChart(data) {
 }
 
 function createTotalElectricityChart(data) {
-    const chart = getOrCreateChart("totalElectricityChart");
+    const chart = getOrCreateChart(document.getElementById("totalElectricityChart"));
 
     let option = {
         title: {
