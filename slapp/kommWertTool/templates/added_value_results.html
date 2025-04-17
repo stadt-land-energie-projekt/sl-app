@@ -4,92 +4,45 @@
 {% load static %}
 
 {% block content_no_sidebar %}
-<div class="av">
-  <div class="av__container">
-    <header>
-      <h1 class="av-sidebar__heading">Ergebnisse Ihrer Wertschöpfung</h1>
-      <p class="av-sidebar__content">
-        Dies ist ein Tool zur Berechnung der direkten kommunalen Wertschöpfung durch Windenergie-, Freiflächen-Photovoltaik und Agri-Photovoltaik-Anlagen.
-        Es liefert eine Einschätzung des Wertschöpfungspotenzials basierend auf den eingegebenen Daten.
-        Der Rechner ermittelt die möglichen Einnahmen durch die EEG-Beteiligung,
-        durch Pachteinnahmen sowie durch den Wind- und Solar-Euro in brandenburgischen Gemeinden.
-        Es ist wichtig zu beachten, dass die tatsächliche Wertschöpfung deutlich höher ausfallen kann, wenn lokale Unternehmen einbezogen werden,
-        Bürger-Beteiligungen erfolgen und induzierte Effekte berücksichtigt werden.
-        Dieses Tool bietet Kommunen die Möglichkeit, die direkten wirtschaftlichen Vorteile des Ausbaus erneuerbarer Energien
-        abzuschätzen und fundierte Entscheidungen für eine nachhaltige Entwicklung zu treffen.
-      </p>
-    </header>
-  </div>
-  <div class="av-results">
-    <div class="av-results__container">
-      <div class="av-results__tabs">
-        <button class="tab-button active" data-tab="costs">Einnahmen</button>
-        <button class="tab-button" data-tab="taxes">Grundsteuer</button>
-        <button class="tab-button" data-tab="revenue">Gesamteinnahmen</button>
-      </div>
-      <div class="av-results__tabs-content">
-        <div id="costs" class="tab-content active">
-          <div class="container addedValue" id="charts">
-            {{ results|json_script:"results-data" }}
-            <div class="av-results__section">
-              <h2 class="smallHeadline">EEG-Beteiligung (jährlich)</h2>
-              <div class="av-results__wrapper">
-                <div class="av-results__chart">
-                  <div class="d-flex align-items-center">
-                    <div id="eeg_participation_loader" class="loader"></div>
-                    <div id="eeg_participation_chart" style="width: 100%;  height: 400px;"></div>
-                  </div>
-                </div>
-                <div class="av-results__table">
-                  <p class="pb-4">
-                    Der 2021 eingeführte § 6 im Erneuerbare-Energien-Gesetz (EEG) ermöglicht Kommunen Einnahmen durch EE-Anlagen zu gewinnen und soll somit zur Akzeptanzsteigerung beitragen. Bis zu 0,2 Cent können pro kWh eingespeister Strommenge durch WEA, FF-PV- und APV-Anlagen in die Haushaltskassen der Gemeinden fließen.
-                  </p>
-                  <table class="table table-bordered">
-                    <thead>
-                      <tr>
-                        <th>WEA</th>
-                        <th>FF-PV</th>
-                        <th>APV</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>{{ results.wind_eeg_yearly }} €</td>
-                        <td>{{ results.pv_eeg_yearly }} €</td>
-                        <td>{{ results.apv_eeg_yearly }} €</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div class="av-results__details">
-                    <div class="title">
-                      <h3>Annahmen:</h3>
-                    </div>
-                    <ul class="list">
-                      <li>Es findet keine Eigennutzung der erzeugten Strommmenge statt</li>
-                      <li>Beteiligung von 0,2 Cent pro kWh</li>
-                    </ul>
-                    <div class="more">
-                      <p>
-                        Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {% if results.choosen_mun != "0" and results.check_county != "check_county_sh" %}
+  <div class="av">
+    <div class="av__container">
+      <header>
+        <h1 class="av-sidebar__heading">Ergebnisse Ihrer Wertschöpfung</h1>
+        <p class="av-sidebar__content">
+          Dies ist ein Tool zur Berechnung der direkten kommunalen Wertschöpfung durch Windenergie-, Freiflächen-Photovoltaik und Agri-Photovoltaik-Anlagen.
+          Es liefert eine Einschätzung des Wertschöpfungspotenzials basierend auf den eingegebenen Daten.
+          Der Rechner ermittelt die möglichen Einnahmen durch die EEG-Beteiligung,
+          durch Pachteinnahmen sowie durch den Wind- und Solar-Euro in brandenburgischen Gemeinden.
+          Es ist wichtig zu beachten, dass die tatsächliche Wertschöpfung deutlich höher ausfallen kann, wenn lokale Unternehmen einbezogen werden,
+          Bürger-Beteiligungen erfolgen und induzierte Effekte berücksichtigt werden.
+          Dieses Tool bietet Kommunen die Möglichkeit, die direkten wirtschaftlichen Vorteile des Ausbaus erneuerbarer Energien
+          abzuschätzen und fundierte Entscheidungen für eine nachhaltige Entwicklung zu treffen.
+        </p>
+      </header>
+    </div>
+    <div class="av-results">
+      <div class="av-results__container">
+        <div class="av-results__tabs">
+          <button class="tab-button active" data-tab="costs">Einnahmen</button>
+          <button class="tab-button" data-tab="taxes">Grundsteuer</button>
+          <button class="tab-button" data-tab="revenue">Gesamteinnahmen</button>
+        </div>
+        <div class="av-results__tabs-content">
+          <div id="costs" class="tab-content active">
+            <div class="container addedValue" id="charts">
+              {{ results|json_script:"results-data" }}
               <div class="av-results__section">
-                <h2 class="smallHeadline">Wind- & Solar-Euro (jährlich)</h2>
+                <h2 class="smallHeadline">EEG-Beteiligung (jährlich)</h2>
                 <div class="av-results__wrapper">
                   <div class="av-results__chart">
                     <div class="d-flex align-items-center">
-                      <div id="wind_solar_euro_loader" class="loader"></div>
-                      <div id="wind_solar_euro_chart" style="width: 100%;  height: 400px;"></div>
+                      <div id="eeg_participation_loader" class="loader"></div>
+                      <div id="eeg_participation_chart" style="width: 100%;  height: 400px;"></div>
                     </div>
                   </div>
                   <div class="av-results__table">
-                    <p>
-                      Um die Akzeptanz von WEA und PV-Anlagen zu steigern, hat der Landtag Brandenburg zwei Sonderregelungen verabschiedet. Ab 2025 müssen Betreibende von FF-PV- und APV-Anlagen 2.000,00 Euro pro MW und Jahr an die jeweilige Standortgemeinde zahlen. Ab 2026 zahlen Anlagenbetreibende von WEA 5.000,00 Euro pro installierten MW. Beteiligt werden alle Gemeinden, die sich in einem Radius von drei Kilometern um den Standort der WEA befinden.
+                    <p class="pb-4">
+                      Der 2021 eingeführte § 6 im Erneuerbare-Energien-Gesetz (EEG) ermöglicht Kommunen Einnahmen durch EE-Anlagen zu gewinnen und soll somit zur Akzeptanzsteigerung beitragen. Bis zu 0,2 Cent können pro kWh eingespeister Strommenge durch WEA, FF-PV- und APV-Anlagen in die Haushaltskassen der Gemeinden fließen.
                     </p>
                     <table class="table table-bordered">
                       <thead>
@@ -101,9 +54,9 @@
                       </thead>
                       <tbody>
                         <tr>
-                          <td>{{ results.wind_sr_bb_yearly }} €</td>
-                          <td>{{ results.pv_sr_bb_yearly }} €</td>
-                          <td>{{ results.apv_sr_bb_yearly }} €</td>
+                          <td>{{ results.wind_eeg_yearly }} €</td>
+                          <td>{{ results.pv_eeg_yearly }} €</td>
+                          <td>{{ results.apv_eeg_yearly }} €</td>
                         </tr>
                       </tbody>
                     </table>
@@ -112,9 +65,8 @@
                         <h3>Annahmen:</h3>
                       </div>
                       <ul class="list">
-                        <li>
-                          Die bisher geltende Regelung von 10.000,00 € pro WEA wird nicht berücksichtigt. Es wird davon ausgegangen, dass alle WEA erst ab 2026 in Betrieb gehen.
-                        </li>
+                        <li>Es findet keine Eigennutzung der erzeugten Strommmenge statt</li>
+                        <li>Beteiligung von 0,2 Cent pro kWh</li>
                       </ul>
                       <div class="more">
                         <p>
@@ -125,16 +77,220 @@
                   </div>
                 </div>
               </div>
+              {% if results.choosen_mun != "0" and results.check_county != "check_county_sh" %}
+                <div class="av-results__section">
+                  <h2 class="smallHeadline">Wind- & Solar-Euro (jährlich)</h2>
+                  <div class="av-results__wrapper">
+                    <div class="av-results__chart">
+                      <div class="d-flex align-items-center">
+                        <div id="wind_solar_euro_loader" class="loader"></div>
+                        <div id="wind_solar_euro_chart" style="width: 100%;  height: 400px;"></div>
+                      </div>
+                    </div>
+                    <div class="av-results__table">
+                      <p>
+                        Um die Akzeptanz von WEA und PV-Anlagen zu steigern, hat der Landtag Brandenburg zwei Sonderregelungen verabschiedet. Ab 2025 müssen Betreibende von FF-PV- und APV-Anlagen 2.000,00 Euro pro MW und Jahr an die jeweilige Standortgemeinde zahlen. Ab 2026 zahlen Anlagenbetreibende von WEA 5.000,00 Euro pro installierten MW. Beteiligt werden alle Gemeinden, die sich in einem Radius von drei Kilometern um den Standort der WEA befinden.
+                      </p>
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>WEA</th>
+                            <th>FF-PV</th>
+                            <th>APV</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>{{ results.wind_sr_bb_yearly }} €</td>
+                            <td>{{ results.pv_sr_bb_yearly }} €</td>
+                            <td>{{ results.apv_sr_bb_yearly }} €</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div class="av-results__details">
+                        <div class="title">
+                          <h3>Annahmen:</h3>
+                        </div>
+                        <ul class="list">
+                          <li>
+                            Die bisher geltende Regelung von 10.000,00 € pro WEA wird nicht berücksichtigt. Es wird davon ausgegangen, dass alle WEA erst ab 2026 in Betrieb gehen.
+                          </li>
+                        </ul>
+                        <div class="more">
+                          <p>
+                            Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+              {% if results.wea_area_income != "0,00" or results.pv_area_income != "0,00" or results.apv_area_income != "0,00" or results.lease_est_income_wea != "0,00" or results.lease_est_income_pv != "0,00" or results.lease_est_income_apv != "0,00" or results.lease_trade_tax_wea != "0,00" or results.lease_trade_tax_pv != "0,00" or results.lease_trade_tax_apv != "0,00" %}
+                <div class="av-results__section">
+                  <h2 class="smallHeadline">Einnahmen durch Pachterlöse</h2>
+                  <div class="av-results__wrapper">
+                    <div class="av-results__chart">
+                      <div class="d-flex align-items-center">
+                        <div id="area_lease_income_loader" class="loader"></div>
+                        <div id="area_lease_income_chart" style="width: 100%;  height: 400px;"></div>
+                      </div>
+                    </div>
+                    <div class="av-results__table">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th>WEA</th>
+                            <th>FF-PV</th>
+                            <th>APV</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Pachteinnahmen</td>
+                            <td>{{ results.wea_area_income }} €</td>
+                            <td>{{ results.pv_area_income }} €</td>
+                            <td>{{ results.apv_area_income }} €</td>
+                          </tr>
+                          <tr>
+                            <td>Komm. ESt.-Anteil</td>
+                            <td>{{ results.lease_est_income_wea }} €</td>
+                            <td>{{ results.lease_est_income_pv }} €</td>
+                            <td>{{ results.lease_est_income_apv }} €</td>
+                          </tr>
+                          <tr>
+                            <td>Komm. GewSt.-Anteil</td>
+                            <td>{{ results.lease_trade_tax_wea }} €</td>
+                            <td>{{ results.lease_trade_tax_pv }} €</td>
+                            <td>{{ results.lease_trade_tax_apv }} €</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div class="av-results__details">
+                        <div class="title">
+                          <h3>Allgemeine Annahmen:</h3>
+                        </div>
+                        <ul class="list">
+                          <li>Zugrundeliegende Pachtpreise: WEA = 16.000,00 € pro MW; FF-PV = 3.000,00 € pro ha; APV = 830,00 € pro ha</li>
+                        </ul>
+                        <div class="title">
+                          <h3>Annahmen ESt.-Berechnung:</h3>
+                          <ul class="list">
+                            <li>
+                              Durchschnittliches DE-weites Brutto-Jahreseinkommen von 59.094,00 € <a href="https://www.destatis.de/DE/Themen/Arbeit/Verdienste/Verdienste-Branche-Berufe/Tabellen/bruttojahresverdienst.html"
+    title="Statistisches Bundesamt"
+    target="_blank"><i class="fas fa-link"></i></a>
+                            </li>
+                            <li>ledige Person</li>
+                          </ul>
+                          <div class="title">
+                            <h3>Annahmen GewSt.-Berechnung:</h3>
+                          </div>
+                          <ul class="list">
+                            <li>Kein Steuerfreibetrag aufgrund von Unternehmensform</li>
+                            <li>
+                              Berücksichtigung der Gewerbesteuerumlage laut Gemeindefinanzreformgesetz <a href="https://www.bundesfinanzministerium.de/Content/DE/Downloads/Oeffentliche-Finanzen/Foederale-Finanzbeziehungen/Kommunalfinanzen/Gemeindefinanzreform/entwicklung-gewerbesteuerumlage.pdf"
+    target="_blank"
+    title="Gewerbesteuerumlage"><i class="fas fa-link"></i></a>
+                            </li>
+                          </ul>
+                          <div class="more">
+                            Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% else %}
+                <div class="alert alert-info mt-4 mb-4" role="alert">
+                  <i class="fas fa-info-circle" data-placement="left"></i> Keine Einnahmen durch Pachterlöse vorhanden, da keine Angaben gemacht wurden. Entsprechend wird von Landes-/Bundeseigentum der Potenzialflächen ausgegangen.
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          <div id="taxes" class="tab-content">
+            {% if results.property_tax_a_wea != "0,00" %}
+              <div class="av-results__section">
+                <h2 class="smallHeadline">Erhöhte Grundsteuer A durch WEA</h2>
+                <div class="av-results__wrapper">
+                  <div class="av-results__text">
+                    <p>
+                      Der § 238 Abs. 2 BewG wertet WEA-Standorte auf land- und forstwirtschaftlichen Flächen durch einen Zuschlag auf. Die "abgegrenzte Standortfläche der Windenergieanlage" umfasst Turmgrundfläche, Sicherheitsabstände, Fundamente, Zuwegungen und Kranstellflächen.
+                      Der Zuschlag errechnet sich aus dieser Fläche und einem festgelegten Bewertungsfaktor.
+                    </p>
+                    <p>
+                      Anhand der zuvor getätigten Angaben wurde eine Anzahl von <b>{{ results.N_wea }} WEA</b> ermittelt. Die daraus entstehenden Mehreinnahmen durch die Grundsteuer A betragen:
+                    </p>
+                  </div>
+                  <div class="av-results__table">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>WEA</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>{{ results.property_tax_a_wea }} €</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="av-results__details">
+                      <div class="title">
+                        <h3>Annahmen:</h3>
+                      </div>
+                      <ul class="list">
+                        <li>Abgrenzende Standortfläche pro WEA beträgt 0,4 ha</li>
+                      </ul>
+                      <div class="more">
+                        <p>
+                          Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="alert alert-dark mt-4 mb-4" role="alert">
+                <i class="fas fa-info-circle" data-placement="left"></i> Grundsteuer A bleibt unverändert, da die WEA auf gemeindeeigenen Flächen errichtet wurden.
+              </div>
             {% endif %}
-            {% if results.wea_area_income != "0,00" or results.pv_area_income != "0,00" or results.apv_area_income != "0,00" or results.lease_est_income_wea != "0,00" or results.lease_est_income_pv != "0,00" or results.lease_est_income_apv != "0,00" or results.lease_trade_tax_wea != "0,00" or results.lease_trade_tax_pv != "0,00" or results.lease_trade_tax_apv != "0,00" %}
+          </div>
+          <div id="revenue" class="tab-content">
             <div class="av-results__section">
-              <h2 class="smallHeadline">Einnahmen durch Pachterlöse</h2>
+              <h2 class="rowHeader">Gewerbesteuereinnahmen durch Anlagengewinne</h2>
               <div class="av-results__wrapper">
                 <div class="av-results__chart">
-                  <div class="d-flex align-items-center">
-                    <div id="area_lease_income_loader" class="loader"></div>
-                    <div id="area_lease_income_chart" style="width: 100%;  height: 400px;"></div>
-                  </div>
+                  {% if results.total_trade_tax_3 != "0,00" %}
+                    <div class="d-flex align-items-center">
+                      <div id="trade_tax_wind_loader" class="loader"></div>
+                      <div id="trade_tax_wind_chart"
+                           class="chart-container"
+                           style="width: 100%;
+                                  height: 400px"></div>
+                    </div>
+                  {% endif %}
+                  {% if results.total_trade_tax_1 != "0,00" %}
+                    <div class="d-flex align-items-center">
+                      <div id="trade_tax_pv_loader" class="loader"></div>
+                      <div id="trade_tax_pv_chart"
+                           class="chart-container"
+                           style="width: 100%;
+                                  height: 400px"></div>
+                    </div>
+                  {% endif %}
+                  {% if results.total_trade_tax_2 != "0,00" %}
+                    <div class="d-flex align-items-center">
+                      <div id="trade_tax_apv_loader" class="loader"></div>
+                      <div id="trade_tax_apv_chart"
+                           class="chart-container"
+                           style="width: 100%;
+                                  height: 400px"></div>
+                    </div>
+                  {% endif %}
                 </div>
                 <div class="av-results__table">
                   <table class="table table-bordered">
@@ -148,22 +304,16 @@
                     </thead>
                     <tbody>
                       <tr>
-                        <td>Pachteinnahmen</td>
-                        <td>{{ results.wea_area_income }} €</td>
-                        <td>{{ results.pv_area_income }} €</td>
-                        <td>{{ results.apv_area_income }} €</td>
+                        <td>Max. jährl. GewSt.</td>
+                        <td>{{ results.max_tax_3 }} €</td>
+                        <td>{{ results.max_tax_1 }} €</td>
+                        <td>{{ results.max_tax_2 }} €</td>
                       </tr>
                       <tr>
-                        <td>Komm. ESt.-Anteil</td>
-                        <td>{{ results.lease_est_income_wea }} €</td>
-                        <td>{{ results.lease_est_income_pv }} €</td>
-                        <td>{{ results.lease_est_income_apv }} €</td>
-                      </tr>
-                      <tr>
-                        <td>Komm. GewSt.-Anteil</td>
-                        <td>{{ results.lease_trade_tax_wea }} €</td>
-                        <td>{{ results.lease_trade_tax_pv }} €</td>
-                        <td>{{ results.lease_trade_tax_apv }} €</td>
+                        <td>Einnahmen über 25 Jahre</td>
+                        <td>{{ results.total_trade_tax_3 }} €</td>
+                        <td>{{ results.total_trade_tax_1 }} €</td>
+                        <td>{{ results.total_trade_tax_2 }} €</td>
                       </tr>
                     </tbody>
                   </table>
@@ -172,28 +322,30 @@
                       <h3>Allgemeine Annahmen:</h3>
                     </div>
                     <ul class="list">
-                      <li>Zugrundeliegende Pachtpreise: WEA = 16.000,00 € pro MW; FF-PV = 3.000,00 € pro ha; APV = 830,00 € pro ha</li>
+                      <li>Zinssatz in Höhe von 5 %</li>
+                      <li>Eigenkapitalanteil von 80 %</li>
+                      <li>Tilgungsdauer von 15 Jahren</li>
                     </ul>
-                    <div class="title">
-                      <h3>Annahmen ESt.-Berechnung:</h3>
-                      <ul class="list">
-                        <li>
-                          Durchschnittliches DE-weites Brutto-Jahreseinkommen von 59.094,00 € <a href="https://www.destatis.de/DE/Themen/Arbeit/Verdienste/Verdienste-Branche-Berufe/Tabellen/bruttojahresverdienst.html"
-                          title="Statistisches Bundesamt"
-                          target="_blank"><i class="fas fa-link"></i></a>
-                        </li>
-                        <li>ledige Person</li>
-                      </ul>
+                    <a id="collapseDetailsWinBtn"
+                       data-bs-toggle="collapse"
+                       href="#collapseDetailsWin"
+                       role="button"
+                       aria-expanded="false"
+                       aria-controls="collapseDetailsWin"></a>
+                    <div class="collapse" id="collapseDetailsWin" style="margin-top: 1rem;">
                       <div class="title">
-                        <h3>Annahmen GewSt.-Berechnung:</h3>
+                        <h3>Annahmen WEA:</h3>
                       </div>
                       <ul class="list">
-                        <li>Kein Steuerfreibetrag aufgrund von Unternehmensform</li>
-                        <li>
-                          Berücksichtigung der Gewerbesteuerumlage laut Gemeindefinanzreformgesetz <a href="https://www.bundesfinanzministerium.de/Content/DE/Downloads/Oeffentliche-Finanzen/Foederale-Finanzbeziehungen/Kommunalfinanzen/Gemeindefinanzreform/entwicklung-gewerbesteuerumlage.pdf"
-                          target="_blank"
-                          title="Gewerbesteuerumlage"><i class="fas fa-link"></i></a>
-                        </li>
+                        <li>Angenommene Volllaststunden:</li>
+                        <li>Jährliche Leistungsdegradation von 0,6 %</li>
+                      </ul>
+                      <div class="title">
+                        <h3>Annahmen FF-PV:</h3>
+                      </div>
+                      <ul class="list">
+                        <li>Angenommene Volllaststunden:</li>
+                        <li>Jährliche Leistungsdegradation von 0,5 %</li>
                       </ul>
                       <div class="more">
                         Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
@@ -203,91 +355,20 @@
                 </div>
               </div>
             </div>
-            {% else %}
-            <div class="alert alert-info mt-4 mb-4" role="alert">
-              <i class="fas fa-info-circle" data-placement="left"></i> Keine Einnahmen durch Pachterlöse vorhanden, da keine Angaben gemacht wurden. Entsprechend wird von Landes-/Bundeseigentum der Potenzialflächen ausgegangen.
-            </div>
-            {% endif %}
-          </div>
-        </div>
-        <div id="taxes" class="tab-content">
-          {% if results.property_tax_a_wea != "0,00" %}
-          <div class="av-results__section">
-            <h2 class="smallHeadline">Erhöhte Grundsteuer A durch WEA</h2>
-            <div class="av-results__wrapper">
-              <div class="av-results__text">
-                <p>
-                  Der § 238 Abs. 2 BewG wertet WEA-Standorte auf land- und forstwirtschaftlichen Flächen durch einen Zuschlag auf. Die "abgegrenzte Standortfläche der Windenergieanlage" umfasst Turmgrundfläche, Sicherheitsabstände, Fundamente, Zuwegungen und Kranstellflächen.
-                  Der Zuschlag errechnet sich aus dieser Fläche und einem festgelegten Bewertungsfaktor.
-                </p>
-                <p>
-                  Anhand der zuvor getätigten Angaben wurde eine Anzahl von <b>{{ results.N_wea }} WEA</b> ermittelt. Die daraus entstehenden Mehreinnahmen durch die Grundsteuer A betragen:
-                </p>
-              </div>
-              <div class="av-results__table">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>WEA</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{ results.property_tax_a_wea }} €</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div class="av-results__details">
-                  <div class="title">
-                    <h3>Annahmen:</h3>
-                  </div>
-                  <ul class="list">
-                    <li>Abgrenzende Standortfläche pro WEA beträgt 0,4 ha</li>
-                  </ul>
-                  <div class="more">
-                    <p>
-                      Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
-                    </p>
+            <div class="av-results__section">
+              <h2 class="rowHeader">Gesamteinnahmen über 25 Jahre</h2>
+              <div class="av-results__wrapper">
+                <div class="av-results__chart">
+                  <div class="d-flex align-items-center">
+                    <div id="total_income_loader" class="loader"></div>
+                    <div id="total_income_chart" style="width: 100%; height: 500px;"></div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        {% else %}
-          <div class="alert alert-dark mt-4 mb-4" role="alert">
-            <i class="fas fa-info-circle" data-placement="left"></i> Grundsteuer A bleibt unverändert, da die WEA auf gemeindeeigenen Flächen errichtet wurden.
-          </div>
-        {% endif %}
-        </div>
-        <div id="revenue" class="tab-content">
-          <div class="av-results__section">
-            <h2 class="rowHeader">Gewerbesteuereinnahmen durch Anlagengewinne</h2>
-            <div class="av-results__wrapper">
-              <div class="av-results__chart">
-                {% if results.total_trade_tax_3 != "0,00" %}
-                <div class="d-flex align-items-center">
-                  <div id="trade_tax_wind_loader" class="loader"></div>
-                  <div id="trade_tax_wind_chart" style="width: 100%; height: 400px;"></div>
-                </div>
-              {% endif %}
-              {% if results.total_trade_tax_1 != "0,00" %}
-                <div class="d-flex align-items-center">
-                  <div id="trade_tax_pv_loader" class="loader"></div>
-                  <div id="trade_tax_pv_chart" style="width: 100%; height: 400px;"></div>
-                </div>
-              {% endif %}
-              {% if results.total_trade_tax_2 != "0,00" %}
-                <div class="d-flex align-items-center">
-                  <div id="trade_tax_apv_loader" class="loader"></div>
-                  <div id="trade_tax_apv_chart" style="width: 100%; height: 400px;"></div>
-                </div>
-              {% endif %}
-              </div>
-              <div class="av-results__table">
+              <div class="av-results__table" style="margin-top: 2rem">
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th></th>
                       <th>WEA</th>
                       <th>FF-PV</th>
                       <th>APV</th>
@@ -295,88 +376,19 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Max. jährl. GewSt.</td>
-                      <td>{{ results.max_tax_3 }} €</td>
-                      <td>{{ results.max_tax_1 }} €</td>
-                      <td>{{ results.max_tax_2 }} €</td>
-                    </tr>
-                    <tr>
-                      <td>Einnahmen über 25 Jahre</td>
-                      <td>{{ results.total_trade_tax_3 }} €</td>
-                      <td>{{ results.total_trade_tax_1 }} €</td>
-                      <td>{{ results.total_trade_tax_2 }} €</td>
+                      <td>{{ results.sum_wea }} €</td>
+                      <td>{{ results.sum_ff_pv }} €</td>
+                      <td>{{ results.sum_agri_pv }} €</td>
                     </tr>
                   </tbody>
                 </table>
-                <div class="av-results__details">
-                  <div class="title">
-                    <h3>Allgemeine Annahmen:</h3>
-                  </div>
-                  <ul class="list">
-                    <li>Zinssatz in Höhe von 5 %</li>
-                    <li>Eigenkapitalanteil von 80 %</li>
-                    <li>Tilgungsdauer von 15 Jahren</li>
-                  </ul>
-                  <a id="collapseDetailsWinBtn" data-bs-toggle="collapse" href="#collapseDetailsWin" role="button" aria-expanded="false" aria-controls="collapseDetailsWin">
-                  </a>
-                  <div class="collapse" id="collapseDetailsWin" style="margin-top: 1rem;">
-                    <div class="title">
-                      <h3>Annahmen WEA:</h3>
-                    </div>
-                    <ul class="list">
-                      <li>Angenommene Volllaststunden:</li>
-                      <li>Jährliche Leistungsdegradation von 0,6 %</li>
-                    </ul>
-                    <div class="title">
-                      <h3>Annahmen FF-PV:</h3>
-                    </div>
-                    <ul class="list">
-                      <li>Angenommene Volllaststunden:</li>
-                      <li>Jährliche Leistungsdegradation von 0,5 %</li>
-                    </ul>
-                    <div class="more">
-                      Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
-                    </div>
-                  </div>
-                </div>
               </div>
-            </div>
-          </div>
-          <div class="av-results__section">
-            <h2 class="rowHeader">Gesamteinnahmen über 25 Jahre</h2>
-            <div class="av-results__wrapper">
-              <div class="av-results__chart">
-                <div class="d-flex align-items-center">
-                  <div id="total_income_loader" class="loader"></div>
-                  <div id="total_income_chart" style="width: 100%; height: 500px;"></div>
-                </div>
-              </div>
-            </div>
-            <div class="av-results__table" style="margin-top: 2rem">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>WEA</th>
-                    <th>FF-PV</th>
-                    <th>APV</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{{ results.sum_wea }} €</td>
-                    <td>{{ results.sum_ff_pv }} €</td>
-                    <td>{{ results.sum_agri_pv }} €</td>
-                  </tr>
-                </tbody>
-              </table>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
 {% endblock content_no_sidebar %}
 {% block inline_javascript %}
   <script>
@@ -519,16 +531,16 @@
     });
   </script>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
       const addedValueButtons = document.querySelectorAll(".av-results .tab-button");
       const addedValueContent = document.querySelectorAll(".av-results .tab-content");
-  
+
       addedValueButtons.forEach((button) => {
         button.addEventListener("click", () => {
           // Remove active class from all buttons and contents
           addedValueButtons.forEach((btn) => btn.classList.remove("active"));
           addedValueContent.forEach((content) => content.classList.remove("active"));
-  
+
           // Add active class to clicked button and corresponding content
           button.classList.add("active");
           document.getElementById(button.dataset.tab).classList.add("active");
@@ -541,6 +553,12 @@
               totalIncomeChart.resize();
             }, 50);
           }
+
+          const charts = document.getElementById(button.dataset.tab).querySelectorAll(".chart-container");
+          charts.forEach((container) => {
+            const chart = echarts.getInstanceByDom(container);
+            if (chart) chart.resize();
+          });
         });
       });
     });
@@ -559,6 +577,5 @@
     myCollapsible.addEventListener('hidden.bs.collapse', () => {
       toggleText.textContent = 'Mehr anzeigen';
     });
-
   </script>
 {% endblock inline_javascript %}
