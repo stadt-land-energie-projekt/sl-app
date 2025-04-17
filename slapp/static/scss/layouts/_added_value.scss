@@ -8,12 +8,44 @@
     display: flex;
     flex-direction: column;
     padding-top: 4rem;
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
 
     @media only screen and (min-width: 1400px) {
       padding-top: 6rem;
       padding-bottom: 3rem;
     }
+
+  .avaspects {
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      margin-bottom: 0rem;
+
+      @media only screen and (min-width: 1200px) {
+        flex-direction: row;
+      }
+    }
+
+    .aspect {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      background-color: $color-accent-light;
+      padding: 1rem;
+      border-radius: $border-radius;
+
+      h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: $color-blue-dark;
+      }
+    }
+  }
 
     h1 {
       font-size: 2.5rem;
