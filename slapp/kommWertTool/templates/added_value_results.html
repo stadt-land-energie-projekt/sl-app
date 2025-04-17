@@ -210,82 +210,48 @@
             {% endif %}
           </div>
         </div>
-      </div>
-    {% endif %}
-    {% if results.wea_area_income != "0,00" or results.pv_area_income != "0,00" or results.apv_area_income != "0,00" or results.lease_est_income_wea != "0,00" or results.lease_est_income_pv != "0,00" or results.lease_est_income_apv != "0,00" or results.lease_trade_tax_wea != "0,00" or results.lease_trade_tax_pv != "0,00" or results.lease_trade_tax_apv != "0,00" %}
-      <hr />
-      <div class="row">
-        <div class="col-md-6 d-flex align-items-center">
-          <div id="area_lease_income_loader" class="loader"></div>
-          <div id="area_lease_income_chart" style="width: 100%;  height: 400px;"></div>
-        </div>
-        <div class="col-md-6 m-auto">
-          <h3 class="smallHeadline">Einnahmen durch Pachterlöse</h3>
-          <table class="table table-bordered">
-            <thead>
-              <tr class="table-info">
-                <th></th>
-                <th>WEA</th>
-                <th>FF-PV</th>
-                <th>APV</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Pachteinnahmen</td>
-                <td>{{ results.wea_area_income }} €</td>
-                <td>{{ results.pv_area_income }} €</td>
-                <td>{{ results.apv_area_income }} €</td>
-              </tr>
-              <tr>
-                <td>Komm. ESt.-Anteil</td>
-                <td>{{ results.lease_est_income_wea }} €</td>
-                <td>{{ results.lease_est_income_pv }} €</td>
-                <td>{{ results.lease_est_income_apv }} €</td>
-              </tr>
-              <tr>
-                <td>Komm. GewSt.-Anteil</td>
-                <td>{{ results.lease_trade_tax_wea }} €</td>
-                <td>{{ results.lease_trade_tax_pv }} €</td>
-                <td>{{ results.lease_trade_tax_apv }} €</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="expandable-text bg-light p-4 small text-muted">
-            <p class="mb-0">
-              <b>Allgemeine Annahmen:</b>
-            </p>
-            <ul>
-              <li>Zugrundeliegende Pachtpreise: WEA = 16.000,00 € pro MW; FF-PV = 3.000,00 € pro ha; APV = 830,00 € pro ha</li>
-            </ul>
-            <span class="collapse">
-              <p class="mb-0">
-                <b>Annahmen ESt.-Berechnung:</b>
-              </p>
-              <ul>
-                <li>
-                  Durchschnittliches DE-weites Brutto-Jahreseinkommen von 59.094,00 € <a href="https://www.destatis.de/DE/Themen/Arbeit/Verdienste/Verdienste-Branche-Berufe/Tabellen/bruttojahresverdienst.html"
-    title="Statistisches Bundesamt"
-    target="_blank"><i class="fas fa-link"></i></a>
-                </li>
-                <li>ledige Person</li>
-              </ul>
-              <p class="mb-0">
-                <b>Annahmen GewSt.-Berechnung:</b>
-              </p>
-              <ul>
-                <li>Kein Steuerfreibetrag aufgrund von Unternehmensform</li>
-                <li>
-                  Berücksichtigung der Gewerbesteuerumlage laut Gemeindefinanzreformgesetz <a href="https://www.bundesfinanzministerium.de/Content/DE/Standardartikel/Themen/Oeffentliche_Finanzen/Foederale_Finanzbeziehungen/Kommunalfinanzen/Gemeindefinanzreform/entwicklung-gewerbesteuerumlage.pdf"
-    target="_blank"
-    title="Gewerbesteuerumlage"><i class="fas fa-link"></i></a>
-                </li>
-              </ul>
-              <p>
-                Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
-              </p>
-            </span>
-            <a class="expand-btn mt-2 d-block" href="#" role="button">+ Mehr anzeigen</a>
+        <div id="taxes" class="tab-content">
+          {% if results.property_tax_a_wea != "0,00" %}
+          <div class="av-results__section">
+            <h2 class="smallHeadline">Erhöhte Grundsteuer A durch WEA</h2>
+            <div class="av-results__wrapper">
+              <div class="av-results__text">
+                <p>
+                  Der § 238 Abs. 2 BewG wertet WEA-Standorte auf land- und forstwirtschaftlichen Flächen durch einen Zuschlag auf. Die "abgegrenzte Standortfläche der Windenergieanlage" umfasst Turmgrundfläche, Sicherheitsabstände, Fundamente, Zuwegungen und Kranstellflächen.
+                  Der Zuschlag errechnet sich aus dieser Fläche und einem festgelegten Bewertungsfaktor.
+                </p>
+                <p>
+                  Anhand der zuvor getätigten Angaben wurde eine Anzahl von <b>{{ results.N_wea }} WEA</b> ermittelt. Die daraus entstehenden Mehreinnahmen durch die Grundsteuer A betragen:
+                </p>
+              </div>
+              <div class="av-results__table">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>WEA</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{ results.property_tax_a_wea }} €</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="av-results__details">
+                  <div class="title">
+                    <h3>Annahmen:</h3>
+                  </div>
+                  <ul class="list">
+                    <li>Abgrenzende Standortfläche pro WEA beträgt 0,4 ha</li>
+                  </ul>
+                  <div class="more">
+                    <p>
+                      Für eine detaillierte Dokumentation aller getroffener Annahmen siehe <a href="#" title="Dokumentation">hier</a>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         {% else %}
           <div class="alert alert-dark mt-4 mb-4" role="alert">
