@@ -158,8 +158,9 @@
 
 .av-send {
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
+  justify-content: center;
+  gap: 2rem;
+  padding: 4rem 2rem;
 
   .btn {
     @include button-primary;
