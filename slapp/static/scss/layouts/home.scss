@@ -185,13 +185,13 @@
 
   &__logos {
     display: flex;
-    gap: 2rem;
+    flex-wrap: wrap;
+    gap: 2rem 4rem;
     justify-content: center;
+    align-items: center;
 
     img {
-      max-height: 4rem;
       display: inline-block;
     }
   }
-
 }
