@@ -27,6 +27,7 @@ function regionSelected(buttonElement, regionTitle) {
     load_charts(regionTitle);
     console.log("region titel: " + regionTitle);
     display_details(regionTitle);
+    updateStickyHeader(regionTitle);
 }
 
 function display_details(regionTitle){
@@ -268,3 +269,48 @@ function load_co2_chart(co2Data) {
         <span style="margin-left: 8px;">${text}</span>
     `;
 }
+
+// Update the sticky header with the region's title and image
+function updateStickyHeader(title) {
+  const titleEl = document.getElementById('sticky-region-title');
+  titleEl.textContent = title;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // 1) Determine navbar height to offset the sticky header
+  const navbar    = document.querySelector('.navbar__wrap');
+  const navHeight = navbar ? navbar.offsetHeight : 0;
+
+  // Apply that offset so sticky-header sits just below main nav
+  const stickyHeader = document.getElementById('sticky-region-header');
+  stickyHeader.style.top = `${navHeight}px`;
+
+  // 2) Bind click events to all select-buttons
+  document.querySelectorAll('.select-button').forEach(button => {
+    button.addEventListener('click', event => {
+      const wrapper = event.currentTarget.closest('.cs__region-container');
+      const title   = wrapper.dataset.regionTitle;
+      const bbox    = JSON.parse(wrapper.dataset.regionBbox);
+
+      // 2a) Update the sticky header
+      updateStickyHeader(title);
+    });
+  });
+
+  // 3) Show/hide the sticky header when the first card scrolls out of view
+ const firstTitle = document.querySelector(
+    '.cs__region-container[data-region-title] .cs__top-row h2'
+  );
+  if (firstTitle) {
+    new IntersectionObserver(
+      ([entry]) => {
+        stickyHeader.classList.toggle('visible', !entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: `-${navHeight}px 0px 0px 0px`,
+        threshold: 0
+      }
+    ).observe(firstTitle);
+  }
+});
