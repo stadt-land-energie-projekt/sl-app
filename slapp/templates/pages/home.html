@@ -12,9 +12,7 @@
       <p class="hero__description">Interkommunale Energiewendeszenarien und Wertschöpfung im Stadt-Land-Nexus</p>
       <div class="hero__scenarios">
         <div class="hero__scenarios--item">
-          <h2>
-            Robuste Szenarien der Energiewende
-          </h2>
+          <h2>Robuste Szenarien der Energiewende</h2>
           <p>
             Die Optimierung von regionalen Energiewendeszenarien dient Stakeholdern als Entscheidungsgrundlage für die
             Gestaltung eines zukünftig klimaneutralen Energiesystems. Gekoppelt mit einer Robustheitsanalyse bietet der
@@ -25,16 +23,12 @@
           </p>
           <form method="post">
             {% csrf_token %}
-            <button type="submit" name="go_to_esys" class="btn btn-primary">
-              Start
-            </button>
+            <button type="submit" name="go_to_esys" class="btn btn-primary">Start</button>
           </form>
         </div>
         <div class="hero__scenarios--item">
           <h2>Wertschöpfungsrechner</h2>
-          <p>
-            Welchen finanziellen Mehrwert hat die Energiewende für Ihre Kommune?
-          </p>
+          <p>Welchen finanziellen Mehrwert hat die Energiewende für Ihre Kommune?</p>
           <p>
             Mit dem Wertschöpfungsrechner lässt sich ganz einfach das direkte kommunale Wertschöpfungspotential durch
             erneuerbare Energien abschätzen. Geben Sie die gemeindespezifische Potenzialflächen für erneuerbare Energien
@@ -49,9 +43,13 @@
       </div>
       <div class="hero__more">
         <a href="#home-info">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-            <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="16"
+               height="16"
+               fill="currentColor"
+               viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708" />
+            <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708" />
           </svg>
           <span>Hintergrund</span>
         </a>
@@ -103,12 +101,27 @@
       </div>
     </div>
     <div class="home__logos">
-      <img style="max-height: 5rem;" src="{% static 'images/logos/Logo_RLI.png' %}" alt="Logo RLI"/>
-      <img style="max-height: 3rem;" src="{% static 'images/logos/Logo_OVGU.png' %}" alt="Logo OVGU"/>
-      <img style="max-height: 7rem;" src="{% static 'images/logos/Logo_ZIB.png' %}" alt="Logo ZIB"/>
-      <img style="max-height: 6rem;" src="{% static 'images/logos/Logo_Kowid.png' %}" alt="Logo KOWID"/>
-      <img style="max-height: 4rem;" src="{% static 'images/logos/Logo_DStGB.svg' %}" alt="Logo DStGB"/>
-      <img style="max-height: 9rem;" src="{% static 'images/logos/Logo_BMWK.png' %}" alt="Logo BMWK"/>
+      <img style="max-height: 5rem"
+           src="{% static 'images/logos/Logo_RLI.png' %}"
+           alt="Logo RLI" />
+      <img style="max-height: 3rem"
+           src="{% static 'images/logos/Logo_OVGU.png' %}"
+           alt="Logo OVGU" />
+      <img style="max-height: 7rem"
+           src="{% static 'images/logos/Logo_ZIB.png' %}"
+           alt="Logo ZIB" />
+      <img style="max-height: 6rem"
+           src="{% static 'images/logos/Logo_Kowid.png' %}"
+           alt="Logo KOWID" />
+      <img style="max-height: 4rem"
+           src="{% static 'images/logos/Logo_UOS.svg' %}"
+           alt="Logo UOS" />
+      <img style="max-height: 4rem"
+           src="{% static 'images/logos/Logo_DStGB.svg' %}"
+           alt="Logo DStGB" />
+      <img style="max-height: 9rem"
+           src="{% static 'images/logos/Logo_BMWK.png' %}"
+           alt="Logo BMWK" />
     </div>
   </div>
 {% endblock content_no_sidebar %}
