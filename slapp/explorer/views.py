@@ -22,6 +22,7 @@ from django.views.generic import TemplateView
 from django_mapengine import views
 
 from . import charts, results
+from .chart_data import REGION_NAME_MAP as OS_REGIONS
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
 from .regions import get_case_studies_charts_data, get_energy_data
@@ -568,6 +569,7 @@ class Results(TemplateView):
         context["added_value_url"] = reverse("added_value:index")
         context["technologies"] = technologies
         context["alternatives"] = alternatives
+        context["os_regions"] = OS_REGIONS
         return context
 
 
@@ -613,7 +615,10 @@ def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
 def basic_charts(request: HttpRequest) -> JsonResponse:
     """Return data for basic charts on results page."""
     region = request.GET.get("type", "")
-    region = "all" if region == "verbu" else "single"
+    if region == "verbu":
+        region = "all"
+    elif region == "einzeln":
+        region = "single"
     basic_charts_data = charts.get_all_base_charts(region)
     return JsonResponse(basic_charts_data)
 

@@ -14,6 +14,8 @@ async function showHiddenDiv(region, button) {
             btn.classList.remove("selected");
             btn.textContent = "Auswählen";
         }
+
+    showDropdownBasicSolution(region);
     });
 
     const hiddenDiv = document.querySelector(".hidden-div");
@@ -664,3 +666,24 @@ function syncRowHeight(chartId, tableId, dataLength) {
   });
   // console.log("ended syncRowHeight");
 }
+
+function showDropdownBasicSolution(region){
+    const dropdown = document.getElementById('region-select');
+  if (!dropdown) return;
+
+  if (region === 'einzeln') {
+    dropdown.style.display = 'inline-block';
+  } else {
+    dropdown.style.display = 'none';
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const dropdown = document.getElementById("region-select");
+    if (dropdown) {
+        dropdown.addEventListener("change", function () {
+            const selectedregion = this.value;
+            loadBasicData(selectedregion);
+        });
+    }
+});
