@@ -325,7 +325,7 @@ function loadCostCapacityLineChart(lineData) {
             }
         },
         grid: { left: '10%', right: '20%', top: '25%', bottom: '15%', containLabel: true },
-        xAxis: { type: "category", name: "Kosten (€)", data: xValues, axisPointer: { snap: true } },
+        xAxis: { type: "category", name: "Kosten (€/MW)", data: xValues, axisPointer: { snap: true } },
         yAxis: { type: "value", name: "Installierte Leistung (MW)" },
         series: [{ type: "line", data: seriesData, smooth: true, showAllSymbol: true, symbol: "circle", symbolSize: 8 }]
     };
@@ -360,7 +360,7 @@ function loadTechComparisonChart(data, selectedX) {
     let barData = data.bar_data || [];
     if (barData.length === 0) {
          removeChart(el);
-         showErrorMessage(el, "Keine Daten verfügbar");
+         showErrorMessage(el, "Das Modell hat unter den getroffenen Annahmen keinen Ausbau der ausgewählten Technologie vorgesehen.");
          return;
     } else {
         removeErrorMessage(el);
