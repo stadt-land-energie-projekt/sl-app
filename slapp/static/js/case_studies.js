@@ -289,8 +289,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.select-button').forEach(button => {
     button.addEventListener('click', event => {
       const wrapper = event.currentTarget.closest('.cs__region-container');
+      console.log("wrapper ist: " + wrapper);
       const title   = wrapper.dataset.regionTitle;
-      const bbox    = JSON.parse(wrapper.dataset.regionBbox);
 
       // 2a) Update the sticky header
       updateStickyHeader(title);

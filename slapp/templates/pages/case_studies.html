@@ -45,8 +45,7 @@
         </header>
         <section class="cs__selection">
           {% for region in regions %}
-            <div class="cs__region-container"
-                 data-region-title="{{ region.title|escapejs }}">
+            <div class="cs__region-container" data-region-title="{{ region.title }}">
               <c-regions title="{{ region.title }}" :bbox="region.bbox" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" :keyfacts="region.keyfacts">
               </c-regions>
             </div>
