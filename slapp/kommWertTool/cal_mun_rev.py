@@ -217,7 +217,7 @@ def main(form_data):
             "legend": {
                 "top": "0",
                 "bottom": "50%",
-                "padding": [5, 10, 15, 10],  # [top, right, bottom, left]
+                "padding": [5, 0, 15, 0],  # [top, right, bottom, left]
                 "data": legend_data
             },
             "xAxis": {

@@ -1,3 +1,12 @@
+@keyframes floatUpDown {
+  0%, 100% {
+    transform: translateY(2px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
 .hero {
   background-image: url("/static/images/sle-hp-bg-min.png");
   background-size: cover;
@@ -16,6 +25,11 @@
     @media only screen and (min-width: 1400px) {
       padding-top: 8rem;
       padding-bottom: 2rem;
+    }
+
+    @media only screen and (max-height: 900px) {
+      padding-top: 5rem;
+      padding-bottom: 1rem;
     }
 
     &--name {
@@ -48,6 +62,10 @@
     @media only screen and (min-width: 992px) {
       font-size: 1.75rem;
     }
+
+    @media only screen and (max-height: 900px) {
+      padding-bottom: 2rem;
+    }
   }
 
   &__scenarios {
@@ -55,19 +73,18 @@
     flex-direction: column;
     justify-content: space-between;
     gap: 2rem;
-    padding-bottom: 4rem;
+    padding-bottom: 2rem;
 
     @media only screen and (min-width: 992px) {
-      padding-bottom: 8rem;
       flex-direction: row;
     }
 
     @media only screen and (min-width: 1400px) {
-      padding-bottom: 12rem;
+      padding-bottom: 4rem;
     }
 
-    @media only screen and (min-width: 1600px) {
-      padding-bottom: 16rem;
+    @media only screen and (max-height: 900px) {
+      padding-bottom: 4rem;
     }
 
     &--item {
@@ -97,6 +114,29 @@
 
     button {
       @include button-primary;
+    }
+  }
+
+  &__more {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2rem;
+
+    @media only screen and (min-width: 1400px) {
+      padding-bottom: 4rem;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      @include button-tertiary;
+      text-decoration: none;
+      font-size: 0.875rem;
+
+      svg {
+        animation: floatUpDown 2s ease-in-out infinite;
+      }
     }
   }
 }
@@ -140,6 +180,18 @@
       color: $font-color-secondary;
       font-weight: 400;
       line-height: 170%;
+    }
+  }
+
+  &__logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem 4rem;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      display: inline-block;
     }
   }
 }

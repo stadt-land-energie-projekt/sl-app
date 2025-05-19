@@ -21,24 +21,12 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
 from django_mapengine import views
 
+from . import charts, results
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
-from .regions import get_basic_charts_data, get_case_studies_charts_data, get_energy_data
+from .regions import get_case_studies_charts_data, get_energy_data
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
-from .results import (
-    build_cost_cap_data,
-    build_tech_comp_data,
-    filter_alternatives,
-    filter_region_and_tech,
-    get_alternative_result,
-    get_base_scenario,
-    get_potential,
-    get_potential_unit,
-    get_sensitivity_result,
-    get_technology_color,
-    prepare_table_data,
-)
 from .settings import TECHNOLOGIES, TECHNOLOGIES_SELECTED
 
 MAX_MUNICIPALITY_COUNT = 3
@@ -567,12 +555,17 @@ class Results(TemplateView):
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
-        technologies = sorted(TECHNOLOGIES.items(), key=lambda tech: tech[1]["name"])
-        alternatives = get_alternative_result("B", 1)
+        sensitivity_technologies = (
+            models.Sensitivity.objects.filter(attribute="capacity_cost", region="ALL")
+            .distinct()
+            .values_list("component", flat=True)
+        )
+        technologies = {tech: TECHNOLOGIES[tech] for tech in sensitivity_technologies}
+        technologies = sorted(technologies.items(), key=lambda tech: tech[1]["name"])
+        alternatives = results.get_alternative_result("B", 1)
 
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
-        context["sensitivity"] = get_sensitivity_result("CapacityCosts", "B", "pv")
         context["technologies"] = technologies
         context["alternatives"] = alternatives
         return context
@@ -590,18 +583,14 @@ def flow_chart(request: HttpRequest) -> JsonResponse:
 def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
     """Return either line_data or bar_data."""
     tech = request.GET.get("type", "")
+    sensitivity_data = results.get_sensitivity_result("capacity_cost", "ALL", tech)
 
-    selected_region = request.GET.get("region")
-    region = "B" if selected_region == "kiel" else "BB"
-
-    sensitivity_data = get_sensitivity_result("CapacityCosts", region, tech)
-    sensitivity_data.update(get_sensitivity_result("CapacityCosts", "ALL", tech))
-
-    if bool(sensitivity_data):
-        base_scenario = get_base_scenario()
+    if sensitivity_data:
+        base_scenario = results.get_base_scenario(var_value__gt=0)
         sensitivity_data[0.0] = base_scenario
 
-    sensitivity_data = filter_region_and_tech(sensitivity_data, region)
+    sensitivity_data = results.calculate_capacity_cost_for_technology(tech, sensitivity_data)
+
     # If an "x" parameter is provided, return tech comparison chart data.
     selected_x = request.GET.get("x")
     if selected_x is not None:
@@ -612,20 +601,20 @@ def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
         if selected_x not in sensitivity_data:
             return JsonResponse({"error": "x value not found"}, status=404)
 
-        tech_comp_data_list = build_tech_comp_data(sensitivity_data[selected_x], tech)
+        merged_sensitivity_data = results.merge_sensitivity_results(sensitivity_data)
+        tech_comp_data_list = results.build_tech_comp_data(merged_sensitivity_data[selected_x], tech)
         return JsonResponse({"bar_data": tech_comp_data_list})
 
     # Without "x": Create line chart data for the selected technology.
-    cost_cap_data = build_cost_cap_data(sensitivity_data, tech)
+    cost_cap_data = results.build_cost_cap_data(sensitivity_data, tech)
     return JsonResponse({"line_data": cost_cap_data})
 
 
 def basic_charts(request: HttpRequest) -> JsonResponse:
     """Return data for basic charts on results page."""
     region = request.GET.get("type", "")
-
-    basic_charts_data = get_basic_charts_data(region)
-
+    region = "all" if region == "verbu" else "single"
+    basic_charts_data = charts.get_all_base_charts(region)
     return JsonResponse(basic_charts_data)
 
 
@@ -635,14 +624,14 @@ def ranges(request: HttpRequest) -> JsonResponse:
     region = "B" if selected_region == "kiel" else "BB"
     divergence = float(request.GET.get("divergence", 1)) / 100
 
-    alternatives = get_alternative_result(region, divergence)
-    alternatives = filter_alternatives(alternatives, TECHNOLOGIES_SELECTED)
+    alternatives = results.get_alternative_result(region, divergence)
+    alternatives = results.filter_alternatives(alternatives, TECHNOLOGIES_SELECTED)
     for tech, vals in alternatives.items():
-        vals["color"] = get_technology_color(tech)
-        vals["potential"] = get_potential(tech) or 0
-        vals["potential_unit"] = get_potential_unit(tech)
+        vals["color"] = results.get_technology_color(tech)
+        vals["potential"] = results.get_potential(tech) or 0
+        vals["potential_unit"] = results.get_potential_unit(tech, vals["potential"])
 
-    alternatives = prepare_table_data(alternatives)
+    alternatives = results.prepare_table_data(alternatives)
     alternatives = dict(sorted(alternatives.items(), key=lambda item: item[1]["max_cost"]))
 
     return JsonResponse(

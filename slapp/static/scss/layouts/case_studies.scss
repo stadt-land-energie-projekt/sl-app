@@ -7,7 +7,7 @@
   header {
     display: flex;
     flex-direction: column;
-    padding-top: 4rem;
+    padding-top: 2rem;
     padding-bottom: 4rem;
 
     @media only screen and (min-width: 1400px) {
@@ -19,16 +19,38 @@
       font-size: 2.5rem;
       font-weight: 700;
       color: $font-color-main;
-      padding-bottom: 2rem;
+      padding-bottom: 1rem;
     }
 
     p {
-      max-width: 64rem;
       color: $font-color-secondary;
-      font-size: 1rem;
+      font-size: 1.25rem;
       line-height: 170%;
     }
   }
+
+/* Sticky header container */
+.sticky-region-header {
+  position: sticky;    /* stick within its parent section */
+  /* top will be set dynamically via JS to match navbar height */
+  left: 0; right: 0;   /* full-width within its container */
+  display: flex;       /* image + title side-by-side */
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: #fff;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* When visible, fade in */
+.sticky-region-header.visible {
+  opacity: 1;
+}
+
 
   &__selection {
     display: flex;
@@ -52,6 +74,11 @@
     border-radius: $border-radius;
     border: 2px solid #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   }
 
   &__region-image {
@@ -168,16 +195,15 @@
 
     .cs__cta-row {
       button {
-        background-color: #eff6ff;
+        background-color: $white;
         color: $color-selected;
-        border: 1px solid $color-selected;
         pointer-events: none;
       }
     }
   }
 
   #cs-details {
-    display: none;
+    display: block;
   }
 
   &__info {

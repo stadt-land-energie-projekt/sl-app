@@ -3,119 +3,324 @@
 {% load static %}
 
 {% block content_no_sidebar %}
-  <div class="flex-container">
-    <div class="container" id="header">
-      <h1>Zentrale Ergebnisse</h1>
-      <p>Wähle eine Case Study</p>
+  <nav class="header-tabs">
+    <div class="tab">
+      <a href="{% url 'explorer:esys_robust' %}">Energiesystem & Robustheit</a>
     </div>
-    <div id="regions-container">
-      <div class="region-box">
-        <h2>Oderland-Spree (Verbund)</h2>
-        <img src="{% static 'images/Oderland-Spree.png' %}"
-             alt="Karte Oderland-Spree Verbund" />
-        <button class="select-button" onclick="showHiddenDiv('verbu', this)">Auswählen</button>
-      </div>
-      <div class="region-box">
-        <h2>Oderland-Spree (Einzeln)</h2>
-        <img src="{% static 'images/Oderland-Spree-single.png' %}"
-             alt="Karte Oderland-Spree Einzeln" />
-        <button class="select-button" onclick="showHiddenDiv('einzeln', this)">Auswählen</button>
-      </div>
-      <div class="region-box">
-        <h2>Kiel</h2>
-        <img src="{% static 'images/Kiel.png' %}" alt="Karte Kiel" />
-        <button class="select-button" onclick="showHiddenDiv('kiel', this)">Auswählen</button>
+    <svg width="8"
+         height="14"
+         viewBox="0 0 8 14"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70772 7.70699L2.05072 13.364L0.636719 11.95L5.58672 6.99999L0.636719 2.04999L2.05072 0.635986L7.70772 6.29299C7.89519 6.48051 8.0005 6.73482 8.0005 6.99999C8.0005 7.26515 7.89519 7.51946 7.70772 7.70699Z" fill="#101828" />
+    </svg>
+    <div class="tab">
+      <a href="{% url 'explorer:case_studies' %}">Case Studies</a>
+    </div>
+    <svg width="8"
+         height="14"
+         viewBox="0 0 8 14"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70772 7.70699L2.05072 13.364L0.636719 11.95L5.58672 6.99999L0.636719 2.04999L2.05072 0.635986L7.70772 6.29299C7.89519 6.48051 8.0005 6.73482 8.0005 6.99999C8.0005 7.26515 7.89519 7.51946 7.70772 7.70699Z" fill="#101828" />
+    </svg>
+    <div class="tab selected">Ergebnisse</div>
+  </nav>
+  <main class="results">
+    <div class="results__container">
+      <header id="header">
+        <h1>Robuste Szenarien der Energiewende: Zentrale Ergebnisse</h1>
+        <p>
+          Hier finden Sie die zentralen Ergebnisse der berechneten Fallbeispiele. Wählen Sie dazu eine
+          Fallstudie aus und analysieren Sie den gesamten Lösungsraum der Energiewendeszenarien.
+        </p>
+      </header>
+      <div class="results__selection">
+        <div class="results__region-container">
+          <div class="results__top-row">
+            <img class="results__region-image"
+                 src="{% static 'images/Oderland-Spree.png' %}"
+                 alt="Karte Oderland-Spree Verbund" />
+            <h2>Oderland-Spree (Verbund)</h2>
+          </div>
+          <div class="results__cta-row">
+            <button class="select-button" onclick="showHiddenDiv('verbu', this)">Auswählen</button>
+          </div>
+        </div>
+        <div class="results__region-container"
+             data-region-name="oderland-spree-einzeln">
+          <div class="results__top-row">
+            <img class="results__region-image"
+                 src="{% static 'images/Oderland-Spree-single.png' %}"
+                 alt="Karte Oderland-Spree Einzeln" />
+            <h2>Oderland-Spree (Einzeln)</h2>
+          </div>
+          <div class="results__cta-row">
+            <button class="select-button" onclick="showHiddenDiv('einzeln', this)">Auswählen</button>
+          </div>
+        </div>
+        <div class="results__region-container disabled">
+          <div class="results__top-row">
+            <img class="results__region-image"
+                 src="{% static 'images/Kiel.png' %}"
+                 alt="Karte Kiel" />
+            <h2>Kiel</h2>
+          </div>
+          <div class="results__cta-row">
+            <button class="results__button"
+                    onclick="showHiddenDiv('kiel', this)"
+                    disabled>Demnächst verfügbar</button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="hidden-div">
-      <div class="flex-container">
-        <div id="electricity-chart"></div>
-        <div id="hydrogen-chart"></div>
-      </div>
-      <div class="container" id="basic-solution">
-        <h1>Basislösung</h1>
-        <div class="flex-container" id="basic-charts">
-          <div id="basic-electricity" class="chart-container"></div>
-          <div id="basic-heat" class="chart-container"></div>
-          <div id="basic-capacity" class="chart-container"></div>
-          <div id="basic-costs" class="chart-container"></div>
-        </div>
-      </div>
-      <div class="container">
-        <h1>Sensitivitäten</h1>
-        <p>Hier kommt auch noch ein Intro-Text dazu.</p>
-        <select id="technologySelect" name="technology" autocomplete="off">
-          {% for key, data in technologies %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
-        </select>
-        <div id="tech-container">
-          <div class="technology-charts" id="cost-capacity-chart"></div>
-          <div class="technology-charts" id="tech-comparison-chart"></div>
-        </div>
-      </div>
-      <div class="container">
-        <h1>Alternative Lösungen erkunden</h1>
-        <p>
-          Neben der obigen Basislösung haben wir zahlreiche alternative Wege zu einem erneuerbaren Energiesystem berechnet.
-          Dafür haben wir den sogenannten Ansatz <span>Modelling to Generate Alternatives</span> (MGA) verwendet.
-          Das bedeutet, dass für jede Technologie <span>verschiedene Ausbaumöglichkeiten</span> existieren, ohne dass die Gesamtsystemkosten
-          stark von den Kosten der (optimalen) Basislösung abweichen. Die Alternativen sollten nicht mehr als <span>1-2 %
-          günstiger oder teurer als die Basislösung</span> sein.
-          Der verstärkte Ausbau einer Technologie bei nahezu
-          gleichbleibenden Kosten funktioniert natürlich nur, wenn andere Technologien dafür weniger stark wachsen.
-          Das bedeutet, dass sich die Zusammensetzung des künftigen Energiesystems mit dem Fokus auf eine oder mehrere
-          Technologien mehr oder weniger stark ändern muss, um im Kostenrahmen zu bleiben.
-        </p>
-        <div id="example">
-          <h2>Beispiel</h2>
-          <div class="flex-container">
-            <img src="{% static 'images/icons/battery.svg' %}"
-                 alt="battery icon"
-                 id="battery-icon" />
-            <div>
-              <span>Batteriespeicher:</span> Statt X MWh in der Basislösung können Sie zusätzliche Speicherkapazitäten installieren.
-              Das kostet Sie für diese Anlagen zwar mehr, kann jedoch an anderer Stelle Kosten sparen, da z.B. mehr am
-              Tage gewonnene Energie in die Nachtstunden verschoben werden kann und damit weniger Photovoltaik und
-              Windenergieanlagen erforderlich werden, um den Energiebedarf zu decken.
-            </div>
+      <section class="bg-light">
+        <div class="results__container">
+          <div class="results__tabs">
+            <button class="tab-button active" data-tab="exchange">Austausch</button>
+            <button class="tab-button" data-tab="basic-solution">Basislösung</button>
+            <button class="tab-button" data-tab="sensitivity">Sensitivitäten</button>
+            <button class="tab-button" data-tab="alternatives">Alternative Lösungen erkunden</button>
           </div>
-        </div>
-        <div>
-          <div class="scope-chart">
-            <div class="flex-container">
-              <div class="plus-minus-container">
-                <img src="{% static 'images/icons/plus_minus.svg' %}"
-                     alt="plus-minus icon"
-                     class="plus-minus-icon" />
-                1 %
+          <div class="results__tabs-content">
+            <div id="exchange" class="tab-content tab-content--exchange active">
+              <p>
+                Hier sehen Sie, welche Strom- und Wasserstoffmengen ausgetauscht werden.
+              </p>
+              <div>
+                <div id="electricity-chart"></div>
+                <div id="hydrogen-chart"></div>
               </div>
-              Wenn Sie innerhalb von <span>+/- 1% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
-              folgende Spielräume:
             </div>
-            {% include 'pages/partials/ranges_chart_table.html' with divergence=1 %}
-          </div>
-          <div class="scope-chart">
-            <div class="flex-container">
-              <div class="plus-minus-container">
-                <img src="{% static 'images/icons/plus_minus.svg' %}"
-                     alt="plus-minus icon"
-                     class="plus-minus-icon" />
-                2 %
+            <div class="tab-content tab-content--basic" id="basic-solution">
+              <p>
+                Hier sehen Sie die Ergebnisse der optimalen Lösung des Energiesystems.
+              </p>
+              <div id="basic-charts">
+                <div>
+                  <div id="electricityImportChart" class="chart-container"></div>
+                  <div id="generationConsumptionChart" class="chart-container"></div>
+                </div>
+                <div>
+                  <div id="optimizedCapacitiesChart" class="chart-container"></div>
+                  <div id="selfGenerationPowerChart" class="chart-container"></div>
+                </div>
+                <div>
+                  <div id="suppliedHoursChart" class="chart-container"></div>
+                  <div id="totalElectricityChart" class="chart-container"></div>
+                </div>
               </div>
-              Wenn Sie innerhalb von <span>+/- 2% der Gesamtkosten</span> bleiben möchten, ergeben sich für die Technologien
-              folgende Spielräume:
             </div>
-            {% include 'pages/partials/ranges_chart_table.html' with divergence=2 %}
+            <div class="tab-content tab-content--sensitivity" id="sensitivity">
+              <p>
+                Wir haben berechnet, wie stark der Technologiemix von Investitionskosten, Kosten für Energie und
+                Energieträger sowie den jährlichen Energieverbräuchen abhängt. Mehr Hintergrundinformationen finden Sie
+                auf der Einstiegsseite zu <a href="/explorer/esys_robust">Energiesystem & Robustheit</a>.
+              </p>
+              <select id="technologySelect" name="technology" autocomplete="off">
+                {% for key, data in technologies %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
+              </select>
+              <div id="tech-container">
+                <div class="technology-charts chart-container" id="cost-capacity-chart"></div>
+                <div class="technology-charts chart-container" id="tech-comparison-chart"></div>
+              </div>
+            </div>
+            <div class="tab-content tab-content--alternatives" id="alternatives">
+{#              <h3>Modelling to Generate Alternatives (MGA)</h3>#}
+{#              <div class="more-info-box" id="more-info-box">#}
+                <p>
+                  Wir haben alternative Lösungen berechnet. Das sind verschiedene Ausbaukombinationen
+                  erneuerbarer Technologien bei nahezu gleichen Gesamtkosten. So lassen sich technologische Prioritäten
+                  setzen, ohne das Budget zu sprengen. Mehr dazu erfahren Sie auf der Einstiegsseite zu
+                  <a href="/explorer/esys_robust">Energiesystem & Robustheit</a>.
+                </p>
+{#                <button onclick="toggleMoreInfo()">#}
+{#                  <span>Mehr Infos</span>#}
+{#                  <span id="info-arrow" class="arrow-icon">#}
+{#                    <svg xmlns="http://www.w3.org/2000/svg"#}
+{#                         width="16"#}
+{#                         height="16"#}
+{#                         fill="currentColor"#}
+{#                         viewBox="0 0 16 16">#}
+{#                      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708" />#}
+{#                    </svg>#}
+{#                  </span>#}
+{#                </button>#}
+{#                <div class="more-info-box__text" id="more-info-text">#}
+{#                  <p>#}
+{#                    Neben der obigen Basislösung haben wir zahlreiche alternative Wege zu einem erneuerbaren Energiesystem berechnet.#}
+{#                    Dafür haben wir den sogenannten Ansatz <span>Modelling to Generate Alternatives</span> (MGA) verwendet.#}
+{#                    Das bedeutet, dass für jede Technologie <span>verschiedene Ausbaumöglichkeiten</span> existieren, ohne dass die Gesamtsystemkosten#}
+{#                    stark von den Kosten der (optimalen) Basislösung abweichen. Die Alternativen sollten nicht mehr als <span>1-2 %#}
+{#                    günstiger oder teurer als die Basislösung</span> sein.#}
+{#                    Der verstärkte Ausbau einer Technologie bei nahezu#}
+{#                    gleichbleibenden Kosten funktioniert natürlich nur, wenn andere Technologien dafür weniger stark wachsen.#}
+{#                    Das bedeutet, dass sich die Zusammensetzung des künftigen Energiesystems mit dem Fokus auf eine oder mehrere#}
+{#                    Technologien mehr oder weniger stark ändern muss, um im Kostenrahmen zu bleiben.#}
+{#                  </p>#}
+{#                </div>#}
+{#              </div>#}
+              <div>
+                <div class="toggle-buttons">
+                  <button class="alternative toggle-button active"
+                          onclick="toggleScope('scope-1')">± 1 % Gesamtkosten</button>
+                  <button class="alternative toggle-button" onclick="toggleScope('scope-2')">± 2 % Gesamtkosten</button>
+                </div>
+                <div id="scope-1" class="scope-wrapper active">
+                  {% include 'pages/partials/ranges_chart_table.html' with divergence=1 %}
+                </div>
+                <div id="scope-2" class="scope-wrapper">{% include 'pages/partials/ranges_chart_table.html' with divergence=2 %}</div>
+              </div>
+              <div id="example">
+                <h3>Beispiel: Batteriespeicher</h3>
+                <div class="example__content">
+                  <svg width="95"
+                       height="95"
+                       viewBox="0 0 95 95"
+                       fill="none"
+                       xmlns="http://www.w3.org/2000/svg">
+                    <path d="M43.912 22.3734V25.9618H51.0927V22.3734H43.912ZM37.6294 27.1606C36.1191 27.3127 34.939 28.5967 34.939 30.1515V69.6354C34.939 71.2942 36.2749 72.6264 37.9299 72.6264H57.0743C58.7331 72.6264 60.0653 71.2905 60.0653 69.6354V30.1515C60.0653 28.4927 58.7294 27.1606 57.0743 27.1606H37.6294ZM45.8751 36.7347H52.5882C53.4157 36.7347 54.0354 37.7849 53.6347 38.5122L48.6435 47.5038H51.9907C52.822 47.5112 53.4342 48.5762 53.0186 49.2998L45.2405 62.4621C44.9473 62.9779 44.2385 63.208 43.7004 62.9631C43.1623 62.7181 42.8729 62.0316 43.0696 61.4713L46.1348 52.2904H42.4127C41.678 52.2978 41.0582 51.4851 41.2549 50.7763L44.8433 37.614C45.0882 37.0722 45.4816 36.9052 45.8712 36.7345L45.8751 36.7347Z" fill="#1E3A8A" />
+                  </svg>
+                  <p>
+                    Statt X MWh in der Basislösung können Sie zusätzliche Speicherkapazitäten installieren.
+                    Das kostet Sie für diese Anlagen zwar mehr, kann jedoch an anderer Stelle Kosten sparen, da z.B. mehr am
+                    Tage gewonnene Energie in die Nachtstunden verschoben werden kann und damit weniger Photovoltaik und
+                    Windenergieanlagen erforderlich werden, um den Energiebedarf zu decken.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
-    <div>
-      <a href="{{ home_url }}" class="btn btn-primary mt-3">Zur Hauptseite</a>
-      <a href="{{ added_value_url }}" class="btn btn-primary mt-3">Zum Wertschöpfungsrechner</a>
+    <div class="results__buttons">
+      <a href="{{ home_url }}" class="button--tertiary">Zur Hauptseite</a>
+      <a href="{{ added_value_url }}" class="button--primary">Zum Wertschöpfungsrechner</a>
     </div>
-  </div>
+  </main>
 {% endblock content_no_sidebar %}
 {% block javascript %}
   {{ block.super }}
   <script src="{% static 'js/results.js' %}" defer></script>
+  <script src="{% static 'js/base_charts.js' %}" defer></script>
 {% endblock javascript %}
+{% block inline_javascript %}
+  <script>
+    // Toggle content about MGA
+    function toggleMoreInfo() {
+      const box = document.getElementById("more-info-box");
+      const arrow = document.getElementById("info-arrow");
+
+      box.classList.toggle("open");
+
+      const isOpen = box.classList.contains("open");
+
+      arrow.innerHTML = isOpen ?
+        `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z" />
+          </svg>` :
+        `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708" />
+          </svg>`;
+    }
+
+
+    // Tabs between 1% and 2% scope
+    function toggleScope(id) {
+      document.querySelectorAll('.scope-wrapper').forEach(div => div.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+
+      document.querySelectorAll('.toggle-button').forEach(btn => btn.classList.remove('active'));
+      const idx = id === 'scope-1' ? 0 : 1;
+      document.querySelectorAll('.toggle-button')[idx].classList.add('active');
+    }
+
+    // Disable tabs for Oderland Einzeln
+    function handleOderlandSpreeTabVisibility() {
+      const oderlandSpreeRegion = document.querySelector('[data-region-name="oderland-spree-einzeln"]');
+      const sensitivityTab = document.querySelector('.tab-button[data-tab="sensitivity"]');
+      const alternativesTab = document.querySelector('.tab-button[data-tab="alternatives"]');
+      const exchangeTab = document.querySelector('.tab-button[data-tab="exchange"]');
+
+      if (oderlandSpreeRegion && sensitivityTab && alternativesTab && exchangeTab) {
+        const isSelected = oderlandSpreeRegion.classList.contains('selected');
+
+        if (isSelected) {
+          sensitivityTab.disabled = true;
+          alternativesTab.disabled = true;
+          sensitivityTab.classList.add('disabled');
+          alternativesTab.classList.add('disabled');
+
+          const isSensitivityActive = sensitivityTab.classList.contains('active');
+          const isAlternativesActive = alternativesTab.classList.contains('active');
+
+          // If a disabled tab is active, switch to the exchange tab
+          if (isSensitivityActive || isAlternativesActive) {
+            // Simulate a click on the exchange tab to properly trigger the event handler
+            exchangeTab.click();
+          }
+        } else {
+          sensitivityTab.disabled = false;
+          alternativesTab.disabled = false;
+          sensitivityTab.classList.remove('disabled');
+          alternativesTab.classList.remove('disabled');
+        }
+      }
+    }
+
+    function updateTabState() {
+      handleOderlandSpreeTabVisibility();
+    }
+
+    function setupObserver() {
+      const oderlandSpreeRegion = document.querySelector('[data-region-name="oderland-spree-einzeln"]');
+
+      if (oderlandSpreeRegion) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              updateTabState();
+            }
+          });
+        });
+
+        observer.observe(oderlandSpreeRegion, {
+          attributes: true
+        });
+        updateTabState();
+      }
+    }
+
+    // Show the hidden div and hide the selection
+    document.addEventListener('DOMContentLoaded', function() {
+      setupObserver();
+
+      const buttons = document.querySelectorAll(".results .tab-button");
+      const contents = document.querySelectorAll(".results .tab-content");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          // Don't process clicks on disabled buttons
+          if (button.disabled) {
+            return;
+          }
+
+          buttons.forEach((btn) => btn.classList.remove("active"));
+          contents.forEach((content) => content.classList.remove("active"));
+          button.classList.add("active");
+          const activeTab = document.getElementById(button.dataset.tab);
+          activeTab.classList.add("active");
+
+          // Trigger chart resize for all charts inside the activated tab
+          const charts = activeTab.querySelectorAll(".chart-container");
+          charts.forEach((container) => {
+            const chart = echarts.getInstanceByDom(container);
+            if (chart) chart.resize();
+          });
+        });
+      });
+    });
+  </script>
+{% endblock inline_javascript %}
