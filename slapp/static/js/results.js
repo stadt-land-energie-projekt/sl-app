@@ -541,11 +541,9 @@ function renderChart(chartId, dataArray) {
       }
     },
     grid: {
-      left: '50%',
-      right: '10%',
       top: 45,      // Must equal table header row height
-      bottom: 1,    // Must be non-zero, as otherwise last y-category tick is not drawn
-      containLabel: false,
+      bottom: '-1.64%',    // Must be non-zero, as otherwise last y-category tick is not drawn
+      containLabel: true,
     },
     xAxis: {
       type: 'value',
@@ -559,6 +557,7 @@ function renderChart(chartId, dataArray) {
       inverse: true,
       axisTick: { show: true },
       show : true,
+      containLabel: true,
     },
     series: [
       // 1) Offset series (transparent)
