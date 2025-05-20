@@ -7,84 +7,91 @@
     <div class="tab">
       <a href="{% url 'explorer:esys_robust' %}">Energiesystem & Robustheit</a>
     </div>
-    <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M7.70772 7.70699L2.05072 13.364L0.636719 11.95L5.58672 6.99999L0.636719 2.04999L2.05072 0.635986L7.70772 6.29299C7.89519 6.48051 8.0005 6.73482 8.0005 6.99999C8.0005 7.26515 7.89519 7.51946 7.70772 7.70699Z"
-            fill="#101828"/>
+    <svg width="8"
+         height="14"
+         viewBox="0 0 8 14"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70772 7.70699L2.05072 13.364L0.636719 11.95L5.58672 6.99999L0.636719 2.04999L2.05072 0.635986L7.70772 6.29299C7.89519 6.48051 8.0005 6.73482 8.0005 6.99999C8.0005 7.26515 7.89519 7.51946 7.70772 7.70699Z" fill="#101828" />
     </svg>
-    <div class="tab selected">
-      Case Studies
-    </div>
-    <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M7.70772 7.70699L2.05072 13.364L0.636719 11.95L5.58672 6.99999L0.636719 2.04999L2.05072 0.635986L7.70772 6.29299C7.89519 6.48051 8.0005 6.73482 8.0005 6.99999C8.0005 7.26515 7.89519 7.51946 7.70772 7.70699Z"
-            fill="#101828"/>
+    <div class="tab selected">Case Studies</div>
+    <svg width="8"
+         height="14"
+         viewBox="0 0 8 14"
+         fill="none"
+         xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M7.70772 7.70699L2.05072 13.364L0.636719 11.95L5.58672 6.99999L0.636719 2.04999L2.05072 0.635986L7.70772 6.29299C7.89519 6.48051 8.0005 6.73482 8.0005 6.99999C8.0005 7.26515 7.89519 7.51946 7.70772 7.70699Z" fill="#101828" />
     </svg>
     <div class="tab">
       <a href="{% url 'explorer:results' %}">Ergebnisse</a>
     </div>
   </nav>
   <main class="cs">
-    <div class="cs__container">
-      <header>
-        <h1>Robuste Szenarien der Energiewende: Zwei Fallstudien</h1>
-        <p>
-          Wie lassen sich regionale und interkommunale Energiewendeszenarien erfolgreich umsetzen? Zwei Fallstudien aus
-          Deutschland zeigen praxisnahe Lösungen für eine nachhaltige und regionale Energiezukunft: <b>Vier Gemeinden in
-          Oderland-Spree und Kiel</b>. Anhand konkreter Beispiele wird deutlich, welche Herausforderungen Städte und
-          ländliche Regionen gemeinsam meistern müssen und welche Chancen sich durch innovative Konzepte und
-          Kooperationen ergeben.
-        </p>
-      </header>
-      <section class="cs__selection">
-        {% for region in regions %}
-          {{ region.centroid }}
-          <c-regions title="{{ region.title }}" :bbox="region.bbox" info="{{ region.info }}"
-                     img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}"
-                     :keyfacts="region.keyfacts">
-          </c-regions>
-        {% endfor %}
-      </section>
-    </div>
-    <section class="bg-light" id="cs-details">
+    <section id="cs-region">
+      <!-- Sticky header placeholder (initially empty) -->
+      <div id="sticky-region-header" class="sticky-region-header">
+        <h2 id="sticky-region-title" class="sticky-region-title"></h2>
+      </div>
       <div class="cs__container">
-        <div id="legend" class="legend"></div>
-        <div class="cs__info">
-          <h2 class="cs__region" id="cs-selected-name">Regionname</h2>
-          <div class="cs__tabs">
-            <button class="tab-button active" data-tab="map">Karte</button>
-            <button class="tab-button" data-tab="charts">Statistiken</button>
-            <button class="tab-button" data-tab="details">Details</button>
-          </div>
-          <div class="cs__tabs-content">
-            <div id="map" class="tab-content active"></div>
-            <div id="charts" class="tab-content">
-              <div class="charts-container">
-                <div id="electricityImportChart" class="chart"></div>
-                <div id="generationConsumptionChart" class="chart"></div>
-                <div id="optimizedCapacitiesChart" class="chart"></div>
-                <div id="selfGenerationPowerChart" class="chart"></div>
-                <div id="suppliedHoursChart" class="chart"></div>
-                <div id="totalElectricityChart" class="chart"></div>
-              </div>
+        <header>
+          <h1>Robuste Szenarien der Energiewende: Zwei Fallstudien</h1>
+          <p>
+            Wie lassen sich regionale und interkommunale Energiewendeszenarien erfolgreich umsetzen? Zwei Fallstudien aus
+            Deutschland zeigen praxisnahe Lösungen für eine nachhaltige und regionale Energiezukunft: <b>Vier Gemeinden in
+            Oderland-Spree und Kiel</b>. Anhand konkreter Beispiele wird deutlich, welche Herausforderungen Städte und
+            ländliche Regionen gemeinsam meistern müssen und welche Chancen sich durch innovative Konzepte und
+            Kooperationen ergeben.
+          </p>
+        </header>
+        <section class="cs__selection">
+          {% for region in regions %}
+            <div class="cs__region-container" data-region-title="{{ region.title }}">
+              <c-regions title="{{ region.title }}" :bbox="region.bbox" info="{{ region.info }}" img_source="{% static 'images/' %}{{ region.img_source }}" text="{{ region.text }}" :keyfacts="region.keyfacts">
+              </c-regions>
             </div>
-            <div id="details" class="tab-content">
-              <div id="table-details-os" class="container mt-4">
-                <h2>Detailansicht Oderland-Spree</h2>
-                {% include "pages/details.html" with municipalities=municipalities_region_os %}
+          {% endfor %}
+        </section>
+      </div>
+      <section class="bg-light" id="cs-details">
+        <div class="cs__container">
+          <div id="legend" class="legend"></div>
+          <div class="cs__info">
+            <h2 class="cs__region" id="cs-selected-name">Regionname</h2>
+            <div class="cs__tabs">
+              <button class="tab-button active" data-tab="map">Karte</button>
+              <button class="tab-button" data-tab="charts">Statistiken</button>
+              <button class="tab-button" data-tab="details">Details</button>
+            </div>
+            <div class="cs__tabs-content">
+              <div id="map" class="tab-content active"></div>
+              <div id="charts" class="tab-content">
+                <div class="charts-container">
+                  <div id="electricityImportChart" class="chart"></div>
+                  <div id="generationConsumptionChart" class="chart"></div>
+                  <div id="optimizedCapacitiesChart" class="chart"></div>
+                  <div id="selfGenerationPowerChart" class="chart"></div>
+                  <div id="suppliedHoursChart" class="chart"></div>
+                  <div id="totalElectricityChart" class="chart"></div>
+                </div>
               </div>
-              <div id="table-details-kiel" class="container mt-4">
-                <h2>Detailansicht Kiel</h2>
-                {% include "pages/details.html" with municipalities=municipalities_region_kiel %}
+              <div id="details" class="tab-content">
+                <div id="table-details-os" class="container mt-4">
+                  <h2>Detailansicht Oderland-Spree</h2>
+                  {% include "pages/details.html" with municipalities=municipalities_region_os %}
+                </div>
+                <div id="table-details-kiel" class="container mt-4">
+                  <h2>Detailansicht Kiel</h2>
+                  {% include "pages/details.html" with municipalities=municipalities_region_kiel %}
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </section>
+      <div class="cs__button">
+        <a href="{{ next_url }}" id="btn_next">Zu den Ergebnissen</a>
       </div>
     </section>
-    <div class="cs__button">
-      <a href="{{ next_url }}" id="btn_next">Zu den Ergebnissen</a>
-    </div>
   </main>
 {% endblock content_no_sidebar %}
 {% block javascript %}
@@ -103,61 +110,61 @@
     {% include 'django_mapengine/map_js.html' %}
   {% endcompress %}
   <script>
-      const eventTopics = {};
-      window.regionTitle = "{{ regions.0.title|escapejs }}";
+    const eventTopics = {};
+    window.regionTitle = "{{ regions.0.title|escapejs }}";
   </script>
   <script>
-      document.addEventListener("DOMContentLoaded", function () {
-          const buttons = document.querySelectorAll(".tab-button");
-          const contents = document.querySelectorAll(".tab-content");
+    document.addEventListener("DOMContentLoaded", function() {
+      const buttons = document.querySelectorAll(".tab-button");
+      const contents = document.querySelectorAll(".tab-content");
 
-          buttons.forEach((button) => {
-              button.addEventListener("click", () => {
-                  // Remove active class from all buttons and contents
-                  buttons.forEach((btn) => btn.classList.remove("active"));
-                  contents.forEach((content) => content.classList.remove("active"));
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          // Remove active class from all buttons and contents
+          buttons.forEach((btn) => btn.classList.remove("active"));
+          contents.forEach((content) => content.classList.remove("active"));
 
-                  // Add active class to clicked button and corresponding content
-                  button.classList.add("active");
-                  document.getElementById(button.dataset.tab).classList.add("active");
-                  console.log(button)
-              });
-          });
+          // Add active class to clicked button and corresponding content
+          button.classList.add("active");
+          document.getElementById(button.dataset.tab).classList.add("active");
+          console.log(button)
+        });
       });
+    });
   </script>
   <script>
-      document.addEventListener('DOMContentLoaded', function () {
-          const allRegions = document.querySelectorAll('.cs__region-container');
+    document.addEventListener('DOMContentLoaded', function() {
+      const allRegions = document.querySelectorAll('.cs__region-container');
 
-          allRegions.forEach(container => {
-              const titleEl = container.querySelector('h2');
-              if (titleEl && titleEl.textContent.trim() === 'Region Kiel') {
-                  container.classList.add('disabled');
-                  const button = container.querySelector('button');
-                  if (button) {
-                      button.disabled = true;
-                      button.textContent = "Demnächst verfügbar";
-                  }
-              } else {
-                  container.classList.add('selected');
-                  const button = container.querySelector('button');
-                  if (button) {
-                      button.textContent = "Ausgewählt";
-                  }
-              }
-          });
+      allRegions.forEach(container => {
+        const titleEl = container.querySelector('h2');
+        if (titleEl && titleEl.textContent.trim() === 'Region Kiel') {
+          container.classList.add('disabled');
+          const button = container.querySelector('button');
+          if (button) {
+            button.disabled = true;
+            button.textContent = "Demnächst verfügbar";
+          }
+        } else {
+          container.classList.add('selected');
+          const button = container.querySelector('button');
+          if (button) {
+            button.textContent = "Ausgewählt";
+          }
+        }
       });
+    });
 
-      // Activate first region at startup
-      map.on("load", async function () {
-          document.querySelector(".cs__cta-row").getElementsByClassName("select-button")[0].click();
-      });
+    // Activate first region at startup
+    map.on("load", async function() {
+      document.querySelector(".cs__cta-row").getElementsByClassName("select-button")[0].click();
+    });
   </script>
 {% endblock inline_javascript %}
 {% block css %}
   {{ block.super }}
   {% compress css %}
     <link href="{% static 'vendors/maplibre/css/maplibre-gl.css' %}"
-          rel='stylesheet'/>
+          rel='stylesheet' />
   {% endcompress %}
 {% endblock css %}
