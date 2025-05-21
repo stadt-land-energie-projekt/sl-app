@@ -118,7 +118,7 @@
                 <p>
                   Wir haben berechnet, wie stark der Technologiemix von Investitionskosten, Kosten für Energie und
                   Energieträger sowie den jährlichen Energieverbräuchen abhängt. Mehr Hintergrundinformationen finden Sie
-                  auf der Einstiegsseite zu <a href="/explorer/esys_robust">Energiesystem & Robustheit</a>.
+                  auf der Einstiegsseite zu <a href="{% url 'explorer:esys_robust' %}">Energiesystem & Robustheit</a>.
                 </p>
                 <select id="technologySelect" name="technology" autocomplete="off">
                   {% for key, data in technologies %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
@@ -135,7 +135,7 @@
                   Wir haben alternative Lösungen berechnet. Das sind verschiedene Ausbaukombinationen
                   erneuerbarer Technologien bei nahezu gleichen Gesamtkosten. So lassen sich technologische Prioritäten
                   setzen, ohne das Budget zu sprengen. Mehr dazu erfahren Sie auf der Einstiegsseite zu
-                  <a href="/explorer/esys_robust">Energiesystem & Robustheit</a>.
+                  <a href="{% url 'explorer:esys_robust' %}">Energiesystem & Robustheit</a>.
                 </p>
                 {#                <button onclick="toggleMoreInfo()">#}
                 {#                  <span>Mehr Infos</span>#}
