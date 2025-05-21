@@ -799,7 +799,7 @@
                     <div class="col-md-6">
                         <label for="${type}_anteil_flaeche${counters[type]}">Anteil an Fläche in %</label>
                         <input class="form-control" id="${type}_anteil_flaeche${counters[type]}" name="${type}_anteil_flaeche${counters[type]}" type="number" oninput="validateAnteilFlaeche('${type}')" />
-                        <small id="${type}_error_msg${counters[type]}" class="text-danger d-none">Die Summe der Flächenanteile liegt über 100 %. Bitte reduzieren sie die Anteile.</small>
+                        <small id="${type}_error_msg${counters[type]}" class="d-none"></small>
                     </div>
                 </div>`;
 
@@ -828,31 +828,42 @@
           }
       }
 
-      function validateAnteilFlaeche(type) {
-          let total = 0;
-          let fields = document.querySelectorAll(`#flaecheneigentuemer-container-${type} input[name^="${type}_anteil_flaeche"]`);
-          let isOver100 = false;
-          fields.forEach((field, index) => {
-              let value = parseFloat(field.value) || 0;
-              total += value;
-              let errorMsg = document.getElementById(`${type}_error_msg${index + 1}`);
-              if (total > 100) {
-                  isOver100 = true;
-                  if (index === fields.length - 1) {
-                      field.style.borderColor = 'red';
-                      field.style.backgroundColor = 'red';
-                      field.style.color = 'white';
-                      field.style.fontWeight = 'bold';
-                      errorMsg.classList.remove('d-none');
-                  }
-              } else {
-                  field.style.borderColor = '';
-                  field.style.backgroundColor = '';
-                  field.style.fontWeight = '';
-                  field.style.color = '';
-                  if (errorMsg) errorMsg.classList.add('d-none');
-              }
-          });
+    function validateAnteilFlaeche(type) {
+      let total = 0;
+      let fields = document.querySelectorAll(`#flaecheneigentuemer-container-${type} input[name^="${type}_anteil_flaeche"]`);
+      let isOver100 = false;
+      fields.forEach((field, index) => {
+        let value = parseFloat(field.value) || 0;
+        total += value;
+        let errorMsg = document.getElementById(`${type}_error_msg${index + 1}`);
+        if (total > 100) {
+          isOver100 = true;
+          if (index === fields.length - 1) {
+            field.style.borderColor = 'red';
+            field.style.backgroundColor = 'red';
+            field.style.color = 'white';
+            field.style.fontWeight = 'bold';
+            errorMsg.classList.remove('d-none');
+            errorMsg.classList.add('text-danger');
+            errorMsg.textContent = 'Die Summe der Flächenanteile liegt über 100 %. Bitte reduzieren sie die Anteile.';
+          }
+        } else if (total < 100) {
+          if (index === fields.length - 1) {
+            field.style.borderColor = '';
+            field.style.backgroundColor = '';
+            field.style.fontWeight = '';
+            field.style.color = '';
+            errorMsg.classList.remove('d-none', 'text-danger');
+            errorMsg.textContent = 'Die Summe der Flächenanteile ist kleiner 100 %. Einnahmen werden nur für die eingegebenen Flächen berechnet.';
+          }
+        } else {
+          field.style.borderColor = '';
+          field.style.backgroundColor = '';
+          field.style.fontWeight = '';
+          field.style.color = '';
+          if (errorMsg) errorMsg.classList.add('d-none');
+        }
+      })
 
           document.querySelector('button[type="submit"]').disabled = isOver100;
           return isOver100;
