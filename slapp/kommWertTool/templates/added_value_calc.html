@@ -17,24 +17,32 @@
         </p>
         <p>Zu den direkten Einnahmequellen aus den Ausbau Erneuerbarer Energien zählen:</p>
         <div class="avaspects">
-              <div>
-                <div class="aspect">
-                  <img style="width: 48px;" src="{% static 'images/icons/hand.svg' %}" alt="Hand"/>
-                  <h3>EEG-Beteiligung</h3>
-                </div>
-                <div class="aspect">
-                  <img style="width: 48px;" src="{% static 'images/icons/hand.svg' %}" alt="Hand"/>
-                  <h3>Wind- und Solar-Euro</h3>
-                </div>
-                <div class="aspect">
-                  <img style="width: 48px;" src="{% static 'images/icons/hand.svg' %}" alt="Hand"/>
-                  <h3>Pachteinnahmen</h3>
-                </div>
-                <div class="aspect">
-                  <img style="width: 48px;" src="{% static 'images/icons/hand.svg' %}" alt="Hand"/>
-                  <h3>Steuereinnahmen</h3>
-                </div>
-              </div>
+          <div>
+            <div class="aspect">
+              <img style="width: 48px"
+                   src="{% static 'images/icons/hand.svg' %}"
+                   alt="Hand" />
+              <h3>EEG-Beteiligung</h3>
+            </div>
+            <div class="aspect">
+              <img style="width: 48px"
+                   src="{% static 'images/icons/hand.svg' %}"
+                   alt="Hand" />
+              <h3>Wind- und Solar-Euro</h3>
+            </div>
+            <div class="aspect">
+              <img style="width: 48px"
+                   src="{% static 'images/icons/hand.svg' %}"
+                   alt="Hand" />
+              <h3>Pachteinnahmen</h3>
+            </div>
+            <div class="aspect">
+              <img style="width: 48px"
+                   src="{% static 'images/icons/hand.svg' %}"
+                   alt="Hand" />
+              <h3>Steuereinnahmen</h3>
+            </div>
+          </div>
         </div>
       </header>
       <div class="av-content addedValueCalc">
@@ -43,14 +51,18 @@
             <div class="alert alert-info">
               <p class="alert-heading">Anwendungshinweise</p>
               <p>
-                <i class="fas fa-exclamation-triangle" aria-hidden="true" style="padding-right: 0.5rem;"></i>
+                <i class="fas fa-exclamation-triangle"
+                   aria-hidden="true"
+                   style="padding-right: 0.5rem"></i>
                 Es ist wichtig zu beachten, dass die <b>tatsächliche Wertschöpfung deutlich höher</b> ausfallen kann,
                 wenn
                 lokale Unternehmen einbezogen werden, Bürger-Beteiligungen erfolgen und induzierte Effekte
                 berücksichtigt werden.
               </p>
               <p>
-                <i class="fas fa-info-circle" aria-hidden="true"  style="padding-right: 0.5rem;"></i>
+                <i class="fas fa-info-circle"
+                   aria-hidden="true"
+                   style="padding-right: 0.5rem"></i>
                 Es reicht die Angabe der Potenzialfläche oder der maximal installierbaren Leistung, insofern Sie keine
                 weiteren Informationen vorliegen haben. Weitere benötigte Werte werden mittels Standardverfahren und
                 -werten berechnet.
@@ -71,8 +83,7 @@
                         name="choosen_mun">
                   <option>Gemeinde wählen</option>
                   {% for municipality in municipalities %}
-                    <option value="{{ municipality.id }}"
-                            data-name="{{ municipality.name }}">{{ municipality.name }}</option>
+                    <option value="{{ municipality.id }}" data-name="{{ municipality.name }}">{{ municipality.name }}</option>
                   {% endfor %}
                   <option value="own_county" data-name="own_county">Eigener Landkreis</option>
                 </select>
@@ -88,7 +99,7 @@
                            name="check_county"
                            data-name="check_county_bb"
                            value="check_county_bb"
-                           type="radio"/>
+                           type="radio" />
                     <label class="form-check-label" for="check_county_bb">Brandenburg</label>
                   </div>
                   <div>
@@ -97,7 +108,7 @@
                            data-name="check_county_sh"
                            value="check_county_sh"
                            name="check_county"
-                           type="radio"/>
+                           type="radio" />
                     <label class="form-check-label" for="check_county_sh">Schleswig-Holstein</label>
                   </div>
                 </div>
@@ -117,7 +128,7 @@
                      data-toggle="tooltip"
                      title="Falls nicht bekannt, wird der durchschnittliche Hebesatz für DE im Jahr 2023 angenommen (407 %)."></i>
                 </label>
-                <input class="form-control" id="levy_rate" name="levy_rate" type="number"/>
+                <input class="form-control" id="levy_rate" name="levy_rate" type="number" />
               </div>
               <div class="col-md-6">
                 <label for="mun_key_num">
@@ -130,7 +141,7 @@
                 <input class="form-control"
                        id="mun_key_num"
                        name="mun_key_num"
-                       type="number"/>
+                       type="number" />
               </div>
             </div>
             <div class="row mb-3">
@@ -145,7 +156,7 @@
                 <input class="form-control"
                        id="levy_rate_a"
                        name="levy_rate_a"
-                       type="number"/>
+                       type="number" />
               </div>
               <div class="col-md-6">
                 <label for="grassland_number">
@@ -158,7 +169,7 @@
                 <input class="form-control"
                        id="grassland_number"
                        name="grassland_number"
-                       type="text"/>
+                       type="text" />
               </div>
             </div>
           </section>
@@ -170,7 +181,7 @@
                   <input class="form-check-input"
                          id="checkboxWind"
                          onclick="toggleAccordions()"
-                         type="checkbox"/>
+                         type="checkbox" />
                   <label class="form-check-label" for="checkboxWind">Windenergie (WEA)</label>
                 </div>
               </div>
@@ -179,7 +190,7 @@
                   <input class="form-check-input"
                          id="checkboxPV"
                          onclick="toggleAccordions()"
-                         type="checkbox"/>
+                         type="checkbox" />
                   <label class="form-check-label" for="checkboxPV">Freiflächen-Photovoltaik (FF-PV)</label>
                 </div>
               </div>
@@ -188,7 +199,7 @@
                   <input class="form-check-input"
                          id="checkboxAPVV"
                          onclick="toggleAccordions()"
-                         type="checkbox"/>
+                         type="checkbox" />
                   <label class="form-check-label" for="checkboxAPVV">Agri-Photovoltaik ver. (APVV)</label>
                 </div>
               </div>
@@ -197,7 +208,7 @@
                   <input class="form-check-input"
                          id="checkboxAPVH"
                          onclick="toggleAccordions()"
-                         type="checkbox"/>
+                         type="checkbox" />
                   <label class="form-check-label" for="checkboxAPVH">Agri-Photovoltaik hor. (APVH)</label>
                 </div>
               </div>
@@ -213,8 +224,7 @@
                         data-bs-toggle="collapse"
                         data-bs-target="#collapseWind"
                         aria-expanded="true"
-                        aria-controls="collapseWind">Windenergie (WEA)
-                </button>
+                        aria-controls="collapseWind">Windenergie (WEA)</button>
               </h2>
               <div id="collapseWind"
                    class="accordion-collapse collapse"
@@ -238,14 +248,14 @@
                         <input class="form-control"
                                id="wea_area_max"
                                name="wea_area_max"
-                               type="number"/>
+                               type="number" />
                         <small><i>Die Potenzialfläche in ihrer
                           Gemeinde können Sie auch mit dem
                           <a href="https://wfr.agora-energiewende.de/"
                              target="_blank"
                              title="Zum Photovoltaik- und Windflächenrechner">Photovoltaik- und
-                            Windflächenrechner</a>
-                          ermitteln.</i></small>
+                          Windflächenrechner</a>
+                        ermitteln.</i></small>
                       </div>
                       <div class="col-md-6">
                         <label for="wea_p_max">
@@ -255,7 +265,7 @@
                              data-toggle="tooltip"
                              title="Geben Sie die Leistung in MW an, für die Sie die Wertschöpfung berechnen möchten. Alternativ wird die installierbare Leistung anhand der Potenzialfläche ermittelt."></i>
                         </label>
-                        <input class="form-control" id="wea_p_max" name="wea_p_max" type="number"/>
+                        <input class="form-control" id="wea_p_max" name="wea_p_max" type="number" />
                       </div>
                     </div>
                     <div class="optional-separator">
@@ -289,21 +299,21 @@
                                  id="wea_anteil_flaeche1"
                                  name="wea_anteil_flaeche1"
                                  oninput="validateAnteilFlaeche('wea')"
-                                 type="number"/>
+                                 type="number" />
                         </div>
                       </div>
                     </div>
                     <div class="accordion-buttons">
-                      <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-wea" type="button">+ Flächeneigentümer
+                      <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-wea" type="button">
+                        + Flächeneigentümer
                         hinzufügen
                       </button>
                       <button class="btn btn--tertiary mt-3 btn-sm"
                               id="removeLastBtn-wea"
                               style="display: none"
-                              type="button">- Weniger Flächeneigentümer
-                      </button>
+                              type="button">- Weniger Flächeneigentümer</button>
                     </div>
-                    <hr/>
+                    <hr />
                     <div class="av-sliders row mt-3">
                       <div class="col-md-6">
                         <label for="rotor_diameter">Rotordurchmesser</label>
@@ -318,7 +328,7 @@
                                name="rotor_diameter"
                                oninput="this.nextElementSibling.value = this.value"
                                type="range"
-                               value="130"/>
+                               value="130" />
                         <output>140</output>
                       </div>
                       <div class="col-md-6">
@@ -334,11 +344,11 @@
                                name="system_output"
                                oninput="this.nextElementSibling.value = this.value"
                                type="range"
-                               value="4"/>
+                               value="4" />
                         <output>4</output>
                       </div>
                     </div>
-                    <hr/>
+                    <hr />
                     <div class="row mt-3">
                       <div class="col-md-6">
                         <label for="wea_eeg_share">
@@ -352,7 +362,7 @@
                                id="wea_eeg_share"
                                name="wea_eeg_share"
                                type="number"
-                               value="100"/>
+                               value="100" />
                       </div>
                       <div class="col-md-6">
                         <label for="wind_euro_share">
@@ -366,7 +376,7 @@
                                id="wind_euro_share"
                                name="wind_euro_share"
                                type="number"
-                               value="100"/>
+                               value="100" />
                       </div>
                     </div>
                   </div>
@@ -382,8 +392,7 @@
                         data-bs-toggle="collapse"
                         data-bs-target="#collapsePV"
                         aria-expanded="true"
-                        aria-controls="collapsePV">Freiflächen-Photovoltaik (FF-PV)
-                </button>
+                        aria-controls="collapsePV">Freiflächen-Photovoltaik (FF-PV)</button>
               </h2>
               <div id="collapsePV"
                    class="accordion-collapse collapse"
@@ -407,14 +416,14 @@
                         <input class="form-control"
                                id="ffpv_area_max"
                                name="ffpv_area_max"
-                               type="number"/>
+                               type="number" />
                         <small><i>Die Potenzialfläche in ihrer
                           Gemeinde können Sie auch mit dem
                           <a href="https://wfr.agora-energiewende.de/"
                              target="_blank"
                              title="Zum Photovoltaik- und Windflächenrechner">Photovoltaik- und
-                            Windflächenrechner</a>
-                          ermitteln.</i></small>
+                          Windflächenrechner</a>
+                        ermitteln.</i></small>
                       </div>
                       <div class="col-md-6">
                         <label for="pv_p_max">
@@ -424,7 +433,7 @@
                              data-toggle="tooltip"
                              title="Geben Sie die Leistung in MW an, für die Sie die Wertschöpfung berechnen möchten. Alternativ wird die installierbare Leistung anhand der Potenzialfläche ermittelt."></i>
                         </label>
-                        <input class="form-control" id="pv_p_max" name="pv_p_max" type="number"/>
+                        <input class="form-control" id="pv_p_max" name="pv_p_max" type="number" />
                       </div>
                     </div>
                     <div class="optional-separator">
@@ -458,19 +467,19 @@
                                  id="ffpv_anteil_flaeche1"
                                  name="ffpv_anteil_flaeche1"
                                  oninput="validateAnteilFlaeche('ffpv')"
-                                 type="number"/>
+                                 type="number" />
                         </div>
                       </div>
                     </div>
                     <div class="accordion-buttons">
-                      <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-ffpv" type="button">+ Flächeneigentümer
+                      <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-ffpv" type="button">
+                        + Flächeneigentümer
                         hinzufügen
                       </button>
                       <button class="btn btn--tertiary mt-3 btn-sm"
                               id="removeLastBtn-ffpv"
                               style="display: none"
-                              type="button">- Weniger Flächeneigentümer
-                      </button>
+                              type="button">- Weniger Flächeneigentümer</button>
                     </div>
                   </div>
                 </div>
@@ -485,8 +494,7 @@
                         data-bs-toggle="collapse"
                         data-bs-target="#collapseAPVV"
                         aria-expanded="true"
-                        aria-controls="collapseAPVV">Agri-Photovoltaik vertikal (APVV)
-                </button>
+                        aria-controls="collapseAPVV">Agri-Photovoltaik vertikal (APVV)</button>
               </h2>
               <div id="collapseAPVV"
                    class="accordion-collapse collapse"
@@ -510,7 +518,7 @@
                         <input class="form-control"
                                id="apvv_area_max"
                                name="apvv_area_max"
-                               type="number"/>
+                               type="number" />
                       </div>
                       <div class="col-md-6">
                         <label for="apv_ver_p_max">
@@ -523,7 +531,7 @@
                         <input class="form-control"
                                id="apv_ver_p_max"
                                name="apv_ver_p_max"
-                               type="number"/>
+                               type="number" />
                       </div>
                     </div>
                     <div class="optional-separator">
@@ -557,19 +565,19 @@
                                  id="apvv_anteil_flaeche1"
                                  name="apvv_anteil_flaeche1"
                                  oninput="validateAnteilFlaeche('apvv')"
-                                 type="number"/>
+                                 type="number" />
                         </div>
                       </div>
                     </div>
                     <div class="accordion-buttons">
-                      <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-apvv" type="button">+ Flächeneigentümer
+                      <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-apvv" type="button">
+                        + Flächeneigentümer
                         hinzufügen
                       </button>
                       <button class="btn btn--tertiary mt-3 btn-sm"
                               id="removeLastBtn-apvv"
                               style="display: none"
-                              type="button">- Weniger Flächeneigentümer
-                      </button>
+                              type="button">- Weniger Flächeneigentümer</button>
                     </div>
                   </div>
                 </div>
@@ -584,8 +592,7 @@
                         data-bs-toggle="collapse"
                         data-bs-target="#collapseAPVH"
                         aria-expanded="true"
-                        aria-controls="collapseAPVH">Agri-Photovoltaik horizontal (APVH)
-                </button>
+                        aria-controls="collapseAPVH">Agri-Photovoltaik horizontal (APVH)</button>
               </h2>
               <div id="collapseAPVH"
                    class="accordion-collapse collapse"
@@ -609,7 +616,7 @@
                         <input class="form-control"
                                id="apvh_area_max"
                                name="apvh_area_max"
-                               type="number"/>
+                               type="number" />
                       </div>
                       <div class="col-md-6">
                         <label for="apv_hor_p_max">
@@ -622,7 +629,7 @@
                         <input class="form-control"
                                id="apv_hor_p_max"
                                name="apv_hor_p_max"
-                               type="number"/>
+                               type="number" />
                       </div>
                     </div>
                     <div class="optional-separator">
@@ -656,19 +663,19 @@
                                  id="apvh_anteil_flaeche1"
                                  name="apvh_anteil_flaeche1"
                                  oninput="validateAnteilFlaeche('apvh')"
-                                 type="number"/>
+                                 type="number" />
                         </div>
                       </div>
                     </div>
                     <div class="accordion-buttons">
-                      <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-apvh" type="button">+ Flächeneigentümer
+                      <button class="btn btn--add mt-3 btn-sm" id="addMoreBtn-apvh" type="button">
+                        + Flächeneigentümer
                         hinzufügen
                       </button>
                       <button class="btn btn--tertiary mt-3 btn-sm"
                               id="removeLastBtn-apvh"
                               style="display: none"
-                              type="button">- Weniger Flächeneigentümer
-                      </button>
+                              type="button">- Weniger Flächeneigentümer</button>
                     </div>
                   </div>
                 </div>
@@ -682,100 +689,99 @@
       </div>
     </div>
   </div>
-
 {% endblock content_no_sidebar %}
 {% block inline_javascript %}
   <script>
-      $(document).ready(function () {
-          $('[data-toggle="tooltip"]').tooltip();
+    $(document).ready(function() {
+      $('[data-toggle="tooltip"]').tooltip();
 
-          // Deselect all checkboxes when loading the page
-          $('input[type="checkbox"]').prop('checked', false);
+      // Deselect all checkboxes when loading the page
+      $('input[type="checkbox"]').prop('checked', false);
 
-          // Empty all input fields when loading the page
-          $('input[type="text"]').val('');
+      // Empty all input fields when loading the page
+      $('input[type="text"]').val('');
 
-          // Ensure that all accordion areas start deactivated
-          toggleAccordions();
-          $('.accordion-button').prop('disabled', true);
+      // Ensure that all accordion areas start deactivated
+      toggleAccordions();
+      $('.accordion-button').prop('disabled', true);
+    });
+
+    function toggleAccordions() {
+      const mappings = [{
+        checkbox: "#checkboxWind",
+        accordion: "#collapseWind"
+      }, {
+        checkbox: "#checkboxPV",
+        accordion: "#collapsePV"
+      }, {
+        checkbox: "#checkboxAPVV",
+        accordion: "#collapseAPVV"
+      }, {
+        checkbox: "#checkboxAPVH",
+        accordion: "#collapseAPVH"
+      }];
+
+      // Disable the parent behavior where clicking one accordion closes others
+      $(".accordion-collapse").each(function() {
+        $(this).attr("data-bs-parent", "");
       });
 
-      function toggleAccordions() {
-          const mappings = [{
-              checkbox: "#checkboxWind",
-              accordion: "#collapseWind"
-          }, {
-              checkbox: "#checkboxPV",
-              accordion: "#collapsePV"
-          }, {
-              checkbox: "#checkboxAPVV",
-              accordion: "#collapseAPVV"
-          }, {
-              checkbox: "#checkboxAPVH",
-              accordion: "#collapseAPVH"
-          }];
-
-          // Disable the parent behavior where clicking one accordion closes others
-          $(".accordion-collapse").each(function () {
-              $(this).attr("data-bs-parent", "");
-          });
-
-          mappings.forEach(mapping => {
-              const $checkbox = $(mapping.checkbox);
-              const $content = $(mapping.accordion);
-              const $item = $content.closest('.accordion-item');
-              const $button = $item.find('.accordion-button');
+      mappings.forEach(mapping => {
+        const $checkbox = $(mapping.checkbox);
+        const $content = $(mapping.accordion);
+        const $item = $content.closest('.accordion-item');
+        const $button = $item.find('.accordion-button');
 
 
-              updateAccordionState($checkbox, $item, $button, $content);
+        updateAccordionState($checkbox, $item, $button, $content);
 
-              // Handle checkbox changes
-              $checkbox.on('change', function () {
-                  updateAccordionState($(this), $item, $button, $content);
-              });
-          });
+        // Handle checkbox changes
+        $checkbox.on('change', function() {
+          updateAccordionState($(this), $item, $button, $content);
+        });
+      });
 
-          function updateAccordionState($checkbox, $item, $button, $content) {
-              if ($checkbox.prop('checked')) {
-                  $item.removeClass('d-none');
-                  $button.prop('disabled', false);
-                  $button.removeClass('disabled bg-light');
+      function updateAccordionState($checkbox, $item, $button, $content) {
+        if ($checkbox.prop('checked')) {
+          $item.removeClass('d-none');
+          $button.prop('disabled', false);
+          $button.removeClass('disabled bg-light');
 
-                  // Don't automatically expand the content
-                  if (!$item.data('been-shown')) {
-                      $content.addClass('show');
-                      $button.removeClass('collapsed');
-                      $item.data('been-shown', true);
-                  }
-              } else {
-                  $item.addClass('d-none');
-                  $button.prop('disabled', true);
-                  $button.addClass('disabled bg-light');
-                  $content.removeClass('show');
-                  $button.addClass('collapsed');
-              }
+          // Don't automatically expand the content
+          if (!$item.data('been-shown')) {
+            $content.addClass('show');
+            $button.removeClass('collapsed');
+            $item.data('been-shown', true);
           }
+        } else {
+          $item.addClass('d-none');
+          $button.prop('disabled', true);
+          $button.addClass('disabled bg-light');
+          $content.removeClass('show');
+          $button.addClass('collapsed');
+        }
       }
+    }
 
-      function expandAllAccordions() {
-          // Expand all visible (but collapsed) accordions
-          $('.accordion-item:not(.d-none) .accordion-button.collapsed').each(function () {
-              $(this).click();
-          });
-      }
+    function expandAllAccordions() {
+      // Expand all visible (but collapsed) accordions
+      $('.accordion-item:not(.d-none) .accordion-button.collapsed').each(function() {
+        $(this).click();
+      });
+    }
 
-      const counters = {
-          'wea': 1,
-          'ffpv': 1,
-          'apvv': 1,
-          'apvh': 1
-      };
+    const counters = {
+      'wea': 1,
+      'ffpv': 1,
+      'apvv': 1,
+      'apvh': 1
+    };
 
-      function addFieldset(type) {
-          counters[type]++;
-          let container = document.getElementById(`flaecheneigentuemer-container-${type}`);
+    function addFieldset(type) {
+      counters[type]++;
+      let container = document.getElementById(`flaecheneigentuemer-container-${type}`);
 
-          let newFieldset = `<div class="row mt-3" id="flaecheneigentuemer-${type}-${counters[type]}">
+      let newFieldset = `<div class="row mt-3" id="flaecheneigentuemer-${type}-${counters[type]}">
                     <div class="col-md-6">
                         <label for="${type}_area_ownertype${counters[type]}">Flächeneigentum
                             <i class="fas fa-info-circle" data-placement="right" data-toggle="tooltip" title="Als Gemeinde erhalten Sie Einnahmen durch die Pachterlöse. Dies kann direkt erfolgen oder durch Steuereinnahmen je nach Eigentumsstruktur. Falls die Eigentümer nicht bekannt sind, werden die Pachteinnahmen nicht berücksichtigt."></i>
@@ -803,207 +809,207 @@
                     </div>
                 </div>`;
 
-          container.insertAdjacentHTML('beforeend', newFieldset);
-          toggleRemoveButton(type);
-          $('[data-toggle="tooltip"]').tooltip(); // Reinitialize tooltips
-          validateAnteilFlaeche(type); // Validate after adding new fieldset
-      }
+      container.insertAdjacentHTML('beforeend', newFieldset);
+      toggleRemoveButton(type);
+      $('[data-toggle="tooltip"]').tooltip(); // Reinitialize tooltips
+      validateAnteilFlaeche(type); // Validate after adding new fieldset
+    }
 
-      function removeFieldset(type) {
-          if (counters[type] > 1) {
-              let lastFieldset = document.getElementById(`flaecheneigentuemer-${type}-${counters[type]}`);
-              lastFieldset.remove();
-              counters[type]--;
-              toggleRemoveButton(type);
-              validateAnteilFlaeche(type); // Validate after removing fieldset
+    function removeFieldset(type) {
+      if (counters[type] > 1) {
+        let lastFieldset = document.getElementById(`flaecheneigentuemer-${type}-${counters[type]}`);
+        lastFieldset.remove();
+        counters[type]--;
+        toggleRemoveButton(type);
+        validateAnteilFlaeche(type); // Validate after removing fieldset
+      }
+    }
+
+    function toggleRemoveButton(type) {
+      let removeBtn = document.getElementById(`removeLastBtn-${type}`);
+      if (counters[type] > 1) {
+        removeBtn.style.display = 'inline-block';
+      } else {
+        removeBtn.style.display = 'none';
+      }
+    }
+
+    function validateAnteilFlaeche(type) {
+      let total = 0;
+      let fields = document.querySelectorAll(`#flaecheneigentuemer-container-${type} input[name^="${type}_anteil_flaeche"]`);
+      let isOver100 = false;
+      fields.forEach((field, index) => {
+        let value = parseFloat(field.value) || 0;
+        total += value;
+        let errorMsg = document.getElementById(`${type}_error_msg${index + 1}`);
+        if (total > 100) {
+          isOver100 = true;
+          if (index === fields.length - 1) {
+            field.style.borderColor = 'red';
+            field.style.backgroundColor = 'red';
+            field.style.color = 'white';
+            field.style.fontWeight = 'bold';
+            errorMsg.classList.remove('d-none');
           }
-      }
+        } else {
+          field.style.borderColor = '';
+          field.style.backgroundColor = '';
+          field.style.fontWeight = '';
+          field.style.color = '';
+          if (errorMsg) errorMsg.classList.add('d-none');
+        }
+      });
 
-      function toggleRemoveButton(type) {
-          let removeBtn = document.getElementById(`removeLastBtn-${type}`);
-          if (counters[type] > 1) {
-              removeBtn.style.display = 'inline-block';
+      document.querySelector('button[type="submit"]').disabled = isOver100;
+      return isOver100;
+    }
+
+    // Event listeners for adding/removing fieldsets
+    document.getElementById('addMoreBtn-wea').addEventListener('click', function() {
+      addFieldset('wea');
+    });
+
+    document.getElementById('removeLastBtn-wea').addEventListener('click', function() {
+      removeFieldset('wea');
+    });
+
+    document.getElementById('addMoreBtn-ffpv').addEventListener('click', function() {
+      addFieldset('ffpv');
+    });
+
+    document.getElementById('removeLastBtn-ffpv').addEventListener('click', function() {
+      removeFieldset('ffpv');
+    });
+
+    document.getElementById('addMoreBtn-apvv').addEventListener('click', function() {
+      addFieldset('apvv');
+    });
+
+    document.getElementById('removeLastBtn-apvv').addEventListener('click', function() {
+      removeFieldset('apvv');
+    });
+
+    document.getElementById('addMoreBtn-apvh').addEventListener('click', function() {
+      addFieldset('apvh');
+    });
+
+    document.getElementById('removeLastBtn-apvh').addEventListener('click', function() {
+      removeFieldset('apvh');
+    });
+
+    $(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+      toggleRemoveButton('wea');
+      toggleRemoveButton('ffpv');
+      toggleRemoveButton('apvv');
+      toggleRemoveButton('apvh');
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Adds levy rate of the chosen municipality to the input fields
+      const selectElement = document.getElementById('choosen_mun');
+      const inputFieldLevyRate = document.getElementById('levy_rate');
+      const inputFieldLevyRateA = document.getElementById('levy_rate_a');
+      const inputFieldGrasslandNumber = document.getElementById('grassland_number');
+
+      const valueMap = {
+        '0': {
+          levy_rate: 450,
+          levy_rate_a: 420,
+          grassland_number: "30,00"
+        },
+        '1': {
+          levy_rate: 300,
+          levy_rate_a: 280,
+          grassland_number: "29,9"
+        },
+        '5': {
+          levy_rate: 350,
+          levy_rate_a: 270,
+          grassland_number: "29,9"
+        },
+        '6': {
+          levy_rate: 340,
+          levy_rate_a: 200,
+          grassland_number: "29,9"
+        },
+        '7': {
+          levy_rate: 320,
+          levy_rate_a: 240,
+          grassland_number: "29,9"
+        },
+        'own_county': {
+          levy_rate: 407,
+          levy_rate_a: 310,
+          grassland_number: "30,00"
+        }
+      };
+
+      // Event Listener für das Dropdown-Menü
+      selectElement.addEventListener('change', function() {
+        const selectedValue = this.value;
+        if (selectedValue in valueMap) {
+          inputFieldLevyRate.value = valueMap[selectedValue].levy_rate;
+          inputFieldLevyRateA.value = valueMap[selectedValue].levy_rate_a;
+          inputFieldGrasslandNumber.value = valueMap[selectedValue].grassland_number;
+        } else {
+          inputFieldLevyRate.value = '';
+          inputFieldLevyRateA.value = '';
+          inputFieldGrasslandNumber.value = '';
+        }
+
+        // Überprüfen der Sichtbarkeit nach Auswahländerung
+        checkMunicipality();
+      });
+
+      // Hides wind/solar-euro if municipality is not in BB + displays county selection when own_county is chosen
+      function checkMunicipality() {
+        var windEuroShareDiv = document.querySelector('.col-md-6 label[for="wind_euro_share"]').parentElement;
+        var countyCheckDiv = document.getElementById('check_county');
+
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var municipalityName = selectedOption.getAttribute('data-name');
+
+        var selectedRadio = document.querySelector('input[name="check_county"]:checked');
+        var countyName = selectedRadio ? selectedRadio.getAttribute('data-name') : null;
+
+        function resetRadioButtons() {
+          const radioButtons = document.querySelectorAll('#check_county input[type="radio"]');
+          radioButtons.forEach(button => {
+            button.checked = false;
+          });
+        }
+
+        if (municipalityName === 'Kiel') {
+          windEuroShareDiv.style.display = 'none';
+          countyCheckDiv.style.display = 'none';
+          resetRadioButtons();
+        } else if (municipalityName === 'own_county') {
+          countyCheckDiv.style.display = 'block';
+          if (countyName === 'check_county_bb') {
+            windEuroShareDiv.style.display = 'block';
           } else {
-              removeBtn.style.display = 'none';
+            windEuroShareDiv.style.display = 'none';
           }
+        } else {
+          windEuroShareDiv.style.display = 'block';
+          countyCheckDiv.style.display = 'none';
+          resetRadioButtons();
+        }
       }
 
-      function validateAnteilFlaeche(type) {
-          let total = 0;
-          let fields = document.querySelectorAll(`#flaecheneigentuemer-container-${type} input[name^="${type}_anteil_flaeche"]`);
-          let isOver100 = false;
-          fields.forEach((field, index) => {
-              let value = parseFloat(field.value) || 0;
-              total += value;
-              let errorMsg = document.getElementById(`${type}_error_msg${index + 1}`);
-              if (total > 100) {
-                  isOver100 = true;
-                  if (index === fields.length - 1) {
-                      field.style.borderColor = 'red';
-                      field.style.backgroundColor = 'red';
-                      field.style.color = 'white';
-                      field.style.fontWeight = 'bold';
-                      errorMsg.classList.remove('d-none');
-                  }
-              } else {
-                  field.style.borderColor = '';
-                  field.style.backgroundColor = '';
-                  field.style.fontWeight = '';
-                  field.style.color = '';
-                  if (errorMsg) errorMsg.classList.add('d-none');
-              }
-          });
-
-          document.querySelector('button[type="submit"]').disabled = isOver100;
-          return isOver100;
-      }
-
-      // Event listeners for adding/removing fieldsets
-      document.getElementById('addMoreBtn-wea').addEventListener('click', function () {
-          addFieldset('wea');
+      // Event Listener für Radiobuttons
+      document.querySelectorAll('input[name="check_county"]').forEach(function(radio) {
+        radio.addEventListener('change', checkMunicipality);
       });
 
-      document.getElementById('removeLastBtn-wea').addEventListener('click', function () {
-          removeFieldset('wea');
-      });
-
-      document.getElementById('addMoreBtn-ffpv').addEventListener('click', function () {
-          addFieldset('ffpv');
-      });
-
-      document.getElementById('removeLastBtn-ffpv').addEventListener('click', function () {
-          removeFieldset('ffpv');
-      });
-
-      document.getElementById('addMoreBtn-apvv').addEventListener('click', function () {
-          addFieldset('apvv');
-      });
-
-      document.getElementById('removeLastBtn-apvv').addEventListener('click', function () {
-          removeFieldset('apvv');
-      });
-
-      document.getElementById('addMoreBtn-apvh').addEventListener('click', function () {
-          addFieldset('apvh');
-      });
-
-      document.getElementById('removeLastBtn-apvh').addEventListener('click', function () {
-          removeFieldset('apvh');
-      });
-
-      $(function () {
-          $('[data-toggle="tooltip"]').tooltip();
-          toggleRemoveButton('wea');
-          toggleRemoveButton('ffpv');
-          toggleRemoveButton('apvv');
-          toggleRemoveButton('apvh');
-      });
-
-      document.addEventListener('DOMContentLoaded', function () {
-          // Adds levy rate of the chosen municipality to the input fields
-          const selectElement = document.getElementById('choosen_mun');
-          const inputFieldLevyRate = document.getElementById('levy_rate');
-          const inputFieldLevyRateA = document.getElementById('levy_rate_a');
-          const inputFieldGrasslandNumber = document.getElementById('grassland_number');
-
-          const valueMap = {
-              '0': {
-                  levy_rate: 450,
-                  levy_rate_a: 420,
-                  grassland_number: "30,00"
-              },
-              '4': {
-                  levy_rate: 300,
-                  levy_rate_a: 280,
-                  grassland_number: "29,9"
-              },
-              '5': {
-                  levy_rate: 350,
-                  levy_rate_a: 270,
-                  grassland_number: "29,9"
-              },
-              '6': {
-                  levy_rate: 340,
-                  levy_rate_a: 200,
-                  grassland_number: "29,9"
-              },
-              '7': {
-                  levy_rate: 320,
-                  levy_rate_a: 240,
-                  grassland_number: "29,9"
-              },
-              'own_county': {
-                  levy_rate: 407,
-                  levy_rate_a: 310,
-                  grassland_number: "30,00"
-              }
-          };
-
-          // Event Listener für das Dropdown-Menü
-          selectElement.addEventListener('change', function () {
-              const selectedValue = this.value;
-              if (selectedValue in valueMap) {
-                  inputFieldLevyRate.value = valueMap[selectedValue].levy_rate;
-                  inputFieldLevyRateA.value = valueMap[selectedValue].levy_rate_a;
-                  inputFieldGrasslandNumber.value = valueMap[selectedValue].grassland_number;
-              } else {
-                  inputFieldLevyRate.value = '';
-                  inputFieldLevyRateA.value = '';
-                  inputFieldGrasslandNumber.value = '';
-              }
-
-              // Überprüfen der Sichtbarkeit nach Auswahländerung
-              checkMunicipality();
-          });
-
-          // Hides wind/solar-euro if municipality is not in BB + displays county selection when own_county is chosen
-          function checkMunicipality() {
-              var windEuroShareDiv = document.querySelector('.col-md-6 label[for="wind_euro_share"]').parentElement;
-              var countyCheckDiv = document.getElementById('check_county');
-
-              var selectedOption = selectElement.options[selectElement.selectedIndex];
-              var municipalityName = selectedOption.getAttribute('data-name');
-
-              var selectedRadio = document.querySelector('input[name="check_county"]:checked');
-              var countyName = selectedRadio ? selectedRadio.getAttribute('data-name') : null;
-
-              function resetRadioButtons() {
-                  const radioButtons = document.querySelectorAll('#check_county input[type="radio"]');
-                  radioButtons.forEach(button => {
-                      button.checked = false;
-                  });
-              }
-
-              if (municipalityName === 'Kiel') {
-                  windEuroShareDiv.style.display = 'none';
-                  countyCheckDiv.style.display = 'none';
-                  resetRadioButtons();
-              } else if (municipalityName === 'own_county') {
-                  countyCheckDiv.style.display = 'block';
-                  if (countyName === 'check_county_bb') {
-                      windEuroShareDiv.style.display = 'block';
-                  } else {
-                      windEuroShareDiv.style.display = 'none';
-                  }
-              } else {
-                  windEuroShareDiv.style.display = 'block';
-                  countyCheckDiv.style.display = 'none';
-                  resetRadioButtons();
-              }
-          }
-
-          // Event Listener für Radiobuttons
-          document.querySelectorAll('input[name="check_county"]').forEach(function (radio) {
-              radio.addEventListener('change', checkMunicipality);
-          });
-
-          // Überprüfen des ausgewählten Elements beim Laden der Seite
-          checkMunicipality();
-          var selectedRadio = document.querySelector('input[name="check_county"]:checked');
-          var countyName = selectedRadio ? selectedRadio.value : null; // Hier wird der Wert abgerufen
-          console.log("Selected County Name:", countyName); // Debugging-Ausgabe
+      // Überprüfen des ausgewählten Elements beim Laden der Seite
+      checkMunicipality();
+      var selectedRadio = document.querySelector('input[name="check_county"]:checked');
+      var countyName = selectedRadio ? selectedRadio.value : null; // Hier wird der Wert abgerufen
+      console.log("Selected County Name:", countyName); // Debugging-Ausgabe
 
 
-      });
+    });
   </script>
 {% endblock inline_javascript %}
