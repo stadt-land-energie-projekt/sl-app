@@ -14,6 +14,8 @@ async function showHiddenDiv(region, button) {
             btn.classList.remove("selected");
             btn.textContent = "Auswählen";
         }
+
+    showDropdownBasicSolution(region);
     });
 
     const hiddenDiv = document.querySelector(".hidden-div");
@@ -163,106 +165,6 @@ async function loadCostCapacityData(tech) {
     } catch (error) {
         console.error("Error loading cost capacity data:", error);
     }
-}
-
-function loadElectricityChart(data) {
-    let el = document.getElementById("basic-electricity");
-    if (!el) return;
-    let chart = getOrCreateChart(el);
-    let categories = data.categories || [];
-    let seriesData = data.series || {};
-    let series = Object.keys(seriesData).map(key => ({
-        name: key,
-        type: "bar",
-        stack: "electricityStack",
-        data: seriesData[key]
-    }));
-    let option = {
-        title: { text: "Elektrizität (GWh)", left: "center" },
-        tooltip: { trigger: "axis" },
-        legend: { top: 30 },
-        grid: { left: "10%", right: "10%", bottom: "10%" },
-        xAxis: { type: "value" },
-        yAxis: { type: "category", data: categories },
-        series: series
-    };
-    chart.setOption(option);
-    chart.resize();
-}
-
-function loadHeatChart(data) {
-    let el = document.getElementById("basic-heat");
-    if (!el) return;
-    let chart = getOrCreateChart(el);
-    let categories = data.categories || [];
-    let seriesData = data.series || {};
-    let series = Object.keys(seriesData).map(key => ({
-        name: key,
-        type: "bar",
-        stack: "heatStack",
-        data: seriesData[key]
-    }));
-    let option = {
-        title: { text: "Wärme (GWh)", left: "center" },
-        tooltip: { trigger: "axis" },
-        legend: { top: 30 },
-        grid: { left: "10%", right: "10%", bottom: "10%" },
-        xAxis: { type: "value" },
-        yAxis: { type: "category", data: categories },
-        series: series
-    };
-    chart.setOption(option);
-    chart.resize();
-}
-
-function loadCapacityChart(data) {
-    let el = document.getElementById("basic-capacity");
-    if (!el) return;
-    let chart = getOrCreateChart(el);
-    let categories = data.categories || [];
-    let seriesData = data.series || {};
-    let series = Object.keys(seriesData).map(key => ({
-        name: key,
-        type: "bar",
-        stack: "capacityStack",
-        data: seriesData[key]
-    }));
-    let option = {
-        title: { text: "Kapazität (MW)", left: "center" },
-        tooltip: { trigger: "axis" },
-        legend: { top: 30 },
-        grid: { left: "10%", right: "10%", bottom: "10%" },
-        xAxis: { type: "value" },
-        yAxis: { type: "category", data: categories },
-        series: series
-    };
-    chart.setOption(option);
-    chart.resize();
-}
-
-function loadCostsChart(data) {
-    let el = document.getElementById("basic-costs");
-    if (!el) return;
-    let chart = getOrCreateChart(el);
-    let categories = data.categories || [];
-    let seriesData = data.series || {};
-    let series = Object.keys(seriesData).map(key => ({
-        name: key,
-        type: "bar",
-        stack: "costsStack",
-        data: seriesData[key]
-    }));
-    let option = {
-        title: { text: "Kosten (€)", left: "center" },
-        tooltip: { trigger: "axis" },
-        legend: { top: 30 },
-        grid: { left: "10%", right: "10%", bottom: "10%" },
-        xAxis: { type: "value" },
-        yAxis: { type: "category", data: categories },
-        series: series
-    };
-    chart.setOption(option);
-    chart.resize();
 }
 
 function transformLineData(lineData) {
@@ -541,11 +443,9 @@ function renderChart(chartId, dataArray) {
       }
     },
     grid: {
-      left: '50%',
-      right: '10%',
       top: 45,      // Must equal table header row height
-      bottom: 1,    // Must be non-zero, as otherwise last y-category tick is not drawn
-      containLabel: false,
+      bottom: '-1.64%',    // Must be non-zero, as otherwise last y-category tick is not drawn
+      containLabel: true,
     },
     xAxis: {
       type: 'value',
@@ -559,6 +459,7 @@ function renderChart(chartId, dataArray) {
       inverse: true,
       axisTick: { show: true },
       show : true,
+      containLabel: true,
     },
     series: [
       // 1) Offset series (transparent)
@@ -664,6 +565,27 @@ function syncRowHeight(chartId, tableId, dataLength) {
   });
   // console.log("ended syncRowHeight");
 }
+
+function showDropdownBasicSolution(region){
+    const dropdown = document.getElementById('region-select');
+  if (!dropdown) return;
+
+  if (region === 'einzeln') {
+    dropdown.style.display = 'inline-block';
+  } else {
+    dropdown.style.display = 'none';
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const dropdown = document.getElementById("region-select");
+    if (dropdown) {
+        dropdown.addEventListener("change", function () {
+            const selectedregion = this.value;
+            loadBasicData(selectedregion);
+        });
+    }
+});
 
 // Update the sticky header with the region's title and image
 function updateStickyHeader(title) {

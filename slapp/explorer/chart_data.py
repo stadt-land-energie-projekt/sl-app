@@ -12,6 +12,13 @@ OEMOF_SCENARIOS_SINGLE = [
     "r120670201201",
 ]
 
+REGION_NAME_MAP = {
+    "r120640428428": "Rüdersdorf",
+    "r120640472472": "Straußberg",
+    "r120670201201": "Grünheide",
+    "r120670124124": "Erkner",
+}
+
 
 def get_postprocessed_data(scenario: str = "all"):
     """
@@ -25,13 +32,16 @@ def get_postprocessed_data(scenario: str = "all"):
             DATA_DIR / OEMOF_SCENARIO / "postprocessed" / "scalars.csv",
             delimiter=";",
         )
-    scenario_data = []
-    for scenario in OEMOF_SCENARIOS_SINGLE:
-        scenario_data.append(
-            pd.read_csv(DATA_DIR / scenario / OEMOF_SCENARIO / "postprocessed" / "scalars.csv", delimiter=";"),
-        )
-    merged_df = pd.concat(scenario_data, axis=0)
-    return merged_df
+    elif scenario == "single":
+        scenario_data = []
+        for scenario in OEMOF_SCENARIOS_SINGLE:
+            scenario_data.append(
+                pd.read_csv(DATA_DIR / scenario / OEMOF_SCENARIO / "postprocessed" / "scalars.csv", delimiter=";")
+            )
+        merged_df = pd.concat(scenario_data, axis=0)
+        return merged_df
+    else:
+        return pd.read_csv(DATA_DIR / scenario / OEMOF_SCENARIO / "postprocessed" / "scalars.csv", delimiter=";")
 
 
 def get_preprocessed_file_list():

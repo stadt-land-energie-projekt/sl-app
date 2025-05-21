@@ -498,12 +498,11 @@ table {
           display: flex;
           justify-content: center;
           align-items: center;
-          gap: 4rem;
         }
       }
 
       table {
-        width: 100%;
+        width: 70%;
         border-collapse: collapse;
         font-size: 0.875rem;
 
@@ -610,3 +609,7 @@ table {
     }
   }
 }
+
+region-select {
+  display: none;
+  }
