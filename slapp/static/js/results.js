@@ -685,7 +685,6 @@ document.addEventListener('DOMContentLoaded', () => {
     button.addEventListener('click', event => {
       const wrapper = event.currentTarget.closest('.results__region-container');
       const title   = wrapper.dataset.regionName;
-      console.log("Titel:" + title);
 
       // 2a) Update the sticky header
       updateStickyHeader(title);
