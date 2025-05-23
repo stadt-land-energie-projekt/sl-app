@@ -124,9 +124,12 @@ def empty_data(models: list[Model] | None = None) -> None:
 
 def load_base_scenario() -> None:
     """Import base data from ZIB."""
+
+    objective = read(objective.csv)
     scenario, created = models.Scenario.objects.get_or_create(
         name="base_scenario",
         defaults={"parameters": {}},
+        objective=objective,
     )
     if not created:
         scenario.result_set.all().delete()
@@ -159,7 +162,9 @@ def load_sensitivities() -> None:
             with (folder / "scenario.json").open("r", encoding="utf-8") as f:
                 scenario_details = json.load(f)
 
-            scenario = models.Scenario(name=scenario_name, parameters=scenario_details)
+            objective = read(objective.csv)
+
+            scenario = models.Scenario(name=scenario_name, parameters=scenario_details, objective=objective)
             scenario.save()
 
             # Create Sensitivity instance
