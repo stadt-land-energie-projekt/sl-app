@@ -609,7 +609,7 @@ class Scenario(models.Model):
 
     name = models.CharField(max_length=255, unique=True)
     parameters = models.JSONField()
-    objective = models.FloatField(null=True, blank=True)
+    objective = models.FloatField(default=0)
 
 
 class Result(models.Model):
