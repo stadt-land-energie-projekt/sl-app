@@ -556,20 +556,37 @@ class Results(TemplateView):
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
-        sensitivity_technologies = (
+        cost_sensitivity_technologies = (
             models.Sensitivity.objects.filter(attribute="capacity_cost", region="ALL")
             .distinct()
             .values_list("component", flat=True)
         )
-        technologies = {tech: TECHNOLOGIES[tech] for tech in sensitivity_technologies}
-        technologies = sorted(technologies.items(), key=lambda tech: tech[1]["name"])
+        demand_sensitivity_technologies = models.Sensitivity.objects.filter(
+            attribute="amount",
+            region="ALL",
+        ).values_list("component", "perturbation_parameter")
+        cost_technologies = {tech: TECHNOLOGIES[tech] for tech in cost_sensitivity_technologies}
+        cost_technologies = sorted(cost_technologies.items(), key=lambda tech: tech[1]["name"])
+        demand_technologies = [
+            (
+                tech,
+                {
+                    "definition": TECHNOLOGIES[tech],
+                    "perturbation": perturbation,
+                },
+            )
+            for tech, perturbation in demand_sensitivity_technologies
+        ]
+        demand_technologies.sort(key=lambda item: item[1]["definition"]["name"])
         alternatives = results.get_alternative_result("B", 1)
 
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
-        context["technologies"] = technologies
+        context["cost_technologies"] = cost_technologies
+        context["demand_technologies"] = demand_technologies
         context["alternatives"] = alternatives
         context["os_regions"] = OS_REGIONS
+        context["demand"] = demand_sensitivity_technologies
         return context
 
 

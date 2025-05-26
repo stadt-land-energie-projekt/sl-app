@@ -121,11 +121,21 @@
                   auf der Einstiegsseite zu <a href="{% url 'explorer:esys_robust' %}">Energiesystem & Robustheit</a>.
                 </p>
                 <select id="technologySelect" name="technology" autocomplete="off">
-                  {% for key, data in technologies %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
+                  {% for key, data in cost_technologies %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
                 </select>
                 <div id="tech-container">
                   <div class="technology-charts chart-container" id="cost-capacity-chart"></div>
                   <div class="technology-charts chart-container" id="tech-comparison-chart"></div>
+                </div>
+                <select id="demand-technologySelect" name="technology" autocomplete="off">
+                  {% for key, data in demand_technologies %}
+                    <option value="{{ key }}">{{ data.definition.name }} {{ data.perturbation }}</option>
+                  {% endfor %}
+                </select>
+                <div id="demand-tech-container">
+                  <div class="technology-charts chart-container" id="demand-chart"></div>
+                  <div class="technology-charts chart-container"
+                       id="demand-tech-comparison-chart"></div>
                 </div>
               </div>
               <div class="tab-content tab-content--alternatives" id="alternatives">
