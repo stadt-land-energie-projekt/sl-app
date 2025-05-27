@@ -638,7 +638,14 @@ class Sensitivity(models.Model):
     class Meta:
         """Metadata for model."""
 
-        unique_together = ("attribute", "component", "region", "perturbation_method", "perturbation_parameter")
+        unique_together = (
+            "scenario",
+            "attribute",
+            "component",
+            "region",
+            "perturbation_method",
+            "perturbation_parameter",
+        )
 
 
 class Alternative(models.Model):
