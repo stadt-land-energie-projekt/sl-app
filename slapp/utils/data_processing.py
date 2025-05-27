@@ -196,16 +196,14 @@ def load_sensitivities() -> None:
             scenario = models.Scenario(name=scenario_name, parameters=scenario_details, objective=objective)
             scenario.save()
             # Create Sensitivity instance
-            perturbations = scenario_details[sensitivity_lookup].get("Perturbation1", [])
-            if len(perturbations) == 1:
-                sensitivity_data = perturbations[0]
+            for perturbation in scenario_details[sensitivity_lookup]["Perturbation1"]:
+                sensitivity_data = perturbation
                 models.Sensitivity(
                     scenario=scenario,
                     attribute=sensitivity_data["Column"],
                     component=sensitivity_data["FileName"],
                     region="ALL",
                     perturbation_method=sensitivity_data["PerturbationMethod"],
-                    # Only one (first) parameter is taken into account
                     perturbation_parameter=sensitivity_data["PerturbationParameter"][0],
                 ).save()
 
