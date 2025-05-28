@@ -561,23 +561,15 @@ class Results(TemplateView):
             .distinct()
             .values_list("component", flat=True)
         )
-        demand_sensitivity_technologies = models.Sensitivity.objects.filter(
+        demand_sensitivity_scenarios = models.Sensitivity.objects.filter(
             attribute="amount",
             region="ALL",
-        ).values_list("component", "perturbation_parameter")
+        ).values_list("scenario", "component", "perturbation_parameter")
         cost_technologies = {tech: TECHNOLOGIES[tech] for tech in cost_sensitivity_technologies}
         cost_technologies = sorted(cost_technologies.items(), key=lambda tech: tech[1]["name"])
-        demand_technologies = [
-            (
-                tech,
-                {
-                    "definition": TECHNOLOGIES[tech],
-                    "perturbation": perturbation,
-                },
-            )
-            for tech, perturbation in demand_sensitivity_technologies
-        ]
-        demand_technologies.sort(key=lambda item: item[1]["definition"]["name"])
+        demand_technologies = {}
+        for scenario_id, component, perturbation in demand_sensitivity_scenarios:
+            demand_technologies.setdefault(scenario_id, []).append((component, perturbation))
         alternatives = results.get_alternative_result("B", 1)
 
         context["home_url"] = reverse("explorer:home")
@@ -586,7 +578,7 @@ class Results(TemplateView):
         context["demand_technologies"] = demand_technologies
         context["alternatives"] = alternatives
         context["os_regions"] = OS_REGIONS
-        context["demand"] = demand_sensitivity_technologies
+        context["demand"] = demand_sensitivity_scenarios
         return context
 
 

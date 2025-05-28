@@ -630,3 +630,132 @@ document.addEventListener('DOMContentLoaded', () => {
     ).observe(firstTitle);
   }
 });
+
+function loadDemandChart(data) {
+    let el = document.getElementById("demand-chart");
+    if (!el) return;
+    let chart = getOrCreateChart(el);
+  // 1) grid definitions
+  const lefts = ['-5%', '30%', '50%', '70%'];
+  const tops  = ['5%', '30%', '55%', '80%'];
+  const grid = [];
+  for (let r = 0; r < 4; r++) {
+    for (let c = 0; c < 4; c++) {
+      grid.push({
+        left:  lefts[c],
+        top:   tops[r],
+        width: '25%',
+        height:'17%'
+      });
+    }
+  }
+
+  // 2) xAxis / yAxis
+  const validIndices = [0,1,2,4,8,9,10,12,13,14,15];
+  const xAxis = Array.from({ length: 16 }, (_, idx) => {
+    const col = idx % 4;
+    const hasBar = validIndices.includes(idx);
+    const label = col === 0
+      ? ['']
+      : col === 1
+        ? ['Zentral']
+        : col === 2
+          ? ['Dezentral']
+          : ['Hoch'];
+
+    return {
+      gridIndex: idx,
+      type: 'category',
+      data: hasBar ? label : [],
+      axisTick: { show: false },
+      axisLabel: { show: hasBar, margin: 10 },
+      axisLine: {
+        show: hasBar,
+        onZero: false,
+        lineStyle: { color: '#000', width: 1 }
+      }
+    };
+  });
+
+  const yAxis = Array.from({ length: 16 }, (_, idx) => ({
+    gridIndex: idx,
+    type: 'value',
+    axisLabel: { show: false },
+    axisLine:  { show: false },
+    splitLine:{ show: false }
+  }));
+
+  // 3) series mapping
+  const mapping = {
+    0:  'electricity-demand_hh',
+    1:  'heat_low_central-demand_hh',
+    2:  'heat_low_decentral-demand_hh',
+    4:  'electricity-demand_mob',
+    8:  'electricity-demand_cts',
+    9:  'heat_low_central-demand_cts',
+    10: 'heat_low_decentral-demand_cts',
+    12: 'electricity-demand_ind',
+    13: 'heat_low_central-demand_ind',
+    14: 'heat_low_decentral-demand_ind',
+    15: 'heat_high-demand_ind'
+  };
+
+  const series = Object.entries(mapping)
+    .map(([idx, key]) => {
+      const entry = data[key];
+      if (!entry || entry.demand == null) return null;
+      return {
+        name: key,
+        type: 'bar',
+        xAxisIndex: +idx,
+        yAxisIndex: +idx,
+        data: [ entry.demand ],
+        barWidth: '15%',
+        itemStyle: { color: entry.color }
+      };
+    })
+    .filter(s => s);
+
+  // 4) static graphics
+  const graphic = [
+    { type: 'text', left: '5%',  top: '0%',   style: { text: 'Strom', textAlign: 'center', font: '16px Arial' } },
+    { type: 'text', left: '59%', top: '0%',   style: { text: 'Wärme', textAlign: 'center', font: '16px Arial' } },
+    { type: 'text', right:'2%', top: '11.5%', style: { text: 'Haushalte', textAlign: 'right', font: '14px Arial' } },
+    { type: 'text', right:'2%', top: '36.5%', style: { text: 'Verkehr',   textAlign: 'right', font: '14px Arial' } },
+    { type: 'text', right:'2%', top: '61.5%', style: { text: 'GHD',       textAlign: 'right', font: '14px Arial' } },
+    { type: 'text', right:'2%', top: '86.5%', style: { text: 'Industrie', textAlign: 'right', font: '14px Arial' } }
+  ];
+
+  // 5) assemble & render
+  const option = {
+    grid,
+    xAxis,
+    yAxis,
+    series,
+    graphic,
+    tooltip: { trigger: 'item' },
+    legend: { show: false }
+  };
+
+  chart.setOption(option);
+  chart.resize();
+}
+
+const dummyData = {
+  "electricity-demand_hh":               { demand: 120.5, color: "#1f77b4" },
+  "heat_low_central-demand_hh":          { demand:  60.2, color: "#ff7f0e" },
+  "heat_low_decentral-demand_hh":        { demand:  40.7, color: "#2ca02c" },
+
+  "electricity-demand_mob":              { demand:  80.1, color: "#d62728" },
+
+  "electricity-demand_cts":              { demand: 100.3, color: "#9467bd" },
+  "heat_low_central-demand_cts":         { demand:  50.4, color: "#8c564b" },
+  "heat_low_decentral-demand_cts":       { demand:  30.9, color: "#e377c2" },
+
+  "electricity-demand_ind":              { demand: 200.0, color: "#7f7f7f" },
+  "heat_low_central-demand_ind":         { demand:  80.6, color: "#bcbd22" },
+  "heat_low_decentral-demand_ind":       { demand:  60.8, color: "#17becf" },
+  "heat_high-demand_ind":                { demand:  40.0, color: "#ff9896" }
+};
+
+loadDemandChart(dummyData);
