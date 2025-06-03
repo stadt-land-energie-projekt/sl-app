@@ -566,7 +566,7 @@ class Results(TemplateView):
             region="ALL",
         ).values_list("scenario", "component", "perturbation_parameter")
         cost_technologies = {tech: TECHNOLOGIES[tech] for tech in cost_sensitivity_technologies}
-        cost_technologies = sorted(cost_technologies.items(), key=lambda tech: tech[1]["name"])
+        cost_technologies = dict(sorted(cost_technologies.items(), key=lambda tech: tech[1]["name"]))
         demand_technologies = {}
         for scenario_id, component, perturbation in demand_sensitivity_scenarios:
             demand_technologies.setdefault(scenario_id, []).append((component, perturbation))
