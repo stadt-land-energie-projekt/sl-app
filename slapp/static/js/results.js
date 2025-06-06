@@ -1,6 +1,9 @@
 let currentRegion = "";
 let currentTech = "";
 
+let chartZoomStart = {};
+let chartZoomEnd = {};
+
 // Called when a region button is clicked
 async function showHiddenDiv(region, button) {
     const parentContainer = button.closest(".results__region-container");
@@ -47,15 +50,29 @@ async function showHiddenDiv(region, button) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const dropdown = document.getElementById("technologySelect");
-    if (dropdown) {
-        dropdown.addEventListener("change", function () {
+    const costDropdown = document.getElementById("technologySelect");
+    if (costDropdown) {
+        costDropdown.addEventListener("change", function () {
             const selectedType = this.value;
             loadCostCapacityData(selectedType);
         });
-        if (dropdown.options.length > 0) {
-            currentTech = dropdown.options[0].value;
+        if (costDropdown.options.length > 0) {
+            currentTech = costDropdown.options[0].value;
             loadCostCapacityData(currentTech);
+        }
+    }
+
+    const demandDropdown = document.getElementById("demand-technologySelect");
+    if (demandDropdown) {
+        demandDropdown.addEventListener("change", function () {
+            const selectedType = this.value;
+            loadDemandData(selectedType);
+            loadDemandCapacityData(selectedType);
+        });
+        if (demandDropdown.options.length > 0) {
+            currentTech = demandDropdown.options[0].value;
+            loadDemandData(currentTech);
+            loadDemandCapacityData(currentTech);
         }
     }
 });
@@ -167,6 +184,35 @@ async function loadCostCapacityData(tech) {
     }
 }
 
+async function loadDemandData(scenario) {
+    const url = `/explorer/demand_chart/?scenario_id=${encodeURIComponent(scenario)}&region=${encodeURIComponent(currentRegion)}`;
+    try {
+        const response = await fetch(url, { method: 'GET', headers: { "Accept": "application/json" } });
+        if (!response.ok) throw new Error("Network error: " + response.status);
+        const data = await response.json();
+        loadDemandChart(data);
+    } catch (error) {
+        console.error("Error loading demand data:", error);
+    }
+}
+
+function loadDemandCapacityData(scenario_id) {
+    fetch(`/explorer/demand_capacity_chart/?scenario_id=${encodeURIComponent(scenario_id)}&region=${encodeURIComponent(currentRegion)}`, {
+        method: 'GET',
+        headers: { "Accept": "application/json" }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Network error: " + response.status);
+        return response.json();
+    })
+    .then(data => {
+        loadTechComparisonChart(data, scenario_id, "demand");
+    })
+    .catch(error => {
+        console.error("Error updating the tech comparison chart:", error);
+    });
+}
+
 function transformLineData(lineData) {
     const xValues = lineData.map(item => item[0]);
     const yValues = lineData.map(item => item[1]);
@@ -255,8 +301,9 @@ function updateTechComparisonChart(selectedX, tech) {
     });
 }
 
-function loadTechComparisonChart(data, selectedX) {
-    let el = document.getElementById("tech-comparison-chart");
+function loadTechComparisonChart(data, selectedX, category="cost") {
+    const div_id = category === "cost" ? "tech-comparison-chart" : "demand-tech-comparison-chart";
+    let el = document.getElementById(div_id);
     if (!el) return;
     let chart = getOrCreateChart(el);
     let barData = data.bar_data || [];
@@ -271,11 +318,11 @@ function loadTechComparisonChart(data, selectedX) {
     let categories = barData.map(item => item.name);
     let values = barData.map(item => ({ value: item.value, itemStyle: { color: item.color } }));
 
-    let storedZoomStart = localStorage.getItem('chartZoomStart');
-    let storedZoomEnd = localStorage.getItem('chartZoomEnd');
+    let storedZoomStart = chartZoomStart[category];
+    let storedZoomEnd = chartZoomEnd[category];
 
     let option = {
-        title: { text: "Technologievergleich bei Kosten von " + selectedX + " €", left: "center" },
+        title: { text: category === "cost" ? `Technologievergleich bei Kosten von ${selectedX} €` : `Technologievergleich für Szenario ${selectedX}`, left: "center" },
         tooltip: { trigger: "item", formatter: (params) => `${params.name}<br/>Wert: ${params.value}` },
         grid: { left: '10%', right: '20%', top: '25%', bottom: '15%', containLabel: true },
         xAxis: { type: "value", name: "Leistung" },
@@ -296,8 +343,8 @@ function loadTechComparisonChart(data, selectedX) {
 
     chart.on('datazoom', function(params) {
         const zoomState = chart.getOption().dataZoom[0];
-        localStorage.setItem('chartZoomStart', zoomState.start);
-        localStorage.setItem('chartZoomEnd', zoomState.end);
+        chartZoomStart[category] = zoomState.start;
+        chartZoomEnd[category] = zoomState.end;
     });
 }
 
@@ -632,53 +679,34 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadDemandChart(data) {
-    let el = document.getElementById("demand-chart");
-    if (!el) return;
-    let chart = getOrCreateChart(el);
+  let el = document.getElementById("demand-chart");
+  if (!el) return;
+  let chart = getOrCreateChart(el);
   // 1) grid definitions
-  const lefts = ['-5%', '30%', '50%', '70%'];
-  const tops  = ['5%', '30%', '55%', '80%'];
   const grid = [];
   for (let r = 0; r < 4; r++) {
-    for (let c = 0; c < 4; c++) {
-      grid.push({
-        left:  lefts[c],
-        top:   tops[r],
-        width: '25%',
-        height:'17%'
-      });
-    }
+    grid.push({
+      top: `${r * 25}%`,
+      height: '25%'
+    });
   }
 
   // 2) xAxis / yAxis
-  const validIndices = [0,1,2,4,8,9,10,12,13,14,15];
-  const xAxis = Array.from({ length: 16 }, (_, idx) => {
-    const col = idx % 4;
-    const hasBar = validIndices.includes(idx);
-    const label = col === 0
-      ? ['']
-      : col === 1
-        ? ['Zentral']
-        : col === 2
-          ? ['Dezentral']
-          : ['Hoch'];
-
-    return {
+  const xAxis = Array.from({ length: 4 }, (_, idx) => {
+     return {
       gridIndex: idx,
       type: 'category',
-      data: hasBar ? label : [],
       axisTick: { show: false },
-      axisLabel: { show: hasBar, margin: 10 },
+      axisLabel: { margin: 10 },
       axisLine: {
-        show: hasBar,
         onZero: false,
         lineStyle: { color: '#000', width: 1 }
       }
     };
   });
 
-  const yAxis = Array.from({ length: 16 }, (_, idx) => ({
-    gridIndex: idx,
+  const yAxis = Array.from({ length: 8 }, (_, idx) => ({
+    gridIndex: Math.floor(idx / 2),
     type: 'value',
     axisLabel: { show: false },
     axisLine:  { show: false },
@@ -690,31 +718,71 @@ function loadDemandChart(data) {
     0:  'electricity-demand_hh',
     1:  'heat_low_central-demand_hh',
     2:  'heat_low_decentral-demand_hh',
+    3:  '',
     4:  'electricity-demand_mob',
+    5:  '',
+    6:  '',
+    7:  '',
     8:  'electricity-demand_cts',
     9:  'heat_low_central-demand_cts',
     10: 'heat_low_decentral-demand_cts',
+    11:  '',
     12: 'electricity-demand_ind',
     13: 'heat_low_central-demand_ind',
     14: 'heat_low_decentral-demand_ind',
     15: 'heat_high-demand_ind'
   };
 
+  function mapYAxis(idx) {
+    if (idx % 4 === 0) return idx / 2;
+    return Math.floor(idx / 4) * 2 + 1;
+  }
+
   const series = Object.entries(mapping)
     .map(([idx, key]) => {
       const entry = data[key];
-      if (!entry || entry.demand == null) return null;
+      if (!entry || entry.demand == null) return {
+        type: 'bar',
+        stack: idx,
+        xAxisIndex: Math.floor(idx / 4),
+        yAxisIndex: mapYAxis(idx),
+        data: [ null ],
+        barWidth: '15%',
+      };
       return {
         name: key,
         type: 'bar',
-        xAxisIndex: +idx,
-        yAxisIndex: +idx,
-        data: [ entry.demand ],
+        stack: idx,
+        xAxisIndex: Math.floor(idx / 4),
+        yAxisIndex: mapYAxis(idx),
+        data: [ entry.demand],
         barWidth: '15%',
-        itemStyle: { color: entry.color }
+        itemStyle: { color: entry.color ?? "blue"}
       };
-    })
-    .filter(s => s);
+    });
+
+  const seriesDiffs = Object.entries(mapping)
+    .map(([idx, key]) => {
+      const entry = data[key];
+      if (!entry || entry.demand == null) return {
+        type: 'bar',
+        stack: idx,
+        xAxisIndex: Math.floor(idx / 4),
+        yAxisIndex: mapYAxis(idx),
+        data: [ null ],
+        barWidth: '15%',
+      };
+      return {
+        name: key,
+        type: 'bar',
+        stack: idx,
+        xAxisIndex: Math.floor(idx / 4),
+        yAxisIndex: mapYAxis(idx),
+        data: [ entry.diff ?? 0],
+        barWidth: '15%',
+        itemStyle: { color: entry.color ?? "blue" }
+      };
+    });
 
   // 4) static graphics
   const graphic = [
@@ -731,7 +799,7 @@ function loadDemandChart(data) {
     grid,
     xAxis,
     yAxis,
-    series,
+    series: series.concat(seriesDiffs),
     graphic,
     tooltip: { trigger: 'item' },
     legend: { show: false }
@@ -740,22 +808,3 @@ function loadDemandChart(data) {
   chart.setOption(option);
   chart.resize();
 }
-
-const dummyData = {
-  "electricity-demand_hh":               { demand: 120.5, color: "#1f77b4" },
-  "heat_low_central-demand_hh":          { demand:  60.2, color: "#ff7f0e" },
-  "heat_low_decentral-demand_hh":        { demand:  40.7, color: "#2ca02c" },
-
-  "electricity-demand_mob":              { demand:  80.1, color: "#d62728" },
-
-  "electricity-demand_cts":              { demand: 100.3, color: "#9467bd" },
-  "heat_low_central-demand_cts":         { demand:  50.4, color: "#8c564b" },
-  "heat_low_decentral-demand_cts":       { demand:  30.9, color: "#e377c2" },
-
-  "electricity-demand_ind":              { demand: 200.0, color: "#7f7f7f" },
-  "heat_low_central-demand_ind":         { demand:  80.6, color: "#bcbd22" },
-  "heat_low_decentral-demand_ind":       { demand:  60.8, color: "#17becf" },
-  "heat_high-demand_ind":                { demand:  40.0, color: "#ff9896" }
-};
-
-loadDemandChart(dummyData);

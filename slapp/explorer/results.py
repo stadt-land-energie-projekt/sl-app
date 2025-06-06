@@ -6,6 +6,8 @@ from collections import defaultdict
 from functools import reduce
 from operator import or_
 
+import pandas as pd
+
 from django.db.models import Prefetch, Q
 
 from .models import AlternativeResult, Result, Scenario, Sensitivity
@@ -43,13 +45,15 @@ def get_invests_in_results() -> dict[str, str]:
     }
 
 
+invest_technologies = get_invests_in_results()
+capacity_query = reduce(
+    or_,
+    [Q(name=technology, var_name=capacity_name) for technology, capacity_name in invest_technologies.items()],
+)
+
+
 def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> dict[float, dict[str, float]]:
     """Return resulting capacities for given sensitivity."""
-    invest_technologies = get_invests_in_results()
-    capacity_query = reduce(
-        or_,
-        [Q(name=technology, var_name=capacity_name) for technology, capacity_name in invest_technologies.items()],
-    )
     sensitivities = (
         Sensitivity.objects.filter(attribute=sensitivity, component=technology, region=region)
         .select_related("scenario")
@@ -276,3 +280,40 @@ def format_min_max(min_value: float, max_value: float, unit: str) -> str:
         unit_str = ""
 
     return f"{converted_min} - {converted_max} {unit_str}"
+
+
+def get_demand_data(scenario_id: int) -> dict:
+    """Return demand data to create demand chart."""
+
+    demands = pd.DataFrame(
+        [
+            result
+            for result in Scenario.objects.prefetch_related("result_set")
+            .get(pk=scenario_id)
+            .result_set.filter(tech__contains="demand")
+            .values()
+        ]
+    )
+    demands["name"] = demands["name"].map(lambda x: x[14:])
+    demands_sum = demands.loc[:, ["name", "var_value"]].groupby(["name"]).sum()
+    demands_sum.columns = ["demand"]
+    demands_sum["demand"] = demands_sum["demand"] * 1e-3
+    demands_sum = demands_sum.round()
+    demand_dict = demands_sum.to_dict("index")
+    return demand_dict
+
+
+def get_demand_capacity_data(scenario_id: int) -> list:
+    """Return capacities to create demand capacity chart for given scenario id."""
+    results = pd.DataFrame([
+        result
+        for result in Scenario.objects.prefetch_related("result_set")
+        .get(pk=scenario_id)
+        .result_set.filter(capacity_query, var_value__gt=0)
+        .values()
+    ])
+    results = results[["name", "var_value"]].set_index("name")
+    results_dict = results["var_value"].to_dict()
+    results_merged = merge_sensitivity_results({0: results_dict})  # merge expects multiple results for different sensitivities, here only one sensitivity is given
+    chart_data = build_tech_comp_data(results_merged[0], current_tech="")  # Do not exclude any technology
+    return chart_data
