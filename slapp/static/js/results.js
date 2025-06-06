@@ -755,9 +755,9 @@ function loadDemandChart(data) {
         stack: idx,
         xAxisIndex: Math.floor(idx / 4),
         yAxisIndex: mapYAxis(idx),
-        data: [ entry.demand],
+        data: [ entry.diff < 0 ? entry.demand + entry.diff : entry.demand ],
         barWidth: '15%',
-        itemStyle: { color: entry.color ?? "blue"}
+        itemStyle: { color: entry.color}
       };
     });
 
@@ -778,9 +778,9 @@ function loadDemandChart(data) {
         stack: idx,
         xAxisIndex: Math.floor(idx / 4),
         yAxisIndex: mapYAxis(idx),
-        data: [ entry.diff ?? 0],
+        data: [ Math.abs(entry.diff) ],
         barWidth: '15%',
-        itemStyle: { color: entry.color ?? "blue" }
+        itemStyle: { color: adjust_color(entry.color, entry.diff < 0 ? -20 : 20) }
       };
     });
 
@@ -807,4 +807,9 @@ function loadDemandChart(data) {
 
   chart.setOption(option);
   chart.resize();
+}
+
+function adjust_color(color, amount) {
+  // From https://stackoverflow.com/a/57401891/5804947
+  return '#' + color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
 }
