@@ -122,6 +122,12 @@ def empty_data(models: list[Model] | None = None) -> None:
         model.objects.all().delete()
 
 
+def empty_zib_data() -> None:
+    """Delete all ZIB related data."""
+    models.Scenario.objects.all().delete()
+    models.Alternative.objects.all().delete()
+
+
 def load_base_scenario() -> None:
     """Import base data from ZIB."""
     # Get objective value

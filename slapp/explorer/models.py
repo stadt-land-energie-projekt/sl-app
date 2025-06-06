@@ -633,7 +633,7 @@ class Sensitivity(models.Model):
     region = models.CharField(max_length=255, null=True)
     perturbation_method = models.CharField(max_length=255)
     perturbation_parameter = models.FloatField()
-    scenario = models.ForeignKey(Scenario, on_delete=models.DO_NOTHING, related_name="sensitivities")
+    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE, related_name="sensitivities")
 
     class Meta:
         """Metadata for model."""
