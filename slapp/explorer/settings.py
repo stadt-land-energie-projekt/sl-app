@@ -12,6 +12,9 @@ CONFIG_DIR = pathlib.Path(__file__).parent.parent / "config"
 with (CONFIG_DIR / "technologies.json").open("r", encoding="utf-8") as f:
     TECHNOLOGIES = json.load(f)
 
+with (CONFIG_DIR / "nodes.json").open("r", encoding="utf-8") as f:
+    NODES = json.load(f)
+
 with (CONFIG_DIR / "demand_colors.json").open("r", encoding="utf-8") as f:
     DEMAND_COLORS = json.load(f)
 

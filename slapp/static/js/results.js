@@ -4,6 +4,8 @@ let currentTech = "";
 let chartZoomStart = {};
 let chartZoomEnd = {};
 
+const nodes = JSON.parse(document.getElementById("nodes").innerText);
+
 // Called when a region button is clicked
 async function showHiddenDiv(region, button) {
     const parentContainer = button.closest(".results__region-container");
@@ -105,22 +107,32 @@ async function loadFlowsChart(chartType, region) {
         });
         if (!response.ok) throw new Error("Network error: " + response.status);
         const jsonObj = await response.json();
-        let dataArray = jsonObj.data;
-        if (!Array.isArray(dataArray) || dataArray.length < 2) {
-            console.error("Unerwartetes Datenformat:", dataArray);
-            return;
-        }
-        createFlowChart(document.getElementById("electricity-chart"), dataArray[0], "electricity");
-        createFlowChart(document.getElementById("hydrogen-chart"), dataArray[1], "hydrogen");
+        const hydroData = jsonObj.flow_data.filter(d => d.carrier === "h2");
+        const electricityData = jsonObj.flow_data.filter(d => d.carrier === "electricity");
+        createFlowChart(electricityData, "electricity", "electricity-chart");
+        createFlowChart(hydroData, "hydrogen", "hydrogen-chart");
     } catch (error) {
         console.error("Error loading flow chart:", error);
     }
 }
 
-function createFlowChart(domElement, chartData, resource) {
-    if (!domElement || !chartData) return;
-    let chart = getOrCreateChart(domElement);
-    let values = chartData.energyData.map(d => d.value);
+function createFlowChart(data, resource, chartID) {
+    if (!data || data.length === 0) {
+      const resource_de = resource === "hydrogen" ? "Wasserstoff" : "Strom";
+      const chartDiv = document.getElementById(chartID);
+      const wrapper = chartDiv.parentNode;
+      const msg = document.createElement("div");
+      msg.textContent = "Aktuell gibt es keine Daten für " + resource_de + ".";
+      msg.style.textAlign = "center";
+      msg.style.padding = "1em";
+      msg.style.fontSize = "1.1em";
+      msg.style.color = "#555";
+      wrapper.insertBefore(msg, chartDiv);
+      return;
+    }
+
+    const chart = getOrCreateChart(document.getElementById(chartID));
+    let values = data.map(d => d.value);
     let minEnergy = Math.min(...values);
     let maxEnergy = Math.max(...values);
     function scaleLineWidth(value) {
@@ -130,17 +142,24 @@ function createFlowChart(domElement, chartData, resource) {
     let gradientColors = resource === "hydrogen" ?
         [{ offset: 0, color: "#feb1b1" }, { offset: 1, color: "#c34747" }] :
         [{ offset: 0, color: "#a2edbd" }, { offset: 1, color: "#20a54f" }];
+    const links  = data.map(d => ({
+          source: d.source,
+          target: d.target,
+          value:  d.value,
+          lineStyle: { width: scaleLineWidth(d.value) }
+        }));
     let option = {
-        title: { text: chartData.title || "Flussdiagramm", left: "center" },
+        title: { text: data.title || "Flussdiagramm", left: "center" },
         tooltip: {
             trigger: "item",
             formatter: function (params) {
                 return params.dataType === "edge" ?
-                    `${params.data.source} → ${params.data.target}: ${params.data.value} MWh` : params.name;
+                    `$${params.data.source} → $${params.data.target}: $${params.data.value} MWh` : params.name;
             }
         },
         series: [{
             type: "graph",
+            layout: "none",
             force: { repulsion: 300, edgeLength: [50, 200] },
             roam: true,
             label: { show: true, position: "right", fontSize: 20 },
@@ -151,13 +170,8 @@ function createFlowChart(domElement, chartData, resource) {
                 curveness: 0.2,
                 opacity: 0.8
             },
-            data: chartData.nodes,
-            links: chartData.energyData.map(d => ({
-                source: d.source,
-                target: d.target,
-                value: d.value,
-                lineStyle: { width: scaleLineWidth(d.value) }
-            })),
+            data: nodes,
+            links: links,
             emphasis: { focus: "adjacency" }
         }]
     };

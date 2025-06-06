@@ -25,10 +25,10 @@ from . import charts, results
 from .chart_data import REGION_NAME_MAP as OS_REGIONS
 from .forms import ParametersSliderForm
 from .models import Municipality, Region
-from .regions import get_case_studies_charts_data, get_energy_data
+from .regions import get_case_studies_charts_data
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
-from .settings import TECHNOLOGIES, TECHNOLOGIES_SELECTED
+from .settings import NODES, TECHNOLOGIES, TECHNOLOGIES_SELECTED
 
 MAX_MUNICIPALITY_COUNT = 3
 
@@ -582,17 +582,17 @@ class Results(TemplateView):
         context["alternatives"] = alternatives
         context["os_regions"] = OS_REGIONS
         context["technologies"] = TECHNOLOGIES
+        context["nodes"] = NODES
         context["demand"] = demand_sensitivity_scenarios
         return context
 
 
 def flow_chart(request: HttpRequest) -> JsonResponse:
     """Return requested data for flow charts on results page."""
-    chart_type = request.GET.get("type", "")
-
-    response_data = {"data": get_energy_data(chart_type)}
-
-    return JsonResponse(response_data)
+    region = request.GET.get("type", "")
+    region = "all" if region == "verbu" else "single"
+    _, data = charts.electricity_hydro_flow(region)
+    return JsonResponse({"flow_data": data})
 
 
 def cost_capacity_chart(request: HttpRequest) -> HttpResponse:

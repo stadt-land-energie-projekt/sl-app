@@ -221,6 +221,7 @@
 {% endblock javascript %}
 {% block inline_javascript %}
   {{ technologies | json_script:"technologies" }}
+  {{ nodes | json_script:"nodes" }}
   <script>
     // Toggle content about MGA
     function toggleMoreInfo() {
