@@ -581,6 +581,7 @@ class Results(TemplateView):
         context["demand_technologies"] = demand_technologies_parsed
         context["alternatives"] = alternatives
         context["os_regions"] = OS_REGIONS
+        context["technologies"] = TECHNOLOGIES
         context["demand"] = demand_sensitivity_scenarios
         return context
 

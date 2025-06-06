@@ -220,6 +220,7 @@
   <script src="{% static 'js/base_charts.js' %}" defer></script>
 {% endblock javascript %}
 {% block inline_javascript %}
+  {{ technologies | json_script:"technologies" }}
   <script>
     // Toggle content about MGA
     function toggleMoreInfo() {
