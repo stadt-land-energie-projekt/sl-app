@@ -21,6 +21,8 @@ urlpatterns = [
     path("results/", views.Results.as_view(), name="results"),
     path("chart/flow_chart/", views.flow_chart, name="flow_chart"),
     path("cost_capacity_chart/", views.cost_capacity_chart, name="cost_capacity_chart"),
+    path("demand_chart/", views.demand_chart, name="demand_chart"),
+    path("demand_capacity_chart/", views.demand_capacity_chart, name="demand_capacity_chart"),
     path("basic_charts/", views.basic_charts, name="basic_charts"),
     path("ranges/", views.ranges, name="ranges"),
 ]

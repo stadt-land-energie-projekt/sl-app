@@ -122,11 +122,32 @@ def empty_data(models: list[Model] | None = None) -> None:
         model.objects.all().delete()
 
 
+def empty_zib_data() -> None:
+    """Delete all ZIB related data."""
+    models.Scenario.objects.all().delete()
+    models.Alternative.objects.all().delete()
+
+
 def load_base_scenario() -> None:
     """Import base data from ZIB."""
+    # Get objective value
+    objective_path = pathlib.Path(ZIB_DATA) / "base" / "2045_scenario" / "postprocessed" / "objective.csv"
+    objective_df = pd.read_csv(
+        objective_path,
+        sep=";",
+        skiprows=1,
+        header=None,
+        names=["key", "value"],
+        usecols=["value"],
+    )
+    objective = float(objective_df["value"].iloc[0])
+
     scenario, created = models.Scenario.objects.get_or_create(
         name="base_scenario",
-        defaults={"parameters": {}},
+        defaults={
+            "parameters": {},
+            "objective": objective,
+        },
     )
     if not created:
         scenario.result_set.all().delete()
@@ -142,7 +163,7 @@ def load_base_scenario() -> None:
 
 def load_sensitivities() -> None:
     """Import data from sensitivity runs at ZIB."""
-    for folder_name, sensitivity_lookup in (("cost", "CostPerturbations"),):
+    for folder_name, sensitivity_lookup in (("cost", "CostPerturbations"), ("demand", "DemandPerturbations")):
         for folder in (pathlib.Path(ZIB_DATA) / folder_name).iterdir():
             if not folder.is_dir():
                 continue
@@ -159,20 +180,38 @@ def load_sensitivities() -> None:
             with (folder / "scenario.json").open("r", encoding="utf-8") as f:
                 scenario_details = json.load(f)
 
-            scenario = models.Scenario(name=scenario_name, parameters=scenario_details)
-            scenario.save()
+            # Get objective_values
+            objective_path = (
+                pathlib.Path(ZIB_DATA)
+                / folder_name
+                / folder.name
+                / "2045_scenario"
+                / "postprocessed"
+                / "objective.csv"
+            )
+            objective_df = pd.read_csv(
+                objective_path,
+                sep=";",
+                skiprows=1,
+                header=None,
+                names=["key", "value"],
+                usecols=["value"],
+            )
+            objective = float(objective_df["value"].iloc[0])
 
+            scenario = models.Scenario(name=scenario_name, parameters=scenario_details, objective=objective)
+            scenario.save()
             # Create Sensitivity instance
-            sensitivity_data = scenario_details[sensitivity_lookup]["Perturbation1"][0]
-            models.Sensitivity(
-                scenario=scenario,
-                attribute=sensitivity_data["Column"],
-                component=sensitivity_data["FileName"],
-                region="ALL",
-                perturbation_method=sensitivity_data["PerturbationMethod"],
-                # Only one (first) parameter is taken into account
-                perturbation_parameter=sensitivity_data["PerturbationParameter"][0],
-            ).save()
+            for perturbation in scenario_details[sensitivity_lookup]["Perturbation1"]:
+                sensitivity_data = perturbation
+                models.Sensitivity(
+                    scenario=scenario,
+                    attribute=sensitivity_data["Column"],
+                    component=sensitivity_data["FileName"],
+                    region="ALL",
+                    perturbation_method=sensitivity_data["PerturbationMethod"],
+                    perturbation_parameter=sensitivity_data["PerturbationParameter"][0],
+                ).save()
 
             # Add results to Scenario
             results_df = pd.read_csv(

@@ -1,0 +1,13 @@
+{
+  "electricity-demand_cts": "#4169E1",
+  "electricity-demand_hh": "#4169E1",
+  "electricity-demand_ind": "#4169E1",
+  "electricity-demand_mob": "#4169E1",
+  "heat_high-demand_ind": "#8B0000",
+  "heat_low_central-demand_cts": "#B22222",
+  "heat_low_central-demand_hh": "#B22222",
+  "heat_low_central-demand_ind": "#B22222",
+  "heat_low_decentral-demand_cts": "#CD5C5C",
+  "heat_low_decentral-demand_hh": "#CD5C5C",
+  "heat_low_decentral-demand_ind": "#CD5C5C"
+}

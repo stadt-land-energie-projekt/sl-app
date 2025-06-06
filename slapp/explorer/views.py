@@ -556,20 +556,32 @@ class Results(TemplateView):
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
-        sensitivity_technologies = (
+        cost_sensitivity_technologies = (
             models.Sensitivity.objects.filter(attribute="capacity_cost", region="ALL")
             .distinct()
             .values_list("component", flat=True)
         )
-        technologies = {tech: TECHNOLOGIES[tech] for tech in sensitivity_technologies}
-        technologies = sorted(technologies.items(), key=lambda tech: tech[1]["name"])
+        cost_technologies = {tech: TECHNOLOGIES[tech] for tech in cost_sensitivity_technologies}
+        cost_technologies = dict(sorted(cost_technologies.items(), key=lambda tech: tech[1]["name"]))
+
+        demand_sensitivity_scenarios = models.Sensitivity.objects.filter(
+            attribute="amount",
+            region="ALL",
+        ).values_list("scenario", "component", "perturbation_parameter")
+        demand_technologies = {}
+        for scenario_id, component, perturbation in demand_sensitivity_scenarios:
+            demand_technologies.setdefault(scenario_id, []).append((component, perturbation))
+        demand_technologies_parsed = results.parse_demand_scenario_title(demand_technologies)
+
         alternatives = results.get_alternative_result("B", 1)
 
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
-        context["technologies"] = technologies
+        context["cost_technologies"] = cost_technologies
+        context["demand_technologies"] = demand_technologies_parsed
         context["alternatives"] = alternatives
         context["os_regions"] = OS_REGIONS
+        context["demand"] = demand_sensitivity_scenarios
         return context
 
 
@@ -610,6 +622,20 @@ def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
     # Without "x": Create line chart data for the selected technology.
     cost_cap_data = results.build_cost_cap_data(sensitivity_data, tech)
     return JsonResponse({"line_data": cost_cap_data})
+
+
+def demand_chart(request: HttpRequest) -> JsonResponse:
+    """Return demand data."""
+    scenario_id = int(request.GET["scenario_id"])
+    demand_data = results.get_demand_data(scenario_id)
+    return JsonResponse(demand_data)
+
+
+def demand_capacity_chart(request: HttpRequest) -> JsonResponse:
+    """Return demand data."""
+    scenario_id = int(request.GET["scenario_id"])
+    capacity_data = results.get_demand_capacity_data(scenario_id)
+    return JsonResponse({"bar_data": capacity_data})
 
 
 def basic_charts(request: HttpRequest) -> JsonResponse:
