@@ -7,11 +7,10 @@ from functools import reduce
 from operator import or_
 
 import pandas as pd
-
 from django.db.models import Prefetch, Q
 
 from .models import AlternativeResult, Result, Scenario, Sensitivity
-from .settings import CAPACITY_COST, POTENTIALS, TECHNOLOGIES
+from .settings import CAPACITY_COST, DEMAND_COLORS, POTENTIALS, TECHNOLOGIES
 
 INF_STRING = "Keine obere Grenze"
 
@@ -284,36 +283,45 @@ def format_min_max(min_value: float, max_value: float, unit: str) -> str:
 
 def get_demand_data(scenario_id: int) -> dict:
     """Return demand data to create demand chart."""
+    base_scenario_id = Scenario.objects.get(name="base_scenario").id
 
     demands = pd.DataFrame(
         [
             result
-            for result in Scenario.objects.prefetch_related("result_set")
-            .get(pk=scenario_id)
-            .result_set.filter(tech__contains="demand")
-            .values()
-        ]
+            for scenario in Scenario.objects.prefetch_related("result_set").filter(
+                pk__in=[base_scenario_id, scenario_id],
+            )
+            for result in scenario.result_set.filter(tech__contains="demand").values()
+        ],
     )
+    # Strip region name
     demands["name"] = demands["name"].map(lambda x: x[14:])
-    demands_sum = demands.loc[:, ["name", "var_value"]].groupby(["name"]).sum()
+    # Sum regions
+    demands_sum = demands.loc[:, ["scenario_id", "name", "var_value"]].groupby(["scenario_id", "name"]).sum()
     demands_sum.columns = ["demand"]
     demands_sum["demand"] = demands_sum["demand"] * 1e-3
     demands_sum = demands_sum.round()
-    demand_dict = demands_sum.to_dict("index")
+    demands_current = demands_sum.loc[base_scenario_id]
+    demands_current["diff"] = demands_sum.loc[scenario_id] - demands_sum.loc[base_scenario_id]
+    demands_current["color"] = demands_current.index.map(DEMAND_COLORS)
+    demand_dict = demands_current.to_dict("index")
     return demand_dict
 
 
 def get_demand_capacity_data(scenario_id: int) -> list:
     """Return capacities to create demand capacity chart for given scenario id."""
-    results = pd.DataFrame([
-        result
-        for result in Scenario.objects.prefetch_related("result_set")
-        .get(pk=scenario_id)
-        .result_set.filter(capacity_query, var_value__gt=0)
-        .values()
-    ])
+    results = pd.DataFrame(
+        list(
+            Scenario.objects.prefetch_related("result_set")
+            .get(pk=scenario_id)
+            .result_set.filter(capacity_query, var_value__gt=0)
+            .values(),
+        ),
+    )
     results = results[["name", "var_value"]].set_index("name")
     results_dict = results["var_value"].to_dict()
-    results_merged = merge_sensitivity_results({0: results_dict})  # merge expects multiple results for different sensitivities, here only one sensitivity is given
+    results_merged = merge_sensitivity_results(
+        {0: results_dict},
+    )  # merge expects multiple results for different sensitivities, here only one sensitivity is given
     chart_data = build_tech_comp_data(results_merged[0], current_tech="")  # Do not exclude any technology
     return chart_data
