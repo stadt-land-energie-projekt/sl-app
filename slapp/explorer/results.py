@@ -325,3 +325,26 @@ def get_demand_capacity_data(scenario_id: int) -> list:
     )  # merge expects multiple results for different sensitivities, here only one sensitivity is given
     chart_data = build_tech_comp_data(results_merged[0], current_tech="")  # Do not exclude any technology
     return chart_data
+
+
+def parse_demand_scenario_title(demand_scenarios: dict[int, list[tuple[str, float]]]) -> dict[int, str]:
+    """Parse demand scenario title."""
+    symbols = {
+        "hh": "🏠",
+        "mob": "🚗",
+        "cts": "🏪",
+        "ind": "🏭",
+    }
+    parsed_choices = {}
+    for scenario_id, permutations in demand_scenarios.items():
+        items = []
+        for permutation in permutations:
+            title = f"{permutation[1]}x"
+            title += f"{'⚡' if 'electricity' in permutation[0] else '🔥'}"
+            if "heat" in permutation[0]:
+                title += "🔽" if "low" in permutation[0] else "🔼"
+            title += f"{symbols[permutation[0].split('_')[-1]]}"
+            title += f"{'(zentral)' if 'central' in permutation[0] else ''}"
+            items.append(title)
+        parsed_choices[scenario_id] = ", ".join(items)
+    return parsed_choices
