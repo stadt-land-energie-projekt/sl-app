@@ -57,12 +57,17 @@ function load_charts(regionTitle) {
     })
     .then(response => response.json())
     .then(data => {
+        load_capacity_chart(data.capacity);
+        load_capacity_potential_chart(data.capacity_potential);
+        load_capacity_potential_usage_chart(data.capacity_potential_usage)
         load_production_chart(data.production);
-        load_tech_chart(data.tech);
-        load_another_chart(data.another);
-        load_demand_chart(data.demand);
+        load_production_specific_chart(data.production_specific);
+        load_demand_power_chart(data.demand_power);
+        load_self_generation_power_chart(data.self_generation);
+        load_demand_heat_chart(data.demand_heat);
+        load_demand_heat_type_chart(data.demand_heat_type);
         load_area_chart(data.area);
-        load_co2_chart(data.co2);
+        load_population_chart(data.population);
     })
     .catch(error => {
         console.error("Error loading charts:", error);
@@ -82,11 +87,56 @@ function getOrCreateChart(domElement) {
     return chart;
 }
 
-/**
- * Production chart (simple bar chart)
- */
-function load_production_chart(chartData) {
-    let el = document.getElementById("chart-production");
+function load_capacity_chart(chartData) {
+    let el = document.getElementById("chart-capacity");
+    if (!el) return;
+
+    let chart = getOrCreateChart(el);
+
+    let series = [];
+    for (let [name, values] of Object.entries(chartData.y_data)) {
+        series.push({ name: name, data: values, type: 'bar' });
+    }
+
+    // // Optional: a line for a "target" value
+    // if (chartData.target) {
+    //     for (let [targetLabel, targetVal] of Object.entries(chartData.target)) {
+    //         series.push({
+    //             name: targetLabel,
+    //             type: 'line',
+    //             markLine: {
+    //                 symbol: 'none',
+    //                 data: [{ yAxis: targetVal }]
+    //             },
+    //         });
+    //     }
+    // }
+
+    let options = {
+        title: { text: "Installierte Leistung EE (Strom)" },
+        color: ['#67B7E3', '#F0C808', '#F9E171', '#4AC29D'],
+        tooltip: {
+            trigger: 'axis',
+            valueFormatter: function (value) {
+                return `${value} MW`.replace('.', ',');
+            }
+        },
+        legend: {
+            orient: 'horizontal',
+            left: 'center',
+            bottom: '5%',
+        },
+        xAxis: { type: "category", data: chartData.x_data },
+        yAxis: { type: "value", name: chartData.y_label || "" },
+        series: series
+    };
+
+    chart.setOption(options);
+    chart.resize();
+}
+
+function load_capacity_potential_chart(chartData) {
+    let el = document.getElementById("chart-capacity-potential");
     if (!el) return;
 
     let chart = getOrCreateChart(el);
@@ -97,9 +147,19 @@ function load_production_chart(chartData) {
     }
 
     let options = {
-        title: { text: "Production" },
-        tooltip: {},
-        legend: {},
+        title: { text: "Installierbare Leistung EE (Strom)" },
+        color: ['#67B7E3', '#F0C808', '#F9E171'],
+        tooltip: {
+            trigger: 'axis',
+            valueFormatter: function (value) {
+                return `${value} MW`.replace('.', ',');
+            }
+        },
+        legend: {
+            orient: 'horizontal',
+            left: 'center',
+            bottom: '5%',
+        },
         xAxis: { type: "category", data: chartData.x_data },
         yAxis: { type: "value", name: chartData.y_label || "" },
         series: series
@@ -109,11 +169,42 @@ function load_production_chart(chartData) {
     chart.resize();
 }
 
-/**
- * Tech chart (bar chart with multiple bars side by side)
- */
-function load_tech_chart(chartData) {
-    let el = document.getElementById("chart-tech");
+function load_capacity_potential_usage_chart(chartData) {
+    let el = document.getElementById("chart-capacity-potential-usage");
+    if (!el) return;
+
+    let chart = getOrCreateChart(el);
+
+    let series = [];
+    for (let [name, values] of Object.entries(chartData.y_data)) {
+        series.push({ name: name, data: values, type: 'bar' });
+    }
+
+    let options = {
+        title: { text: "Potenzialnutzung EE" },
+        color: ['#67B7E3', '#F0C808', '#F9E171'],
+        tooltip: {
+            trigger: 'axis',
+            valueFormatter: function (value) {
+                return `${value} %`.replace('.', ',');
+            }
+        },
+        legend: {
+            orient: 'horizontal',
+            left: 'center',
+            bottom: '5%',
+        },
+        xAxis: { type: "category", data: chartData.x_data },
+        yAxis: { type: "value", name: chartData.y_label || "" },
+        series: series
+    };
+
+    chart.setOption(options);
+    chart.resize();
+}
+
+function load_production_chart(chartData) {
+    let el = document.getElementById("chart-production");
     if (!el) return;
 
     let chart = getOrCreateChart(el);
@@ -138,9 +229,19 @@ function load_tech_chart(chartData) {
     }
 
     let options = {
-        title: { text: "Tech Chart" },
-        tooltip: {},
-        legend: {},
+        title: { text: "Stromerzeugung aus EE" },
+        color: ['#67B7E3', '#F0C808', '#F9E171', '#4AC29D'],
+        tooltip: {
+            trigger: 'axis',
+            valueFormatter: function (value) {
+                return `${value} GWh`.replace('.', ',');
+            }
+        },
+        legend: {
+            orient: 'horizontal',
+            left: 'center',
+            bottom: '5%',
+        },
         xAxis: { type: "category", data: chartData.x_data },
         yAxis: { type: "value", name: chartData.y_label || "" },
         series: series
@@ -150,11 +251,8 @@ function load_tech_chart(chartData) {
     chart.resize();
 }
 
-/**
- * Another chart: also a bar chart
- */
-function load_another_chart(chartData) {
-    let el = document.getElementById("chart-another");
+function load_production_specific_chart(chartData) {
+    let el = document.getElementById("chart-production-specific");
     if (!el) return;
 
     let chart = getOrCreateChart(el);
@@ -164,10 +262,34 @@ function load_another_chart(chartData) {
         series.push({ name: name, data: values, type: 'bar' });
     }
 
+    // Optional: a line for a "target" value
+    if (chartData.target) {
+        for (let [targetLabel, targetVal] of Object.entries(chartData.target)) {
+            series.push({
+                name: targetLabel,
+                type: 'line',
+                markLine: {
+                    symbol: 'none',
+                    data: [{ yAxis: targetVal }]
+                }
+            });
+        }
+    }
+
     let options = {
-        title: { text: "Another Chart" },
-        tooltip: {},
-        legend: {},
+        title: { text: "Stromerzeugung aus EE spezifisch" },
+        color: ['#21A179', '#73DDBC'],
+        tooltip: {
+            trigger: 'axis',
+            valueFormatter: function (value) {
+                return `${value} MWh`.replace('.', ',');
+            }
+        },
+        legend: {
+            orient: 'horizontal',
+            left: 'center',
+            bottom: '5%',
+        },
         xAxis: { type: "category", data: chartData.x_data },
         yAxis: { type: "value", name: chartData.y_label || "" },
         series: series
@@ -177,11 +299,8 @@ function load_another_chart(chartData) {
     chart.resize();
 }
 
-/**
- * Demand chart: stacked bar chart
- */
-function load_demand_chart(chartData) {
-    let el = document.getElementById("chart-demand");
+function load_demand_power_chart(chartData) {
+    let el = document.getElementById("chart-demand-power");
     if (!el) return;
 
     let chart = getOrCreateChart(el);
@@ -197,9 +316,20 @@ function load_demand_chart(chartData) {
     }
 
     let options = {
-        title: { text: "Demand Chart" },
-        tooltip: { trigger: 'axis' },
-        legend: {},
+        title: { text: "Strombedarf (ohne Wärme)" },
+        color: ['#2080B6', '#67B7E3', '#BAE1F6'],
+        // backgroundColor: '#E9F6FE',
+        tooltip: {
+            trigger: 'axis',
+            valueFormatter: function (value) {
+                return `${value} GWh`.replace('.', ',');
+            }
+        },
+        legend: {
+            orient: 'horizontal',
+            left: 'center',
+            bottom: '5%',
+        },
         xAxis: { type: "category", data: chartData.x_data },
         yAxis: { type: "value", name: chartData.y_label || "" },
         series: series
@@ -209,16 +339,93 @@ function load_demand_chart(chartData) {
     chart.resize();
 }
 
-/**
- * Area chart: pie chart
- */
-function load_area_chart(chartData) {
-    let el = document.getElementById("chart-area");
+function load_self_generation_power_chart(chartData) {
+    let el = document.getElementById("chart-self-generation-power");
     if (!el) return;
 
     let chart = getOrCreateChart(el);
 
-    // We transform the y_data into an array of {value, name} items for the pie
+    let series = [];
+    for (let [name, values] of Object.entries(chartData.y_data)) {
+        series.push({
+            name: name,
+            data: values,
+            type: 'bar',
+            stack: 'demandStack'
+        });
+    }
+
+    let options = {
+        title: { text: "Strombedarfsdeckung aus EE bilanziell" },
+        color: ['#2080B6'],
+        // backgroundColor: '#F6FCFF',
+        tooltip: {
+            trigger: 'axis',
+            valueFormatter: function (value) {
+                return `${value} %`.replace('.', ',');
+            }
+        },
+        legend: {
+            orient: 'horizontal',
+            left: 'center',
+            bottom: '5%',
+        },
+        xAxis: { type: "category", data: chartData.x_data },
+        yAxis: { type: "value", name: chartData.y_label || "" },
+        series: series
+    };
+
+    chart.setOption(options);
+    chart.resize();
+}
+
+
+function load_demand_heat_chart(chartData) {
+    let el = document.getElementById("chart-demand-heat");
+    if (!el) return;
+
+    let chart = getOrCreateChart(el);
+
+    let series = [];
+    for (let [name, values] of Object.entries(chartData.y_data)) {
+        series.push({
+            name: name,
+            data: values,
+            type: 'bar',
+            stack: 'demandStack'
+        });
+    }
+
+    let options = {
+        title: { text: "Wärmebedarf" },
+        color: ['#AB2134', '#E5707F', '#FAC7CD'],
+        // backgroundColor: '#FFF6F8',
+        tooltip: {
+            trigger: 'axis',
+            valueFormatter: function (value) {
+                return `${value} GWh`.replace('.', ',');
+            }
+        },
+        legend: {
+            orient: 'horizontal',
+            left: 'center',
+            bottom: '5%',
+        },
+        xAxis: { type: "category", data: chartData.x_data },
+        yAxis: { type: "value", name: chartData.y_label || "" },
+        series: series
+    };
+
+    chart.setOption(options);
+    chart.resize();
+}
+
+function load_demand_heat_type_chart(chartData) {
+    let el = document.getElementById("chart-demand-heat-type");
+    if (!el) return;
+
+    let chart = getOrCreateChart(el);
+
     let pieData = [];
     for (let [key, valArray] of Object.entries(chartData.y_data)) {
         let val = (valArray && valArray.length > 0) ? valArray[0] : 0;
@@ -226,8 +433,15 @@ function load_area_chart(chartData) {
     }
 
     let options = {
-        title: { text: "Area Chart", left: 'center' },
-        tooltip: { trigger: 'item' },
+        title: { text: "Art der Wärmversorgung", left: 'center' },
+        color: ['#AB2134', '#E5707F'],
+        // backgroundColor: '#FFF6F8',
+        tooltip: {
+            trigger: 'item',
+            valueFormatter: function (value) {
+                return `${value} %`.replace('.', ',');
+            }
+        },
         legend: {
             orient: 'horizontal',
             left: 'center',
@@ -237,7 +451,7 @@ function load_area_chart(chartData) {
             {
                 name: "Area",
                 type: 'pie',
-                radius: '50%',
+                radius: ['40%', '70%'],
                 data: pieData,
                 emphasis: {
                     itemStyle: {
@@ -254,20 +468,98 @@ function load_area_chart(chartData) {
     chart.resize();
 }
 
-/**
- * CO2 "chart": we only display an icon and some text
- */
-function load_co2_chart(co2Data) {
-    let co2El = document.getElementById("co2-info");
-    if (!co2El) return;
+function load_area_chart(chartData) {
+    let el = document.getElementById("chart-area");
+    if (!el) return;
 
-    let iconUrl = co2Data.icon_url || "";
-    let text = co2Data.co2_text || "No data";
+    let chart = getOrCreateChart(el);
 
-    co2El.innerHTML = `
-        <img src="${iconUrl}" alt="CO2 Icon" style="height:24px; vertical-align:middle;" />
-        <span style="margin-left: 8px;">${text}</span>
-    `;
+    let pieData = [];
+    for (let [key, valArray] of Object.entries(chartData.y_data)) {
+        let val = (valArray && valArray.length > 0) ? valArray[0] : 0;
+        pieData.push({ name: key, value: val });
+    }
+
+    let options = {
+        title: { text: "Regionsfläche", left: 'center' },
+        color: ['#758E9A', '#99ACB5', '#BECAD0', '#E3E8EB'],
+        tooltip: {
+            trigger: 'item',
+            valueFormatter: function (value) {
+                return `${value} km²`.replace('.', ',');
+            }
+        },
+        legend: {
+            orient: 'horizontal',
+            left: 'center',
+            top: 'bottom',
+        },
+        series: [
+            {
+                name: "Area",
+                type: 'pie',
+                radius: ['40%', '70%'],
+                data: pieData,
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    chart.setOption(options);
+    chart.resize();
+}
+
+function load_population_chart(chartData) {
+    let el = document.getElementById("chart-population");
+    if (!el) return;
+
+    let chart = getOrCreateChart(el);
+
+    let pieData = [];
+    for (let [key, valArray] of Object.entries(chartData.y_data)) {
+        let val = (valArray && valArray.length > 0) ? valArray[0] : 0;
+        pieData.push({ name: key, value: val });
+    }
+
+    let options = {
+        title: { text: "Bevölkerung", left: 'center' },
+        color: ['#758E9A', '#99ACB5', '#BECAD0', '#E3E8EB'],
+        tooltip: {
+            trigger: 'item',
+            valueFormatter: function (value) {
+                return `${value} Personen`.replace('.', ',');
+            }
+        },
+        legend: {
+            orient: 'horizontal',
+            left: 'center',
+            top: 'bottom',
+        },
+        series: [
+            {
+                name: "Area",
+                type: 'pie',
+                radius: ['40%', '70%'],
+                data: pieData,
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    chart.setOption(options);
+    chart.resize();
 }
 
 // Update the sticky header with the region's title and image
