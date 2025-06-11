@@ -1,6 +1,8 @@
 """Charts and Data for Regions."""
 from __future__ import annotations
 
+import numpy as np
+import pandas as pd
 from django.contrib.gis.db.models.functions import Envelope
 from django.db.models import Sum
 from django.db.models.functions import Round
@@ -45,13 +47,48 @@ def get_regions_data() -> list:
                     "icon": "/static/images/icons/case-study-challenge.svg",
                 },
             ],
-            "plans": {
-                "2023": {"wind": 40, "pv": 80, "moor": 1},
-                "2030": {"wind": 70, "pv": 100, "moor": 2},
-                "2040": {"wind": 80, "pv": 120, "moor": 4},
+            "basic_data": {
+                "Rüdersdorf": {"area": 70.1, "population": 16079},
+                "Strausberg": {"area": 67.6, "population": 27456},
+                "Erkner": {"area": 17.7, "population": 12019},
+                "Grünheide": {"area": 126.4, "population": 9189},
             },
-            "area": "5.5%",
-            "co2": 1500.81,
+            "capacity": {
+                "Rüdersdorf": {"wind": 4.2, "pv_ground": 20.4, "pv_roof": 6.8, "bio": 2.2},
+                "Strausberg": {"wind": 0, "pv_ground": 2.3, "pv_roof": 4.0, "bio": 3.1},
+                "Erkner": {"wind": 0, "pv_ground": 0, "pv_roof": 1.6, "bio": 0},
+                "Grünheide": {"wind": 0, "pv_ground": 0, "pv_roof": 4.5, "bio": 0},
+            },
+            "capacity_potential": {
+                "Rüdersdorf": {"wind": 0, "pv_ground": 1509.7, "pv_roof": 132.3},
+                "Strausberg": {"wind": 0, "pv_ground": 733.2, "pv_roof": 135.6},
+                "Erkner": {"wind": 0, "pv_ground": 0, "pv_roof": 49.1},
+                "Grünheide": {"wind": 92.0, "pv_ground": 163.0, "pv_roof": 77.9},
+            },
+            "full_load_hours": {
+                "wind": 1500,
+                "pv_ground": 910,
+                "pv_roof": 750,
+                "bio": 6000,
+            },
+            "demand_power": {
+                "Rüdersdorf": {"hh": 21.8, "cts": 30.4, "ind": 259.5},
+                "Strausberg": {"hh": 37.3, "cts": 42.8, "ind": 38.7},
+                "Erkner": {"hh": 16.3, "cts": 10.3, "ind": 12.5},
+                "Grünheide": {"hh": 12.3, "cts": 53.5, "ind": 1012.5},
+            },
+            "demand_heat_cen": {
+                "Rüdersdorf": {"hh": 1.3, "cts": 0.4, "ind": 0.1},
+                "Strausberg": {"hh": 19.5, "cts": 6.8, "ind": 1.4},
+                "Erkner": {"hh": 0.1, "cts": 0, "ind": 0},
+                "Grünheide": {"hh": 6.0, "cts": 1.1, "ind": 11.7},
+            },
+            "demand_heat_dec": {
+                "Rüdersdorf": {"hh": 59.5, "cts": 18.9, "ind": 6.6},
+                "Strausberg": {"hh": 58.3, "cts": 20.4, "ind": 4.3},
+                "Erkner": {"hh": 37.4, "cts": 7.6, "ind": 4.0},
+                "Grünheide": {"hh": 53.5, "cts": 10.0, "ind": 103.7},
+            },
         },
         {
             "title": "Region Kiel",
@@ -83,116 +120,9 @@ def get_regions_data() -> list:
                     "icon": "/static/images/icons/case-study-challenge.svg",
                 },
             ],
-            "plans": {
-                "2023": {"wind": 60, "pv": 80, "moor": 0},
-                "2030": {"wind": 100, "pv": 120, "moor": 1},
-                "2040": {"wind": 150, "pv": 140, "moor": 2},
-            },
-            "area": "3.5%",
-            "co2": 1829.81,
+            # TODO: Insert data for Kiel
         },
     ]
-
-
-def get_basic_charts_data(region: str) -> dict:
-    """Return basic chart data."""
-    if region == "verbu":
-        chart_data = {
-            "electricity": {
-                "categories": ["Jan", "Feb", "Mar"],
-                "series": {
-                    "Generation": [120, 200, 150],
-                    "Consumption": [90, 50, 110],
-                },
-            },
-            "heat": {
-                "categories": ["Jan", "Feb", "Mar"],
-                "series": {
-                    "Generation": [80, 60, 90],
-                    "Consumption": [40, 30, 55],
-                },
-            },
-            "capacity": {
-                "categories": ["Wind", "Solar", "Biomass"],
-                "series": {
-                    "Existing": [300, 200, 100],
-                    "Addition": [30, 20, 10],
-                },
-            },
-            "costs": {
-                "categories": ["Project A", "Project B", "Project C"],
-                "series": {
-                    "Variable costs": [50000, 30000, 45000],
-                    "Investment": [200000, 150000, 250000],
-                },
-            },
-        }
-    elif region == "einzeln":
-        chart_data = {
-            "electricity": {
-                "categories": ["Jan", "Feb", "Mar"],
-                "series": {
-                    "Generation": [100, 190, 150],
-                    "Consumption": [80, 40, 110],
-                },
-            },
-            "heat": {
-                "categories": ["Jan", "Feb", "Mar"],
-                "series": {
-                    "Generation": [100, 80, 90],
-                    "Consumption": [60, 45, 55],
-                },
-            },
-            "capacity": {
-                "categories": ["Wind", "Solar", "Biomass"],
-                "series": {
-                    "Existing": [200, 150, 100],
-                    "Addition": [20, 10, 5],
-                },
-            },
-            "costs": {
-                "categories": ["Project A", "Project B", "Project C"],
-                "series": {
-                    "Variable costs": [40000, 30000, 45000],
-                    "Investment": [180000, 150000, 250000],
-                },
-            },
-        }
-    elif region == "kiel":
-        chart_data = {
-            "electricity": {
-                "categories": ["Jan", "Feb", "Mar"],
-                "series": {
-                    "Generation": [200, 290, 150],
-                    "Consumption": [100, 60, 110],
-                },
-            },
-            "heat": {
-                "categories": ["Jan", "Feb", "Mar"],
-                "series": {
-                    "Generation": [100, 120, 40],
-                    "Consumption": [80, 55, 50],
-                },
-            },
-            "capacity": {
-                "categories": ["Wind", "Solar", "Biomass"],
-                "series": {
-                    "Existing": [400, 300, 100],
-                    "Addition": [40, 20, 5],
-                },
-            },
-            "costs": {
-                "categories": ["Project A", "Project B", "Project C"],
-                "series": {
-                    "Variable costs": [80000, 30000, 48000],
-                    "Investment": [190000, 160000, 270000],
-                },
-            },
-        }
-    else:
-        chart_data = {}
-
-    return chart_data
 
 
 def get_case_studies_charts_data(region_name: str) -> dict:
@@ -208,52 +138,121 @@ def get_case_studies_charts_data(region_name: str) -> dict:
     if not selected_region:
         selected_region = regions[0]
 
-    plans = selected_region["plans"]
-    x_axis_data = list(plans.keys())
+    basic_data = selected_region["basic_data"]
+    capacity = selected_region["capacity"]
+    capacity_potential = selected_region["capacity_potential"]
+    full_load_hours = selected_region["full_load_hours"]
+    production_data = {
+        "Wind": [round(p["wind"] * full_load_hours["wind"] / 1e3, 1) for p in capacity.values()],
+        "PV Freifläche": [round(p["pv_ground"] * full_load_hours["pv_ground"] / 1e3, 1) for p in capacity.values()],
+        "PV Dach": [round(p["pv_roof"] * full_load_hours["pv_roof"] / 1e3, 1) for p in capacity.values()],
+        "Bioenergie": [round(p["bio"] * full_load_hours["bio"] / 1e3, 1) for p in capacity.values()]
+    }
+    demand_power = selected_region["demand_power"]
+    demand_heat_cen = selected_region["demand_heat_cen"]
+    demand_heat_cen_sum = sum([sum(_.values()) for _ in demand_heat_cen.values()])
+    demand_heat_dec = selected_region["demand_heat_dec"]
+    demand_heat_dec_sum = sum([sum(_.values()) for _ in demand_heat_dec.values()])
+    demand_heat_total = {
+        mun: {k: round(v1 + v2, 1)
+              for (k, v1), (_, v2) in
+              zip(demand_heat_cen[mun].items(), demand_heat_dec[mun].items())
+              } for mun in demand_heat_cen
+    }
+
+    x_axis_data = list(capacity.keys())
 
     charts_data = {
-        "production": {
-            "x_data": x_axis_data,
-            "y_data": {
-                "Production": [p["wind"] + p["pv"] for p in plans.values()],
-                "Consumption": [p["wind"] * 1.5 for p in plans.values()],
-            },
-            "y_label": "kWh",
+        "area": {
+            "x_data": [""],
+            "y_data": {k: [v["area"]] for k, v in basic_data.items()},
+            "y_label": "km²",
         },
-        "tech": {
+        "population": {
+            "x_data": x_axis_data,
+            "y_data": {k: [v["population"]] for k, v in basic_data.items()},
+            "y_label": "",
+        },
+        "capacity": {
             "x_data": x_axis_data,
             "y_data": {
-                "Wind": [p["wind"] for p in plans.values()],
-                "PV": [p["pv"] for p in plans.values()],
+                "Wind": [p["wind"] for p in capacity.values()],
+                "PV Freifläche": [p["pv_ground"] for p in capacity.values()],
+                "PV Dach": [p["pv_roof"] for p in capacity.values()],
+                "Bioenergie": [p["bio"] for p in capacity.values()],
             },
             "y_label": "MW",
-            "target": {"Target 2040": 100},
+            # "target": {"Regionalziel 2032": 100},
         },
-        "another": {
+        "capacity_potential": {
             "x_data": x_axis_data,
             "y_data": {
-                "Moor": [p["moor"] for p in plans.values()],
+                "Wind": [p["wind"] for p in capacity_potential.values()],
+                "PV Freifläche": [p["pv_ground"] for p in capacity_potential.values()],
+                "PV Dach": [p["pv_roof"] for p in capacity_potential.values()],
             },
-            "y_label": "Moor KPI [dummy]",
+            "y_label": "MW",
         },
-        "demand": {
+        "capacity_potential_usage": {
+            "x_data": x_axis_data,
+            "y_data": (
+                pd.DataFrame(capacity).T[
+                    ["wind", "pv_ground", "pv_roof"]
+                ].T.div(
+                    pd.DataFrame(capacity_potential)
+                ).fillna(0).mul(100).replace(np.inf, 0).round(1).T.rename(
+                    columns={"wind": "Wind", "pv_ground": "PV Freifläche", "pv_roof": "PV Dach"}
+                ).to_dict("list")
+            ),
+            "y_label": "%",
+        },
+        "production": {
+            "x_data": x_axis_data,
+            "y_data": production_data,
+            "y_label": "GWh",
+        },
+        "production_specific": {
             "x_data": x_axis_data,
             "y_data": {
-                "Households": [p["pv"] / 2 for p in plans.values()],
-                "Industry": [p["wind"] / 2 for p in plans.values()],
+                "pro Hektar": (pd.DataFrame(production_data).sum(axis=1) / pd.DataFrame(basic_data).T.reset_index()["area"] / 100 * 1e3).round(1).tolist(),
+                "pro Kopf": (pd.DataFrame(production_data).sum(axis=1) / pd.DataFrame(basic_data).T.reset_index()["population"] * 1e3).round(1).tolist(),
             },
-            "y_label": "Energy Demand [GWh]",
+            "y_label": "MWh",
         },
-        "area": {
-            "x_data": ["dummy"],
+        "demand_power": {
+            "x_data": x_axis_data,
             "y_data": {
-                "Used Land": [45],
-                "Unused Land": [55],
+                "Haushalte": [p["hh"] for p in demand_power.values()],
+                "GHD": [p["cts"] for p in demand_power.values()],
+                "Industrie": [p["ind"] for p in demand_power.values()],
             },
+            "y_label": "GWh",
         },
-        "co2": {
-            "icon_url": "/static/images/co2_icon.png",
-            "co2_text": f"Region: {selected_region['title']} - CO₂ Emissions: {selected_region['co2']} tons",
+        "self_generation": {
+            "x_data": x_axis_data,
+            "y_data": {
+                "Deckung": (
+                    pd.DataFrame(production_data).sum(axis=1) /
+                    pd.DataFrame(demand_power).T.sum(axis=1).reset_index(drop=True)
+                ).mul(1e2).round(1).to_list(),
+            },
+            "y_label": "%",
+        },
+        "demand_heat": {
+            "x_data": x_axis_data,
+            "y_data": {
+                "Haushalte": [p["hh"] for p in demand_heat_total.values()],
+                "GHD": [p["cts"] for p in demand_heat_total.values()],
+                "Industrie": [p["ind"] for p in demand_heat_total.values()],
+            },
+            "y_label": "GWh",
+        },
+        "demand_heat_type": {
+            "x_data": [""],
+            "y_data": {
+                "Fernwärme": [round(demand_heat_cen_sum / (demand_heat_cen_sum + demand_heat_dec_sum) * 100, 1)],
+                "Dezentral": [round(demand_heat_dec_sum / (demand_heat_cen_sum + demand_heat_dec_sum) * 100, 1)],
+            },
         },
     }
 
