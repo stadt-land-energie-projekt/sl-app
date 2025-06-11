@@ -111,25 +111,25 @@ function createGenerationConsumptionChart(data) {
               top: 'top'
           },
           {
-              text: `flow_out_electricity von TechnologieX \n / Gesamtstrombedarf (` + data['chart1-total'] + 'GW)',
+              text: `Gesamtstrombedarf (` + data['chart1-total'] + 'GWh)',
               left: '25%',
               top: '10%',
               textAlign: 'center', ...subTitleStyle
           },
           {
-              text: `flow_out_heat_low_decentral von TechnologieX  \n / Gesamtwämrebedarf dezentral (` + data['chart2-total'] + 'GW)',
+              text: `Gesamtwärmebedarf dezentral (` + data['chart2-total'] + 'GWh)',
               left: '75%',
               top: '10%',
               textAlign: 'center', ...subTitleStyle
           },
           {
-              text: `flow_out_heat_low_central von TechnologieX \n / Gesamtwämrebedarf zentral (` + data['chart3-total'] + 'GW)',
+              text: `Gesamtwärmebedarf zentral (` + data['chart3-total'] + 'GWh)',
               left: '25%',
               top: '55%',
               textAlign: 'center', ...subTitleStyle
           },
           {
-              text: `flow_out_heat_high von TechnologieX \n / Gesamtwämrebedarf heat_high (` + data['chart4-total'] + 'GW)',
+              text: `Gesamtwärmebedarf heat_high (` + data['chart4-total'] + 'GWh)',
               left: '75%',
               top: '55%',
               textAlign: 'center', ...subTitleStyle
@@ -137,7 +137,7 @@ function createGenerationConsumptionChart(data) {
       ],
       tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'
+          formatter: '{b}: {c} ({d}%)'
       },
       series: [
           getSeries({
@@ -217,16 +217,22 @@ function createOptimizedCapacitiesChart(data) {
           {
               type: 'value',
               name: 'optimierte \n Leistung [MW]',
+              nameTextStyle: {
+                align: "left"
+              }
           },
           {
               type: 'value',
               name: 'theoretisches \n Ausbaupotential [MW]',
+              nameTextStyle: {
+                align: "right"
+              }
           }
       ],
       series: [
           {
               name: 'optimierte Leistung',
-              data: data.map(item => item.var_value === 0 ? item.capacity_potential * 0.5 : item.var_value),
+              data: data.map(item => item.var_value === 0 ? null : item.var_value),
               type: 'bar'
           },
           {
@@ -259,6 +265,7 @@ function createSelfGenerationPowerChart(data) {
         series: [
             {
                 type: 'pie',
+                radius: "50%",
                 data: [
                     {value: data.y1, name: 'Anteil Eigenerzeugung aus EE'},
                     {value: data.y2, name: 'Anteil Stromimport'},
@@ -296,11 +303,11 @@ function createSuppliedHoursChart(data) {
         },
         xAxis: {
             type: 'category',
-            data: Object.keys(data.y1)
+            data: [""]
         },
         yAxis: {
             type: 'value',
-            name: 'Percentage (%)',
+            name: '[%]',
             axisLabel: {formatter: '{value}%'}
         },
         series: [
@@ -361,16 +368,16 @@ function createTotalElectricityChart(data) {
             trigger: 'item'
         },
         legend: {
-            orient: 'vertical',
-            left: 'right',
-            bottom: '-5%',
+            orient: 'horizontal',
+            top: 'bottom',
+            itemGap: 2,
         },
         series: [
             {
                 name: 'Energy',
                 type: 'pie',
                 radius: '50%',
-                center: ['30%', '50%'],
+                center: ['50%', '50%'],
                 data: styledData,
                 emphasis: {
                     itemStyle: {

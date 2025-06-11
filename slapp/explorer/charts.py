@@ -143,7 +143,8 @@ def optimized_capacities(scenario: str):
         (merged_df["var_value"].notna())
         & (merged_df["capacity_potential"].notna() & merged_df["capacity_potential"] > 0)
     ]
-    merged_df["name"] = merged_df["name"].apply(merge_technologies)
+    merged_df["name"] = merged_df["name"].map(lambda x: x.split("-", 1)[1])
+    merged_df = merged_df.groupby("name").sum().round().reset_index()
     return template, merged_df.to_dict(orient="records")
 
 
