@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from . import chart_data
@@ -85,6 +86,8 @@ def electricity_hydro_flow(scenario: str):
     if h2_elec_df is not None and not h2_elec_df.empty:
         combined_df = pd.concat([h2_elec_df, combined_df], ignore_index=True)
     combined_df = combined_df.round()
+    # Convert NaN to None as NaN cannot be converted to JSON
+    combined_df = combined_df.map(lambda x: None if x is np.nan else x)
     data_records = combined_df.to_dict(orient="records")
     return template, data_records
 
