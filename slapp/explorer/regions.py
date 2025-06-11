@@ -1,13 +1,14 @@
 """Charts and Data for Regions."""
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
 import pandas as pd
+from django.conf import settings
 from django.contrib.gis.db.models.functions import Envelope
-from django.db.models import Sum
-from django.db.models.functions import Round
 
-from .models import Municipality, Region
+from .models import Region
 
 
 def get_regions_data() -> list:
@@ -33,12 +34,14 @@ def get_regions_data() -> list:
                 },
                 {
                     "title": "Besonderheiten",
-                    "fact": "Tesla-Gigafactory als wirtschaftlicher Impulsgeber, Großes, erfolgreiches H2-Kavernen-Speicherprojekt",
+                    "fact": "Tesla-Gigafactory als wirtschaftlicher Impulsgeber, Großes, "
+                    "erfolgreiches H2-Kavernen-Speicherprojekt",
                     "icon": "/static/images/icons/case-study-particularity.svg",
                 },
                 {
                     "title": "Erneuerbare Energien",
-                    "fact": "Hoher Anteil an Wind- und Solarenergie, Genehmigter Anschlusspunkt an das Wasserstoffkernnetz",
+                    "fact": "Hoher Anteil an Wind- und Solarenergie, "
+                    "Genehmigter Anschlusspunkt an das Wasserstoffkernnetz",
                     "icon": "/static/images/icons/case-study-renewable.svg",
                 },
                 {
@@ -120,7 +123,7 @@ def get_regions_data() -> list:
                     "icon": "/static/images/icons/case-study-challenge.svg",
                 },
             ],
-            # TODO: Insert data for Kiel
+            # TODO: Insert data for Kiel  # noqa: TD002, TD003
         },
     ]
 
@@ -146,7 +149,7 @@ def get_case_studies_charts_data(region_name: str) -> dict:
         "Wind": [round(p["wind"] * full_load_hours["wind"] / 1e3, 1) for p in capacity.values()],
         "PV Freifläche": [round(p["pv_ground"] * full_load_hours["pv_ground"] / 1e3, 1) for p in capacity.values()],
         "PV Dach": [round(p["pv_roof"] * full_load_hours["pv_roof"] / 1e3, 1) for p in capacity.values()],
-        "Bioenergie": [round(p["bio"] * full_load_hours["bio"] / 1e3, 1) for p in capacity.values()]
+        "Bioenergie": [round(p["bio"] * full_load_hours["bio"] / 1e3, 1) for p in capacity.values()],
     }
     demand_power = selected_region["demand_power"]
     demand_heat_cen = selected_region["demand_heat_cen"]
@@ -154,10 +157,11 @@ def get_case_studies_charts_data(region_name: str) -> dict:
     demand_heat_dec = selected_region["demand_heat_dec"]
     demand_heat_dec_sum = sum([sum(_.values()) for _ in demand_heat_dec.values()])
     demand_heat_total = {
-        mun: {k: round(v1 + v2, 1)
-              for (k, v1), (_, v2) in
-              zip(demand_heat_cen[mun].items(), demand_heat_dec[mun].items())
-              } for mun in demand_heat_cen
+        mun: {
+            k: round(v1 + v2, 1)
+            for (k, v1), (_, v2) in zip(demand_heat_cen[mun].items(), demand_heat_dec[mun].items())
+        }
+        for mun in demand_heat_cen
     }
 
     x_axis_data = list(capacity.keys())
@@ -182,7 +186,7 @@ def get_case_studies_charts_data(region_name: str) -> dict:
                 "Bioenergie": [p["bio"] for p in capacity.values()],
             },
             "y_label": "MW",
-            # "target": {"Regionalziel 2032": 100},
+            # "target": {"Regionalziel 2032": 100},  # noqa: ERA001
         },
         "capacity_potential": {
             "x_data": x_axis_data,
@@ -196,13 +200,15 @@ def get_case_studies_charts_data(region_name: str) -> dict:
         "capacity_potential_usage": {
             "x_data": x_axis_data,
             "y_data": (
-                pd.DataFrame(capacity).T[
-                    ["wind", "pv_ground", "pv_roof"]
-                ].T.div(
-                    pd.DataFrame(capacity_potential)
-                ).fillna(0).mul(100).replace(np.inf, 0).round(1).T.rename(
-                    columns={"wind": "Wind", "pv_ground": "PV Freifläche", "pv_roof": "PV Dach"}
-                ).to_dict("list")
+                pd.DataFrame(capacity)
+                .T[["wind", "pv_ground", "pv_roof"]]
+                .T.div(pd.DataFrame(capacity_potential))
+                .fillna(0)
+                .mul(100)
+                .replace(np.inf, 0)
+                .round(1)
+                .T.rename(columns={"wind": "Wind", "pv_ground": "PV Freifläche", "pv_roof": "PV Dach"})
+                .to_dict("list")
             ),
             "y_label": "%",
         },
@@ -214,8 +220,21 @@ def get_case_studies_charts_data(region_name: str) -> dict:
         "production_specific": {
             "x_data": x_axis_data,
             "y_data": {
-                "pro Hektar": (pd.DataFrame(production_data).sum(axis=1) / pd.DataFrame(basic_data).T.reset_index()["area"] / 100 * 1e3).round(1).tolist(),
-                "pro Kopf": (pd.DataFrame(production_data).sum(axis=1) / pd.DataFrame(basic_data).T.reset_index()["population"] * 1e3).round(1).tolist(),
+                "pro Hektar": (
+                    pd.DataFrame(production_data).sum(axis=1)
+                    / pd.DataFrame(basic_data).T.reset_index()["area"]
+                    / 100
+                    * 1e3
+                )
+                .round(1)
+                .tolist(),
+                "pro Kopf": (
+                    pd.DataFrame(production_data).sum(axis=1)
+                    / pd.DataFrame(basic_data).T.reset_index()["population"]
+                    * 1e3
+                )
+                .round(1)
+                .tolist(),
             },
             "y_label": "MWh",
         },
@@ -232,9 +251,12 @@ def get_case_studies_charts_data(region_name: str) -> dict:
             "x_data": x_axis_data,
             "y_data": {
                 "Deckung": (
-                    pd.DataFrame(production_data).sum(axis=1) /
-                    pd.DataFrame(demand_power).T.sum(axis=1).reset_index(drop=True)
-                ).mul(1e2).round(1).to_list(),
+                    pd.DataFrame(production_data).sum(axis=1)
+                    / pd.DataFrame(demand_power).T.sum(axis=1).reset_index(drop=True)
+                )
+                .mul(1e2)
+                .round(1)
+                .to_list(),
             },
             "y_label": "%",
         },
@@ -259,34 +281,19 @@ def get_case_studies_charts_data(region_name: str) -> dict:
     return charts_data
 
 
-def municipalities_details(ids: list[int]) -> list[Municipality]:
-    """Return municipalities."""
-    municipalities = (
-        Municipality.objects.filter(id__in=ids)
-        .annotate(area_rounded=Round("area", precision=1))
-        .annotate(biomass_net=Round(Sum("biomass__capacity_net", default=0) / 1000, precision=1))
-        .annotate(pvground_net=Round(Sum("pvground__capacity_net", default=0) / 1000, precision=1))
-        .annotate(pvroof_net=Round(Sum("pvroof__capacity_net", default=0) / 1000, precision=1))
-        .annotate(wind_net=Round(Sum("windturbine__capacity_net", default=0) / 1000, precision=1))
-        .annotate(hydro_net=Round(Sum("hydro__capacity_net", default=0) / 1000, precision=1))
-        .annotate(
-            total_net=Round(
-                (
-                    Sum("windturbine__capacity_net", default=0)
-                    + Sum("hydro__capacity_net", default=0)
-                    + Sum("pvroof__capacity_net", default=0)
-                    + Sum("pvground__capacity_net", default=0)
-                    + Sum("biomass__capacity_net", default=0)
-                )
-                / 1000,
-                precision=1,
-            ),
-        )
-        .annotate(storage_net=Round(Sum("storage__capacity_net", default=0) / 1000, precision=1))
-        .annotate(kwk_el_net=Round(Sum("combustion__capacity_net", default=0) / 1000, precision=1))
-        .annotate(kwk_th_net=Round(Sum("combustion__th_capacity", default=0) / 1000, precision=1))
-    )
-    return municipalities
+def municipalities_details(names: list[str]) -> list[dict[str, Any]]:  # noqa: ARG001
+    """Return data for given municipalities from CSV."""
+    # TODO (henhuy): Get data depending on selected region
+    # https://github.com/stadt-land-energie-projekt/sl-app/issues/242
+
+    municipalities = pd.read_csv(str(settings.DATA_DIR.path("regions").path("municipality_data.csv")))
+    # Merge electricity and heat columns to calculate aggregated energies
+    municipalities.columns = municipalities.columns.map(
+        lambda x: "electricity_demand_item" if "power" in x and "demand" in x else x,
+    ).map(lambda x: "heat_demand_item" if "heat" in x and "demand" in x else x)
+    municipalities["electricity_demand"] = municipalities.loc[:, "electricity_demand_item"].sum(axis=1).round()
+    municipalities["heat_demand"] = municipalities.loc[:, "heat_demand_item"].sum(axis=1).round()
+    return municipalities.to_dict(orient="records")
 
 
 def get_energy_data(region: str) -> list:

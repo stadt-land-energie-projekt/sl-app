@@ -504,12 +504,16 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
             region_os = None
 
         if region_kiel:
+            # TODO (henhuy): Select region Kiel
+            # https://github.com/stadt-land-energie-projekt/sl-app/issues/242
             ids_kiel = region_kiel.municipality_set.values_list("id", flat=True)
             context["municipalities_region_kiel"] = municipalities_details(ids_kiel)
         else:
             context["municipalities_region_kiel"] = None
 
         if region_os:
+            # TODO (henhuy): Select region Oberland-Spreewald
+            # https://github.com/stadt-land-energie-projekt/sl-app/issues/242
             ids_os = region_os.municipality_set.values_list("id", flat=True)
             context["municipalities_region_os"] = municipalities_details(ids_os)
         else:
