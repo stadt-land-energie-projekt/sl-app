@@ -17,6 +17,40 @@ def get_regions_data() -> list:
         entry["name"]: entry["bounding_box"]
         for entry in Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
     }
+    region_data = pd.read_csv(str(settings.DATA_DIR.path("regions").path("municipality_data.csv")), index_col="name")
+    region_data.columns = region_data.columns.map(lambda x: x.split("_", 1)[1] if "capacity" in x else x)
+
+    basic_data = region_data.loc[:, ["area", "population"]].to_dict(orient="index")
+
+    capacity = region_data.loc[:, ["wind", "pv_ground", "pv_roof", "bio"]].to_dict(orient="index")
+
+    capacity_potential = region_data.loc[
+        :,
+        [column for column in region_data.columns if column.startswith("potential")],
+    ]
+    capacity_potential.columns = ["pv_ground", "pv_roof", "wind"]
+    capacity_potential = capacity_potential.to_dict(orient="index")
+
+    power_demand = region_data.loc[
+        :,
+        [column for column in region_data.columns if "demand" in column and "power" in column],
+    ]
+    power_demand.columns = [column.split("_")[1] for column in power_demand.columns]
+    power_demand = power_demand.to_dict(orient="index")
+
+    heat_demand_central = region_data.loc[
+        :,
+        [column for column in region_data.columns if "demand" in column and "heat" in column and "cen" in column],
+    ]
+    heat_demand_central.columns = [column.split("_")[1] for column in heat_demand_central.columns]
+    heat_demand_central = heat_demand_central.to_dict(orient="index")
+
+    heat_demand_decentral = region_data.loc[
+        :,
+        [column for column in region_data.columns if "demand" in column and "heat" in column and "dec" in column],
+    ]
+    heat_demand_decentral.columns = [column.split("_")[1] for column in heat_demand_decentral.columns]
+    heat_demand_decentral = heat_demand_decentral.to_dict(orient="index")
     return [
         {
             "title": "Region Oderland-Spree",
@@ -50,48 +84,18 @@ def get_regions_data() -> list:
                     "icon": "/static/images/icons/case-study-challenge.svg",
                 },
             ],
-            "basic_data": {
-                "Rüdersdorf": {"area": 70.1, "population": 16079},
-                "Strausberg": {"area": 67.6, "population": 27456},
-                "Erkner": {"area": 17.7, "population": 12019},
-                "Grünheide": {"area": 126.4, "population": 9189},
-            },
-            "capacity": {
-                "Rüdersdorf": {"wind": 4.2, "pv_ground": 20.4, "pv_roof": 6.8, "bio": 2.2},
-                "Strausberg": {"wind": 0, "pv_ground": 2.3, "pv_roof": 4.0, "bio": 3.1},
-                "Erkner": {"wind": 0, "pv_ground": 0, "pv_roof": 1.6, "bio": 0},
-                "Grünheide": {"wind": 0, "pv_ground": 0, "pv_roof": 4.5, "bio": 0},
-            },
-            "capacity_potential": {
-                "Rüdersdorf": {"wind": 0, "pv_ground": 1509.7, "pv_roof": 132.3},
-                "Strausberg": {"wind": 0, "pv_ground": 733.2, "pv_roof": 135.6},
-                "Erkner": {"wind": 0, "pv_ground": 0, "pv_roof": 49.1},
-                "Grünheide": {"wind": 92.0, "pv_ground": 163.0, "pv_roof": 77.9},
-            },
+            "basic_data": basic_data,
+            "capacity": capacity,
+            "capacity_potential": capacity_potential,
             "full_load_hours": {
                 "wind": 1500,
                 "pv_ground": 910,
                 "pv_roof": 750,
                 "bio": 6000,
             },
-            "demand_power": {
-                "Rüdersdorf": {"hh": 21.8, "cts": 30.4, "ind": 259.5},
-                "Strausberg": {"hh": 37.3, "cts": 42.8, "ind": 38.7},
-                "Erkner": {"hh": 16.3, "cts": 10.3, "ind": 12.5},
-                "Grünheide": {"hh": 12.3, "cts": 53.5, "ind": 1012.5},
-            },
-            "demand_heat_cen": {
-                "Rüdersdorf": {"hh": 1.3, "cts": 0.4, "ind": 0.1},
-                "Strausberg": {"hh": 19.5, "cts": 6.8, "ind": 1.4},
-                "Erkner": {"hh": 0.1, "cts": 0, "ind": 0},
-                "Grünheide": {"hh": 6.0, "cts": 1.1, "ind": 11.7},
-            },
-            "demand_heat_dec": {
-                "Rüdersdorf": {"hh": 59.5, "cts": 18.9, "ind": 6.6},
-                "Strausberg": {"hh": 58.3, "cts": 20.4, "ind": 4.3},
-                "Erkner": {"hh": 37.4, "cts": 7.6, "ind": 4.0},
-                "Grünheide": {"hh": 53.5, "cts": 10.0, "ind": 103.7},
-            },
+            "demand_power": power_demand,
+            "demand_heat_cen": heat_demand_central,
+            "demand_heat_dec": heat_demand_decentral,
         },
         {
             "title": "Region Kiel",
