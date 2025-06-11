@@ -121,7 +121,12 @@ function createFlowChart(data, resource, chartID) {
       const resource_de = resource === "hydrogen" ? "Wasserstoff" : "Strom";
       const chartDiv = document.getElementById(chartID);
       const wrapper = chartDiv.parentNode;
+      const msgClass = `${chartID}_msg`;
+      document.querySelectorAll(`.${msgClass}`).forEach(function(div) {
+        div.remove();
+      });
       const msg = document.createElement("div");
+      msg.classList.add(msgClass);
       msg.textContent = "Aktuell gibt es keine Daten für " + resource_de + ".";
       msg.style.textAlign = "center";
       msg.style.padding = "1em";
