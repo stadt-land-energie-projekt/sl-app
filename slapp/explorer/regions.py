@@ -1,6 +1,8 @@
 """Charts and Data for Regions."""
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -291,12 +293,50 @@ def municipalities_details(names: list[str]) -> list[dict[str, Any]]:  # noqa: A
     # https://github.com/stadt-land-energie-projekt/sl-app/issues/242
 
     municipalities = pd.read_csv(str(settings.DATA_DIR.path("regions").path("municipality_data.csv")))
-    # Merge electricity and heat columns to calculate aggregated energies
-    municipalities.columns = municipalities.columns.map(
-        lambda x: "electricity_demand_item" if "power" in x and "demand" in x else x,
-    ).map(lambda x: "heat_demand_item" if "heat" in x and "demand" in x else x)
-    municipalities["electricity_demand"] = municipalities.loc[:, "electricity_demand_item"].sum(axis=1).round()
-    municipalities["heat_demand"] = municipalities.loc[:, "heat_demand_item"].sum(axis=1).round()
+    with Path.open(str(settings.DATA_DIR.path("regions").path("technology_data.json"))) as f:
+        tech_data = json.load(f)
+    flh = pd.Series(tech_data["full_load_hours"])
+
+    production_cols = {
+        f"production_{tech}": municipalities[f"capacity_{tech}"].mul(flh[tech]).div(1e3).round(1)
+        for tech in ["wind", "pv_ground", "pv_roof", "bio"]
+    }
+    capacity_potential_usage_cols = {
+        f"capacity_potential_usage_{tech}": municipalities[f"capacity_{tech}"]
+        .div(
+            municipalities[f"potentialarea_{tech}_installable_power"],
+        )
+        .fillna(0)
+        .mul(100)
+        .replace(np.inf, 100)
+        .round(1)
+        for tech in ["wind", "pv_ground", "pv_roof"]
+    }
+
+    # Aggregate production, demand, potentials
+    municipalities = municipalities.assign(
+        capacity_total=municipalities.filter(like="capacity_").sum(axis=1).round(1),
+        potentialarea_total_installable_power=municipalities.filter(like="potentialarea_").sum(axis=1).round(1),
+        power_demand_total=municipalities.filter(like="_power_demand").sum(axis=1).round(1),
+        heat_demand_total=municipalities.filter(like="_heat_demand_").sum(axis=1).round(1),
+        heat_demand_cen_total=municipalities.filter(like="_heat_demand_cen").sum(axis=1).round(1),
+        heat_demand_dec_total=municipalities.filter(like="_heat_demand_dec").sum(axis=1).round(1),
+        **production_cols,
+        **capacity_potential_usage_cols,
+    )
+    municipalities["production_total"] = municipalities.filter(like="production_").sum(axis=1).round(1)
+    municipalities["capacity_potential_usage_total"] = (
+        municipalities["capacity_total"]
+        .div(
+            municipalities["potentialarea_total_installable_power"],
+        )
+        .mul(100)
+        .round(1)
+    )
+    municipalities["energy_demand_total"] = (
+        municipalities[["power_demand_total", "heat_demand_total"]].sum(axis=1).round(1)
+    )
+
     return municipalities.to_dict(orient="records")
 
 
