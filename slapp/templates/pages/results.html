@@ -87,7 +87,7 @@
               <button class="tab-button active" data-tab="exchange">Austausch</button>
               <button class="tab-button" data-tab="basic-solution">Basislösung</button>
               <button class="tab-button" data-tab="sensitivity">Sensitivitäten</button>
-              <button class="tab-button" data-tab="alternatives">Alternative Lösungen erkunden</button>
+              <button class="tab-button alternative" data-tab="alternatives">Alternative Lösungen erkunden</button>
             </div>
             <div class="results__tabs-content">
               <div id="exchange" class="tab-content tab-content--exchange active">
@@ -121,11 +121,21 @@
                   auf der Einstiegsseite zu <a href="{% url 'explorer:esys_robust' %}">Energiesystem & Robustheit</a>.
                 </p>
                 <select id="technologySelect" name="technology" autocomplete="off">
-                  {% for key, data in technologies %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
+                  {% for key, data in cost_technologies.items %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
                 </select>
                 <div id="tech-container">
                   <div class="technology-charts chart-container" id="cost-capacity-chart"></div>
                   <div class="technology-charts chart-container" id="tech-comparison-chart"></div>
+                </div>
+                <select id="demand-technologySelect" name="technology" autocomplete="off">
+                  {% for key, title in demand_technologies.items %}
+                    <option value="{{ key }}">Lastvariationen: {{ title }}</option>
+                  {% endfor %}
+                </select>
+                <div id="demand-tech-container">
+                  <div class="technology-charts chart-container" id="demand-chart"></div>
+                  <div class="technology-charts chart-container"
+                       id="demand-tech-comparison-chart"></div>
                 </div>
               </div>
               <div class="tab-content tab-content--alternatives" id="alternatives">
@@ -210,6 +220,8 @@
   <script src="{% static 'js/base_charts.js' %}" defer></script>
 {% endblock javascript %}
 {% block inline_javascript %}
+  {{ technologies | json_script:"technologies" }}
+  {{ nodes | json_script:"nodes" }}
   <script>
     // Toggle content about MGA
     function toggleMoreInfo() {

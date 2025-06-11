@@ -609,6 +609,7 @@ class Scenario(models.Model):
 
     name = models.CharField(max_length=255, unique=True)
     parameters = models.JSONField()
+    objective = models.FloatField(default=0)
 
 
 class Result(models.Model):
@@ -632,12 +633,19 @@ class Sensitivity(models.Model):
     region = models.CharField(max_length=255, null=True)
     perturbation_method = models.CharField(max_length=255)
     perturbation_parameter = models.FloatField()
-    scenario = models.ForeignKey(Scenario, on_delete=models.DO_NOTHING)
+    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE, related_name="sensitivities")
 
     class Meta:
         """Metadata for model."""
 
-        unique_together = ("attribute", "component", "region", "perturbation_method", "perturbation_parameter")
+        unique_together = (
+            "scenario",
+            "attribute",
+            "component",
+            "region",
+            "perturbation_method",
+            "perturbation_parameter",
+        )
 
 
 class Alternative(models.Model):

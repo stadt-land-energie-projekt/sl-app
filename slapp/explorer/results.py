@@ -6,10 +6,11 @@ from collections import defaultdict
 from functools import reduce
 from operator import or_
 
+import pandas as pd
 from django.db.models import Prefetch, Q
 
 from .models import AlternativeResult, Result, Scenario, Sensitivity
-from .settings import CAPACITY_COST, POTENTIALS, TECHNOLOGIES
+from .settings import CAPACITY_COST, DEMAND_COLORS, POTENTIALS, TECHNOLOGIES
 
 INF_STRING = "Keine obere Grenze"
 
@@ -43,13 +44,15 @@ def get_invests_in_results() -> dict[str, str]:
     }
 
 
+invest_technologies = get_invests_in_results()
+capacity_query = reduce(
+    or_,
+    [Q(name=technology, var_name=capacity_name) for technology, capacity_name in invest_technologies.items()],
+)
+
+
 def get_sensitivity_result(sensitivity: str, region: str, technology: str) -> dict[float, dict[str, float]]:
     """Return resulting capacities for given sensitivity."""
-    invest_technologies = get_invests_in_results()
-    capacity_query = reduce(
-        or_,
-        [Q(name=technology, var_name=capacity_name) for technology, capacity_name in invest_technologies.items()],
-    )
     sensitivities = (
         Sensitivity.objects.filter(attribute=sensitivity, component=technology, region=region)
         .select_related("scenario")
@@ -276,3 +279,72 @@ def format_min_max(min_value: float, max_value: float, unit: str) -> str:
         unit_str = ""
 
     return f"{converted_min} - {converted_max} {unit_str}"
+
+
+def get_demand_data(scenario_id: int) -> dict:
+    """Return demand data to create demand chart."""
+    base_scenario_id = Scenario.objects.get(name="base_scenario").id
+
+    demands = pd.DataFrame(
+        [
+            result
+            for scenario in Scenario.objects.prefetch_related("result_set").filter(
+                pk__in=[base_scenario_id, scenario_id],
+            )
+            for result in scenario.result_set.filter(tech__contains="demand").values()
+        ],
+    )
+    # Strip region name
+    demands["name"] = demands["name"].map(lambda x: x[14:])
+    # Sum regions
+    demands_sum = demands.loc[:, ["scenario_id", "name", "var_value"]].groupby(["scenario_id", "name"]).sum()
+    demands_sum.columns = ["demand"]
+    demands_sum["demand"] = demands_sum["demand"] * 1e-3
+    demands_sum = demands_sum.round()
+    demands_current = demands_sum.loc[base_scenario_id]
+    demands_current["diff"] = demands_sum.loc[scenario_id] - demands_sum.loc[base_scenario_id]
+    demands_current["color"] = demands_current.index.map(DEMAND_COLORS)
+    demand_dict = demands_current.to_dict("index")
+    return demand_dict
+
+
+def get_demand_capacity_data(scenario_id: int) -> list:
+    """Return capacities to create demand capacity chart for given scenario id."""
+    results = pd.DataFrame(
+        list(
+            Scenario.objects.prefetch_related("result_set")
+            .get(pk=scenario_id)
+            .result_set.filter(capacity_query, var_value__gt=0)
+            .values(),
+        ),
+    )
+    results = results[["name", "var_value"]].set_index("name")
+    results_dict = results["var_value"].to_dict()
+    results_merged = merge_sensitivity_results(
+        {0: results_dict},
+    )  # merge expects multiple results for different sensitivities, here only one sensitivity is given
+    chart_data = build_tech_comp_data(results_merged[0], current_tech="")  # Do not exclude any technology
+    return chart_data
+
+
+def parse_demand_scenario_title(demand_scenarios: dict[int, list[tuple[str, float]]]) -> dict[int, str]:
+    """Parse demand scenario title."""
+    symbols = {
+        "hh": "🏠",
+        "mob": "🚗",
+        "cts": "🏪",
+        "ind": "🏭",
+    }
+    parsed_choices = {}
+    for scenario_id, permutations in demand_scenarios.items():
+        items = []
+        for permutation in permutations:
+            title = f"{permutation[1]}x"
+            title += f"{'⚡' if 'electricity' in permutation[0] else '🔥'}"
+            if "heat" in permutation[0]:
+                title += "🔽" if "low" in permutation[0] else "🔼"
+            title += f"{symbols[permutation[0].split('_')[-1]]}"
+            title += f"{'(zentral)' if 'central' in permutation[0] else ''}"
+            items.append(title)
+        parsed_choices[scenario_id] = ", ".join(items)
+    return parsed_choices

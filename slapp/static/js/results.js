@@ -1,6 +1,11 @@
 let currentRegion = "";
 let currentTech = "";
 
+let chartZoomStart = {};
+let chartZoomEnd = {};
+
+const nodes = JSON.parse(document.getElementById("nodes").innerText);
+
 // Called when a region button is clicked
 async function showHiddenDiv(region, button) {
     const parentContainer = button.closest(".results__region-container");
@@ -47,15 +52,29 @@ async function showHiddenDiv(region, button) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const dropdown = document.getElementById("technologySelect");
-    if (dropdown) {
-        dropdown.addEventListener("change", function () {
+    const costDropdown = document.getElementById("technologySelect");
+    if (costDropdown) {
+        costDropdown.addEventListener("change", function () {
             const selectedType = this.value;
             loadCostCapacityData(selectedType);
         });
-        if (dropdown.options.length > 0) {
-            currentTech = dropdown.options[0].value;
+        if (costDropdown.options.length > 0) {
+            currentTech = costDropdown.options[0].value;
             loadCostCapacityData(currentTech);
+        }
+    }
+
+    const demandDropdown = document.getElementById("demand-technologySelect");
+    if (demandDropdown) {
+        demandDropdown.addEventListener("change", function () {
+            const selectedType = this.value;
+            loadDemandData(selectedType);
+            loadDemandCapacityData(selectedType);
+        });
+        if (demandDropdown.options.length > 0) {
+            currentTech = demandDropdown.options[0].value;
+            loadDemandData(currentTech);
+            loadDemandCapacityData(currentTech);
         }
     }
 });
@@ -88,22 +107,37 @@ async function loadFlowsChart(chartType, region) {
         });
         if (!response.ok) throw new Error("Network error: " + response.status);
         const jsonObj = await response.json();
-        let dataArray = jsonObj.data;
-        if (!Array.isArray(dataArray) || dataArray.length < 2) {
-            console.error("Unerwartetes Datenformat:", dataArray);
-            return;
-        }
-        createFlowChart(document.getElementById("electricity-chart"), dataArray[0], "electricity");
-        createFlowChart(document.getElementById("hydrogen-chart"), dataArray[1], "hydrogen");
+        const hydroData = jsonObj.flow_data.filter(d => d.carrier === "h2");
+        const electricityData = jsonObj.flow_data.filter(d => d.carrier === "electricity");
+        createFlowChart(electricityData, "electricity", "electricity-chart");
+        createFlowChart(hydroData, "hydrogen", "hydrogen-chart");
     } catch (error) {
         console.error("Error loading flow chart:", error);
     }
 }
 
-function createFlowChart(domElement, chartData, resource) {
-    if (!domElement || !chartData) return;
-    let chart = getOrCreateChart(domElement);
-    let values = chartData.energyData.map(d => d.value);
+function createFlowChart(data, resource, chartID) {
+    if (!data || data.length === 0) {
+      const resource_de = resource === "hydrogen" ? "Wasserstoff" : "Strom";
+      const chartDiv = document.getElementById(chartID);
+      const wrapper = chartDiv.parentNode;
+      const msgClass = `${chartID}_msg`;
+      document.querySelectorAll(`.${msgClass}`).forEach(function(div) {
+        div.remove();
+      });
+      const msg = document.createElement("div");
+      msg.classList.add(msgClass);
+      msg.textContent = "Aktuell gibt es keine Daten für " + resource_de + ".";
+      msg.style.textAlign = "center";
+      msg.style.padding = "1em";
+      msg.style.fontSize = "1.1em";
+      msg.style.color = "#555";
+      wrapper.insertBefore(msg, chartDiv);
+      return;
+    }
+
+    const chart = getOrCreateChart(document.getElementById(chartID));
+    let values = data.map(d => d.value);
     let minEnergy = Math.min(...values);
     let maxEnergy = Math.max(...values);
     function scaleLineWidth(value) {
@@ -113,17 +147,24 @@ function createFlowChart(domElement, chartData, resource) {
     let gradientColors = resource === "hydrogen" ?
         [{ offset: 0, color: "#feb1b1" }, { offset: 1, color: "#c34747" }] :
         [{ offset: 0, color: "#a2edbd" }, { offset: 1, color: "#20a54f" }];
+    const links  = data.map(d => ({
+          source: d.source,
+          target: d.target,
+          value:  d.value,
+          lineStyle: { width: scaleLineWidth(d.value) }
+        }));
     let option = {
-        title: { text: chartData.title || "Flussdiagramm", left: "center" },
+        title: { text: data.title || "Flussdiagramm", left: "center" },
         tooltip: {
             trigger: "item",
             formatter: function (params) {
                 return params.dataType === "edge" ?
-                    `${params.data.source} → ${params.data.target}: ${params.data.value} MWh` : params.name;
+                    `$${params.data.source} → $${params.data.target}: $${params.data.value} MWh` : params.name;
             }
         },
         series: [{
             type: "graph",
+            layout: "none",
             force: { repulsion: 300, edgeLength: [50, 200] },
             roam: true,
             label: { show: true, position: "right", fontSize: 20 },
@@ -134,13 +175,8 @@ function createFlowChart(domElement, chartData, resource) {
                 curveness: 0.2,
                 opacity: 0.8
             },
-            data: chartData.nodes,
-            links: chartData.energyData.map(d => ({
-                source: d.source,
-                target: d.target,
-                value: d.value,
-                lineStyle: { width: scaleLineWidth(d.value) }
-            })),
+            data: nodes,
+            links: links,
             emphasis: { focus: "adjacency" }
         }]
     };
@@ -165,6 +201,35 @@ async function loadCostCapacityData(tech) {
     } catch (error) {
         console.error("Error loading cost capacity data:", error);
     }
+}
+
+async function loadDemandData(scenario) {
+    const url = `/explorer/demand_chart/?scenario_id=${encodeURIComponent(scenario)}&region=${encodeURIComponent(currentRegion)}`;
+    try {
+        const response = await fetch(url, { method: 'GET', headers: { "Accept": "application/json" } });
+        if (!response.ok) throw new Error("Network error: " + response.status);
+        const data = await response.json();
+        loadDemandChart(data);
+    } catch (error) {
+        console.error("Error loading demand data:", error);
+    }
+}
+
+function loadDemandCapacityData(scenario_id) {
+    fetch(`/explorer/demand_capacity_chart/?scenario_id=${encodeURIComponent(scenario_id)}&region=${encodeURIComponent(currentRegion)}`, {
+        method: 'GET',
+        headers: { "Accept": "application/json" }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Network error: " + response.status);
+        return response.json();
+    })
+    .then(data => {
+        loadTechComparisonChart(data, scenario_id, "demand");
+    })
+    .catch(error => {
+        console.error("Error updating the tech comparison chart:", error);
+    });
 }
 
 function transformLineData(lineData) {
@@ -255,8 +320,9 @@ function updateTechComparisonChart(selectedX, tech) {
     });
 }
 
-function loadTechComparisonChart(data, selectedX) {
-    let el = document.getElementById("tech-comparison-chart");
+function loadTechComparisonChart(data, selectedX, category="cost") {
+    const div_id = category === "cost" ? "tech-comparison-chart" : "demand-tech-comparison-chart";
+    let el = document.getElementById(div_id);
     if (!el) return;
     let chart = getOrCreateChart(el);
     let barData = data.bar_data || [];
@@ -271,11 +337,11 @@ function loadTechComparisonChart(data, selectedX) {
     let categories = barData.map(item => item.name);
     let values = barData.map(item => ({ value: item.value, itemStyle: { color: item.color } }));
 
-    let storedZoomStart = localStorage.getItem('chartZoomStart');
-    let storedZoomEnd = localStorage.getItem('chartZoomEnd');
+    let storedZoomStart = chartZoomStart[category];
+    let storedZoomEnd = chartZoomEnd[category];
 
     let option = {
-        title: { text: "Technologievergleich bei Kosten von " + selectedX + " €", left: "center" },
+        title: { text: category === "cost" ? `Technologievergleich bei Kosten von ${selectedX} €` : `Technologievergleich für Szenario ${selectedX}`, left: "center" },
         tooltip: { trigger: "item", formatter: (params) => `${params.name}<br/>Wert: ${params.value}` },
         grid: { left: '10%', right: '20%', top: '25%', bottom: '15%', containLabel: true },
         xAxis: { type: "value", name: "Leistung" },
@@ -296,8 +362,8 @@ function loadTechComparisonChart(data, selectedX) {
 
     chart.on('datazoom', function(params) {
         const zoomState = chart.getOption().dataZoom[0];
-        localStorage.setItem('chartZoomStart', zoomState.start);
-        localStorage.setItem('chartZoomEnd', zoomState.end);
+        chartZoomStart[category] = zoomState.start;
+        chartZoomEnd[category] = zoomState.end;
     });
 }
 
@@ -630,3 +696,139 @@ document.addEventListener('DOMContentLoaded', () => {
     ).observe(firstTitle);
   }
 });
+
+function loadDemandChart(data) {
+  let el = document.getElementById("demand-chart");
+  if (!el) return;
+  let chart = getOrCreateChart(el);
+  // 1) grid definitions
+  const grid = [];
+  for (let r = 0; r < 4; r++) {
+    grid.push({
+      top: `${r * 25}%`,
+      height: '25%'
+    });
+  }
+
+  // 2) xAxis / yAxis
+  const xAxis = Array.from({ length: 4 }, (_, idx) => {
+     return {
+      gridIndex: idx,
+      type: 'category',
+      axisTick: { show: false },
+      axisLabel: { margin: 10 },
+      axisLine: {
+        onZero: false,
+        lineStyle: { color: '#000', width: 1 }
+      }
+    };
+  });
+
+  const yAxis = Array.from({ length: 8 }, (_, idx) => ({
+    gridIndex: Math.floor(idx / 2),
+    type: 'value',
+    axisLabel: { show: false },
+    axisLine:  { show: false },
+    splitLine:{ show: false }
+  }));
+
+  // 3) series mapping
+  const mapping = {
+    0:  'electricity-demand_hh',
+    1:  'heat_low_central-demand_hh',
+    2:  'heat_low_decentral-demand_hh',
+    3:  '',
+    4:  'electricity-demand_mob',
+    5:  '',
+    6:  '',
+    7:  '',
+    8:  'electricity-demand_cts',
+    9:  'heat_low_central-demand_cts',
+    10: 'heat_low_decentral-demand_cts',
+    11:  '',
+    12: 'electricity-demand_ind',
+    13: 'heat_low_central-demand_ind',
+    14: 'heat_low_decentral-demand_ind',
+    15: 'heat_high-demand_ind'
+  };
+
+  function mapYAxis(idx) {
+    if (idx % 4 === 0) return idx / 2;
+    return Math.floor(idx / 4) * 2 + 1;
+  }
+
+  const series = Object.entries(mapping)
+    .map(([idx, key]) => {
+      const entry = data[key];
+      if (!entry || entry.demand == null) return {
+        type: 'bar',
+        stack: idx,
+        xAxisIndex: Math.floor(idx / 4),
+        yAxisIndex: mapYAxis(idx),
+        data: [ null ],
+        barWidth: '15%',
+      };
+      return {
+        name: key,
+        type: 'bar',
+        stack: idx,
+        xAxisIndex: Math.floor(idx / 4),
+        yAxisIndex: mapYAxis(idx),
+        data: [ entry.diff < 0 ? entry.demand + entry.diff : entry.demand ],
+        barWidth: '15%',
+        itemStyle: { color: entry.color}
+      };
+    });
+
+  const seriesDiffs = Object.entries(mapping)
+    .map(([idx, key]) => {
+      const entry = data[key];
+      if (!entry || entry.demand == null) return {
+        type: 'bar',
+        stack: idx,
+        xAxisIndex: Math.floor(idx / 4),
+        yAxisIndex: mapYAxis(idx),
+        data: [ null ],
+        barWidth: '15%',
+      };
+      return {
+        name: key,
+        type: 'bar',
+        stack: idx,
+        xAxisIndex: Math.floor(idx / 4),
+        yAxisIndex: mapYAxis(idx),
+        data: [ Math.abs(entry.diff) ],
+        barWidth: '15%',
+        itemStyle: { color: adjust_color(entry.color, entry.diff < 0 ? -20 : 20) }
+      };
+    });
+
+  // 4) static graphics
+  const graphic = [
+    { type: 'text', left: '5%',  top: '0%',   style: { text: 'Strom', textAlign: 'center', font: '16px Arial' } },
+    { type: 'text', left: '59%', top: '0%',   style: { text: 'Wärme', textAlign: 'center', font: '16px Arial' } },
+    { type: 'text', right:'2%', top: '11.5%', style: { text: 'Haushalte', textAlign: 'right', font: '14px Arial' } },
+    { type: 'text', right:'2%', top: '36.5%', style: { text: 'Verkehr',   textAlign: 'right', font: '14px Arial' } },
+    { type: 'text', right:'2%', top: '61.5%', style: { text: 'GHD',       textAlign: 'right', font: '14px Arial' } },
+    { type: 'text', right:'2%', top: '86.5%', style: { text: 'Industrie', textAlign: 'right', font: '14px Arial' } }
+  ];
+
+  // 5) assemble & render
+  const option = {
+    grid,
+    xAxis,
+    yAxis,
+    series: series.concat(seriesDiffs),
+    graphic,
+    tooltip: { trigger: 'item' },
+    legend: { show: false }
+  };
+
+  chart.setOption(option);
+  chart.resize();
+}
+
+function adjust_color(color, amount) {
+  // From https://stackoverflow.com/a/57401891/5804947
+  return '#' + color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
+}
