@@ -147,49 +147,28 @@ def get_case_studies_charts_data(region_name: str) -> dict:
     if not selected_region:
         selected_region = regions[0]
 
-    basic_data = selected_region["basic_data"]
-    capacity = selected_region["capacity"]
-    capacity_potential = selected_region["capacity_potential"]
-    full_load_hours = selected_region["full_load_hours"]
-    production_data = {
-        "Wind": [round(p["wind"] * full_load_hours["wind"] / 1e3, 1) for p in capacity.values()],
-        "PV Freifläche": [round(p["pv_ground"] * full_load_hours["pv_ground"] / 1e3, 1) for p in capacity.values()],
-        "PV Dach": [round(p["pv_roof"] * full_load_hours["pv_roof"] / 1e3, 1) for p in capacity.values()],
-        "Bioenergie": [round(p["bio"] * full_load_hours["bio"] / 1e3, 1) for p in capacity.values()],
-    }
-    demand_power = selected_region["demand_power"]
-    demand_heat_cen = selected_region["demand_heat_cen"]
-    demand_heat_cen_sum = sum([sum(_.values()) for _ in demand_heat_cen.values()])
-    demand_heat_dec = selected_region["demand_heat_dec"]
-    demand_heat_dec_sum = sum([sum(_.values()) for _ in demand_heat_dec.values()])
-    demand_heat_total = {
-        mun: {
-            k: round(v1 + v2, 1)
-            for (k, v1), (_, v2) in zip(demand_heat_cen[mun].items(), demand_heat_dec[mun].items())
-        }
-        for mun in demand_heat_cen
-    }
+    region_data = pd.DataFrame(municipalities_details(None)).sort_values("id").set_index("name")
 
-    x_axis_data = list(capacity.keys())
+    x_axis_data = region_data.index.to_list()
 
     charts_data = {
         "area": {
             "x_data": [""],
-            "y_data": {k: [v["area"]] for k, v in basic_data.items()},
+            "y_data": region_data["area"].apply(lambda _: [_]).to_dict(),
             "y_label": "km²",
         },
         "population": {
-            "x_data": x_axis_data,
-            "y_data": {k: [v["population"]] for k, v in basic_data.items()},
+            "x_data": [""],
+            "y_data": region_data["population"].apply(lambda _: [_]).to_dict(),
             "y_label": "",
         },
         "capacity": {
             "x_data": x_axis_data,
             "y_data": {
-                "Wind": [p["wind"] for p in capacity.values()],
-                "PV Freifläche": [p["pv_ground"] for p in capacity.values()],
-                "PV Dach": [p["pv_roof"] for p in capacity.values()],
-                "Bioenergie": [p["bio"] for p in capacity.values()],
+                "Wind": region_data["capacity_wind"].to_list(),
+                "PV Freifläche": region_data["capacity_pv_ground"].to_list(),
+                "PV Dach": region_data["capacity_pv_roof"].to_list(),
+                "Bioenergie": region_data["capacity_bio"].to_list(),
             },
             "y_label": "MW",
             # "target": {"Regionalziel 2032": 100},  # noqa: ERA001
@@ -197,70 +176,54 @@ def get_case_studies_charts_data(region_name: str) -> dict:
         "capacity_potential": {
             "x_data": x_axis_data,
             "y_data": {
-                "Wind": [p["wind"] for p in capacity_potential.values()],
-                "PV Freifläche": [p["pv_ground"] for p in capacity_potential.values()],
-                "PV Dach": [p["pv_roof"] for p in capacity_potential.values()],
+                "Wind": region_data["potentialarea_wind_installable_power"].to_list(),
+                "PV Freifläche": region_data["potentialarea_pv_ground_installable_power"].to_list(),
+                "PV Dach": region_data["potentialarea_pv_roof_installable_power"].to_list(),
             },
             "y_label": "MW",
         },
         "capacity_potential_usage": {
             "x_data": x_axis_data,
-            "y_data": (
-                pd.DataFrame(capacity)
-                .T[["wind", "pv_ground", "pv_roof"]]
-                .T.div(pd.DataFrame(capacity_potential))
-                .fillna(0)
-                .mul(100)
-                .replace(np.inf, 0)
-                .round(1)
-                .T.rename(columns={"wind": "Wind", "pv_ground": "PV Freifläche", "pv_roof": "PV Dach"})
-                .to_dict("list")
-            ),
+            "y_data": {
+                "Wind": region_data["capacity_potential_usage_wind"].to_list(),
+                "PV Freifläche": region_data["capacity_potential_usage_pv_ground"].to_list(),
+                "PV Dach": region_data["capacity_potential_usage_pv_roof"].to_list(),
+            },
             "y_label": "%",
         },
         "production": {
             "x_data": x_axis_data,
-            "y_data": production_data,
+            "y_data": {
+                "Wind": region_data["production_wind"].to_list(),
+                "PV Freifläche": region_data["production_pv_ground"].to_list(),
+                "PV Dach": region_data["production_pv_roof"].to_list(),
+                "Bioenergie": region_data["production_bio"].to_list(),
+            },
             "y_label": "GWh",
         },
         "production_specific": {
             "x_data": x_axis_data,
             "y_data": {
-                "pro Hektar": (
-                    pd.DataFrame(production_data).sum(axis=1)
-                    / pd.DataFrame(basic_data).T.reset_index()["area"]
-                    / 100
-                    * 1e3
-                )
-                .round(1)
-                .tolist(),
-                "pro Kopf": (
-                    pd.DataFrame(production_data).sum(axis=1)
-                    / pd.DataFrame(basic_data).T.reset_index()["population"]
-                    * 1e3
-                )
-                .round(1)
-                .tolist(),
+                "pro Hektar": region_data["production_total_per_ha"].to_list(),
+                "pro Kopf": region_data["production_total_per_capita"].to_list(),
             },
             "y_label": "MWh",
         },
         "demand_power": {
             "x_data": x_axis_data,
             "y_data": {
-                "Haushalte": [p["hh"] for p in demand_power.values()],
-                "GHD": [p["cts"] for p in demand_power.values()],
-                "Industrie": [p["ind"] for p in demand_power.values()],
+                "Haushalte": region_data["demand_hh_power_demand"].to_list(),
+                "GHD": region_data["demand_cts_power_demand"].to_list(),
+                "Industrie": region_data["demand_ind_power_demand"].to_list(),
             },
             "y_label": "GWh",
         },
         "self_generation": {
             "x_data": x_axis_data,
             "y_data": {
-                "Deckung": (
-                    pd.DataFrame(production_data).sum(axis=1)
-                    / pd.DataFrame(demand_power).T.sum(axis=1).reset_index(drop=True)
-                )
-                .mul(1e2)
+                "Deckung": region_data["production_total"]
+                .div(region_data["power_demand_total"])
+                .mul(100)
                 .round(1)
                 .to_list(),
             },
@@ -269,17 +232,40 @@ def get_case_studies_charts_data(region_name: str) -> dict:
         "demand_heat": {
             "x_data": x_axis_data,
             "y_data": {
-                "Haushalte": [p["hh"] for p in demand_heat_total.values()],
-                "GHD": [p["cts"] for p in demand_heat_total.values()],
-                "Industrie": [p["ind"] for p in demand_heat_total.values()],
+                "Haushalte": region_data[["demand_hh_heat_demand_cen", "demand_hh_heat_demand_dec"]]
+                .sum(axis=1)
+                .round(1)
+                .to_list(),
+                "GHD": region_data[["demand_cts_heat_demand_cen", "demand_cts_heat_demand_dec"]]
+                .sum(axis=1)
+                .round(1)
+                .to_list(),
+                "Industrie": region_data[["demand_ind_heat_demand_cen", "demand_ind_heat_demand_dec"]]
+                .sum(axis=1)
+                .round(1)
+                .to_list(),
             },
             "y_label": "GWh",
         },
         "demand_heat_type": {
             "x_data": [""],
             "y_data": {
-                "Fernwärme": [round(demand_heat_cen_sum / (demand_heat_cen_sum + demand_heat_dec_sum) * 100, 1)],
-                "Dezentral": [round(demand_heat_dec_sum / (demand_heat_cen_sum + demand_heat_dec_sum) * 100, 1)],
+                "Fernwärme": [
+                    round(
+                        region_data["heat_demand_cen_total"].sum()
+                        / region_data[["heat_demand_cen_total", "heat_demand_dec_total"]].sum().sum()
+                        * 100,
+                        1,
+                    ),
+                ],
+                "Dezentral": [
+                    round(
+                        region_data["heat_demand_dec_total"].sum()
+                        / region_data[["heat_demand_cen_total", "heat_demand_dec_total"]].sum().sum()
+                        * 100,
+                        1,
+                    ),
+                ],
             },
         },
     }
@@ -325,6 +311,12 @@ def municipalities_details(names: list[str]) -> list[dict[str, Any]]:  # noqa: A
         **capacity_potential_usage_cols,
     )
     municipalities["production_total"] = municipalities.filter(like="production_").sum(axis=1).round(1)
+    municipalities["production_total_per_ha"] = (
+        municipalities["production_total"].div(municipalities["area"] * 100).mul(1e3).round(1)
+    )
+    municipalities["production_total_per_capita"] = (
+        municipalities["production_total"].div(municipalities["population"]).mul(1e3).round(1)
+    )
     municipalities["capacity_potential_usage_total"] = (
         municipalities["capacity_total"]
         .div(
