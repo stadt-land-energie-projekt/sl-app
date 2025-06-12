@@ -12,13 +12,6 @@ OEMOF_SCENARIOS_SINGLE = [
     "r120670201201",
 ]
 
-REGION_NAME_MAP = {
-    "r120640428428": "Rüdersdorf",
-    "r120640472472": "Straußberg",
-    "r120670201201": "Grünheide",
-    "r120670124124": "Erkner",
-}
-
 NODES = [
     {"name": "Straußberg", "x": 50, "y": -50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
     {"name": "Rüdersdorf", "x": 0, "y": 0, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
@@ -83,10 +76,13 @@ def get_electricity_sequences(scenario: str = "all"):
     if scenario == "all":
         path = DATA_DIR / OEMOF_SCENARIO / "postprocessed" / "sequences" / "bus"
         file_list += [path / f for f in os.listdir(path) if f.endswith(".csv") and "electricity" in f]
-    else:
+    elif scenario == "single":
         for scenario in OEMOF_SCENARIOS_SINGLE:
             path = DATA_DIR / scenario / OEMOF_SCENARIO / "postprocessed" / "sequences" / "bus"
             file_list += [path / f for f in os.listdir(path) if f.endswith(".csv") and "electricity" in f]
+    else:
+        path = DATA_DIR / scenario / OEMOF_SCENARIO / "postprocessed" / "sequences" / "bus"
+        file_list += [path / f for f in os.listdir(path) if f.endswith(".csv") and "electricity" in f]
 
     data = []
 

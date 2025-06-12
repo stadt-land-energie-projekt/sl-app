@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 
 from . import chart_data
+from .settings import REGIONS
 
 
 def get_all_base_charts(scenario: str) -> dict:
@@ -58,8 +59,8 @@ def electricity_hydro_flow(scenario: str):
         split_cols = h2_elec_df["region"].str.split("_", n=1, expand=True)
         h2_elec_df["source"] = split_cols.iloc[:, 0]
         h2_elec_df["target"] = split_cols.iloc[:, 1] if split_cols.shape[1] > 1 else pd.NA
-        h2_elec_df["target"] = h2_elec_df["target"].map(chart_data.REGION_NAME_MAP).fillna(h2_elec_df["target"])
-        h2_elec_df["source"] = h2_elec_df["source"].map(chart_data.REGION_NAME_MAP).fillna(h2_elec_df["source"])
+        h2_elec_df["target"] = h2_elec_df["target"].map(REGIONS).fillna(h2_elec_df["target"])
+        h2_elec_df["source"] = h2_elec_df["source"].map(REGIONS).fillna(h2_elec_df["source"])
 
     export_df = scalars[(scalars["tech"] == "export") & (scalars["var_value"] > 0)][
         ["name", "carrier", "region", "tech", "var_value"]
@@ -71,8 +72,8 @@ def electricity_hydro_flow(scenario: str):
     import_df = import_df.rename(columns={"var_value": "value"})
 
     for df in (import_df, export_df):
-        df["region_name"] = df["region"].map(chart_data.REGION_NAME_MAP).fillna(df["region"])
-    regions = sorted(chart_data.REGION_NAME_MAP.keys())
+        df["region_name"] = df["region"].map(REGIONS).fillna(df["region"])
+    regions = sorted(REGIONS.keys())
     net_labels = {reg: f"Netz{' ' * idx}" for idx, reg in enumerate(regions)}
     for df in (import_df, export_df):
         df["net_label"] = df["region"].map(net_labels)

@@ -19,13 +19,12 @@ with (CONFIG_DIR / "demand_colors.json").open("r", encoding="utf-8") as f:
     DEMAND_COLORS = json.load(f)
 
 
-REGIONS = [
-    "r120640428428",
-    "r120640472472",
-    "r120670124124",
-    "r120670201201",
-]
-
+REGIONS = {
+    "r120640428428": "Rüdersdorf",
+    "r120640472472": "Straußberg",
+    "r120670201201": "Grünheide",
+    "r120670124124": "Erkner",
+}
 
 TECHNOLOGIES_SELECTED = [
     # "electricity-large_battery_storage",
@@ -84,7 +83,7 @@ POTENTIALS = {scenario: get_potentials(scenario) for scenario in ("all", "single
 def get_capacity_cost_for_technology() -> dict[str, float]:
     """Return capacity cost per technology from preprocessed data."""
     capacity_cost = PREPROCESSED_DATA.loc[
-        (~PREPROCESSED_DATA["capacity_cost"].isna()) & (PREPROCESSED_DATA["region"] == REGIONS[0]),
+        (~PREPROCESSED_DATA["capacity_cost"].isna()) & (PREPROCESSED_DATA["region"] == next(iter(REGIONS))),
         ["name", "capacity_cost"],
     ]
     capacity_cost["name"] = capacity_cost["name"].apply(remove_region)
