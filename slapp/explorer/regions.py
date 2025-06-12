@@ -1,13 +1,16 @@
 """Charts and Data for Regions."""
 from __future__ import annotations
 
+import json
+from pathlib import Path
+from typing import Any
+
 import numpy as np
 import pandas as pd
+from django.conf import settings
 from django.contrib.gis.db.models.functions import Envelope
-from django.db.models import Sum
-from django.db.models.functions import Round
 
-from .models import Municipality, Region
+from .models import Region
 
 
 def get_regions_data() -> list:
@@ -16,6 +19,40 @@ def get_regions_data() -> list:
         entry["name"]: entry["bounding_box"]
         for entry in Region.objects.annotate(bounding_box=Envelope("geom")).values("bounding_box", "name")
     }
+    region_data = pd.read_csv(str(settings.DATA_DIR.path("regions").path("municipality_data.csv")), index_col="name")
+    region_data.columns = region_data.columns.map(lambda x: x.split("_", 1)[1] if "capacity" in x else x)
+
+    basic_data = region_data.loc[:, ["area", "population"]].to_dict(orient="index")
+
+    capacity = region_data.loc[:, ["wind", "pv_ground", "pv_roof", "bio"]].to_dict(orient="index")
+
+    capacity_potential = region_data.loc[
+        :,
+        [column for column in region_data.columns if column.startswith("potential")],
+    ]
+    capacity_potential.columns = ["pv_ground", "pv_roof", "wind"]
+    capacity_potential = capacity_potential.to_dict(orient="index")
+
+    power_demand = region_data.loc[
+        :,
+        [column for column in region_data.columns if "demand" in column and "power" in column],
+    ]
+    power_demand.columns = [column.split("_")[1] for column in power_demand.columns]
+    power_demand = power_demand.to_dict(orient="index")
+
+    heat_demand_central = region_data.loc[
+        :,
+        [column for column in region_data.columns if "demand" in column and "heat" in column and "cen" in column],
+    ]
+    heat_demand_central.columns = [column.split("_")[1] for column in heat_demand_central.columns]
+    heat_demand_central = heat_demand_central.to_dict(orient="index")
+
+    heat_demand_decentral = region_data.loc[
+        :,
+        [column for column in region_data.columns if "demand" in column and "heat" in column and "dec" in column],
+    ]
+    heat_demand_decentral.columns = [column.split("_")[1] for column in heat_demand_decentral.columns]
+    heat_demand_decentral = heat_demand_decentral.to_dict(orient="index")
     return [
         {
             "title": "Region Oderland-Spree",
@@ -33,12 +70,14 @@ def get_regions_data() -> list:
                 },
                 {
                     "title": "Besonderheiten",
-                    "fact": "Tesla-Gigafactory als wirtschaftlicher Impulsgeber, Großes, erfolgreiches H2-Kavernen-Speicherprojekt",
+                    "fact": "Tesla-Gigafactory als wirtschaftlicher Impulsgeber, Großes, "
+                    "erfolgreiches H2-Kavernen-Speicherprojekt",
                     "icon": "/static/images/icons/case-study-particularity.svg",
                 },
                 {
                     "title": "Erneuerbare Energien",
-                    "fact": "Hoher Anteil an Wind- und Solarenergie, Genehmigter Anschlusspunkt an das Wasserstoffkernnetz",
+                    "fact": "Hoher Anteil an Wind- und Solarenergie, "
+                    "Genehmigter Anschlusspunkt an das Wasserstoffkernnetz",
                     "icon": "/static/images/icons/case-study-renewable.svg",
                 },
                 {
@@ -47,48 +86,18 @@ def get_regions_data() -> list:
                     "icon": "/static/images/icons/case-study-challenge.svg",
                 },
             ],
-            "basic_data": {
-                "Rüdersdorf": {"area": 70.1, "population": 16079},
-                "Strausberg": {"area": 67.6, "population": 27456},
-                "Erkner": {"area": 17.7, "population": 12019},
-                "Grünheide": {"area": 126.4, "population": 9189},
-            },
-            "capacity": {
-                "Rüdersdorf": {"wind": 4.2, "pv_ground": 20.4, "pv_roof": 6.8, "bio": 2.2},
-                "Strausberg": {"wind": 0, "pv_ground": 2.3, "pv_roof": 4.0, "bio": 3.1},
-                "Erkner": {"wind": 0, "pv_ground": 0, "pv_roof": 1.6, "bio": 0},
-                "Grünheide": {"wind": 0, "pv_ground": 0, "pv_roof": 4.5, "bio": 0},
-            },
-            "capacity_potential": {
-                "Rüdersdorf": {"wind": 0, "pv_ground": 1509.7, "pv_roof": 132.3},
-                "Strausberg": {"wind": 0, "pv_ground": 733.2, "pv_roof": 135.6},
-                "Erkner": {"wind": 0, "pv_ground": 0, "pv_roof": 49.1},
-                "Grünheide": {"wind": 92.0, "pv_ground": 163.0, "pv_roof": 77.9},
-            },
+            "basic_data": basic_data,
+            "capacity": capacity,
+            "capacity_potential": capacity_potential,
             "full_load_hours": {
                 "wind": 1500,
                 "pv_ground": 910,
                 "pv_roof": 750,
                 "bio": 6000,
             },
-            "demand_power": {
-                "Rüdersdorf": {"hh": 21.8, "cts": 30.4, "ind": 259.5},
-                "Strausberg": {"hh": 37.3, "cts": 42.8, "ind": 38.7},
-                "Erkner": {"hh": 16.3, "cts": 10.3, "ind": 12.5},
-                "Grünheide": {"hh": 12.3, "cts": 53.5, "ind": 1012.5},
-            },
-            "demand_heat_cen": {
-                "Rüdersdorf": {"hh": 1.3, "cts": 0.4, "ind": 0.1},
-                "Strausberg": {"hh": 19.5, "cts": 6.8, "ind": 1.4},
-                "Erkner": {"hh": 0.1, "cts": 0, "ind": 0},
-                "Grünheide": {"hh": 6.0, "cts": 1.1, "ind": 11.7},
-            },
-            "demand_heat_dec": {
-                "Rüdersdorf": {"hh": 59.5, "cts": 18.9, "ind": 6.6},
-                "Strausberg": {"hh": 58.3, "cts": 20.4, "ind": 4.3},
-                "Erkner": {"hh": 37.4, "cts": 7.6, "ind": 4.0},
-                "Grünheide": {"hh": 53.5, "cts": 10.0, "ind": 103.7},
-            },
+            "demand_power": power_demand,
+            "demand_heat_cen": heat_demand_central,
+            "demand_heat_dec": heat_demand_decentral,
         },
         {
             "title": "Region Kiel",
@@ -120,7 +129,7 @@ def get_regions_data() -> list:
                     "icon": "/static/images/icons/case-study-challenge.svg",
                 },
             ],
-            # TODO: Insert data for Kiel
+            # TODO: Insert data for Kiel  # noqa: TD002, TD003
         },
     ]
 
@@ -138,120 +147,125 @@ def get_case_studies_charts_data(region_name: str) -> dict:
     if not selected_region:
         selected_region = regions[0]
 
-    basic_data = selected_region["basic_data"]
-    capacity = selected_region["capacity"]
-    capacity_potential = selected_region["capacity_potential"]
-    full_load_hours = selected_region["full_load_hours"]
-    production_data = {
-        "Wind": [round(p["wind"] * full_load_hours["wind"] / 1e3, 1) for p in capacity.values()],
-        "PV Freifläche": [round(p["pv_ground"] * full_load_hours["pv_ground"] / 1e3, 1) for p in capacity.values()],
-        "PV Dach": [round(p["pv_roof"] * full_load_hours["pv_roof"] / 1e3, 1) for p in capacity.values()],
-        "Bioenergie": [round(p["bio"] * full_load_hours["bio"] / 1e3, 1) for p in capacity.values()]
-    }
-    demand_power = selected_region["demand_power"]
-    demand_heat_cen = selected_region["demand_heat_cen"]
-    demand_heat_cen_sum = sum([sum(_.values()) for _ in demand_heat_cen.values()])
-    demand_heat_dec = selected_region["demand_heat_dec"]
-    demand_heat_dec_sum = sum([sum(_.values()) for _ in demand_heat_dec.values()])
-    demand_heat_total = {
-        mun: {k: round(v1 + v2, 1)
-              for (k, v1), (_, v2) in
-              zip(demand_heat_cen[mun].items(), demand_heat_dec[mun].items())
-              } for mun in demand_heat_cen
-    }
+    region_data = pd.DataFrame(municipalities_details(None)).sort_values("id").set_index("name")
 
-    x_axis_data = list(capacity.keys())
+    x_axis_data = region_data.index.to_list()
 
     charts_data = {
         "area": {
             "x_data": [""],
-            "y_data": {k: [v["area"]] for k, v in basic_data.items()},
+            "y_data": region_data["area"].apply(lambda _: [_]).to_dict(),
             "y_label": "km²",
         },
         "population": {
-            "x_data": x_axis_data,
-            "y_data": {k: [v["population"]] for k, v in basic_data.items()},
+            "x_data": [""],
+            "y_data": region_data["population"].apply(lambda _: [_]).to_dict(),
             "y_label": "",
         },
         "capacity": {
             "x_data": x_axis_data,
             "y_data": {
-                "Wind": [p["wind"] for p in capacity.values()],
-                "PV Freifläche": [p["pv_ground"] for p in capacity.values()],
-                "PV Dach": [p["pv_roof"] for p in capacity.values()],
-                "Bioenergie": [p["bio"] for p in capacity.values()],
+                "Wind": region_data["capacity_wind"].to_list(),
+                "PV Freifläche": region_data["capacity_pv_ground"].to_list(),
+                "PV Dach": region_data["capacity_pv_roof"].to_list(),
+                "Bioenergie": region_data["capacity_bio"].to_list(),
             },
             "y_label": "MW",
-            # "target": {"Regionalziel 2032": 100},
+            # "target": {"Regionalziel 2032": 100},  # noqa: ERA001
         },
         "capacity_potential": {
             "x_data": x_axis_data,
             "y_data": {
-                "Wind": [p["wind"] for p in capacity_potential.values()],
-                "PV Freifläche": [p["pv_ground"] for p in capacity_potential.values()],
-                "PV Dach": [p["pv_roof"] for p in capacity_potential.values()],
+                "Wind": region_data["potentialarea_wind_installable_power"].to_list(),
+                "PV Freifläche": region_data["potentialarea_pv_ground_installable_power"].to_list(),
+                "PV Dach": region_data["potentialarea_pv_roof_installable_power"].to_list(),
             },
             "y_label": "MW",
         },
         "capacity_potential_usage": {
             "x_data": x_axis_data,
-            "y_data": (
-                pd.DataFrame(capacity).T[
-                    ["wind", "pv_ground", "pv_roof"]
-                ].T.div(
-                    pd.DataFrame(capacity_potential)
-                ).fillna(0).mul(100).replace(np.inf, 0).round(1).T.rename(
-                    columns={"wind": "Wind", "pv_ground": "PV Freifläche", "pv_roof": "PV Dach"}
-                ).to_dict("list")
-            ),
+            "y_data": {
+                "Wind": region_data["capacity_potential_usage_wind"].to_list(),
+                "PV Freifläche": region_data["capacity_potential_usage_pv_ground"].to_list(),
+                "PV Dach": region_data["capacity_potential_usage_pv_roof"].to_list(),
+            },
             "y_label": "%",
         },
         "production": {
             "x_data": x_axis_data,
-            "y_data": production_data,
+            "y_data": {
+                "Wind": region_data["production_wind"].to_list(),
+                "PV Freifläche": region_data["production_pv_ground"].to_list(),
+                "PV Dach": region_data["production_pv_roof"].to_list(),
+                "Bioenergie": region_data["production_bio"].to_list(),
+            },
             "y_label": "GWh",
         },
         "production_specific": {
             "x_data": x_axis_data,
             "y_data": {
-                "pro Hektar": (pd.DataFrame(production_data).sum(axis=1) / pd.DataFrame(basic_data).T.reset_index()["area"] / 100 * 1e3).round(1).tolist(),
-                "pro Kopf": (pd.DataFrame(production_data).sum(axis=1) / pd.DataFrame(basic_data).T.reset_index()["population"] * 1e3).round(1).tolist(),
+                "pro Hektar": region_data["production_total_per_ha"].to_list(),
+                "pro Kopf": region_data["production_total_per_capita"].to_list(),
             },
             "y_label": "MWh",
         },
         "demand_power": {
             "x_data": x_axis_data,
             "y_data": {
-                "Haushalte": [p["hh"] for p in demand_power.values()],
-                "GHD": [p["cts"] for p in demand_power.values()],
-                "Industrie": [p["ind"] for p in demand_power.values()],
+                "Haushalte": region_data["demand_hh_power_demand"].to_list(),
+                "GHD": region_data["demand_cts_power_demand"].to_list(),
+                "Industrie": region_data["demand_ind_power_demand"].to_list(),
             },
             "y_label": "GWh",
         },
         "self_generation": {
             "x_data": x_axis_data,
             "y_data": {
-                "Deckung": (
-                    pd.DataFrame(production_data).sum(axis=1) /
-                    pd.DataFrame(demand_power).T.sum(axis=1).reset_index(drop=True)
-                ).mul(1e2).round(1).to_list(),
+                "Deckung": region_data["production_total"]
+                .div(region_data["power_demand_total"])
+                .mul(100)
+                .round(1)
+                .to_list(),
             },
             "y_label": "%",
         },
         "demand_heat": {
             "x_data": x_axis_data,
             "y_data": {
-                "Haushalte": [p["hh"] for p in demand_heat_total.values()],
-                "GHD": [p["cts"] for p in demand_heat_total.values()],
-                "Industrie": [p["ind"] for p in demand_heat_total.values()],
+                "Haushalte": region_data[["demand_hh_heat_demand_cen", "demand_hh_heat_demand_dec"]]
+                .sum(axis=1)
+                .round(1)
+                .to_list(),
+                "GHD": region_data[["demand_cts_heat_demand_cen", "demand_cts_heat_demand_dec"]]
+                .sum(axis=1)
+                .round(1)
+                .to_list(),
+                "Industrie": region_data[["demand_ind_heat_demand_cen", "demand_ind_heat_demand_dec"]]
+                .sum(axis=1)
+                .round(1)
+                .to_list(),
             },
             "y_label": "GWh",
         },
         "demand_heat_type": {
             "x_data": [""],
             "y_data": {
-                "Fernwärme": [round(demand_heat_cen_sum / (demand_heat_cen_sum + demand_heat_dec_sum) * 100, 1)],
-                "Dezentral": [round(demand_heat_dec_sum / (demand_heat_cen_sum + demand_heat_dec_sum) * 100, 1)],
+                "Fernwärme": [
+                    round(
+                        region_data["heat_demand_cen_total"].sum()
+                        / region_data[["heat_demand_cen_total", "heat_demand_dec_total"]].sum().sum()
+                        * 100,
+                        1,
+                    ),
+                ],
+                "Dezentral": [
+                    round(
+                        region_data["heat_demand_dec_total"].sum()
+                        / region_data[["heat_demand_cen_total", "heat_demand_dec_total"]].sum().sum()
+                        * 100,
+                        1,
+                    ),
+                ],
             },
         },
     }
@@ -259,34 +273,63 @@ def get_case_studies_charts_data(region_name: str) -> dict:
     return charts_data
 
 
-def municipalities_details(ids: list[int]) -> list[Municipality]:
-    """Return municipalities."""
-    municipalities = (
-        Municipality.objects.filter(id__in=ids)
-        .annotate(area_rounded=Round("area", precision=1))
-        .annotate(biomass_net=Round(Sum("biomass__capacity_net", default=0) / 1000, precision=1))
-        .annotate(pvground_net=Round(Sum("pvground__capacity_net", default=0) / 1000, precision=1))
-        .annotate(pvroof_net=Round(Sum("pvroof__capacity_net", default=0) / 1000, precision=1))
-        .annotate(wind_net=Round(Sum("windturbine__capacity_net", default=0) / 1000, precision=1))
-        .annotate(hydro_net=Round(Sum("hydro__capacity_net", default=0) / 1000, precision=1))
-        .annotate(
-            total_net=Round(
-                (
-                    Sum("windturbine__capacity_net", default=0)
-                    + Sum("hydro__capacity_net", default=0)
-                    + Sum("pvroof__capacity_net", default=0)
-                    + Sum("pvground__capacity_net", default=0)
-                    + Sum("biomass__capacity_net", default=0)
-                )
-                / 1000,
-                precision=1,
-            ),
+def municipalities_details(names: list[str]) -> list[dict[str, Any]]:  # noqa: ARG001
+    """Return data for given municipalities from CSV."""
+    # TODO (henhuy): Get data depending on selected region
+    # https://github.com/stadt-land-energie-projekt/sl-app/issues/242
+
+    municipalities = pd.read_csv(str(settings.DATA_DIR.path("regions").path("municipality_data.csv")))
+    with Path(str(settings.DATA_DIR.path("regions").path("technology_data.json"))).open("r", encoding="utf-8") as f:
+        tech_data = json.load(f)
+    flh = pd.Series(tech_data["full_load_hours"])
+
+    production_cols = {
+        f"production_{tech}": municipalities[f"capacity_{tech}"].mul(flh[tech]).div(1e3).round(1)
+        for tech in ["wind", "pv_ground", "pv_roof", "bio"]
+    }
+    capacity_potential_usage_cols = {
+        f"capacity_potential_usage_{tech}": municipalities[f"capacity_{tech}"]
+        .div(
+            municipalities[f"potentialarea_{tech}_installable_power"],
         )
-        .annotate(storage_net=Round(Sum("storage__capacity_net", default=0) / 1000, precision=1))
-        .annotate(kwk_el_net=Round(Sum("combustion__capacity_net", default=0) / 1000, precision=1))
-        .annotate(kwk_th_net=Round(Sum("combustion__th_capacity", default=0) / 1000, precision=1))
+        .fillna(0)
+        .mul(100)
+        .replace(np.inf, 100)
+        .round(1)
+        for tech in ["wind", "pv_ground", "pv_roof"]
+    }
+
+    # Aggregate production, demand, potentials
+    municipalities = municipalities.assign(
+        capacity_total=municipalities.filter(like="capacity_").sum(axis=1).round(1),
+        potentialarea_total_installable_power=municipalities.filter(like="potentialarea_").sum(axis=1).round(1),
+        power_demand_total=municipalities.filter(like="_power_demand").sum(axis=1).round(1),
+        heat_demand_total=municipalities.filter(like="_heat_demand_").sum(axis=1).round(1),
+        heat_demand_cen_total=municipalities.filter(like="_heat_demand_cen").sum(axis=1).round(1),
+        heat_demand_dec_total=municipalities.filter(like="_heat_demand_dec").sum(axis=1).round(1),
+        **production_cols,
+        **capacity_potential_usage_cols,
     )
-    return municipalities
+    municipalities["production_total"] = municipalities.filter(like="production_").sum(axis=1).round(1)
+    municipalities["production_total_per_ha"] = (
+        municipalities["production_total"].div(municipalities["area"] * 100).mul(1e3).round(1)
+    )
+    municipalities["production_total_per_capita"] = (
+        municipalities["production_total"].div(municipalities["population"]).mul(1e3).round(1)
+    )
+    municipalities["capacity_potential_usage_total"] = (
+        municipalities["capacity_total"]
+        .div(
+            municipalities["potentialarea_total_installable_power"],
+        )
+        .mul(100)
+        .round(1)
+    )
+    municipalities["energy_demand_total"] = (
+        municipalities[["power_demand_total", "heat_demand_total"]].sum(axis=1).round(1)
+    )
+
+    return municipalities.to_dict(orient="records")
 
 
 def get_energy_data(region: str) -> list:

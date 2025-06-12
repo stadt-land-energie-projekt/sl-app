@@ -6,41 +6,63 @@
       <ul class="list-group rounded-0 text-truncate">
         <li class="list-group-item fw-bold bg-secondary text-white">Gemeinde</li>
         <li class="list-group-item">Fläche</li>
-        <li class="list-group-item fw-bold">erneuerbare Stromerzeugung</li>
+        <li class="list-group-item">Bevölkerung</li>
+        <li class="list-group-item fw-bold heading">Installierte Leistung EE (Strom)</li>
+        <li class="list-group-item">Windkraft</li>
         <li class="list-group-item">Freiflächen-PV</li>
         <li class="list-group-item">Dachflächen-PV</li>
-        <li class="list-group-item">Windkraft</li>
         <li class="list-group-item">Biomasse</li>
-        <li class="list-group-item">Wasserkraft</li>
-        <li class="list-group-item fw-bold">Stromspeicher</li>
-        <li class="list-group-item">Speicherkapazität</li>
-        <li class="list-group-item fw-bold">Wärmegewinnung (KWK)</li>
-        <li class="list-group-item">thermische Leistung</li>
-        <li class="list-group-item">elektrische Leistung</li>
-        <li class="list-group-item fw-bold">Energiebedarf (errechnet)</li>
+        <li class="list-group-item fw-bold heading">Stromerzeugung aus EE</li>
+        <li class="list-group-item">Windkraft</li>
+        <li class="list-group-item">Freiflächen-PV</li>
+        <li class="list-group-item">Dachflächen-PV</li>
+        <li class="list-group-item">Biomasse</li>
+        <li class="list-group-item fw-bold heading">EE-Potenziale</li>
+        <li class="list-group-item">Windkraft</li>
+        <li class="list-group-item">Freiflächen-PV</li>
+        <li class="list-group-item">Dachflächen-PV</li>
+        <li class="list-group-item fw-bold heading">EE-Potenzialausschöpfung</li>
+        <li class="list-group-item">Windkraft</li>
+        <li class="list-group-item">Freiflächen-PV</li>
+        <li class="list-group-item">Dachflächen-PV</li>
+        <li class="list-group-item fw-bold heading">Energiebedarf</li>
         <li class="list-group-item">Strombedarf</li>
-        <li class="list-group-item">Wärmebedarf</li>
+        <li class="list-group-item">Wärmebedarf gesamt</li>
+        <li class="list-group-item">Wärmebedarf Fernwärme</li>
+        <li class="list-group-item">Wärmebedarf dezentral</li>
       </ul>
     </div>
     {% for municipality in municipalities %}
       <div class="col-2 text-truncate">
         <ul class="list-group rounded-0">
           <li class="list-group-item text-end fw-bold bg-secondary text-white">{{ municipality.name }}</li>
-          <li class="list-group-item text-end">{{ municipality.area_rounded|intcomma }}</li>
-          <li class="list-group-item text-end fw-bold">{{ municipality.total_net|intcomma }}</li>
-          <li class="list-group-item text-end">{{ municipality.pvground_net|intcomma }}</li>
-          <li class="list-group-item text-end">{{ municipality.pvroof_net|intcomma }}</li>
-          <li class="list-group-item text-end">{{ municipality.wind_net|intcomma }}</li>
-          <li class="list-group-item text-end">{{ municipality.biomass_net|intcomma }}</li>
-          <li class="list-group-item text-end">{{ municipality.hydro_net|intcomma }}</li>
-          <li class="list-group-item fw-bold">&nbsp</li>
-          <li class="list-group-item text-end">{{ municipality.storage_net|intcomma }}</li>
-          <li class="list-group-item fw-bold">&nbsp</li>
-          <li class="list-group-item text-end">{{ municipality.kwk_th_net|intcomma }}</li>
-          <li class="list-group-item text-end">{{ municipality.kwk_el_net|intcomma }}</li>
-          <li class="list-group-item fw-bold">&nbsp</li>
-          <li class="list-group-item fw-bold">&nbsp</li>
-          <li class="list-group-item fw-bold">&nbsp</li>
+          <li class="list-group-item text-end">{{ municipality.area|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.population|floatformat:0 }}</li>
+          <li class="list-group-item text-end fw-bold heading">{{ municipality.capacity_total|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.capacity_wind|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.capacity_pv_ground|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.capacity_pv_roof|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.capacity_bio|intcomma }}</li>
+          <li class="list-group-item text-end fw-bold heading">{{ municipality.production_total|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.production_wind|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.production_pv_ground|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.production_pv_roof|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.production_bio|intcomma }}</li>
+          <li class="list-group-item text-end fw-bold heading">
+            {{ municipality.potentialarea_total_installable_power|intcomma }}
+          </li>
+          <li class="list-group-item text-end">{{ municipality.potentialarea_wind_installable_power|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.potentialarea_pv_ground_installable_power|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.potentialarea_pv_roof_installable_power|intcomma }}</li>
+          <li class="list-group-item text-end fw-bold heading">{{ municipality.capacity_potential_usage_total|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.capacity_potential_usage_wind|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.capacity_potential_usage_pv_ground|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.capacity_potential_usage_pv_roof|intcomma }}</li>
+          <li class="list-group-item text-end fw-bold heading">{{ municipality.energy_demand_total|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.power_demand_total|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.heat_demand_total|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.heat_demand_cen_total|intcomma }}</li>
+          <li class="list-group-item text-end">{{ municipality.heat_demand_dec_total|intcomma }}</li>
         </ul>
       </div>
     {% endfor %}
@@ -48,20 +70,30 @@
       <ul class="list-group rounded-0">
         <li class="list-group-item bg-secondary text-white">Einheit</li>
         <li class="list-group-item">km²</li>
-        <li class="list-group-item fw-bold">kW</li>
-        <li class="list-group-item">kW</li>
-        <li class="list-group-item">kW</li>
-        <li class="list-group-item">kW</li>
-        <li class="list-group-item">kW</li>
-        <li class="list-group-item">kW</li>
-        <li class="list-group-item fw-bold">&nbsp</li>
-        <li class="list-group-item">kWh</li>
-        <li class="list-group-item fw-bold">&nbsp</li>
-        <li class="list-group-item">kW</li>
-        <li class="list-group-item">kW</li>
-        <li class="list-group-item fw-bold">&nbsp</li>
-        <li class="list-group-item">kWh</li>
-        <li class="list-group-item">kWh</li>
+        <li class="list-group-item">&nbsp;</li>
+        <li class="list-group-item fw-bold heading">MW</li>
+        <li class="list-group-item">MW</li>
+        <li class="list-group-item">MW</li>
+        <li class="list-group-item">MW</li>
+        <li class="list-group-item">MW</li>
+        <li class="list-group-item fw-bold heading">GWh</li>
+        <li class="list-group-item">GWh</li>
+        <li class="list-group-item">GWh</li>
+        <li class="list-group-item">GWh</li>
+        <li class="list-group-item">GWh</li>
+        <li class="list-group-item fw-bold heading">MW</li>
+        <li class="list-group-item">MW</li>
+        <li class="list-group-item">MW</li>
+        <li class="list-group-item">MW</li>
+        <li class="list-group-item fw-bold heading">%</li>
+        <li class="list-group-item">%</li>
+        <li class="list-group-item">%</li>
+        <li class="list-group-item">%</li>
+        <li class="list-group-item fw-bold heading">GWh</li>
+        <li class="list-group-item">GWh</li>
+        <li class="list-group-item">GWh</li>
+        <li class="list-group-item">GWh</li>
+        <li class="list-group-item">GWh</li>
       </ul>
     </div>
   </div>
