@@ -279,7 +279,7 @@ def municipalities_details(names: list[str]) -> list[dict[str, Any]]:  # noqa: A
     # https://github.com/stadt-land-energie-projekt/sl-app/issues/242
 
     municipalities = pd.read_csv(str(settings.DATA_DIR.path("regions").path("municipality_data.csv")))
-    with Path.open(str(settings.DATA_DIR.path("regions").path("technology_data.json"))) as f:
+    with Path(str(settings.DATA_DIR.path("regions").path("technology_data.json"))).open("r", encoding="utf-8") as f:
         tech_data = json.load(f)
     flh = pd.Series(tech_data["full_load_hours"])
 
