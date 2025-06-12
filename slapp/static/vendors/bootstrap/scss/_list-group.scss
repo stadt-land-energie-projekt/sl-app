@@ -113,6 +113,10 @@
       border-top-width: var(--#{$prefix}list-group-border-width);
     }
   }
+
+  &.heading {
+    background-color: #DBEAFE;
+  }
 }
 
 // Horizontal

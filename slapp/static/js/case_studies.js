@@ -443,9 +443,7 @@ function load_demand_heat_type_chart(chartData) {
             }
         },
         legend: {
-            orient: 'horizontal',
-            left: 'center',
-            top: 'bottom',
+            show: false
         },
         series: [
             {
@@ -490,9 +488,7 @@ function load_area_chart(chartData) {
             }
         },
         legend: {
-            orient: 'horizontal',
-            left: 'center',
-            top: 'bottom',
+            show: false
         },
         series: [
             {
@@ -537,9 +533,7 @@ function load_population_chart(chartData) {
             }
         },
         legend: {
-            orient: 'horizontal',
-            left: 'center',
-            top: 'bottom',
+            show: false
         },
         series: [
             {
