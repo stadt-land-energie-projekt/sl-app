@@ -294,7 +294,7 @@
   tbody tr td {
     background-color: transparent;
   }
-  
+
   &__details {
     font-size: 0.875rem;
     color: $font-color-secondary;
@@ -317,7 +317,7 @@
     a {
       color: $color-link;
       font-weight: 700;
-      text-decoration: underline;
+      text-decoration: none;
     }
   }
 }
