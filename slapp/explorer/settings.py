@@ -21,7 +21,7 @@ with (CONFIG_DIR / "demand_colors.json").open("r", encoding="utf-8") as f:
 
 REGIONS = {
     "r120640428428": "Rüdersdorf",
-    "r120640472472": "Straußberg",
+    "r120640472472": "Strausberg",
     "r120670201201": "Grünheide",
     "r120670124124": "Erkner",
 }

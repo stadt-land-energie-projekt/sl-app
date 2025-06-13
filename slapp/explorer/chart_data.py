@@ -13,7 +13,7 @@ OEMOF_SCENARIOS_SINGLE = [
 ]
 
 NODES = [
-    {"name": "Straußberg", "x": 50, "y": -50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
+    {"name": "Strausberg", "x": 50, "y": -50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
     {"name": "Rüdersdorf", "x": 0, "y": 0, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
     {"name": "Grünheide", "x": 50, "y": 50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
     {"name": "Erkner", "x": -10, "y": 50, "itemStyle": {"color": "#798897"}, "symbolSize": 30},
