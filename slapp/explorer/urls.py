@@ -1,6 +1,7 @@
 """Urls for explorer app."""
 
 from django.urls import path
+from django.views.generic import TemplateView
 
 from slapp.explorer import views
 
@@ -25,6 +26,11 @@ urlpatterns = [
     path("demand_capacity_chart/", views.demand_capacity_chart, name="demand_capacity_chart"),
     path("basic_charts/", views.basic_charts, name="basic_charts"),
     path("ranges/", views.ranges, name="ranges"),
+    # Other pages
+    path("imprint/", TemplateView.as_view(template_name="pages/imprint.html"), name="imprint"),
+    path("privacy/", TemplateView.as_view(template_name="pages/privacy.html"), name="privacy"),
+    path("documentation/", TemplateView.as_view(template_name="pages/documentation.html"), name="documentation"),
+    path("contact/", TemplateView.as_view(template_name="pages/contact.html"), name="contact"),
 ]
 
 htmx_urlpatterns = [
