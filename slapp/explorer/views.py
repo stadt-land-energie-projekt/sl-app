@@ -22,13 +22,12 @@ from django.views.generic import TemplateView
 from django_mapengine import views
 
 from . import charts, results
-from .chart_data import REGION_NAME_MAP as OS_REGIONS
-from .forms import ParametersSliderForm
+from .forms import ParametersSliderForm, RegionForm
 from .models import Municipality, Region
 from .regions import get_case_studies_charts_data
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
-from .settings import NODES, TECHNOLOGIES, TECHNOLOGIES_SELECTED
+from .settings import NODES, REGIONS, TECHNOLOGIES, TECHNOLOGIES_SELECTED
 
 MAX_MUNICIPALITY_COUNT = 3
 
@@ -584,9 +583,10 @@ class Results(TemplateView):
         context["cost_technologies"] = cost_technologies
         context["demand_technologies"] = demand_technologies_parsed
         context["alternatives"] = alternatives
-        context["os_regions"] = OS_REGIONS
+        context["os_regions"] = REGIONS
         context["technologies"] = TECHNOLOGIES
         context["nodes"] = NODES
+        context["regions_dropdown"] = RegionForm()
         context["demand"] = demand_sensitivity_scenarios
         return context
 
@@ -648,7 +648,7 @@ def basic_charts(request: HttpRequest) -> JsonResponse:
     region = request.GET.get("type", "")
     if region == "verbu":
         region = "all"
-    elif region == "einzeln":
+    if region == "einzeln":
         region = "single"
     basic_charts_data = charts.get_all_base_charts(region)
     return JsonResponse(basic_charts_data)

@@ -1,5 +1,8 @@
 """Module containing django forms."""
-from django.forms import FloatField, Form, TextInput
+
+from django.forms import ChoiceField, FloatField, Form, TextInput
+
+from .settings import REGIONS
 
 
 class ParametersSliderForm(Form):  # noqa: D101
@@ -35,3 +38,9 @@ class ParametersSliderForm(Form):  # noqa: D101
                 required=item.get("required", True),
             )
             yield {"name": name, "field": field}
+
+
+class RegionForm(Form):
+    """Form to select a region."""
+
+    region = ChoiceField(choices=({"single": "Regionen zusammengefasst"} | REGIONS).items())

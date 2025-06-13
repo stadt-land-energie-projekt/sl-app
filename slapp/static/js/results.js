@@ -6,6 +6,8 @@ let chartZoomEnd = {};
 
 const nodes = JSON.parse(document.getElementById("nodes").innerText);
 
+const regionDropdown = document.getElementById("id_region");
+
 // Called when a region button is clicked
 async function showHiddenDiv(region, button) {
     const parentContainer = button.closest(".results__region-container");
@@ -41,7 +43,8 @@ async function showHiddenDiv(region, button) {
     try {
         await loadFlowsChart(region, "electricity");
         await loadFlowsChart(region, "hydrogen");
-        await loadBasicData(region);
+        const basicRegion = region === "einzeln" ? regionDropdown.value : region
+        await loadBasicData(basicRegion);
     } catch (error) {
         console.error("Error in showHiddenDiv:", error);
     }
@@ -633,20 +636,17 @@ function syncRowHeight(chartId, tableId, dataLength) {
 }
 
 function showDropdownBasicSolution(region){
-    const dropdown = document.getElementById('region-select');
-  if (!dropdown) return;
-
+  if (!regionDropdown) return;
   if (region === 'einzeln') {
-    dropdown.style.display = 'inline-block';
+    regionDropdown.parentElement.style.display = null;
   } else {
-    dropdown.style.display = 'none';
+    regionDropdown.parentElement.style.display = 'none';
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const dropdown = document.getElementById("region-select");
-    if (dropdown) {
-        dropdown.addEventListener("change", function () {
+    if (regionDropdown) {
+        regionDropdown.addEventListener("change", function () {
             const selectedregion = this.value;
             loadBasicData(selectedregion);
         });
