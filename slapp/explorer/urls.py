@@ -25,6 +25,11 @@ urlpatterns = [
     path("demand_capacity_chart/", views.demand_capacity_chart, name="demand_capacity_chart"),
     path("basic_charts/", views.basic_charts, name="basic_charts"),
     path("ranges/", views.ranges, name="ranges"),
+    # Other pages
+    path("imprint/", views.Imprint.as_view(), name="imprint"),
+    path("privacy/", views.Privacy.as_view(), name="privacy"),
+    path("documentation/", views.Documentation.as_view(), name="documentation"),
+    path("contact/", views.Contact.as_view(), name="contact"),
 ]
 
 htmx_urlpatterns = [
