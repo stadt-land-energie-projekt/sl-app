@@ -676,27 +676,3 @@ def ranges(request: HttpRequest) -> JsonResponse:
             "ranges": alternatives,
         },
     )
-
-
-class Imprint(TemplateView):
-    """Display imprint."""
-
-    template_name = "pages/imprint.html"
-
-
-class Privacy(TemplateView):
-    """Display privacy statement."""
-
-    template_name = "pages/privacy.html"
-
-
-class Documentation(TemplateView):
-    """Display documentation."""
-
-    template_name = "pages/documentation.html"
-
-
-class Contact(TemplateView):
-    """Display contact."""
-
-    template_name = "pages/contact.html"
