@@ -1,18 +1,12 @@
-<div class="privacy-modal modal fade"
-     id="imprintModal"
-     tabindex="-1"
-     aria-labelledby="imprintModalLabel"
-     aria-hidden="true">
-  <div class="privacy-modal__dialog modal-dialog">
-    <div class="privacy-modal__content">
-      <div class="privacy-modal__header">
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content_no_sidebar %}
+  <div class="home" id="home-info">
+    <div class="home__container">
+      <div class="home__paragraph">
         <h2 class="privacy-modal__title" id="imprintModalLabel">Impressum</h2>
-        <button type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"></button>
-      </div>
-      <div class="privacy-modal__body">
         <p>
           Herausgegeben von:
           <br />
@@ -34,7 +28,7 @@
           Fax +49 (0)30 1208 434 99
         </p>
         <p>Handelsregister Berlin – HRB 124659 B</p>
-        <p>Steuernummer: 27/602/55211</p>
+        <p>Steuernummer: 27/640/02615</p>
         <p>USt-IdNr.: DE274491408</p>
         <p>Disclaimer:</p>
         <h3>1. Haftungshinweis</h3>
@@ -56,4 +50,4 @@
       </div>
     </div>
   </div>
-</div>
+{% endblock content_no_sidebar %}

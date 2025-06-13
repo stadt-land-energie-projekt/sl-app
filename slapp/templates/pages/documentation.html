@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content_no_sidebar %}
+  <div class="home" id="home-info">
+    <div class="home__container">
+      <div class="home__paragraph">
+        <h2>Dokumentation</h2>
+        <div>
+          <p>Der Szenario-Explorer wurde vom Reiner Lemoine Institut (RLI) entwickelt.</p>
+          <p>
+            Die methodische Dokumentation finden Sie <a href="#" target="_blank">hier</a> (derzeit noch im Aufbau).
+          </p>
+          <p>
+            Der Quellcode des Szenario-Explorers ist <a href="https://github.com/stadt-land-energie-projekt/sl-app"
+    target="_blank">frei verfügbar</a>. Die benötigten Daten wurden
+            mit der Daten-Pipeline <a href="https://github.com/rl-institut/apipe/" target="_blank">apipe</a> erzeugt,
+            die ebenfalls den Prinzipien von Open Source & Open Data folgt.
+          </p>
+          <p>
+            Dieses Tool und mehr Informationen zu unseren anderen Tools, Karten und Apps zur Energiewende finden Sie auf
+            dem <a href="https://wam.rl-institut.de" target="_blank">WAM-Portal des RLI</a>.
+          </p>
+          <h3>Über dieses Tool</h3>
+          <p>Hier folgen weitere Detailinfos zum Tool...</p>
+          <h3>Weitere Informationen und Links</h3>
+          <p>Hier folgen weitere Infos und nützliche Links...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content_no_sidebar %}
