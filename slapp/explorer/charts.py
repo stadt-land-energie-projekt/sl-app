@@ -102,7 +102,7 @@ def total_electricity_per_technology(scenario: str):
     filtered.columns = ["name", "value"]
     filtered["name"] = filtered["name"].apply(lambda x: x.split("-", 1)[1])
     filtered = filtered.groupby("name").sum()
-    filtered["value"] = (filtered["value"] / filtered["value"].sum() * 100).round(3)
+    filtered["value"] = (filtered["value"] / filtered["value"].sum() * 100).round(1)
     return template, filtered.reset_index().to_dict(orient="records")
 
 
@@ -115,7 +115,7 @@ def electricity_import(scenario: str):
     export_df = scalars[
         (scalars["var_name"] == "flow_in_electricity") & (scalars["tech"] == "export") & (scalars["var_value"] > 0)
     ][["name", "var_value"]]
-    result = [import_df["var_value"].sum(), -export_df["var_value"].sum()]
+    result = [round(import_df["var_value"].sum() * 1e-3, 1), -round(export_df["var_value"].sum() * 1e-3, 1)]
     return template, result
 
 
@@ -162,8 +162,10 @@ def generation_consumption_per_sector(scenario: str):
         ]
         .groupby("name")
         .sum()
+        .mul(1e-3)
+        .round(1)
     )
-    x1 = int(scalars.loc[(scalars["var_name"] == "flow_in_electricity"), "var_value"].sum().sum() / 1000) * 1000
+    x1 = round(scalars.loc[(scalars["var_name"] == "flow_in_electricity"), "var_value"].sum().sum() / 1000, 1)
 
     y2 = (
         scalars.loc[
@@ -172,8 +174,10 @@ def generation_consumption_per_sector(scenario: str):
         ]
         .groupby("name")
         .sum()
+        .mul(1e-3)
+        .round(1)
     )
-    x2 = int(scalars.loc[(scalars["var_name"] == "flow_in_heat_low_decentral"), "var_value"].sum().sum() / 1000) * 1000
+    x2 = round(scalars.loc[(scalars["var_name"] == "flow_in_heat_low_decentral"), "var_value"].sum().sum() / 1000, 1)
 
     y3 = (
         scalars.loc[
@@ -182,8 +186,10 @@ def generation_consumption_per_sector(scenario: str):
         ]
         .groupby("name")
         .sum()
+        .mul(1e-3)
+        .round(1)
     )
-    x3 = int(scalars.loc[(scalars["var_name"] == "flow_in_heat_low_central"), "var_value"].sum().sum() / 1000) * 1000
+    x3 = round(scalars.loc[(scalars["var_name"] == "flow_in_heat_low_central"), "var_value"].sum().sum() / 1000, 1)
 
     y4 = (
         scalars.loc[
@@ -192,11 +198,13 @@ def generation_consumption_per_sector(scenario: str):
         ]
         .groupby("name")
         .sum()
+        .mul(1e-3)
+        .round(1)
     )
-    x4 = int(scalars.loc[(scalars["var_name"] == "flow_in_heat_high"), "var_value"].sum().sum() / 1000) * 1000
+    x4 = round(scalars.loc[(scalars["var_name"] == "flow_in_heat_high"), "var_value"].sum().sum() / 1000, 1)
 
     data = {
-        "chart1-1": (y1 / y1.sum() * 100).to_dict()["var_value"],
+        "chart1-1": y1.to_dict()["var_value"],
         "chart1-total": x1,
         "chart2-1": y2.to_dict()["var_value"],
         "chart2-total": x2,
@@ -212,15 +220,15 @@ def self_generation_imports(scenario: str):
     template = "self_generation_power.html"
     scalars = chart_data.get_postprocessed_data(scenario)
     y1_df = scalars[(scalars["var_name"] == "flow_out_electricity") & (~scalars["type"].isin(["shortage", "storage"]))]
-    y1 = y1_df["var_value"].sum()
+    y1 = round(y1_df["var_value"].sum() * 1e-3, 1)
 
     y2_df = scalars[(scalars["var_name"] == "flow_out_electricity") & (scalars["tech"] == "import")]
-    y2 = y2_df["var_value"].sum()
+    y2 = round(y2_df["var_value"].sum() * 1e-3, 1)
 
     data = {
         "y1": y1,
         "y2": y2,
-        "x": round(y1 + y2, 2),
+        "x": y1 + y2,
     }
     return template, data
 
