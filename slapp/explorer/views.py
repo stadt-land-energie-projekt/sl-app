@@ -562,8 +562,15 @@ class Results(TemplateView):
         cost_sensitivity_technologies = (
             models.Sensitivity.objects.filter(attribute="capacity_cost", region="ALL")
             .distinct()
-            .values_list("component", flat=True)
+            .prefetch_related("scenario__result_set")
         )
+        # Filter sensitivities where perturbation component is zero
+        cost_sensitivity_technologies = [
+            sensitivity.component
+            for sensitivity in cost_sensitivity_technologies.all()
+            if sensitivity.scenario.result_set.filter(name__contains=sensitivity.component, var_value__gt=0).exists()
+        ]
+
         cost_technologies = {tech: TECHNOLOGIES[tech] for tech in cost_sensitivity_technologies}
         cost_technologies = dict(sorted(cost_technologies.items(), key=lambda tech: tech[1]["name"]))
 
