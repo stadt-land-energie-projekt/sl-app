@@ -57,6 +57,7 @@
           <div id="legend" class="legend"></div>
           <div class="cs__info">
             <h2 class="cs__region" id="cs-selected-name">Regionname</h2>
+            <p class="cs__regionheader">Erkunden Sie die Situation heute (Daten: 2024)</p>
             <div class="cs__tabs">
               <button class="tab-button active" data-tab="map">Karte</button>
               <button class="tab-button" data-tab="charts">Statistiken</button>
@@ -91,7 +92,9 @@
               </div>
             </div>
           </div>
-          <p style="text-align: center;">Daten: 2024</p>
+          <p class="data-footer">
+            Mehr Informationen zu den Daten finden Sie in der <a href="{% url 'explorer:documentation' %}">Dokumentation</a>.
+          </p>
         </div>
       </section>
       <div class="cs__button">

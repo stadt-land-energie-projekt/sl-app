@@ -210,6 +210,11 @@
     padding-top: 4rem;
   }
 
+  &__regionheader {
+    color: $font-color-secondary;
+    text-align: center;
+  }
+
   &__region {
     font-size: 1.5rem;
     font-weight: 700;
@@ -291,6 +296,18 @@
     @include button-primary;
     display: inline-block;
     width: auto;
+    text-decoration: none;
+  }
+}
+
+.data-footer {
+  padding-top: 1em;
+  color: $font-color-secondary;
+  text-align: center;
+
+  a {
+    color: $color-link;
+    font-weight: 700;
     text-decoration: none;
   }
 }
