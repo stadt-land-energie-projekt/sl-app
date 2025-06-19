@@ -20,7 +20,7 @@
     justify-content: center;
     gap: 1rem;
     padding-top: 4rem;
-  
+
   .tab {
     display: flex;
     align-items: center;
@@ -35,7 +35,7 @@
     font-size: 0.875rem;
     font-weight: 600;
     transition: background-color 0.25s ease;
-  
+
     a {
       flex-grow: 1;
       display: flex;
@@ -44,7 +44,7 @@
       text-decoration: none;
       color: $font-color-main;
     }
-  
+
     &.selected {
       background-color: $color-secondary;
       cursor: default;
@@ -61,4 +61,17 @@
   svg {
     align-self: center;
   }
+}
+
+.dev-banner {
+    max-width: 600px;
+    margin-left: 3em;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 165, 0, 0.2);
+    border: 1px solid rgba(255, 165, 0, 0.6);
+    border-radius: 0.5rem;
+    color: #333;
+    font-size: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
