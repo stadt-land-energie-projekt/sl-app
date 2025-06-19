@@ -10,6 +10,7 @@
   "electricity-demand_ind": {"name": "Stromnachfrage (Industrie)", "color": "#0000CD"},
   "electricity-demand_cts": {"name": "Stromnachfrage (Gewerbe, Handel, Dienstleistungen)", "color": "#4682B4"},
   "electricity-demand_mob": {"name": "Stromnachfrage (Mobilität)", "color": "#5F9EA0"},
+  "electricity-storage": {"name": "Batteriespeicher", "color": "#A9A9A9"},
   "electricity-small_battery_storage": {"name": "Kleine Batteriespeicher", "color": "#A9A9A9"},
   "electricity-large_battery_storage": {"name": "Große Batteriespeicher", "color": "#696969"},
   "electricity-heatpump_decentral": {"name": "Wärmepumpe (dezentral)", "color": "#ADD8E6"},
@@ -54,5 +55,7 @@
   "elecricity-storage": {"name": "Batteriespeicher", "color": "#A9A9A9"},
   "heat-storage": {"name": "Wärmespeicher", "color": "#B22222"},
   "bpchp": {"name": "BHKW", "color": "#556B2F"},
-  "boiler": {"name": "Kessel", "color": "#4682B4"}
+  "boiler": {"name": "Kessel", "color": "#4682B4"},
+
+  "import": {"name": "Import", "color": "#4682B4"}
 }

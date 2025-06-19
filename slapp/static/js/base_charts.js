@@ -39,6 +39,7 @@ function createElectricityImportChart(data) {
           left: 'center',
           top: 'top'
       },
+      color: ['#2080B6', '#67B7E3'],
       legend: {
           left: 'center',
           top: 'bottom'
@@ -50,6 +51,13 @@ function createElectricityImportChart(data) {
       yAxis: {
           type: 'value',
           name: 'GWh'
+      },
+      tooltip: {
+          trigger: 'item',
+          valueFormatter: function (value) {
+              if (value === undefined) return;
+              return value.toString().replace('.', ',') + ' GWh';
+          },
       },
       series: [
           {
@@ -84,7 +92,7 @@ function createGenerationConsumptionChart(data) {
               position: 'outside',
               formatter: function (params) {
                   if (params.name !== 'empty') {
-                      return params.percent + '%';
+                      return params.percent.toString().replace('.', ',') + ' %';
                   }
                   return '';
               },
@@ -111,25 +119,25 @@ function createGenerationConsumptionChart(data) {
               top: 'top'
           },
           {
-              text: `Gesamtstrombedarf (` + data['chart1-total'] + 'GWh)',
+              text: `Gesamtstrombedarf (` + data['chart1-total'].toString().replace('.', ',') + ' GWh)',
               left: '25%',
               top: '10%',
               textAlign: 'center', ...subTitleStyle
           },
           {
-              text: `Gesamtwärmebedarf dezentral (` + data['chart2-total'] + 'GWh)',
+              text: `Gesamtwärmebedarf dezentral (` + data['chart2-total'].toString().replace('.', ',') + ' GWh)',
               left: '75%',
               top: '10%',
               textAlign: 'center', ...subTitleStyle
           },
           {
-              text: `Gesamtwärmebedarf zentral (` + data['chart3-total'] + 'GWh)',
+              text: `Gesamtwärmebedarf zentral (` + data['chart3-total'].toString().replace('.', ',') + ' GWh)',
               left: '25%',
               top: '55%',
               textAlign: 'center', ...subTitleStyle
           },
           {
-              text: `Gesamtwärmebedarf heat_high (` + data['chart4-total'] + 'GWh)',
+              text: `Gesamtwärmebedarf hoch (` + data['chart4-total'].toString().replace('.', ',') + ' GWh)',
               left: '75%',
               top: '55%',
               textAlign: 'center', ...subTitleStyle
@@ -137,7 +145,7 @@ function createGenerationConsumptionChart(data) {
       ],
       tooltip: {
           trigger: 'item',
-          formatter: '{b}: {c} ({d}%)'
+          formatter: function(params) {return params.name + " " + params.value.toString().replace('.', ',') + " GWh (" + params.percent.toString().replace('.', ',') + " %)";}
       },
       series: [
           getSeries({
@@ -187,12 +195,17 @@ function createOptimizedCapacitiesChart(data) {
           left: 'center',
           top: 'top'
       },
+      color: ['#2080B6', '#67B7E3'],
       legend: {
           left: 'center',
           top: 'bottom',
       },
       tooltip: {
           trigger: 'axis',
+          valueFormatter: function (value) {
+              if (value === undefined) return;
+              return value.toString().replace('.', ',') + ' MW';
+          },
           axisPointer: {
               type: 'cross',
               crossStyle: {
@@ -247,148 +260,149 @@ function createOptimizedCapacitiesChart(data) {
 }
 
 function createSelfGenerationPowerChart(data) {
-    const chart = getOrCreateChart(document.getElementById("selfGenerationPowerChart"));
+  const chart = getOrCreateChart(document.getElementById("selfGenerationPowerChart"));
 
-    let option = {
-        color: ['#91cc75','#5470c6'],
-        title: {
-            text: 'Eigenerzeugung/Stromimporte ',
-            subtext: 'Eigenerzeugung + Stromimporte = ' + data.x + 'GWh',
-            left: 'center',
-            top: 'top'
-        },
-        legend: {
-            left: 'center',
-            top: 'bottom'
-        },
+  let option = {
+      color: ['#2080B6', '#67B7E3'],
+      title: {
+          text: 'Eigenerzeugung/Stromimporte ',
+          subtext: 'Eigenerzeugung + Stromimporte = ' + data.x.toString().replace('.', ',') + ' GWh',
+          left: 'center',
+          top: 'top'
+      },
+      tooltip: {
+          trigger: 'item',
+          valueFormatter: function (value) {
+              if (value === undefined) return;
+              return value.toString().replace('.', ',') + ' GWh';
+          },
+      },
+      series: [
+          {
+              type: 'pie',
+              radius: "50%",
+              data: [
+                  {value: data.y1, name: 'Anteil Eigenerzeugung aus EE'},
+                  {value: data.y2, name: 'Anteil Stromimport'},
+              ],
+              label: {
+                  show: true,
+                  position: 'outside',
+                  formatter: function (params) {
+                      return params.name + '\n' + params.percent.toString().replace('.', ',') + ' %';
+                  },
+                  textStyle: {
+                      fontSize: 12,
+                  },
+              }
+          },
 
-        series: [
-            {
-                type: 'pie',
-                radius: "50%",
-                data: [
-                    {value: data.y1, name: 'Anteil Eigenerzeugung aus EE'},
-                    {value: data.y2, name: 'Anteil Stromimport'},
-                ],
-                label: {
-                    show: true,
-                    position: 'outside',
-                    formatter: function (params) {
-                        return params.name + '\n' + params.percent + '%';
-                    },
-                    textStyle: {
-                        fontSize: 12,
-                    },
-                }
-            },
+      ]
+  };
 
-        ]
-    };
-
-    chart.setOption(option);
+  chart.setOption(option);
 }
 
 function createSuppliedHoursChart(data) {
-    const chart = getOrCreateChart(document.getElementById("suppliedHoursChart"));
+  const chart = getOrCreateChart(document.getElementById("suppliedHoursChart"));
 
-    let option = {
-        title: {
-            text: 'Stunden eigenversorgt/nicht-eigenversorgt',
-            left: 'center',
-            top: 'top'
-        },
-        legend: {
-            left: 'center',
-            top: 'bottom'
-        },
-        xAxis: {
-            type: 'category',
-            data: [""]
-        },
-        yAxis: {
-            type: 'value',
-            name: '[%]',
-            axisLabel: {formatter: '{value}%'}
-        },
-        series: [
-            {
-                name: 'Stunden mit Eigenerzeugung',
-                type: 'bar',
-                stack: 'total',
-                data: Object.values(data.y1),
-                label: {
-                    show: true,
-                    position: 'inside',
-                    formatter: function (params) {
-                        return (params.data * 1).toFixed(2) + '%';
-                    }
-                }
-            },
-            {
-                name: 'Stunden ohne Eigenversorgung',
-                type: 'bar',
-                stack: 'total',
-                data: Object.values(data.y2),
-                label: {
-                    show: true,
-                    position: 'inside',
-                    formatter: function (params) {
-                        return (params.data * 1).toFixed(2) + '%';
-                    }
-                }
+  let option = {
+      title: {
+          text: 'Stunden eigenversorgt/nicht-eigenversorgt',
+          left: 'center',
+          top: 'top'
+      },
+      color: ['#2080B6', '#67B7E3'],
+      legend: {
+          left: 'center',
+          top: 'bottom'
+      },
+      xAxis: {
+          type: 'category',
+          data: [""]
+      },
+      yAxis: {
+          type: 'value',
+          name: 'Prozent (%)',
+          axisLabel: {formatter: '{value}%'}
+      },
+      series: [
+          {
+              name: 'Stunden mit Eigenerzeugung',
+              type: 'bar',
+              stack: 'total',
+              data: Object.values(data.y1),
+              label: {
+                  show: true,
+                  position: 'inside',
+                  formatter: function (params) {
+                      return (params.data * 1).toFixed(2) + '%';
+                  }
+              }
+          },
+          {
+              name: 'Stunden ohne Eigenversorgung',
+              type: 'bar',
+              stack: 'total',
+              data: Object.values(data.y2),
+              label: {
+                  show: true,
+                  position: 'inside',
+                  formatter: function (params) {
+                      return (params.data * 1).toFixed(2).toString().replace('.', ',') + ' %';
+                  }
+              }
 
-            }
-        ]
-    };
+          }
+      ]
+  };
 
-    chart.setOption(option);
+  chart.setOption(option);
 }
 
 function createTotalElectricityChart(data) {
-    const chart = getOrCreateChart(document.getElementById("totalElectricityChart"));
+  const chart = getOrCreateChart(document.getElementById("totalElectricityChart"));
 
-    const styledData = data.map(item => {
-      const mapEntry = techMap[item.name];
-      if (mapEntry) {
-        return {
-          value: item.value,
-          name:  mapEntry.name,
-          itemStyle: { color: mapEntry.color }
-        };
-      }
-      return item;
-    });
+  const styledData = data.map(item => {
+    const mapEntry = techMap[item.name];
+    if (mapEntry) {
+      return {
+        value: item.value,
+        name:  mapEntry.name,
+        itemStyle: { color: mapEntry.color }
+      };
+    }
+    return item;
+  });
 
-    let option = {
-        title: {
-            text: 'Stromversorgung je Technologie',
-            left: 'center'
-        },
-        tooltip: {
-            trigger: 'item'
-        },
-        legend: {
-            orient: 'horizontal',
-            top: 'bottom',
-            itemGap: 2,
-        },
-        series: [
-            {
-                name: 'Energy',
-                type: 'pie',
-                radius: '50%',
-                center: ['50%', '50%'],
-                data: styledData,
-                emphasis: {
-                    itemStyle: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
-                }
-            }
-        ]
-    };
+  let option = {
+      title: {
+          text: 'Stromversorgung je Technologie',
+          left: 'center'
+      },
+      tooltip: {
+          trigger: 'item',
+          valueFormatter: function (value) {
+              if (value === undefined) return;
+              return value.toString().replace('.', ',') + ' GWh';
+          },
+      },
+      series: [
+          {
+              name: 'Energy',
+              type: 'pie',
+              radius: '50%',
+              data: styledData,
+              emphasis: {
+                  itemStyle: {
+                      shadowBlur: 10,
+                      shadowOffsetX: 0,
+                      shadowColor: 'rgba(0, 0, 0, 0.5)'
+                  }
+              }
+          }
+      ]
+  };
 
-    chart.setOption(option);
+  chart.setOption(option);
 }
