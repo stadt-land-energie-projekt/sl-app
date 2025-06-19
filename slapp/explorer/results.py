@@ -231,7 +231,7 @@ def prepare_table_data(alternatives: dict) -> dict:
         data["tech_name"] = TECHNOLOGIES.get(tech, {"name": tech})["name"]
         data["cap_str"] = format_min_max(data["min_capacity"], data["max_capacity"], "cap")
         data["cost_str"] = format_min_max(data["min_cost"], data["max_cost"], "cost")
-        data["pot_str"] = f"{data['potential']} {data['potential_unit']}"
+        data["pot_str"] = f"{str(data['potential']).replace('.', ',')} {data['potential_unit']}"
     return alternatives
 
 
@@ -241,8 +241,8 @@ def format_min_max(min_value: float, max_value: float, unit: str) -> str:
     million = 1_000_000
     if max_value >= million:
         # Convert both to millions
-        converted_min = round(min_value / million, 1)
-        converted_max = round(max_value / million, 1)
+        converted_min = str(round(min_value / million, 1)).replace(".", ",")
+        converted_max = str(round(max_value / million, 1)).replace(".", ",")
 
         if unit == "cost":
             unit_str = "Mio €"
@@ -256,8 +256,8 @@ def format_min_max(min_value: float, max_value: float, unit: str) -> str:
     # Otherwise, use thousands
     thousand = 1_000
     if max_value >= thousand:
-        converted_min = round((min_value / thousand), 1)
-        converted_max = round((max_value / thousand), 1)
+        converted_min = str(round((min_value / thousand), 1)).replace(".", ",")
+        converted_max = str(round((max_value / thousand), 1)).replace(".", ",")
 
         if unit == "cost":
             unit_str = "k€"
@@ -268,8 +268,8 @@ def format_min_max(min_value: float, max_value: float, unit: str) -> str:
 
         return f"{converted_min} - {converted_max} {unit_str}"
 
-    converted_min = round(min_value, 1)
-    converted_max = round(max_value, 1)
+    converted_min = str(round(min_value, 1)).replace(".", ",")
+    converted_max = str(round(max_value, 1)).replace(".", ",")
 
     if unit == "cost":
         unit_str = "k€"

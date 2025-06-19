@@ -509,7 +509,7 @@ function renderChart(chartId, dataArray) {
         return `
           <div>
             <strong>${item.name}</strong><br/>
-            min: ${item.minCap.toFixed(0)} – max: ${item.maxCap.toFixed(0)}
+            ${numberFormat.format(item.minCap)} – ${numberFormat.format(item.maxCap)} MW
           </div>
         `;
       }
