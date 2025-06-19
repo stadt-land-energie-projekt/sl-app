@@ -304,6 +304,7 @@ def get_demand_data(scenario_id: int) -> dict:
     demands_current = demands_sum.loc[base_scenario_id]
     demands_current["diff"] = demands_sum.loc[scenario_id] - demands_sum.loc[base_scenario_id]
     demands_current["color"] = demands_current.index.map(DEMAND_COLORS)
+    demands_current.index = demands_current.index.map({k: v["name"] for k, v in TECHNOLOGIES.items()})
     demand_dict = demands_current.to_dict("index")
     return demand_dict
 

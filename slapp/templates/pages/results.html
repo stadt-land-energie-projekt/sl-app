@@ -124,7 +124,7 @@
                 <select id="technologySelect" name="technology" autocomplete="off">
                   {% for key, data in cost_technologies.items %}<option value="{{ key }}">{{ data.name }}</option>{% endfor %}
                 </select>
-                <div id="tech-container">
+                <div class="tech-container">
                   <div class="technology-charts chart-container" id="cost-capacity-chart"></div>
                   <div class="technology-charts chart-container" id="tech-comparison-chart"></div>
                 </div>
@@ -132,7 +132,12 @@
                 <select id="demand-technologySelect" name="technology" autocomplete="off">
                   {% for key, title in demand_technologies.items %}<option value="{{ key }}">{{ title }}</option>{% endfor %}
                 </select>
-                <div id="demand-tech-container">
+                <div>
+                  Legende:
+                  ⚡ Strom, 🔥 Wärme, 🔥🔼 Prozesswärme
+                  🏠 Haushalte, 🚗 Verkehr, 🏪 GHD, 🏭 Industrie
+                </div>
+                <div class="tech-container">
                   <div class="technology-charts chart-container" id="demand-chart"></div>
                   <div class="technology-charts chart-container"
                        id="demand-tech-comparison-chart"></div>

@@ -1,8 +1,11 @@
+
 let currentRegion = "";
 let currentTech = "";
 
 let chartZoomStart = {};
 let chartZoomEnd = {};
+
+const numberFormat = Intl.NumberFormat("de-DE", { maximumFractionDigits: 1 });
 
 const nodes = JSON.parse(document.getElementById("nodes").innerText);
 
@@ -291,7 +294,7 @@ function loadCostCapacityLineChart(lineData) {
             trigger: "axis",
             formatter: (params) => {
                 let idx = params[0].dataIndex;
-                return `Kosten: ${xValues[idx]} €<br/>Leistung: ${yValues[idx]} MW`;
+                return `Kosten: ${numberFormat.format(xValues[idx])} €<br/>Leistung: ${numberFormat.format(yValues[idx])} MW`;
             }
         },
         grid: { left: '10%', right: '20%', top: '25%', bottom: '15%', containLabel: true },
@@ -345,7 +348,7 @@ function loadTechComparisonChart(data, selectedX, category="cost") {
 
     let option = {
         title: { text: category === "cost" ? `Technologievergleich bei Kosten von ${selectedX} €` : `Technologievergleich für Szenario ${selectedX}`, left: "center" },
-        tooltip: { trigger: "item", formatter: (params) => `${params.name}<br/>Wert: ${params.value}` },
+        tooltip: { trigger: "item", formatter: (params) => `${params.name}<br/>Wert: ${numberFormat.format(params.value)} MW` },
         grid: { left: '10%', right: '20%', top: '25%', bottom: '15%', containLabel: true },
         xAxis: { type: "value", name: "Leistung" },
         yAxis: { type: "category", data: categories },
@@ -734,22 +737,22 @@ function loadDemandChart(data) {
 
   // 3) series mapping
   const mapping = {
-    0:  'electricity-demand_hh',
-    1:  'heat_low_central-demand_hh',
-    2:  'heat_low_decentral-demand_hh',
+    0:  'Stromnachfrage (Haushalte)',
+    1:  'Wärme (niedrig, zentral) Nachfrage (Haushalte)',
+    2:  'Wärme (niedrig, dezentral) Nachfrage (Haushalte)',
     3:  '',
-    4:  'electricity-demand_mob',
+    4:  'Stromnachfrage (Mobilität)',
     5:  '',
     6:  '',
     7:  '',
-    8:  'electricity-demand_cts',
-    9:  'heat_low_central-demand_cts',
-    10: 'heat_low_decentral-demand_cts',
+    8:  'Stromnachfrage (Gewerbe, Handel, Dienstleistungen)',
+    9:  'Wärme (niedrig, zentral) Nachfrage (Gewerbe, Handel, Dienstleistungen)',
+    10: 'Wärme (niedrig, dezentral) Nachfrage (Gewerbe, Handel, Dienstleistungen)',
     11:  '',
-    12: 'electricity-demand_ind',
-    13: 'heat_low_central-demand_ind',
-    14: 'heat_low_decentral-demand_ind',
-    15: 'heat_high-demand_ind'
+    12: 'Stromnachfrage (Industrie)',
+    13: 'Wärme (niedrig, zentral) Nachfrage (Industrie)',
+    14: 'Wärme (niedrig, dezentral) Nachfrage (Industrie)',
+    15: 'Wärme (hoch, zentral) Nachfrage (Industrie)'
   };
 
   function mapYAxis(idx) {
@@ -792,7 +795,7 @@ function loadDemandChart(data) {
         barWidth: '15%',
       };
       return {
-        name: key,
+        name: `${key} (Differenz zum Basisszenario))`,
         type: 'bar',
         stack: idx,
         xAxisIndex: Math.floor(idx / 4),
@@ -820,7 +823,10 @@ function loadDemandChart(data) {
     yAxis,
     series: series.concat(seriesDiffs),
     graphic,
-    tooltip: { trigger: 'item' },
+    tooltip: {
+      trigger: 'item',
+      formatter: "{a} {c} MWh"
+    },
     legend: { show: false }
   };
 
