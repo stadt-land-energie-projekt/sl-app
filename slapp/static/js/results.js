@@ -346,8 +346,14 @@ function loadTechComparisonChart(data, selectedX, category="cost") {
     let storedZoomStart = chartZoomStart[category];
     let storedZoomEnd = chartZoomEnd[category];
 
+    let title;
+    if (category !== "cost") {
+      const select = document.getElementById("demand-technologySelect");
+      const scenario = select.querySelector(`[value="${select.value}"]`).innerText;
+      title = `Technologievergleich für Szenario\n${scenario}`;
+    }
     let option = {
-        title: { text: category === "cost" ? `Technologievergleich bei Kosten von ${selectedX} €` : `Technologievergleich für Szenario ${selectedX}`, left: "center" },
+        title: { text: category === "cost" ? `Technologievergleich bei Kosten von ${selectedX} €` : title, left: "center" },
         tooltip: { trigger: "item", formatter: (params) => `${params.name}<br/>Wert: ${numberFormat.format(params.value)} MW` },
         grid: { left: '10%', right: '20%', top: '25%', bottom: '15%', containLabel: true },
         xAxis: { type: "value", name: "Leistung" },
