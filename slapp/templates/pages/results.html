@@ -128,10 +128,9 @@
                   <div class="technology-charts chart-container" id="cost-capacity-chart"></div>
                   <div class="technology-charts chart-container" id="tech-comparison-chart"></div>
                 </div>
+                <label for="demand-technologySelect">Lastvariationen</label>
                 <select id="demand-technologySelect" name="technology" autocomplete="off">
-                  {% for key, title in demand_technologies.items %}
-                    <option value="{{ key }}">Lastvariationen: {{ title }}</option>
-                  {% endfor %}
+                  {% for key, title in demand_technologies.items %}<option value="{{ key }}">{{ title }}</option>{% endfor %}
                 </select>
                 <div id="demand-tech-container">
                   <div class="technology-charts chart-container" id="demand-chart"></div>

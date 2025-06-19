@@ -327,8 +327,22 @@ def get_demand_capacity_data(scenario_id: int) -> list:
     return chart_data
 
 
-def parse_demand_scenario_title(demand_scenarios: dict[int, list[tuple[str, float]]]) -> dict[int, str]:
+def parse_demand_scenario_title(demand_scenarios: dict[int, tuple[float, list[str]]]) -> dict[int, str]:
     """Parse demand scenario title."""
+
+    def order_number(name: str) -> int:
+        if "⚡" in name:
+            return 0
+        if "🏠" in name:
+            order = 1
+        elif "🏪" in name:
+            order = 3
+        else:
+            order = 5
+        if "dezentral" in name:
+            return order
+        return order + 1
+
     symbols = {
         "hh": "🏠",
         "mob": "🚗",
@@ -336,15 +350,17 @@ def parse_demand_scenario_title(demand_scenarios: dict[int, list[tuple[str, floa
         "ind": "🏭",
     }
     parsed_choices = {}
-    for scenario_id, permutations in demand_scenarios.items():
-        items = []
-        for permutation in permutations:
-            title = f"{permutation[1]}x"
-            title += f"{'⚡' if 'electricity' in permutation[0] else '🔥'}"
-            if "heat" in permutation[0]:
-                title += "🔽" if "low" in permutation[0] else "🔼"
-            title += f"{symbols[permutation[0].split('_')[-1]]}"
-            title += f"{'(zentral)' if 'central' in permutation[0] else ''}"
-            items.append(title)
-        parsed_choices[scenario_id] = ", ".join(items)
+    for scenario_id, (value, components) in demand_scenarios.items():
+        item_list = []
+        for component in components:
+            item = f"{'⚡' if 'electricity' in component else '🔥'}"
+            item += "🔼" if "high" in component else ""
+            item += f"{symbols[component.split('_')[-1]]}"
+            if "heat" in component:
+                item += f"{'(dezentral)' if 'decentral' in component else '(zentral)'}"
+            item_list.append(item)
+        # Order items in list
+        item_list.sort(key=order_number)
+
+        parsed_choices[scenario_id] = f"{value}x " + " | ".join(item_list)
     return parsed_choices

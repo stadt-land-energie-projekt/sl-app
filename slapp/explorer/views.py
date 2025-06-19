@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 
 import json
 
+from django.db.models import Count
 from django.shortcuts import redirect, render
 from django.templatetags.l10n import localize
 from django.urls import reverse, reverse_lazy
@@ -574,13 +575,17 @@ class Results(TemplateView):
         cost_technologies = {tech: TECHNOLOGIES[tech] for tech in cost_sensitivity_technologies}
         cost_technologies = dict(sorted(cost_technologies.items(), key=lambda tech: tech[1]["name"]))
 
-        demand_sensitivity_scenarios = models.Sensitivity.objects.filter(
-            attribute="amount",
-            region="ALL",
-        ).values_list("scenario", "component", "perturbation_parameter")
-        demand_technologies = {}
-        for scenario_id, component, perturbation in demand_sensitivity_scenarios:
-            demand_technologies.setdefault(scenario_id, []).append((component, perturbation))
+        # Filter demand sensitivities for perturbations with same parameter
+        demand_scenarios = models.Scenario.objects.annotate(
+            distinct_values=Count("sensitivities__perturbation_parameter", distinct=True),
+        ).filter(distinct_values=1, sensitivities__attribute="amount")
+        demand_technologies = {
+            scenario.id: (
+                scenario.sensitivities.first().perturbation_parameter,
+                list(scenario.sensitivities.values_list("component", flat=True)),
+            )
+            for scenario in demand_scenarios
+        }
         demand_technologies_parsed = results.parse_demand_scenario_title(demand_technologies)
 
         alternatives = results.get_alternative_result("B", 1)
@@ -594,7 +599,6 @@ class Results(TemplateView):
         context["technologies"] = TECHNOLOGIES
         context["nodes"] = NODES
         context["regions_dropdown"] = RegionForm()
-        context["demand"] = demand_sensitivity_scenarios
         return context
 
 
