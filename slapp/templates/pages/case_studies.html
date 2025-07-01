@@ -64,6 +64,8 @@
               <button class="tab-button" data-tab="details">Tabelle</button>
             </div>
             <div class="cs__tabs-content">
+              {% include 'pages/partials/layer_box.html' %}
+              <div id="legend" class="legend"></div>
               <div id="map" class="tab-content active"></div>
               <div id="charts" class="tab-content">
                 <div class="charts-container">

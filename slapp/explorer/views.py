@@ -22,8 +22,8 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
 from django_mapengine import views
 
-from . import charts, results
-from .forms import ParametersSliderForm, RegionForm
+from . import charts, map_config, results
+from .forms import ParametersSliderForm, RegionForm, StaticLayerForm
 from .models import Municipality, Region
 from .regions import get_case_studies_charts_data
 from .regions import get_regions_data as get_data
@@ -495,6 +495,9 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
     def get_context_data(self, **kwargs) -> dict:
         """Manage context data."""
         context = super().get_context_data(**kwargs)
+        context["area_switches"] = {
+            category: [StaticLayerForm(layer) for layer in layers] for category, layers in map_config.LEGEND.items()
+        }
 
         try:
             region_kiel = models.Region.objects.get(name="Kiel")
