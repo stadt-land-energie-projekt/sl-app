@@ -18,7 +18,7 @@ class Region(models.Model):
 
     data_file = "bkg_vg_250_regions"
     layer = "bkg_vg_250_regions"
-    mapping = {"id": "FID", "geom": "MULTIPOLYGON"}
+    mapping = {"id": "FID", "geom": "MULTIPOLYGON", "name": "name"}
 
     class Meta:  # noqa: D106
         verbose_name = _("Region")
