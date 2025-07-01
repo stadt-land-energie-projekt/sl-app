@@ -7,7 +7,7 @@ from django.apps import AppConfig
 class ExplorerConfig(AppConfig):
     """AppConfig for slapp explorer app."""
 
-    default_auto_field = "django.db.models.BigAutoField"
+    default_auto_field = "django.db.models.AutoField"
     name = "slapp.explorer"
     verbose_name = "Explorer"
 

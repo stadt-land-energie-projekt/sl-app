@@ -107,6 +107,55 @@
       "text-size": 12
     }
   },
+  "wind_planned": {
+    "type": "symbol",
+    "filter": ["!", ["has", "point_count"]],
+    "layout": {
+      "icon-image": [
+        "case",
+        [
+          ">",
+          [
+            "get",
+            "unit_count"
+          ],
+          1
+        ],
+        "wind_plus",
+        "wind"
+      ],
+      "icon-size": 0.4,
+      "icon-allow-overlap": true
+    },
+    "paint": {
+      "icon-color": "blue"
+    }
+  },
+  "wind_planned_cluster": {
+    "type": "circle",
+    "filter": ["has", "point_count"],
+    "paint": {
+      "circle-color": "#6A89CC",
+      "circle-radius": [
+        "step",
+        ["get", "point_count"],
+        20,
+        15,
+        30,
+        50,
+        40
+      ]
+    }
+  },
+  "wind_planned_cluster_count": {
+    "type": "symbol",
+    "filter": ["has", "point_count"],
+    "layout": {
+      "text-field": "{point_count_abbreviated}",
+      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+      "text-size": 12
+    }
+  },
   "pvroof": {
     "type": "symbol",
     "filter": ["!", ["has", "point_count"]],
@@ -652,6 +701,114 @@
     "type": "fill",
     "paint": {
       "fill-color": "#2171B5"
+    }
+  },
+  "pv_ground_operating": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#FFD700"
+    }
+  },
+  "pv_ground_planned": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#FFECB3"
+    }
+  },
+  "potentialarea_wind_2018_eg": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#66BB6A"
+    }
+  },
+  "potentialarea_wind_stp_2024_vr": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#388E3C"
+    }
+  },
+  "pv_ground_criteria_aviation": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#FFF176"
+    }
+  },
+  "pv_ground_criteria_biotopes": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#FFEE58"
+    }
+  },
+  "pv_ground_criteria_forest": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#FFEB3B"
+    }
+  },
+  "pv_ground_criteria_link_open_spaces": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#FDD835"
+    }
+  },
+  "pv_ground_criteria_merged": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#FBC02D"
+    }
+  },
+  "pv_ground_criteria_moor": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#F9A825"
+    }
+  },
+  "pv_ground_criteria_nature_conservation_area": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#F57F17"
+    }
+  },
+  "pv_ground_criteria_nature_monuments": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#FFF59D"
+    }
+  },
+  "pv_ground_criteria_priority_areas": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#FFEE58"
+    }
+  },
+  "pv_ground_criteria_priority_areas_grassland": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#FFEB3B"
+    }
+  },
+  "pv_ground_criteria_priority_areas_permanent_crops": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#FDD835"
+    }
+  },
+  "pv_ground_criteria_settlements": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#90A4AE"
+    }
+  },
+  "pv_ground_criteria_settlements_200m": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#CFD8DC"
+    }
+  },
+  "pv_ground_criteria_water_bodies": {
+    "type": "fill",
+    "paint": {
+      "fill-color": "#2196F3"
     }
   }
 }
