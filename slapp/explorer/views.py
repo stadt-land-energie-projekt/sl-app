@@ -20,10 +20,10 @@ from django.shortcuts import redirect, render
 from django.templatetags.l10n import localize
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
-from django_mapengine import views
+from django_mapengine import legend, views
 
-from . import charts, map_config, results
-from .forms import ParametersSliderForm, RegionForm, StaticLayerForm
+from . import charts, results
+from .forms import ParametersSliderForm, RegionForm
 from .models import Municipality, Region
 from .regions import get_case_studies_charts_data
 from .regions import get_regions_data as get_data
@@ -495,9 +495,7 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
     def get_context_data(self, **kwargs) -> dict:
         """Manage context data."""
         context = super().get_context_data(**kwargs)
-        context["area_switches"] = {
-            category: [StaticLayerForm(layer) for layer in layers] for category, layers in map_config.LEGEND.items()
-        }
+        context["mapengine_legend"] = legend.Legend.from_layer_names("Legende", ["fauna_flora_habitat"])
 
         try:
             region_kiel = models.Region.objects.get(name="Kiel")
