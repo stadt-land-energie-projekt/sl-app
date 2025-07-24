@@ -528,6 +528,26 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
                     "waters",
                     "floodplain",
                 ],
+                "Wind Potentialflächen": [
+                    "potentialarea_wind_2018_eg",
+                    "potentialarea_wind_stp_2024_vr",
+                ],
+                "Photovoltaik Kriterien": [
+                    "pv_ground_criteria_aviation",
+                    "pv_ground_criteria_biotopes",
+                    "pv_ground_criteria_forest",
+                    "pv_ground_criteria_link_open_spaces",
+                    "pv_ground_criteria_merged",
+                    "pv_ground_criteria_moor",
+                    "pv_ground_criteria_nature_conservation_area",
+                    "pv_ground_criteria_nature_monuments",
+                    "pv_ground_criteria_priority_areas",
+                    "pv_ground_criteria_priority_areas_grassland",
+                    "pv_ground_criteria_priority_areas_permanent_crops",
+                    "pv_ground_criteria_settlements",
+                    "pv_ground_criteria_settlements_200m",
+                    "pv_ground_criteria_water_bodies",
+                ],
             },
         )
 
