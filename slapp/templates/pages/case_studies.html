@@ -64,8 +64,7 @@
               <button class="tab-button" data-tab="details">Tabelle</button>
             </div>
             <div class="cs__tabs-content">
-              {% include 'django_mapengine/legend.html' %}
-              <div id="map" class="tab-content active"></div>
+              <div id="map" class="tab-content active">{% include 'django_mapengine/legend.html' %}</div>
               <div id="charts" class="tab-content">
                 <div class="charts-container">
                   <div id="chart-capacity" class="chart"></div>
