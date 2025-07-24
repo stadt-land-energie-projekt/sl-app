@@ -20,7 +20,7 @@ from django.shortcuts import redirect, render
 from django.templatetags.l10n import localize
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
-from django_mapengine import views
+from django_mapengine import legend, views
 
 from . import charts, results
 from .forms import ParametersSliderForm, RegionForm
@@ -495,6 +495,41 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
     def get_context_data(self, **kwargs) -> dict:
         """Manage context data."""
         context = super().get_context_data(**kwargs)
+        context["mapengine_legend"] = legend.Legend(
+            {
+                "Erneuerbare": [
+                    "wind",
+                    "wind_planned",
+                    "pvroof",
+                    "pvground",
+                    "hydro",
+                    "biomass",
+                    "combustion",
+                    "gsgk",
+                    "storage",
+                ],
+                "Infrastruktur": [
+                    "industry",
+                    "road_default",
+                    "railway",
+                    "aviation",
+                    "air_traffic",
+                    "military",
+                    "grid",
+                ],
+                "Landschaft": [
+                    "nature_conservation_area",
+                    "fauna_flora_habitat",
+                    "special_protection_area",
+                    "biosphere_reserve",
+                    "landscape_protection_area",
+                    "forest",
+                    "drinking_water_protection_area",
+                    "waters",
+                    "floodplain",
+                ],
+            },
+        )
 
         try:
             region_kiel = models.Region.objects.get(name="Kiel")

@@ -28,7 +28,7 @@ build_clusters:
 	python manage.py shell --command="from slapp.utils import data_processing; data_processing.build_cluster_geojson()"
 
 empty_regions:
-	python manage.py shell --command="from slapp.utils import data_processing; data_processing.empty_data(models=data_processing.REGIONS)"
+	python manage.py shell --command="from slapp.utils import data_processing; data_processing.empty_data(models=reversed(data_processing.REGIONS))"
 
 empty_data:
 	python manage.py shell --command="from slapp.utils import data_processing; data_processing.empty_data()"

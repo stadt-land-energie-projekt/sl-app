@@ -11,16 +11,14 @@ class Region(models.Model):
     """Model for region level region."""
 
     geom = models.MultiPolygonField(srid=4326)
-    name = models.CharField(max_length=50, unique=True)
-    area = models.FloatField()
+    name = models.CharField(max_length=50, blank=True, unique=True)
 
     objects = models.Manager()
     vector_tiles = RegionMVTManager(columns=["id", "name", "bbox"])
-    label_tiles = LabelMVTManager(geo_col="geom_label", columns=["id", "name"])
 
     data_file = "bkg_vg_250_regions"
     layer = "bkg_vg_250_regions"
-    mapping = {"id": "id", "geom": "MULTIPOLYGON", "name": "name", "area": "area_km2"}
+    mapping = {"id": "FID", "geom": "MULTIPOLYGON", "name": "name"}
 
     class Meta:  # noqa: D106
         verbose_name = _("Region")
@@ -28,7 +26,7 @@ class Region(models.Model):
 
     def __str__(self) -> str:
         """Return string representation of model."""
-        return self.name
+        return str(self.id)
 
 
 class Municipality(models.Model):
@@ -152,13 +150,13 @@ class PVroof(RenewableModel):
     usage_sector = models.CharField(max_length=50, null=True)
     orientation_primary = models.CharField(max_length=50, null=True)
     orientation_secondary = models.CharField(max_length=50, null=True)
-    area_type = models.FloatField(null=True)
+    area_type = models.CharField(max_length=255, null=True)
     area_occupied = models.FloatField(null=True)
     citizens_unit = models.CharField(max_length=50, null=True)
     landlord_to_tenant_electricity = models.CharField(max_length=50, null=True)
 
     data_file = "bnetza_mastr_pv_roof_agg_region"
-    layer = "bnetza_mastr_pv_roof"
+    layer = "bnetza_mastr_pv_roof_agg_region"
 
     mapping = {
         "geom": "POINT",
@@ -184,7 +182,6 @@ class PVroof(RenewableModel):
         "orientation_primary": "orientation_primary",
         "orientation_secondary": "orientation_secondary",
         "area_type": "area_type",
-        "area_occupied": "area_occupied",
         "citizens_unit": "citizens_unit",
         "landlord_to_tenant_electricity": "landlord_to_tenant_electricity",
     }
@@ -214,7 +211,7 @@ class PVground(RenewableModel):
     landlord_to_tenant_electricity = models.CharField(max_length=50, null=True)
 
     data_file = "bnetza_mastr_pv_ground_agg_region"
-    layer = "bnetza_mastr_pv_ground"
+    layer = "bnetza_mastr_pv_ground_agg_region"
 
     mapping = {
         "geom": "POINT",
@@ -259,7 +256,7 @@ class Hydro(RenewableModel):
     feedin_type = models.CharField(max_length=255, null=True)
 
     data_file = "bnetza_mastr_hydro_agg_region"
-    layer = "bnetza_mastr_hydro"
+    layer = "bnetza_mastr_hydro_agg_region"
 
     mapping = {
         "geom": "POINT",
@@ -301,7 +298,7 @@ class Biomass(RenewableModel):
     flexibility_bonus = models.CharField(max_length=50, null=True)
 
     data_file = "bnetza_mastr_biomass_agg_region"
-    layer = "bnetza_mastr_biomass"
+    layer = "bnetza_mastr_biomass_agg_region"
 
     mapping = {
         "geom": "POINT",
@@ -348,7 +345,7 @@ class Combustion(RenewableModel):
     fuels = models.CharField(max_length=255, null=True)
 
     data_file = "bnetza_mastr_combustion_agg_region"
-    layer = "bnetza_mastr_combustion"
+    layer = "bnetza_mastr_combustion_agg_region"
 
     mapping = {
         "geom": "POINT",
@@ -426,7 +423,7 @@ class Storage(RenewableModel):
     """Storage model."""
 
     data_file = "bnetza_mastr_storage_agg_region"
-    layer = "bnetza_mastr_storage"
+    layer = "bnetza_mastr_storage_agg_region"
 
     mapping = {
         "geom": "POINT",
@@ -481,17 +478,17 @@ class BiosphereReserve(StaticRegionModel):  # noqa: D101
 
 class DrinkingWaterArea(StaticRegionModel):  # noqa: D101
     data_file = "drinking_water_protection_area_region"
-    layer = "drinking_water_protection_area"
+    layer = "drinking_water_protection_area_region"
 
 
 class FaunaFloraHabitat(StaticRegionModel):  # noqa: D101
     data_file = "fauna_flora_habitat_region"
-    layer = "fauna_flora_habitat"
+    layer = "fauna_flora_habitat_region"
 
 
 class Floodplain(StaticRegionModel):  # noqa: D101
     data_file = "floodplain_region"
-    layer = "floodplain"
+    layer = "floodplain_region"
 
 
 class Forest(StaticRegionModel):  # noqa: D101
@@ -501,17 +498,17 @@ class Forest(StaticRegionModel):  # noqa: D101
 
 class Grid(StaticRegionModel):  # noqa: D101
     data_file = "grid_region"
-    layer = "grid"
+    layer = "grid_region"
 
 
 class Industry(StaticRegionModel):  # noqa: D101
     data_file = "industry_region"
-    layer = "industry"
+    layer = "industry_region"
 
 
 class LandscapeProtectionArea(StaticRegionModel):  # noqa: D101
     data_file = "landscape_protection_area_region"
-    layer = "landscape_protection_area"
+    layer = "landscape_protection_area_region"
 
 
 class LessFavouredAreasAgricultural(StaticRegionModel):  # noqa: D101
@@ -521,27 +518,22 @@ class LessFavouredAreasAgricultural(StaticRegionModel):  # noqa: D101
 
 class Military(StaticRegionModel):  # noqa: D101
     data_file = "military_region"
-    layer = "military"
+    layer = "military_region"
 
 
 class NatureConservationArea(StaticRegionModel):  # noqa: D101
     data_file = "nature_conservation_area_region"
-    layer = "nature_conservation_area"
+    layer = "nature_conservation_area_region"
 
 
 class Railway(StaticRegionModel):  # noqa: D101
     data_file = "railway_region"
-    layer = "railway"
-
-
-class RoadRailway500m(StaticRegionModel):  # noqa: D101
-    data_file = "road_railway-500m_region"
-    layer = "road_railway-500m"
+    layer = "railway_region"
 
 
 class Road(StaticRegionModel):  # noqa: D101
     data_file = "road_region"
-    layer = "road"
+    layer = "road_region"
 
 
 class Settlement0m(StaticRegionModel):  # noqa: D101
@@ -561,47 +553,189 @@ class SoilQualityLow(StaticRegionModel):  # noqa: D101
 
 class SpecialProtectionArea(StaticRegionModel):  # noqa: D101
     data_file = "special_protection_area_region"
-    layer = "special_protection_area"
+    layer = "special_protection_area_region"
 
 
 class Water(StaticRegionModel):  # noqa: D101
     data_file = "water_region"
-    layer = "water"
+    layer = "water_region"
 
 
-class PotentialareaPVAgricultureLFAOff(StaticRegionModel):  # noqa: D101
-    data_file = "potentialarea_pv_agriculture_lfa-off_region"
-    layer = "potentialarea_pv_agriculture_lfa-off_region"
+class PotentialareaPVGroundSoilQualityLow(StaticRegionModel):  # noqa: D101
+    data_file = "potentialarea_pv_ground_soil_quality_low_region"
+    layer = "potentialarea_pv_ground_soil_quality_low_region"
 
 
-class PotentialareaPVRoadRailway(StaticRegionModel):  # noqa: D101
-    data_file = "potentialarea_pv_road_railway_region"
-    layer = "potentialarea_pv_road_railway_region"
+class PotentialareaPVGroundSoilQualityMedium(StaticRegionModel):  # noqa: D101
+    data_file = "potentialarea_pv_ground_soil_quality_medium_region"
+    layer = "potentialarea_pv_ground_soil_quality_medium_region"
 
 
-class PotentialareaWindSTP2018Vreg(StaticRegionModel):  # noqa: D101
-    data_file = "potentialarea_wind_stp_2018_vreg"
-    layer = "potentialarea_wind_stp_2018_vreg"
+class PotentialareaPVGroundPermanentCrops(StaticRegionModel):  # noqa: D101
+    data_file = "potentialarea_pv_ground_permanent_crops_region"
+    layer = "potentialarea_pv_ground_permanent_crops_region"
 
 
-class PotentialareaWindSTP2027Repowering(StaticRegionModel):  # noqa: D101
-    data_file = "potentialarea_wind_stp_2027_repowering"
-    layer = "potentialarea_wind_stp_2027_repowering"
+class PotentialareaPVRoof(StaticRegionModel):  # noqa: D101
+    data_file = "potentialarea_pv_roof_region"
+    layer = "potentialarea_pv_roof_region"
 
 
-class PotentialareaWindSTP2027SearchAreaForestArea(StaticRegionModel):  # noqa: D101
-    data_file = "potentialarea_wind_stp_2027_search_area_forest_area"
-    layer = "potentialarea_wind_stp_2027_search_area_forest_area"
+class PotentialareaWindSTP2018EG(StaticRegionModel):  # noqa: D101
+    data_file = "potentialarea_wind_stp_2018_eg"
+    layer = "potentialarea_wind_stp_2018_eg"
 
 
-class PotentialareaWindSTP2027SearchAreaOpenArea(StaticRegionModel):  # noqa: D101
-    data_file = "potentialarea_wind_stp_2027_search_area_open_area"
-    layer = "potentialarea_wind_stp_2027_search_area_open_area"
+class PotentialareaWindSTP2024VR(StaticRegionModel):  # noqa: D101
+    data_file = "potentialarea_wind_stp_2024_vr"
+    layer = "potentialarea_wind_stp_2024_vr"
 
 
-class PotentialareaWindSTP2027VR(StaticRegionModel):  # noqa: D101
-    data_file = "potentialarea_wind_stp_2027_vr"
-    layer = "potentialarea_wind_stp_2027_vr"
+class PvGroundCriteriaAviation(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_aviation"
+    layer = "pv_ground_criteria_aviation"
+
+
+class PvGroundCriteriaBiotopes(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_biotopes"
+    layer = "pv_ground_criteria_biotopes"
+
+
+class PvGroundCriteriaForest(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_forest"
+    layer = "pv_ground_criteria_forest"
+
+
+class PvGroundCriteriaLinkedOpenSpaces(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_linked_open_spaces"
+    layer = "pv_ground_criteria_linked_open_spaces"
+
+
+class PvGroundCriteriaMerged(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_merged"
+    layer = "pv_ground_criteria_merged"
+
+
+class PvGroundCriteriaMoor(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_moor"
+    layer = "pv_ground_criteria_moor"
+
+
+class PvGroundCriteriaNatureConservationArea(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_nature_conservation_area"
+    layer = "pv_ground_criteria_nature_conservation_area"
+
+
+class PvGroundCriteriaNatureMonuments(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_nature_monuments"
+    layer = "pv_ground_criteria_nature_monuments"
+
+
+class PvGroundCriteriaPriorityAreas(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_priority_areas"
+    layer = "pv_ground_criteria_priority_areas"
+
+
+class PvGroundCriteriaPriorityAreasGrassland(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_priority_areas_grassland"
+    layer = "pv_ground_criteria_priority_areas_grassland"
+
+
+class PvGroundCriteriaPriorityAreasPermanentCrops(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_priority_areas_permanent_crops"
+    layer = "pv_ground_criteria_priority_areas_permanent_crops"
+
+
+class PvGroundCriteriaSettlements(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_settlements"
+    layer = "pv_ground_criteria_settlements"
+
+
+class PvGroundCriteriaSettlements200m(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_settlements_200m"
+    layer = "pv_ground_criteria_settlements_200m"
+
+
+class PvGroundCriteriaWaterBodies(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_water_bodies"
+    layer = "pv_ground_criteria_water_bodies"
+
+
+class PvGroundCriteriaWaterFirstOrder(StaticRegionModel):  # noqa: D101
+    data_file = "pv_ground_criteria_water_first_order"
+    layer = "pv_ground_criteria_water_first_order"
+
+
+class RpgOlsPvGroundOperating(StaticRegionModel):  # noqa: D101
+    data_file = "rpg_ols_pv_ground_operating"
+    layer = "rpg_ols_pv_ground_operating"
+
+
+class RpgOlsPvGroundPlanned(StaticRegionModel):  # noqa: D101
+    data_file = "rpg_ols_pv_ground_planned"
+    layer = "rpg_ols_pv_ground_planned"
+
+
+class RpgOlsWindOperating(RenewableModel):  # noqa: D101
+    geometry_approximated = None
+    hub_height = models.FloatField(null=True)
+    rotor_diameter = models.FloatField(null=True)
+    site_type = models.CharField(max_length=255, null=True)
+    operator = models.CharField(max_length=255, null=True)
+
+    data_file = "rpg_ols_wind_operating"
+    layer = "rpg_ols_wind_operating"
+    mapping = {
+        "geom": "POINT",
+        "name": "name",
+        "capacity_net": "capacity_net",
+        "zip_code": "zip_code",
+        "mun_id": {"id": "municipality_id"},
+        "city": "city",
+        "commissioning_date": "commissioning_date",
+        "hub_height": "hub_height",
+        "rotor_diameter": "rotor_diameter",
+        "operator": "operator",
+    }
+
+    class Meta:  # noqa: D106
+        verbose_name = _("Wind turbine")
+        verbose_name_plural = _("Wind turbines")
+
+    def __str__(self) -> str:
+        """Return string representation of model."""
+        return self.name
+
+
+class RpgOlsWindPlanned(RenewableModel):  # noqa: D101
+    geometry_approximated = None
+    hub_height = models.FloatField(null=True)
+    rotor_diameter = models.FloatField(null=True)
+    site_type = models.CharField(max_length=255, null=True)
+    operator = models.CharField(max_length=255, null=True)
+
+    data_file = "rpg_ols_wind_operating"
+    layer = "rpg_ols_wind_operating"
+    mapping = {
+        "geom": "POINT",
+        "name": "name",
+        "capacity_net": "capacity_net",
+        "zip_code": "zip_code",
+        "mun_id": {"id": "municipality_id"},
+        "city": "city",
+        "commissioning_date": "commissioning_date",
+        "hub_height": "hub_height",
+        "rotor_diameter": "rotor_diameter",
+        "operator": "operator",
+    }
+
+    class Meta:  # noqa: D106
+        verbose_name = _("Wind turbine planned")
+        verbose_name_plural = _("Wind turbines planned")
+
+    def __str__(self) -> str:
+        """Return string representation of model."""
+        return self.name
 
 
 class Scenario(models.Model):

@@ -64,6 +64,7 @@
               <button class="tab-button" data-tab="details">Tabelle</button>
             </div>
             <div class="cs__tabs-content">
+              {% include 'django_mapengine/legend.html' %}
               <div id="map" class="tab-content active"></div>
               <div id="charts" class="tab-content">
                 <div class="charts-container">
@@ -117,6 +118,7 @@
   {% include 'django_mapengine/map_json.html' %}
   {% compress js %}
     {% include 'django_mapengine/map_js.html' %}
+    <script src="{% static 'django_mapengine/js/legend.js' %}"></script>
   {% endcompress %}
   <script>
     const eventTopics = {};
@@ -175,5 +177,7 @@
   {% compress css %}
     <link href="{% static 'vendors/maplibre/css/maplibre-gl.css' %}"
           rel='stylesheet' />
+    <link rel="stylesheet"
+          href="{% static 'django_mapengine/css/legend.css' %}" />
   {% endcompress %}
 {% endblock css %}

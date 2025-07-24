@@ -392,7 +392,6 @@ MAP_ENGINE_API_MVTS = {
     "region": [
         setup.MVTAPI("region", "explorer", "Region", style="region-fill", maxzoom=8),
         setup.MVTAPI("regionline", "explorer", "Region", style="region-line", maxzoom=8),
-        setup.MVTAPI("regionlabel", "explorer", "Region", "label_tiles", style="region-label", maxzoom=8),
     ],
     "municipality": [
         setup.MVTAPI("municipality", "explorer", "Municipality", style="region-fill", minzoom=8),
@@ -400,8 +399,6 @@ MAP_ENGINE_API_MVTS = {
         setup.MVTAPI("municipalitylabel", "explorer", "Municipality", "label_tiles", style="region-label", minzoom=8),
     ],
     "static": [
-        setup.MVTAPI("soil_quality_low", "explorer", "SoilQualityLow"),
-        setup.MVTAPI("soil_quality_high", "explorer", "SoilQualityHigh"),
         setup.MVTAPI("landscape_protection_area", "explorer", "LandscapeProtectionArea"),
         setup.MVTAPI("forest", "explorer", "Forest"),
         setup.MVTAPI("special_protection_area", "explorer", "SpecialProtectionArea"),
@@ -418,14 +415,43 @@ MAP_ENGINE_API_MVTS = {
         setup.MVTAPI("nature_conservation_area", "explorer", "NatureConservationArea"),
         setup.MVTAPI("railway", "explorer", "Railway"),
         setup.MVTAPI("road_default", "explorer", "Road"),
-        setup.MVTAPI("road_railway-500m_region", "explorer", "RoadRailway500m"),
-        setup.MVTAPI("settlement-0m", "explorer", "Settlement0m"),
         setup.MVTAPI("waters", "explorer", "Water"),
+        setup.MVTAPI("pv_ground_operating", "explorer", "RpgOlsPvGroundOperating"),
+        setup.MVTAPI("pv_ground_planned", "explorer", "RpgOlsPvGroundPlanned"),
+        setup.MVTAPI("potentialarea_wind_2018_eg", "explorer", "PotentialareaWindSTP2018EG"),
+        setup.MVTAPI("potentialarea_wind_stp_2024_vr", "explorer", "PotentialareaWindSTP2024VR"),
+        setup.MVTAPI("pv_ground_criteria_aviation", "explorer", "PvGroundCriteriaAviation"),
+        setup.MVTAPI("pv_ground_criteria_biotopes", "explorer", "PvGroundCriteriaBiotopes"),
+        setup.MVTAPI("pv_ground_criteria_forest", "explorer", "PvGroundCriteriaForest"),
+        setup.MVTAPI("pv_ground_criteria_link_open_spaces", "explorer", "PvGroundCriteriaLinkedOpenSpaces"),
+        setup.MVTAPI("pv_ground_criteria_merged", "explorer", "PvGroundCriteriaMerged"),
+        setup.MVTAPI("pv_ground_criteria_moor", "explorer", "PvGroundCriteriaMoor"),
+        setup.MVTAPI(
+            "pv_ground_criteria_nature_conservation_area",
+            "explorer",
+            "PvGroundCriteriaNatureConservationArea",
+        ),
+        setup.MVTAPI("pv_ground_criteria_nature_monuments", "explorer", "PvGroundCriteriaNatureMonuments"),
+        setup.MVTAPI("pv_ground_criteria_priority_areas", "explorer", "PvGroundCriteriaPriorityAreas"),
+        setup.MVTAPI(
+            "pv_ground_criteria_priority_areas_grassland",
+            "explorer",
+            "PvGroundCriteriaPriorityAreasGrassland",
+        ),
+        setup.MVTAPI(
+            "pv_ground_criteria_priority_areas_permanent_crops",
+            "explorer",
+            "PvGroundCriteriaPriorityAreasPermanentCrops",
+        ),
+        setup.MVTAPI("pv_ground_criteria_settlements", "explorer", "PvGroundCriteriaSettlements"),
+        setup.MVTAPI("pv_ground_criteria_settlements_200m", "explorer", "PvGroundCriteriaSettlements200m"),
+        setup.MVTAPI("pv_ground_criteria_water_bodies", "explorer", "PvGroundCriteriaWaterBodies"),
     ],
 }
 
 MAP_ENGINE_API_CLUSTERS = [
-    setup.ClusterAPI("wind", "explorer", "WindTurbine", properties=["id", "unit_count"]),
+    setup.ClusterAPI("wind", "explorer", "RpgOlsWindOperating", properties=["id"]),
+    setup.ClusterAPI("wind_planned", "explorer", "RpgOlsWindPlanned", properties=["id"]),
     setup.ClusterAPI("pvroof", "explorer", "PVroof", properties=["id", "unit_count"]),
     setup.ClusterAPI("pvground", "explorer", "PVground", properties=["id", "unit_count"]),
     setup.ClusterAPI("hydro", "explorer", "Hydro", properties=["id", "unit_count"]),

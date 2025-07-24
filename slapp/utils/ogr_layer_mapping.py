@@ -104,7 +104,7 @@ class RelatedModelLayerMapping(LayerMapping):
                 # Can the OGR field type be mapped to the Django field type?
                 if not issubclass(ogr_field, self.FIELD_TYPES[model_field.__class__]):
                     raise LayerMapError(
-                        f'OGR field "{ogr_field}" (of type {ogr_field.__name__}) '
+                        f'OGR field "{ogr_name}" (of type {ogr_field.__name__}) '
                         f"cannot be mapped to Django {fld_name}.",
                     )
                 fields_val = model_field
