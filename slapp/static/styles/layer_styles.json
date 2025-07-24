@@ -62,19 +62,7 @@
     "type": "symbol",
     "filter": ["!", ["has", "point_count"]],
     "layout": {
-      "icon-image": [
-        "case",
-        [
-          ">",
-          [
-            "get",
-            "unit_count"
-          ],
-          1
-        ],
-        "wind_plus",
-        "wind"
-      ],
+      "icon-image": "wind",
       "icon-size": 0.4,
       "icon-allow-overlap": true
     },
@@ -111,19 +99,7 @@
     "type": "symbol",
     "filter": ["!", ["has", "point_count"]],
     "layout": {
-      "icon-image": [
-        "case",
-        [
-          ">",
-          [
-            "get",
-            "unit_count"
-          ],
-          1
-        ],
-        "wind_plus",
-        "wind"
-      ],
+      "icon-image": "wind",
       "icon-size": 0.4,
       "icon-allow-overlap": true
     },
