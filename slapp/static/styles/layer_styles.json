@@ -79,7 +79,7 @@
       "icon-allow-overlap": true
     },
     "paint": {
-      "icon-color": "blue"
+      "icon-color": "#6A89CC"
     }
   },
   "wind_cluster": {
@@ -128,7 +128,7 @@
       "icon-allow-overlap": true
     },
     "paint": {
-      "icon-color": "blue"
+      "icon-color": "#6A89CC"
     }
   },
   "wind_planned_cluster": {
@@ -177,7 +177,7 @@
       "icon-allow-overlap": true
     },
     "paint": {
-      "icon-color": "yellow",
+      "icon-color": "#FFD660",
       "icon-halo-color": "red"
     }
   },
@@ -227,7 +227,7 @@
       "icon-allow-overlap": true
     },
     "paint": {
-      "icon-color": "yellow"
+      "icon-color": "#EFAD25"
     }
   },
   "pvground_cluster": {
@@ -276,7 +276,7 @@
       "icon-allow-overlap": true
     },
     "paint": {
-      "icon-color": "blue"
+      "icon-color": "#A9BDE8"
     }
   },
   "hydro_cluster": {
@@ -325,7 +325,7 @@
       "icon-allow-overlap": true
     },
     "paint": {
-      "icon-color": "green"
+      "icon-color": "#52C41A"
     }
   },
   "biomass_cluster": {
@@ -374,7 +374,7 @@
       "icon-allow-overlap": true
     },
     "paint": {
-      "icon-color": "black"
+      "icon-color": "#C27BA0"
     }
   },
   "gsgk_cluster": {
@@ -426,7 +426,7 @@
       "icon-allow-overlap": true
     },
     "paint": {
-      "icon-color": "black"
+      "icon-color": "#8D2D5F"
     }
   },
   "storage_cluster": {
@@ -478,7 +478,7 @@
       "icon-allow-overlap": true
     },
     "paint": {
-      "icon-color": "black"
+      "icon-color": "#E6772E"
     }
   },
   "combustion_cluster": {

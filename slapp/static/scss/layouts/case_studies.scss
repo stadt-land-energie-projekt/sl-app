@@ -4,6 +4,10 @@
     padding-bottom: 4rem;
   }
 
+  &__tabs-content {
+    position: relative;
+  }
+
   header {
     display: flex;
     flex-direction: column;

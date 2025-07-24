@@ -495,7 +495,41 @@ class CaseStudies(TemplateView, views.MapEngineMixin):
     def get_context_data(self, **kwargs) -> dict:
         """Manage context data."""
         context = super().get_context_data(**kwargs)
-        context["mapengine_legend"] = legend.Legend.from_layer_names("Legende", ["fauna_flora_habitat"])
+        context["mapengine_legend"] = legend.Legend(
+            {
+                "Erneuerbare": [
+                    "wind",
+                    "wind_planned",
+                    "pvroof",
+                    "pvground",
+                    "hydro",
+                    "biomass",
+                    "combustion",
+                    "gsgk",
+                    "storage",
+                ],
+                "Infrastruktur": [
+                    "industry",
+                    "road_default",
+                    "railway",
+                    "aviation",
+                    "air_traffic",
+                    "military",
+                    "grid",
+                ],
+                "Landschaft": [
+                    "nature_conservation_area",
+                    "fauna_flora_habitat",
+                    "special_protection_area",
+                    "biosphere_reserve",
+                    "landscape_protection_area",
+                    "forest",
+                    "drinking_water_protection_area",
+                    "waters",
+                    "floodplain",
+                ],
+            },
+        )
 
         try:
             region_kiel = models.Region.objects.get(name="Kiel")
