@@ -1,0 +1,229 @@
+{
+  "Erneuerbare":[
+    {
+      "layer_name":"wind",
+      "title":"Windenergie (in Betrieb)",
+      "tooltip":"Windenergieanlagen in Betrieb, Punktdaten (Daten: RPG Oderland-Spree, Stand: 08.10.2024)"
+    },
+    {
+      "layer_name":"wind_planned",
+      "title":"Windenergie (in Planung)",
+      "tooltip":"Geplante Windenergieanlagen, Punktdaten (Daten: RPG Oderland-Spree, Stand: 08.10.2024)"
+    },
+    {
+      "layer_name":"pvroof",
+      "title":"Aufdach-PV",
+      "tooltip":"PV-Aufdachanlagen - Punktdaten realisierter oder in Betrieb befindlicher Anlagen(Daten: Marktstammdatenregister, Stand: 08.01.2024). Achtung: Aufgrund der Verzögerung bei der Datenmeldung kann dieser Datensatz unvollständig sein."
+    },
+    {
+      "layer_name":"biomass",
+      "title":"Biomasse",
+      "tooltip":"Biomasseanlagen - Punktdaten realisierter oder in Betrieb befindlicher Anlagen (Daten: Marktstammdatenregister, Stand: 08.01.2024). Achtung: Aufgrund der Verzögerung bei der Datenmeldung kann dieser Datensatz unvollständig sein."
+    },
+    {
+      "layer_name":"combustion",
+      "title":"Verbrennungskraftwerk",
+      "tooltip":"Verbrennungskraftwerke - Punktdaten realisierter oder in Betrieb befindlicher Anlagen (Daten: Marktstammdatenregister, Stand: 08.01.2024). Achtung: Aufgrund der Verzögerung bei der Datenmeldung kann dieser Datensatz unvollständig sein."
+    },
+    {
+      "layer_name":"storage",
+      "title":"Batteriespeicher",
+      "tooltip":"Batteriespeicher - Punktdaten realisierter oder in Betrieb befindlicher Anlagen (Daten: Marktstammdatenregister, Stand: 08.01.2024). Achtung: Aufgrund der Verzögerung bei der Datenmeldung kann dieser Datensatz unvollständig sein."
+    }
+  ],
+  "Infrastruktur":[
+    {
+      "layer_name":"industry",
+      "title":"Industrie",
+      "tooltip":"Industrie- und Gewerbegebiete"
+    },
+    {
+      "layer_name":"road_default",
+      "title":"Straßen",
+      "tooltip":"Zu den Straßen gehören unter anderem Bundesautobahnen, Bundesfern-, Landes- und Kreisstraßen."
+    },
+    {
+      "layer_name":"railway",
+      "title":"Schienenwege",
+      "tooltip":"Schienenwege"
+    },
+    {
+      "layer_name":"aviation",
+      "title":"Luftverkehr",
+      "tooltip":"Zur Infrastruktur des Luftverkehrs gehören neben Start- und Landebahnen die Flughafengebäude und Hangars."
+    },
+    {
+      "layer_name":"air_traffic",
+      "title":"Drehfunkfeuer",
+      "tooltip":"Ein Drehfunkfeuer ist ein Funkfeuer für die Luftfahrtnavigation."
+    },
+    {
+      "layer_name":"military",
+      "title":"Militärgebiete",
+      "tooltip":"Zu den militärisch genutzten Flächen gehören militärische Sperrgebiete und Liegenschaften."
+    },
+    {
+      "layer_name":"grid",
+      "title":"Stromnetze",
+      "tooltip":"Zum Stromnetz zählen die elektrischen Leitungen sowie die dazugehörigen Einrichtungen wie Schalt- und Umspannwerke der Höchst- und Hochspannungsebenen."
+    }
+  ],
+  "Landschaft":[
+    {
+      "layer_name":"nature_conservation_area",
+      "title":"Naturschutzgebiete",
+      "tooltip":"Naturschutzgebiete dienen dem Schutz der Natur und Landschaft. Sie tragen zur Erhaltung, Entwicklung und Wiederherstellung der Lebensstätte für bestimmte wild lebende Tier- und Pflanzenarten bei. Aber auch aus wissenschaftlichen, naturgeschichtlichen und ästhetischen Gründen werden Teile oder die Gesamtheit der Natur in Schutz genommen."
+    },
+    {
+      "layer_name":"fauna_flora_habitat",
+      "title":"Fauna-Flora-Habitate",
+      "tooltip":"Die Fauna-Flora-Habitat-Richtlinie ist eine Naturschutz-Richtlinie der Europäischen Union (EU), die seltene oder bedrohte Arten und Lebensräume schützt. Sie gehört zum Schutzgebietsnetz Natura 2000."
+    },
+    {
+      "layer_name":"special_protection_area",
+      "title":"Vogelschutzgebiete",
+      "tooltip":"Die Vogelschutzrichtlinie der Europäischen Union (EU) dient der Erhaltung der wild lebenden, heimischen Vogelarten. Sie regelt den Schutz dieser Vögel, ihrer Eier und Lebensräume wie Brut-, Rast- und Überwinterungsgebiete. Vogelschutzgebiete gehören zum Schutzgebietsnetz Natura 2000."
+    },
+    {
+      "layer_name":"biosphere_reserve",
+      "title":"Biosphärenreservate",
+      "tooltip":"Biosphärenreservate sind großräumige und für bestimmte Landschaftstypen charakteristische Gebiete mit interdisziplinärem Ansatz. In diesen von der UNESCO initiierten Modellregionen soll nachhaltige Entwicklung in ökologischer, ökonomischer und sozialer Hinsicht exemplarisch verwirklicht werden. Die Biosphärenreservate sind in drei Zonen eingeteilt: Eine naturschutzorientierte Kernzone (Schutzfunktion), eine am Landschaftsschutz orientierte Pflegezone (Forschungs- und Bildungsfunktion) und eine sozioökonomisch orientierte Entwicklungszone (Entwicklungsfunktion)."
+    },
+    {
+      "layer_name":"landscape_protection_area",
+      "title":"Landschaftsschutzgebiete",
+      "tooltip":"Landschaftsschutzgebiete sind oft großflächiger angelegt und zielen auf den Erhalt des Landschaftscharakters, das allgemeine Erscheinungsbild der Landschaft und dessen Schönheit ab. Sie haben einen geringeren Schutzstatus als etwa Naturschutzgebiete oder Nationalparke und unterliegen daher weniger strengen Nutzungsbeschränkungen."
+    },
+    {
+      "layer_name":"forest",
+      "title":"Waldgebiete",
+      "tooltip":"Wald umfasst eine Vielzahl an mit Bäumen und anderer Vegetation bedeckten Fläche mit unterschiedlicher forstwirtschaftlicher Nutzung und ökologischer Bedeutung. Wälder können in Nadel-, Laub- und Mischwald sowie anhand der Waldfunktionen (z. B. Schutzwald, Erholungswald) unterschieden werden."
+    },
+    {
+      "layer_name":"drinking_water_protection_area",
+      "title":"Trinkwasserschutzgeb.",
+      "tooltip":"Wasserschutzgebiete stellen die öffentliche Wasserversorgung durch die Vermeidung schädlicher Eintragungen in die Gewässer (Grundwasser, oberirdische Gewässer, Küstengewässer) sicher."
+    },
+    {
+      "layer_name":"waters",
+      "title":"Fließgewässer",
+      "tooltip":"Natürliche oberirdische Fließgewässer"
+    },
+    {
+      "layer_name":"floodplain",
+      "title":"Überschwemmungsgebiete",
+      "tooltip":"Bei Überschwemmungsgebieten handelt es sich um die Flächen, die statistisch gesehen mindestens einmal in hundert Jahren überflutet sein können."
+    }
+  ],
+  "EE Potentialflächen":[
+    "potentialarea_wind_2018_eg",
+    "potentialarea_wind_stp_2024_vr",
+    {
+      "layer_name":"pv_ground_operating",
+      "title":"FF-PV (in Betrieb)",
+      "tooltip":"Photovoltaik-Freiflächenanlagen in Betrieb, Flächendaten (Daten: RPG Oderland-Spree, Stand: Okt 2024)"
+    },
+    {
+      "layer_name":"pv_ground_planned",
+      "title":"FF-PV (geplant)",
+      "tooltip":"Geplante Photovoltaik-Freiflächenanlagen in Betrieb, Flächendaten (Daten: RPG Oderland-Spree, Stand: "
+    }
+  ],
+  "Negativkriterien Photovoltaik":[
+    {
+      "layer_name":"pv_ground_criteria_merged",
+      "title":"Alle kombiniert",
+      "tooltip":"Alle Negativkritieren N01-N15 für PV-Freiflächenanlagen kombiniert"
+    },
+    {
+      "layer_name":"pv_ground_criteria_priority_areas",
+      "title":"Alle Vorzugsgebiete",
+      "tooltip":"Alle Vorzugsgebiete N15 kombiniert"
+    },
+    {
+      "layer_name":"pv_ground_criteria_settlements",
+      "title":"[N01] Siedlungsgebiete",
+      "tooltip":"'Siedlungsgebiete sowie Flächen rechtskräftiger Bebauungspläne mit Ausweisungen von Wohn-, Mischgebieten' - Negativkriterium [N 01] aus Kriteriengerüst PV-Freiflächenanlagen: Der tatsächliche Siedlungsbestand im Innen- und Außenbereich nach §§ 2 - 7 BauNVO also im Zusammenhang bebaute Innenbereiche, bebaute Flächen im Außenbereich, geplante Baugebiete und Siedlungsflächen nach § 30 und § 34 BauGB ist fachrechtlich ausgeschlossen."
+    },
+    {
+      "layer_name":"pv_ground_criteria_settlements_200m",
+      "title":"[N02] Siedlungsgebiete (200m Puffer)",
+      "tooltip":"'Abstandszone zu Siedlungsgebieten und sonstigen geschützten Nutzungen' - Negativkriterium [N 02] aus Kriteriengerüst PV-Freiflächenanlagen: Um eine räumliche Fragmentierung zu vermeiden, sind solartechnische Anlagen einerseits in räumlicher Anbindung an Siedlungsgebiete zu errichten. Andererseits wird zum Schutz vor Beeinträchtigungen z.B. durch Blendwirkungen ein 200 m Abstand zu Wohnbauflächen nach §§ 2 bis 7 BauNVO berücksichtigt. Die Abstandszone soll eine Siedlungsentwicklung der Gemeinde ermöglichen und Immissionen vorbeugen. Gemeinden können im Rahmen Ihrer kommunalen Planungshoheit geeignete Flächen auch unterhalb der 200 m für die solare Energie- und Wärmeerzeugung auf Freiflächen zur Verfügung stellen."
+    },
+    {
+      "layer_name":"floodplain",
+      "title":"[N03] Überschwemmungsgeb.",
+      "tooltip":"'100-jährliches Hochwasser HQ100 sowie festgesetzte Überschwemmungsgebiete' - Negativkriterium [N 03] aus Kriteriengerüst PV-Freiflächenanlagen: Aus § 76 Abs. 1 WHG geht hervor, dass Überschwemmungsgebiete Flächen umfassen, die bei Hochwasser überschwemmt, durchflossen oder die für Hochwasserentlastung oder Rückhaltung beansprucht werden. Nach § 78 Abs. 4 WHG ist die Errichtung oder Erweiterung baulicher Anlagen in Überschwemmungsgebieten untersagt. Festgesetzte sowie vorläufig gesicherte Überschwemmungsgebiete sind nicht als Standorte für solartechnische Anlagen geeignet (MLUK 2021, S. 6). In von Hochwasser bedrohten Gebieten ist der Hochwasserschutz gem. § 78 WHG ein besonderer Belang. Diese Flächen werden aufgrund hoher Schadensrisiken (Risikogebiete nach § 73 WHG) und Schutzanforderungen (Schutzvorschriften nach § 78 WHG) der Sicherheit des Hochwasserschutzes vom Planer als untauglich für die PV-FFA bewertet."
+    },
+    {
+      "layer_name":"pv_ground_criteria_link_open_spaces",
+      "title":"[N04] Freiraumverbund",
+      "tooltip":"'Vorranggebiet Freiraumverbund Z 6.2 LEP HR' - Negativkriterium [N 04] aus Kriteriengerüst PV-Freiflächenanlagen: Der landesplanerisch festgelegte Freiraumverbund nach Z 6.2 LEP HR im Maßstab 1:300 000 umfasst in der rechtskräftig abgegrenzten Gebietskulisse hochwertige Freiräume mit besonders hochwertigen Funktionen, die gesichert werden sollen. Gemäß Z 6.2 LEP HR ist die Kulisse des Freiraumverbundes nicht vereinbar mit der PV-FFA."
+    },
+    {
+      "layer_name":"pv_ground_criteria_nature_conservation_area",
+      "title":"[N05] Naturschutzgebiete",
+      "tooltip":"'Naturschutzgebiete' - Negativkriterium [N 05] aus Kriteriengerüst PV-Freiflächenanlagen. Gemäß § 23 Abs.1 BNatSchG sind rechtsverbindlich festgesetzte NSG „Gebiete, in denen ein besonderer Schutz von Natur und Landschaft in ihrer Ganzheit oder einzelnen Teilen erforderlich ist“. Eine Errichtung von Photovoltaikanlagen in den Schutzkategorien nach § 23 BNatschG ist durch Zugriffsverbote fachrechtlich ausgeschlossen."
+    },
+    {
+      "layer_name":"fauna_flora_habitat",
+      "title":"[N06] Fauna-Flora-Habitate",
+      "tooltip":"'Fauna-Flora-Habitat-Gebiete' - Negativkriterium [N 06] aus Kriteriengerüst PV-Freiflächenanlagen: Die Errichtung von Photovoltaikanlagen in Flora-Fauna-Habitat-Gebieten (FFH-Gebieten), die nach der Richtlinie 92/43/EWG als besondere Gebiete von gemeinschaftlicher Bedeutung ausgewiesen sind, ist ausgeschlossen, da das Vorhaben in der Regel nicht mit dem Schutzzweck in Einklang steht bzw. in Einklang gebracht werden kann."
+    },
+    {
+      "layer_name":"pv_ground_criteria_biotopes",
+      "title":"[N07] Biotope",
+      "tooltip":"'Gesetzlich geschützte Biotope' - Negativkriterium [N 07] aus Kriteriengerüst PV-Freiflächenanlagen: Die Errichtung von PV-FFA in Gebieten mit gesetzlich (besonders) geschützten Biotopen nach § 30 BNatschG ist fachrechtlich ausgeschlossen, da das Vorhaben mit dem Schutzzweck nicht vereinbar ist bzw. nicht in Einklang gebracht werden kann."
+    },
+    {
+      "layer_name":"pv_ground_criteria_moor",
+      "title":"[N08] Moorböden",
+      "tooltip":"'Naturnahe Moorböden' - Negativkriterium [N 08] aus Kriteriengerüst PV-Freiflächenanlagen: Eine hohe Naturnähe ist gegeben, wenn abgelagerte Torfschichten weitgehend menschlich unbeeinflusst sind (LaPro, Schutzgut Boden, S.2). Naturnahe Moorböden gelten aufgrund ihrer besonderen Klimarelevanz nicht als geeignete Flächen für die Errichtung von PV-FFA. „Der Erhalt der naturnahen Moorflächen und die Sicherung ihrer natürlichen Entwicklung haben höchste Priorität. Dies dient gleichzeitig dem gesetzlichen Auftrag zur Erhaltung oder Wiederherstellung eines günstigen Erhaltungszustandes der Moorlebensraumtypen gemäß FFH-Richtlinie.“ (Nationale Moorschutzstrategie, S. 10)."
+    },
+    {
+      "layer_name":"drinking_water_protection_area",
+      "title":"[N09] Trinkwasserschutzgeb.",
+      "tooltip":"'Schutzzone I und II der Trinkwasserschutzgebiete' - Negativkriterium [N 09] aus Kriteriengerüst PV-Freiflächenanlagen: In Trinkwasserschutzgebieten hat die dauerhafte Sicherung der Wasserversorgung Vorrang vor anderen Nutzungsansprüchen, die den Zielen des Trinkwasserschutzes widersprechen. In Trinkwasserschutzgebieten sollen hohe Grundwasserneubildungsraten sowie die Versickerung des Niederschlagswassers gewährleistet werden. In Zone I (Fassungsbereich) sind jegliche anderweitige Nutzung und das Betreten für Unbefugte verboten. In Zone II (engere Schutzzone) sind die Verletzung der Deckschicht und damit die Bebauung der Flächen verboten. Folglich sind festgesetzte Wasserschutzgebiete nach § 15 BbgWG i.V.m. §§ 51 und 52 WHG der Schutzzonen 1 und 2 nicht als Standorte für solartechnische Anlagen geeignet (GA PV-FFA, S.18). Gemäß §§ 51, 52 WHG i. V. mit § 15 BbgWG gelten in den festgesetzten Trinkwasserschutzzonen I und II ein Verbot bzw. eine wesentliche Beschränkung der Errichtung und Erweiterung von baulichen Anlagen."
+    },
+    {
+      "layer_name":"waters",
+      "title":"[N10] Fließgewässer",
+      "tooltip":"'Natürliche oberirdische Gewässer' - Negativkriterium [N 10] aus Kriteriengerüst PV-Freiflächenanlagen: Seen und Teiche besitzen vielfältige Funktionen für Landschaft und Wasserhaushalt. Sie erhöhen die Strukturvielfalt, bieten Lebensraum für zahlreiche Tier- und Pflanzenarten, können als Trittsteine im Biotopverbund dienen oder als Wasser- und Stoffspeicher wirken. Gemäß § 36 Abs. 3 Wasserhaushaltsgesetz (WHG) darf eine PV-FFA nicht errichtet und betrieben werden: in und über einem oberirdischen Gewässer, das kein künstliches oder erheblich verändertes Gewässer ist, sowie in und über einem künstlichen oder erheblich veränderten Gewässer, wenn ausgehend von der Linie des Mittelwasserstandes, die Anlage mehr als 15 Prozent der Gewässerfläche bedeckt oder der Abstand zum Ufer weniger als 40 m beträgt (GA PV-FFA, S.18)."
+    },
+    {
+      "layer_name":"pv_ground_criteria_water_bodies",
+      "title":"[N10] Stillgewässer",
+      "tooltip":"'Natürliche oberirdische Gewässer' - Negativkriterium [N 10] aus Kriteriengerüst PV-Freiflächenanlagen: Seen und Teiche besitzen vielfältige Funktionen für Landschaft und Wasserhaushalt. Sie erhöhen die Strukturvielfalt, bieten Lebensraum für zahlreiche Tier- und Pflanzenarten, können als Trittsteine im Biotopverbund dienen oder als Wasser- und Stoffspeicher wirken. Gemäß § 36 Abs. 3 Wasserhaushaltsgesetz (WHG) darf eine PV-FFA nicht errichtet und betrieben werden: in und über einem oberirdischen Gewässer, das kein künstliches oder erheblich verändertes Gewässer ist, sowie in und über einem künstlichen oder erheblich veränderten Gewässer, wenn ausgehend von der Linie des Mittelwasserstandes, die Anlage mehr als 15 Prozent der Gewässerfläche bedeckt oder der Abstand zum Ufer weniger als 40 m beträgt (GA PV-FFA, S.18)."
+    },
+    {
+      "layer_name":"pv_ground_criteria_forest",
+      "title":"[N11] Waldgebiete",
+      "tooltip":"'Waldgebiete' - Negativkriterium [N 11] aus Kriteriengerüst PV-Freiflächenanlagen: Gemäß § 1 BWaldG ist der Wald zu erhalten, erforderlichenfalls zu mehren und seine ordnungsgemäße Bewirtschaftung nachhaltig zu sichern. Wald im Sinne des § 2 LWaldG ist für die Errichtung von PV-FFA fachrechtlich ausgeschlossen. (GA PV-FFA, S.18)"
+    },
+    {
+      "layer_name":"pv_ground_criteria_nature_monuments",
+      "title":"[N12] Flächennaturdenkmale",
+      "tooltip":"'Flächennaturdenkmale' - Negativkriterium [N 12] aus Kriteriengerüst PV-Freiflächenanlagen: Naturdenkmale sind gemäß § 28 BNatSchG bundesweit geschützt. Sie dürfen nicht verändert werden (Veränderungsverbot). Eine Bebauung ist auszuschließen. Der Schutz begründet sich durch die Seltenheit, Eigenart oder Schönheit des Naturdenkmals sowie seinen Wert für Wissenschaft, Heimatkunde und Naturverständnis. Die Errichtung von PV-FFA in Gebieten mit flächenhaften Naturdenkmalen nach § 1 Abs. 6 Nr. 5 BauGB ist ausgeschlossen, da das Vorhaben dem Schutzzweck nicht entspricht oder mit ihm nicht in Einklang gebracht werden kann."
+    },
+    {
+      "layer_name":"pv_ground_criteria_aviation",
+      "title":"[N13] Luftverkehr",
+      "tooltip":"'Betriebsflächen von regionalen Flugplätzen' - Negativkriterium [N 13] aus Kriteriengerüst PV-Freiflächenanlagen: Gemäß § 6 LuftVG stehen die Betriebsflächen von regionalen Flugplätzen (Flughäfen, Landeplätze und Segelfluggelände) für PV-FFA aus rechtlichen Gründen nicht zur Verfügung. Die Flächen der Verkehrs- und Sonderlandeplätze, insbesondere der gewidmeten Landebahnen gemäß § 6 LuftVG und Schutzbereiche, sind für die luftverkehrliche Nutzung freizuhalten."
+    },
+    {
+      "layer_name":"military",
+      "title":"[N14] Militärgebiete",
+      "tooltip":"'Militärische Bereiche, deren Betreten verboten ist' - Negativkriterium [N 14] aus Kriteriengerüst PV-Freiflächenanlagen: In der Region Oderland-Spree befinden sich zwei militärische Verteidigungsanlagen mit Schutzbereichen. Dies sind die Schutzbereiche der Verteidigungsanlagen Limsdorf und Schneeberg. Diese Gebiete sind für eine PV-FFA nur in Ausnahmefällen geeignet (§ 3 Schutzbereichsgesetz)."
+    },
+    {
+      "layer_name":"pv_ground_criteria_priority_areas_grassland",
+      "title":"[N15] Vorzug Grünland",
+      "tooltip":"'Böden mit einem hohen Erfüllungsgrad ihrer Bodenfunktion und besonders klimarobuste Böden' - Negativkriterium [N 15] aus Kriteriengerüst PV-Freiflächenanlagen: Bodenfunktionen nach § 2 BBodSchG gelten als besonders schutzwürdig. „Flächenneuinanspruchnahmen sind auf weniger schutzwürdige und empfindliche Böden zu lenken.“ (GA PV-FFA, S.18) Der Boden erfüllt natürliche Funktionen als Lebensgrundlage und Lebensraum für Menschen, Tiere, Pflanzen und Bodenorganismen und als Bestandteil des Naturhaushalts, insbesondere mit seinen Wasser- und Nährstoffkreisläufen, so wie Abbau-, Ausgleichs- und Aufbaumedium für stoffliche Einwirkungen auf Grund der Filter-, Puffer- und Stoffumwandlungseigenschaften, insbesondere auch zum Schutz des Grundwassers. Darüber hinaus sollen die landwirtschaftlich genutzten Böden nachhaltig gesichert werden. (LaPro, 2.2.1.) Der Ausbau von konventionellen PV-FFA auf besonders klimarobusten Böden sollte vermieden werden. (Siehe ZALF-Studie auf der Website der RPG)"
+    },
+    {
+      "layer_name":"pv_ground_criteria_priority_areas_permanent_crops",
+      "title":"[N15] Vorzug Dauerkultur",
+      "tooltip":"'Böden mit einem hohen Erfüllungsgrad ihrer Bodenfunktion und besonders klimarobuste Böden' - Negativkriterium [N 15] aus Kriteriengerüst PV-Freiflächenanlagen: Bodenfunktionen nach § 2 BBodSchG gelten als besonders schutzwürdig. „Flächenneuinanspruchnahmen sind auf weniger schutzwürdige und empfindliche Böden zu lenken.“ (GA PV-FFA, S.18) Der Boden erfüllt natürliche Funktionen als Lebensgrundlage und Lebensraum für Menschen, Tiere, Pflanzen und Bodenorganismen und als Bestandteil des Naturhaushalts, insbesondere mit seinen Wasser- und Nährstoffkreisläufen, so wie Abbau-, Ausgleichs- und Aufbaumedium für stoffliche Einwirkungen auf Grund der Filter-, Puffer- und Stoffumwandlungseigenschaften, insbesondere auch zum Schutz des Grundwassers. Darüber hinaus sollen die landwirtschaftlich genutzten Böden nachhaltig gesichert werden. (LaPro, 2.2.1.) Der Ausbau von konventionellen PV-FFA auf besonders klimarobusten Böden sollte vermieden werden. (Siehe ZALF-Studie auf der Website der RPG)"
+    }
+  ]
+}
