@@ -714,8 +714,8 @@ class RpgOlsWindPlanned(RenewableModel):  # noqa: D101
     site_type = models.CharField(max_length=255, null=True)
     operator = models.CharField(max_length=255, null=True)
 
-    data_file = "rpg_ols_wind_operating"
-    layer = "rpg_ols_wind_operating"
+    data_file = "rpg_ols_wind_planned"
+    layer = "rpg_ols_wind_planned"
     mapping = {
         "geom": "POINT",
         "name": "name",

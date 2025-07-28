@@ -453,11 +453,8 @@ MAP_ENGINE_API_CLUSTERS = [
     setup.ClusterAPI("wind", "explorer", "RpgOlsWindOperating", properties=["id"]),
     setup.ClusterAPI("wind_planned", "explorer", "RpgOlsWindPlanned", properties=["id"]),
     setup.ClusterAPI("pvroof", "explorer", "PVroof", properties=["id", "unit_count"]),
-    setup.ClusterAPI("pvground", "explorer", "PVground", properties=["id", "unit_count"]),
-    setup.ClusterAPI("hydro", "explorer", "Hydro", properties=["id", "unit_count"]),
     setup.ClusterAPI("biomass", "explorer", "Biomass", properties=["id", "unit_count"]),
     setup.ClusterAPI("combustion", "explorer", "Combustion", properties=["id", "unit_count"]),
-    setup.ClusterAPI("gsgk", "explorer", "GSGK", properties=["id", "unit_count"]),
     setup.ClusterAPI("storage", "explorer", "Storage", properties=["id", "unit_count"]),
 ]
 
