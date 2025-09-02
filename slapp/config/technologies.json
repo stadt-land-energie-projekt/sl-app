@@ -51,11 +51,14 @@
   "h2-export": {"name": "Wasserstoffexport", "color": "#48D1CC"},
 
   "electricity-pv": {"name": "PV", "color": "#FFD700"},
+  "electricity-ror": {"name": "Wasserkraft", "color": "#1EAAFF"},
   "electricity-heatpump": {"name": "Wärmepumpe", "color": "#ADD8E6"},
-  "elecricity-storage": {"name": "Batteriespeicher", "color": "#A9A9A9"},
+  "electricity-pth": {"name": "Power-to-Heat", "color": "#A9A9A9"},
   "heat-storage": {"name": "Wärmespeicher", "color": "#B22222"},
   "bpchp": {"name": "BHKW", "color": "#556B2F"},
   "boiler": {"name": "Kessel", "color": "#4682B4"},
+  "gt": {"name": "Gasturbine", "color": "#8882B4"},
+  "cavern": {"name": "Kaverne", "color": "#2222B4"},
 
   "import": {"name": "Import", "color": "#4682B4"}
 }

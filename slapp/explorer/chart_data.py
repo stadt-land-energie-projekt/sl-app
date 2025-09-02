@@ -4,7 +4,6 @@ import pathlib
 import pandas as pd
 
 DATA_DIR = pathlib.Path(__file__).parent.parent / "data" / "zib" / "base"
-OEMOF_SCENARIO = "2045_scenario"
 OEMOF_SCENARIOS_SINGLE = [
     "r120640428428",
     "r120640472472",
@@ -31,25 +30,26 @@ def get_postprocessed_data(scenario: str = "all"):
     Scenario can be one of "all" or "single". In case of "single" scenario,
     postprocessed data from scenarios is merged together.
     """
-    if scenario == "all":
-        return pd.read_csv(
-            DATA_DIR / OEMOF_SCENARIO / "postprocessed" / "scalars.csv",
-            delimiter=";",
-        )
-    elif scenario == "single":
+    if scenario == "single":
         scenario_data = []
         for scenario in OEMOF_SCENARIOS_SINGLE:
             scenario_data.append(
-                pd.read_csv(DATA_DIR / scenario / OEMOF_SCENARIO / "postprocessed" / "scalars.csv", delimiter=";")
+                pd.read_csv(DATA_DIR / scenario / "2045_scenario" / "postprocessed" / "scalars.csv", delimiter=";")
             )
         merged_df = pd.concat(scenario_data, axis=0)
         return merged_df
     else:
-        return pd.read_csv(DATA_DIR / scenario / OEMOF_SCENARIO / "postprocessed" / "scalars.csv", delimiter=";")
+        if scenario.startswith("r"):
+            return pd.read_csv(DATA_DIR / scenario / "2045_scenario" / "postprocessed" / "scalars.csv", delimiter=";")
+        return pd.read_csv(
+            DATA_DIR / scenario / "postprocessed" / "scalars.csv",
+            delimiter=";",
+        )
 
 
-def get_preprocessed_file_list():
-    path = DATA_DIR / OEMOF_SCENARIO / "preprocessed" / "data" / "elements"
+def get_preprocessed_file_list(scenario: str):
+    scenario = "OS" if scenario.startswith("r") or scenario == "single" else scenario
+    path = DATA_DIR / scenario / "preprocessed" / "data" / "elements"
     file_list = [f for f in os.listdir(path) if f.endswith(".csv")]
     filtered_file_list = [
         f
@@ -59,12 +59,13 @@ def get_preprocessed_file_list():
     return filtered_file_list
 
 
-def get_preprocessed_file_df():
+def get_preprocessed_file_df(scenario: str):
+    scenario = "OS" if scenario.startswith("r") or scenario == "single" else scenario
     resultDf = pd.DataFrame()
-    file_list = get_preprocessed_file_list()
+    file_list = get_preprocessed_file_list(scenario)
 
     for file in file_list:
-        file_path = DATA_DIR / OEMOF_SCENARIO / "preprocessed" / "data" / "elements" / file
+        file_path = DATA_DIR / scenario / "preprocessed" / "data" / "elements" / file
         techDf = pd.read_csv(file_path, delimiter=";")
         resultDf = pd.concat([resultDf, techDf], ignore_index=True)
 
@@ -73,15 +74,15 @@ def get_preprocessed_file_df():
 
 def get_electricity_sequences(scenario: str = "all"):
     file_list = []
-    if scenario == "all":
-        path = DATA_DIR / OEMOF_SCENARIO / "postprocessed" / "sequences" / "bus"
-        file_list += [path / f for f in os.listdir(path) if f.endswith(".csv") and "electricity" in f]
-    elif scenario == "single":
+    if scenario == "single":
         for scenario in OEMOF_SCENARIOS_SINGLE:
-            path = DATA_DIR / scenario / OEMOF_SCENARIO / "postprocessed" / "sequences" / "bus"
+            path = DATA_DIR / scenario / "2045_scenario" / "postprocessed" / "sequences" / "bus"
             file_list += [path / f for f in os.listdir(path) if f.endswith(".csv") and "electricity" in f]
+    elif scenario.startswith("r"):
+        path = DATA_DIR / scenario / "2045_scenario" / "postprocessed" / "sequences" / "bus"
+        file_list += [path / f for f in os.listdir(path) if f.endswith(".csv") and "electricity" in f]
     else:
-        path = DATA_DIR / scenario / OEMOF_SCENARIO / "postprocessed" / "sequences" / "bus"
+        path = DATA_DIR / scenario / "postprocessed" / "sequences" / "bus"
         file_list += [path / f for f in os.listdir(path) if f.endswith(".csv") and "electricity" in f]
 
     data = []
@@ -97,9 +98,3 @@ def get_electricity_sequences(scenario: str = "all"):
     merged_df = pd.concat(data, axis=1)
     merged_df = merged_df.astype(float)
     return merged_df
-
-
-def get_postprocessed_by_variable_flow(filename="flow.csv"):
-    path = DATA_DIR / OEMOF_SCENARIO / "postprocessed" / "sequences" / "by_variable" / filename
-    df = pd.read_csv(path, sep=";", skiprows=3, header=None, index_col=0)
-    return df

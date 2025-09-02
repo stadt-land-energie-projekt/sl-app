@@ -18,14 +18,13 @@ async function showHiddenDiv(region, button) {
 
     // Deselect all containers and buttons
     document.querySelectorAll(".results__region-container").forEach(container => {
-        container.classList.remove("selected");
-        const btn = container.querySelector(".select-button");
-        if (btn) {
-            btn.classList.remove("selected");
-            btn.textContent = "Auswählen";
-        }
-
-    showDropdownBasicSolution(region);
+      container.classList.remove("selected");
+      const btn = container.querySelector(".select-button");
+      if (btn) {
+          btn.classList.remove("selected");
+          btn.textContent = "Auswählen";
+      }
+      showDropdownBasicSolution(region);
     });
 
     const hiddenDiv = document.querySelector(".hidden-div");
@@ -46,15 +45,52 @@ async function showHiddenDiv(region, button) {
     try {
         await loadFlowsChart(region, "electricity");
         await loadFlowsChart(region, "hydrogen");
-        const basicRegion = region === "einzeln" ? regionDropdown.value : region
+        const basicRegion = region === "einzeln" ? regionDropdown.value : region;
         await loadBasicData(basicRegion);
     } catch (error) {
         console.error("Error in showHiddenDiv:", error);
     }
 
+    const demandDiv = document.getElementById("demand-sensitivity-container");
+    if (region === "einzeln" || region === "verbu") {
+      demandDiv.hidden = false;
+      echarts.getInstanceByDom(document.getElementById("demand-tech-comparison-chart")).resize();
+      echarts.getInstanceByDom(document.getElementById("demand-chart")).resize();
+    } else {
+      demandDiv.hidden = true;
+    }
+
+    await loadTechnologies(region);
     currentRegion = region;
     await initializeTechnologySelect();
     loadRanges();
+}
+
+async function loadTechnologies(region) {
+  if ((region === "einzeln" && currentRegion === "verbu") || (region === "verbu" && currentRegion === "einzeln")) {
+    // Do not update technology options
+    return;
+  }
+  const url = `/explorer/technology_options/?region=${encodeURIComponent(region)}`;
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {"Accept": "application/json"}
+    });
+    if (!response.ok) throw new Error("Network error: " + response.status);
+    const data = await response.json();
+
+    const dropdown = document.getElementById("technologySelect");
+    dropdown.innerHTML = '';
+    data.technologies.forEach(option => {
+      const opt = document.createElement('option');
+      opt.value = option.value;
+      opt.textContent = option.label;
+      dropdown.appendChild(opt);
+    });
+  } catch (error) {
+    console.error("Error loading technology options:", error);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

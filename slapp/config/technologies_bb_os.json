@@ -1,0 +1,12 @@
+{
+  "gt": "gt",
+  "bpchp": "bpchp",
+  "ror": "electricity-ror",
+  "boiler_large": "boiler",
+  "heatpump_large": "electricity-heatpump",
+  "pth": "electricity-pth",
+  "pv": "electricity-pv",
+  "cavern": "cavern",
+  "onshore": "electricity-wind",
+  "electrolyzer": "electricity-electrolyzer"
+}

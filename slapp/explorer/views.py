@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 
 from . import models
+from .results import get_capacity_cost_technologies
 
 if TYPE_CHECKING:
     from django.http.request import HttpRequest
@@ -28,7 +29,7 @@ from .models import Municipality, Region
 from .regions import get_case_studies_charts_data
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
-from .settings import CONFIG_DIR, NODES, REGIONS, TECHNOLOGIES, TECHNOLOGIES_SELECTED
+from .settings import CONFIG_DIR, NODES, REGIONS, TECHNOLOGIES, TECHNOLOGIES_FROM_BB_TO_OS, TECHNOLOGIES_SELECTED
 
 MAX_MUNICIPALITY_COUNT = 3
 
@@ -561,21 +562,6 @@ class Results(TemplateView):
         """Manage context data."""
         context = super().get_context_data(**kwargs)
 
-        cost_sensitivity_technologies = (
-            models.Sensitivity.objects.filter(attribute="capacity_cost", region="ALL")
-            .distinct()
-            .prefetch_related("scenario__result_set")
-        )
-        # Filter sensitivities where perturbation component is zero
-        cost_sensitivity_technologies = [
-            sensitivity.component
-            for sensitivity in cost_sensitivity_technologies.all()
-            if sensitivity.scenario.result_set.filter(name__contains=sensitivity.component, var_value__gt=0).exists()
-        ]
-
-        cost_technologies = {tech: TECHNOLOGIES[tech] for tech in cost_sensitivity_technologies}
-        cost_technologies = dict(sorted(cost_technologies.items(), key=lambda tech: tech[1]["name"]))
-
         # Filter demand sensitivities for perturbations with same parameter
         demand_scenarios = models.Scenario.objects.annotate(
             distinct_values=Count("sensitivities__perturbation_parameter", distinct=True),
@@ -593,7 +579,7 @@ class Results(TemplateView):
 
         context["home_url"] = reverse("explorer:home")
         context["added_value_url"] = reverse("added_value:index")
-        context["cost_technologies"] = cost_technologies
+        context["cost_technologies"] = get_capacity_cost_technologies("OS")
         context["demand_technologies"] = demand_technologies_parsed
         context["alternatives"] = alternatives
         context["os_regions"] = REGIONS
@@ -606,21 +592,40 @@ class Results(TemplateView):
 def flow_chart(request: HttpRequest) -> JsonResponse:
     """Return requested data for flow charts on results page."""
     region = request.GET.get("type", "")
-    region = "all" if region == "verbu" else "single"
+    region = "OS" if region == "verbu" else region
+    region = "single" if region == "einzeln" else region
     _, data = charts.electricity_hydro_flow(region)
     return JsonResponse({"flow_data": data})
+
+
+def get_technology_options(request: HttpRequest) -> JsonResponse:
+    """Return technology options for capacity chart."""
+    region = request.GET["region"]
+    region = "OS" if region in ("verbu", "einzeln") else region
+    technologies = get_capacity_cost_technologies(region)
+    return JsonResponse(
+        {"technologies": [{"label": data["name"], "value": key} for key, data in technologies.items()]},
+    )
 
 
 def cost_capacity_chart(request: HttpRequest) -> HttpResponse:
     """Return either line_data or bar_data."""
     tech = request.GET.get("type", "")
-    sensitivity_data = results.get_sensitivity_result("capacity_cost", "ALL", tech)
+    region = request.GET["region"]
+    if region in ("verbu", "einzeln"):
+        region = "OS"
+    if region == "BB":
+        technology_from_os_to_bb = {v: k for k, v in TECHNOLOGIES_FROM_BB_TO_OS.items()}
+        tech = technology_from_os_to_bb[tech]
+    sensitivity_data = results.get_sensitivity_result("capacity_cost", region, tech)
 
     if sensitivity_data:
-        base_scenario = results.get_base_scenario(var_value__gt=0)
+        base_scenario_name = f"base_scenario_{region}"
+        base_scenario = results.get_base_scenario(base_scenario_name, var_value__gt=0)
         sensitivity_data[0.0] = base_scenario
 
-    sensitivity_data = results.calculate_capacity_cost_for_technology(tech, sensitivity_data)
+    method = "multiplication" if region == "OS" else "addition"
+    sensitivity_data = results.calculate_capacity_cost_for_technology(region, tech, sensitivity_data, method)
 
     # If an "x" parameter is provided, return tech comparison chart data.
     selected_x = request.GET.get("x")
@@ -659,7 +664,7 @@ def basic_charts(request: HttpRequest) -> JsonResponse:
     """Return data for basic charts on results page."""
     region = request.GET.get("type", "")
     if region == "verbu":
-        region = "all"
+        region = "OS"
     if region == "einzeln":
         region = "single"
     basic_charts_data = charts.get_all_base_charts(region)
@@ -676,7 +681,7 @@ def ranges(request: HttpRequest) -> JsonResponse:
     alternatives = results.filter_alternatives(alternatives, TECHNOLOGIES_SELECTED)
     for tech, vals in alternatives.items():
         vals["color"] = results.get_technology_color(tech)
-        vals["potential"] = results.get_potential(tech) or 0
+        vals["potential"] = results.get_potential("OS", tech) or 0
         vals["potential_unit"] = results.get_potential_unit(tech, vals["potential"])
 
     alternatives = results.prepare_table_data(alternatives)

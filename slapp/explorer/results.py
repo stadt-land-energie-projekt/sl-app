@@ -10,7 +10,7 @@ import pandas as pd
 from django.db.models import Prefetch, Q
 
 from .models import AlternativeResult, Result, Scenario, Sensitivity
-from .settings import CAPACITY_COST, DEMAND_COLORS, POTENTIALS, TECHNOLOGIES
+from .settings import CAPACITY_COST, DEMAND_COLORS, POTENTIALS, TECHNOLOGIES, TECHNOLOGIES_FROM_BB_TO_OS
 
 INF_STRING = "Keine obere Grenze"
 
@@ -119,10 +119,10 @@ def get_alternative_result(region: str, divergence: float) -> dict:  # noqa: ARG
     return data_for_region_and_divergence
 
 
-def get_base_scenario(**result_filter) -> dict:
+def get_base_scenario(scenario: str, **result_filter) -> dict:
     """Return base_scenarios."""
     try:
-        scenario = Scenario.objects.get(name="base_scenario")
+        scenario = Scenario.objects.get(name=scenario)
     except Scenario.DoesNotExist:
         return {}
 
@@ -145,13 +145,49 @@ def get_tech_category(full_key: str) -> str | None:
     return None
 
 
-def calculate_capacity_cost_for_technology(technology: str, sensitivity_data: dict[float, dict]) -> dict[float, dict]:
+def get_capacity_cost_technologies(scenario: str) -> list:
+    """Return list of technologies with capacity cost data."""
+    cost_sensitivity_technologies = (
+        Sensitivity.objects.filter(attribute="capacity_cost", region=scenario)
+        .distinct()
+        .prefetch_related("scenario__result_set")
+    )
+    # Filter sensitivities where perturbation component is zero
+    cost_sensitivity_technologies = [
+        sensitivity.component
+        for sensitivity in cost_sensitivity_technologies.all()
+        if sensitivity.scenario.result_set.filter(name__contains=sensitivity.component, var_value__gt=0).exists()
+    ]
+
+    if scenario == "BB":
+        cost_sensitivity_technologies = [
+            TECHNOLOGIES_FROM_BB_TO_OS[technology] for technology in cost_sensitivity_technologies
+        ]
+    cost_technologies = {tech: TECHNOLOGIES[tech] for tech in cost_sensitivity_technologies}
+    cost_technologies = dict(sorted(cost_technologies.items(), key=lambda tech: tech[1]["name"]))
+    return cost_technologies
+
+
+def calculate_capacity_cost_for_technology(
+    scenario: str,
+    technology: str,
+    sensitivity_data: dict[float, dict],
+    method: str = "multiplication",
+) -> dict[float, dict]:
     """Multiply capacity cost for technology from preprocessed data with sensitivity data perturbations."""
-    base_technology_cost = CAPACITY_COST.get(technology, 0)
-    sensitivity_data = {
-        round(cost * base_technology_cost if cost != 0 else base_technology_cost): technologies
-        for cost, technologies in sensitivity_data.items()
-    }
+    base_technology_cost = CAPACITY_COST[scenario].get(technology, 0)
+    if method == "multiplication":
+        sensitivity_data = {
+            round(cost * base_technology_cost if cost != 0 else base_technology_cost): technologies
+            for cost, technologies in sensitivity_data.items()
+        }
+    elif method == "addition":
+        sensitivity_data = {
+            round(cost + base_technology_cost if cost != 0 else base_technology_cost): technologies
+            for cost, technologies in sensitivity_data.items()
+        }
+    else:
+        raise ValueError(f"Invalid method '{method}' for calculating capacity cost.")
     return sensitivity_data
 
 
@@ -201,9 +237,9 @@ def filter_alternatives(alternatives: dict, selected_tech: dict) -> dict:
     return selected
 
 
-def get_potential(technology: str) -> str | float:
+def get_potential(scenario: str, technology: str) -> str | float:
     """Return potential per technology."""
-    potential = POTENTIALS["all"].get(technology, INF_STRING)
+    potential = POTENTIALS[scenario].get(technology, INF_STRING)
     if isinstance(potential, float):
         return round(potential, 1)
     return potential
@@ -283,7 +319,7 @@ def format_min_max(min_value: float, max_value: float, unit: str) -> str:
 
 def get_demand_data(scenario_id: int) -> dict:
     """Return demand data to create demand chart."""
-    base_scenario_id = Scenario.objects.get(name="base_scenario").id
+    base_scenario_id = Scenario.objects.get(name="base_scenario_OS").id
 
     demands = pd.DataFrame(
         [

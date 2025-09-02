@@ -43,7 +43,7 @@ def electricity_hydro_flow(scenario: str):
     template = "electricity_hydro_flow.html"
     scalars = chart_data.get_postprocessed_data(scenario)
     h2_elec_df = None
-    if scenario == "all":
+    if scenario == "OS":
         hydro_df = scalars[(scalars["var_name"] == "flow_in_h2_from_bus") & (scalars["var_value"] > 0)][
             ["name", "carrier", "region", "tech", "var_value"]
         ]
@@ -122,7 +122,7 @@ def electricity_import(scenario: str):
 def optimized_capacities(scenario: str):
     template = "optimized_capacities.html"
 
-    file_list = chart_data.get_preprocessed_file_list()
+    file_list = chart_data.get_preprocessed_file_list(scenario)
     file_names_list = [file_name[:-4] for file_name in file_list]
 
     scalars_df = chart_data.get_postprocessed_data(scenario)
@@ -132,7 +132,7 @@ def optimized_capacities(scenario: str):
         & (scalars_df["name"].str.contains("|".join(file_names_list)))
     ]
 
-    capacity_potential_df = chart_data.get_preprocessed_file_df()
+    capacity_potential_df = chart_data.get_preprocessed_file_df(scenario)
 
     merged_df = pd.merge(var_value_df, capacity_potential_df, on="name", how="outer")
     merged_df = merged_df[["name", "var_value", "capacity_potential", "var_name"]]
@@ -259,17 +259,3 @@ def supplied_hours(scenario: str):
 
     data = {"y1": {"a": round(y1, 2)}, "y2": {"b": round(y2, 2)}}
     return template, data
-
-
-def interactive_time_series_plot(scenario: str):
-    template = "interactive_time_series_plot.html"
-    data_df = pd.DataFrame()
-    flow_df = chart_data.get_postprocessed_by_variable_flow("flow.csv")
-    storage_content_df = chart_data.get_postprocessed_by_variable_flow("storage_content.csv")
-
-    data_df["flow zeit 1"] = flow_df[1]
-    data_df["storage content zeit 1"] = storage_content_df[1]
-
-    data_df["flow zeit N"] = flow_df[2]
-    data_df["storage content zeit N"] = storage_content_df[3]
-    return template, data_df.to_dict()

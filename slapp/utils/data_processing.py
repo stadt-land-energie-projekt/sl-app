@@ -147,97 +147,107 @@ def empty_zib_data() -> None:
 def load_base_scenario() -> None:
     """Import base data from ZIB."""
     # Get objective value
-    objective_path = pathlib.Path(ZIB_DATA) / "base" / "2045_scenario" / "postprocessed" / "objective.csv"
-    objective_df = pd.read_csv(
-        objective_path,
-        sep=";",
-        skiprows=1,
-        header=None,
-        names=["key", "value"],
-        usecols=["value"],
-    )
-    objective = float(objective_df["value"].iloc[0])
+    for region in ("OS", "BB"):
+        objective_path = pathlib.Path(ZIB_DATA) / "base" / region / "postprocessed" / "objective.csv"
+        objective_df = pd.read_csv(
+            objective_path,
+            sep=";",
+            skiprows=1,
+            header=None,
+            names=["key", "value"],
+            usecols=["value"],
+        )
+        objective = float(objective_df["value"].iloc[0])
 
-    scenario, created = models.Scenario.objects.get_or_create(
-        name="base_scenario",
-        defaults={
-            "parameters": {},
-            "objective": objective,
-        },
-    )
-    if not created:
-        scenario.result_set.all().delete()
+        scenario, created = models.Scenario.objects.get_or_create(
+            name=f"base_scenario_{region}",
+            defaults={
+                "parameters": {},
+                "objective": objective,
+            },
+        )
+        if not created:
+            scenario.result_set.all().delete()
 
-    base_file = pathlib.Path(ZIB_DATA) / "base" / "2045_scenario" / "postprocessed" / "scalars.csv"
-    results_df = pd.read_csv(base_file, delimiter=";", encoding="utf-8")
-    if "scenario" in results_df.columns:
-        results_df = results_df.drop("scenario", axis=1)
+        base_file = pathlib.Path(ZIB_DATA) / "base" / region / "postprocessed" / "scalars.csv"
+        results_df = pd.read_csv(base_file, delimiter=";", encoding="utf-8")
+        if "scenario" in results_df.columns:
+            results_df = results_df.drop("scenario", axis=1)
 
-    results = [models.Result(scenario=scenario, **record) for record in results_df.to_dict(orient="records")]
-    models.Result.objects.bulk_create(results)
+        results = [models.Result(scenario=scenario, **record) for record in results_df.to_dict(orient="records")]
+        models.Result.objects.bulk_create(results)
 
 
 def load_sensitivities() -> None:
     """Import data from sensitivity runs at ZIB."""
-    for folder_name, sensitivity_lookup in (("cost", "CostPerturbations"), ("demand", "DemandPerturbations")):
-        for folder in (pathlib.Path(ZIB_DATA) / folder_name).iterdir():
-            if not folder.is_dir():
-                continue
+    for region in ("OS", "BB"):
+        for folder_name, sensitivity_lookup in (("cost", "CostPerturbations"), ("demand", "DemandPerturbations")):
+            if region == "BB":
+                if folder_name == "demand":
+                    # No demand sensitivites for region BB given
+                    continue
+                if folder_name == "cost":
+                    folder_name = "cost_bb"  # noqa: PLW2901
+            for folder in (pathlib.Path(ZIB_DATA) / folder_name).iterdir():
+                if not folder.is_dir():
+                    continue
 
-            # Create Scenario for current sensitivity results
-            scenario_name = f"{folder_name}_{folder.name}"
+                # Create Scenario for current sensitivity results
+                scenario_name = f"{folder_name}_{folder.name}"
 
-            if Scenario.objects.filter(name=scenario_name).exists():
-                logging.info("Sensitivity scenario '{scenario_name}' already exists. Skipping.")
-                continue
+                if Scenario.objects.filter(name=scenario_name).exists():
+                    logging.info("Sensitivity scenario '{scenario_name}' already exists. Skipping.")
+                    continue
 
-            logging.info(f"Upload data for sensitivity '{folder_name}' from folder '{folder.name}'.")
+                logging.info(f"Upload data for sensitivity '{folder_name}' from folder '{folder.name}'.")
 
-            with (folder / "scenario.json").open("r", encoding="utf-8") as f:
-                scenario_details = json.load(f)
+                with (folder / "scenario.json").open("r", encoding="utf-8") as f:
+                    scenario_details = json.load(f)
 
-            # Get objective_values
-            objective_path = (
-                pathlib.Path(ZIB_DATA)
-                / folder_name
-                / folder.name
-                / "2045_scenario"
-                / "postprocessed"
-                / "objective.csv"
-            )
-            objective_df = pd.read_csv(
-                objective_path,
-                sep=";",
-                skiprows=1,
-                header=None,
-                names=["key", "value"],
-                usecols=["value"],
-            )
-            objective = float(objective_df["value"].iloc[0])
+                # Get objective_values
+                objective_path = (
+                    pathlib.Path(ZIB_DATA)
+                    / folder_name
+                    / folder.name
+                    / "2045_scenario"
+                    / "postprocessed"
+                    / "objective.csv"
+                )
+                objective_df = pd.read_csv(
+                    objective_path,
+                    sep=";",
+                    skiprows=1,
+                    header=None,
+                    names=["key", "value"],
+                    usecols=["value"],
+                )
+                objective = float(objective_df["value"].iloc[0])
 
-            scenario = models.Scenario(name=scenario_name, parameters=scenario_details, objective=objective)
-            scenario.save()
-            # Create Sensitivity instance
-            for perturbation in scenario_details[sensitivity_lookup]["Perturbation1"]:
-                sensitivity_data = perturbation
-                models.Sensitivity(
-                    scenario=scenario,
-                    attribute=sensitivity_data["Column"],
-                    component=sensitivity_data["FileName"],
-                    region="ALL",
-                    perturbation_method=sensitivity_data["PerturbationMethod"],
-                    perturbation_parameter=sensitivity_data["PerturbationParameter"][0],
-                ).save()
+                scenario = models.Scenario(name=scenario_name, parameters=scenario_details, objective=objective)
+                scenario.save()
+                # Create Sensitivity instance
+                for perturbation in scenario_details[sensitivity_lookup]["Perturbation1"]:
+                    sensitivity_data = perturbation
+                    models.Sensitivity(
+                        scenario=scenario,
+                        attribute=sensitivity_data["Column"],
+                        component=sensitivity_data["FileName"],
+                        region=region,
+                        perturbation_method=sensitivity_data["PerturbationMethod"],
+                        perturbation_parameter=sensitivity_data["PerturbationParameter"][0],
+                    ).save()
 
-            # Add results to Scenario
-            results_df = pd.read_csv(
-                folder / "2045_scenario" / "postprocessed" / "scalars.csv",
-                delimiter=";",
-                encoding="utf-8",
-            )
-            results_df = results_df.drop("scenario", axis=1)
-            results = [models.Result(scenario=scenario, **result) for result in results_df.to_dict(orient="records")]
-            models.Result.objects.bulk_create(results)
+                # Add results to Scenario
+                results_df = pd.read_csv(
+                    folder / "2045_scenario" / "postprocessed" / "scalars.csv",
+                    delimiter=";",
+                    encoding="utf-8",
+                )
+                results_df = results_df.drop("scenario", axis=1)
+                results = [
+                    models.Result(scenario=scenario, **result) for result in results_df.to_dict(orient="records")
+                ]
+                models.Result.objects.bulk_create(results)
 
 
 def load_alternatives() -> None:  # noqa: C901, PLR0915

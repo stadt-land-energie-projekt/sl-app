@@ -12,6 +12,9 @@ CONFIG_DIR = pathlib.Path(__file__).parent.parent / "config"
 with (CONFIG_DIR / "technologies.json").open("r", encoding="utf-8") as f:
     TECHNOLOGIES = json.load(f)
 
+with (CONFIG_DIR / "technologies_bb_os.json").open("r", encoding="utf-8") as f:
+    TECHNOLOGIES_FROM_BB_TO_OS = json.load(f)
+
 with (CONFIG_DIR / "nodes.json").open("r", encoding="utf-8") as f:
     NODES = json.load(f)
 
@@ -25,6 +28,7 @@ REGIONS = {
     "r120670201201": "Grünheide",
     "r120670124124": "Erkner",
 }
+REGIONS_BB = ["BB", "B"]
 
 TECHNOLOGIES_SELECTED = [
     # "electricity-large_battery_storage",
@@ -55,7 +59,8 @@ TECHNOLOGIES_SELECTED = [
     "residual_waste-bpchp_heat_low_central",
 ]
 
-PREPROCESSED_DATA = chart_data.get_preprocessed_file_df()
+
+PREPROCESSED_DATA = {scenario: chart_data.get_preprocessed_file_df(scenario=scenario) for scenario in ("OS", "BB")}
 
 
 def remove_region(row: str) -> str:
@@ -68,8 +73,11 @@ def get_potentials(scenario: str) -> dict[str, float]:
     if scenario == "single":
         return {}  # Only potentials for ALL scenario are used currently
 
-    capacity_potentials = PREPROCESSED_DATA.loc[
-        (~PREPROCESSED_DATA["capacity_potential"].isna()) & (PREPROCESSED_DATA["region"].isin(REGIONS)),
+    regions = REGIONS if scenario == "os" else REGIONS_BB
+
+    capacity_potentials = PREPROCESSED_DATA[scenario].loc[
+        (~PREPROCESSED_DATA[scenario]["capacity_potential"].isna())
+        & (PREPROCESSED_DATA[scenario]["region"].isin(regions)),
         ["name", "capacity_potential"],
     ]
     capacity_potentials["name"] = capacity_potentials["name"].apply(remove_region)
@@ -77,17 +85,19 @@ def get_potentials(scenario: str) -> dict[str, float]:
     return capacity_potentials.to_dict()["capacity_potential"]
 
 
-POTENTIALS = {scenario: get_potentials(scenario) for scenario in ("all", "single")}
+POTENTIALS = {scenario: get_potentials(scenario) for scenario in ("OS", "BB")}
 
 
-def get_capacity_cost_for_technology() -> dict[str, float]:
+def get_capacity_cost_for_technology(scenario: str) -> dict[str, float]:
     """Return capacity cost per technology from preprocessed data."""
-    capacity_cost = PREPROCESSED_DATA.loc[
-        (~PREPROCESSED_DATA["capacity_cost"].isna()) & (PREPROCESSED_DATA["region"] == next(iter(REGIONS))),
+    regions = REGIONS if scenario == "OS" else REGIONS_BB
+    capacity_cost = PREPROCESSED_DATA[scenario].loc[
+        (~PREPROCESSED_DATA[scenario]["capacity_cost"].isna())
+        & (PREPROCESSED_DATA[scenario]["region"] == next(iter(regions))),
         ["name", "capacity_cost"],
     ]
     capacity_cost["name"] = capacity_cost["name"].apply(remove_region)
     return capacity_cost.set_index("name").to_dict()["capacity_cost"]
 
 
-CAPACITY_COST = get_capacity_cost_for_technology()
+CAPACITY_COST = {scenario: get_capacity_cost_for_technology(scenario) for scenario in ("OS", "BB")}

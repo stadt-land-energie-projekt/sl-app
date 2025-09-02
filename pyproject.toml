@@ -152,3 +152,6 @@ lint.unfixable = ["UP007", "I001"]
 "*/__init__.py" = [
   "D104",  # Missing docstring in public package
 ]
+"scripts/*" = [
+  "INP001",  # File is part of an implicit namespace package. Add an `__init__.py`.
+]

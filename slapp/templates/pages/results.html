@@ -65,6 +65,18 @@
               <button class="select-button" onclick="showHiddenDiv('einzeln', this)">Auswählen</button>
             </div>
           </div>
+          <div class="results__region-container"
+               data-region-name="Berlin-Brandenburg">
+            <div class="results__top-row">
+              <img class="results__region-image"
+                   src="{% static 'images/Oderland-Spree-single.png' %}"
+                   alt="Karte Oderland-Spree Einzeln" />
+              <h2>Berlin-Brandenburg</h2>
+            </div>
+            <div class="results__cta-row">
+              <button class="select-button" onclick="showHiddenDiv('BB', this)">Auswählen</button>
+            </div>
+          </div>
           <div class="results__region-container disabled" data-region-name="Kiel">
             <div class="results__top-row">
               <img class="results__region-image"
@@ -128,19 +140,21 @@
                   <div class="technology-charts chart-container" id="cost-capacity-chart"></div>
                   <div class="technology-charts chart-container" id="tech-comparison-chart"></div>
                 </div>
-                <label for="demand-technologySelect">Lastvariationen</label>
-                <select id="demand-technologySelect" name="technology" autocomplete="off">
-                  {% for key, title in demand_technologies.items %}<option value="{{ key }}">{{ title }}</option>{% endfor %}
-                </select>
-                <div>
-                  Legende:
-                  ⚡ Strom, 🔥 Wärme, 🔥🔼 Prozesswärme
-                  🏠 Haushalte, 🚗 Verkehr, 🏪 GHD, 🏭 Industrie
-                </div>
-                <div class="tech-container">
-                  <div class="technology-charts chart-container" id="demand-chart"></div>
-                  <div class="technology-charts chart-container"
-                       id="demand-tech-comparison-chart"></div>
+                <div id="demand-sensitivity-container">
+                  <label for="demand-technologySelect">Lastvariationen</label>
+                  <select id="demand-technologySelect" name="technology" autocomplete="off">
+                    {% for key, title in demand_technologies.items %}<option value="{{ key }}">{{ title }}</option>{% endfor %}
+                  </select>
+                  <div>
+                    Legende:
+                    ⚡ Strom, 🔥 Wärme, 🔥🔼 Prozesswärme
+                    🏠 Haushalte, 🚗 Verkehr, 🏪 GHD, 🏭 Industrie
+                  </div>
+                  <div class="tech-container">
+                    <div class="technology-charts chart-container" id="demand-chart"></div>
+                    <div class="technology-charts chart-container"
+                         id="demand-tech-comparison-chart"></div>
+                  </div>
                 </div>
               </div>
               <div class="tab-content tab-content--alternatives" id="alternatives">

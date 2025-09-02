@@ -1,4 +1,6 @@
 
+const techMap = JSON.parse(document.getElementById("technologies").innerText);
+
 async function loadBasicData(region) {
     const url = `/explorer/basic_charts/?type=${encodeURIComponent(region)}`;
     try {
