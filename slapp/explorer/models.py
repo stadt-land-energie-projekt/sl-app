@@ -786,11 +786,12 @@ class Alternative(models.Model):
     """Model to gather results for alternative solution."""
 
     divergence = models.FloatField()
+    region = models.CharField(max_length=255)
 
     class Meta:
         """Metadata for model."""
 
-        unique_together = ("divergence",)
+        unique_together = ("divergence", "region")
 
 
 class AlternativeResult(models.Model):

@@ -19,8 +19,8 @@ from config.settings.base import GEODATA_DIR, ZIB_DATA
 from slapp.explorer import models
 from slapp.utils.ogr_layer_mapping import RelatedModelLayerMapping
 
-ALTERNATIVES_FILENAME = "mga_converted.json"
-ALTERNATIVES_REGIONS = ("r120640428428", "r120640472472", "r120670124124", "r120670201201")
+ALTERNATIVES_FILENAMES = {"OS": "mga_converted.json", "BB": "mga_converted_bb.json"}
+ALTERNATIVES_REGIONS = {"OS": ("r120640428428", "r120640472472", "r120670124124", "r120670201201"), "BB": ("B", "BB")}
 
 REGIONS = [models.Region, models.Municipality]
 
@@ -271,91 +271,92 @@ def load_alternatives() -> None:  # noqa: C901, PLR0915
         store_component_ = f"{carrier_}-{component_}"
         return region_, carrier_, component_, store_component_
 
-    with (pathlib.Path(ZIB_DATA) / ALTERNATIVES_FILENAME).open("r", encoding="utf-8") as f:
-        alternative_data = json.load(f)
+    for scenario in ALTERNATIVES_REGIONS:
+        with (pathlib.Path(ZIB_DATA) / ALTERNATIVES_FILENAMES[scenario]).open("r", encoding="utf-8") as f:
+            alternative_data = json.load(f)
 
-    for divergence, components in alternative_data.items():
-        if models.Alternative.objects.filter(divergence=divergence).exists():
-            logging.info("Alternative scenario '{divergence}' already exists. Skipping.")
-            continue
-
-        alternative = models.Alternative(divergence=divergence)
-        alternative.save()
-        for component_raw, result in components.items():
-            if "min_results" not in result or "max_results" not in result:
+        for divergence, components in alternative_data.items():
+            if models.Alternative.objects.filter(divergence=divergence, region=scenario).exists():
+                logging.info("Alternative scenario '{divergence}' already exists. Skipping.")
                 continue
-            min_file = result["min_results"]
-            min_results = pd.read_csv(pathlib.Path(ZIB_DATA) / min_file, delimiter=";", encoding="utf-8")
-            max_file = result["max_results"]
-            max_results = pd.read_csv(pathlib.Path(ZIB_DATA) / max_file, delimiter=";", encoding="utf-8")
 
-            if component_raw.startswith("GenericInvestmentStorageBlock"):
-                component_type = "storage capacity"
-                # In this case we have an investment of storage capacity
-                # Extract component between brackets (i.e. extract "BB_electricity_liion_battery_0" from
-                # "GenericInvestmentStorageBlock_invest(BB_electricity_liion_battery_0)")
-                composed_component = re.findall(
-                    rf"\w*\(((?:{'|'.join(ALTERNATIVES_REGIONS)})\w*)_0\)",
-                    component_raw,
-                )[0]
-                region, carrier, component, store_component = get_region_carrier_component(composed_component)
-                var_name = "invest_costs"
-            else:
-                component_type = "capacity"
-                # In this case a flow with two components is given
-                # i.e. "InvestmentFlowBlock_invest(Brandenburg_heat_decentral_Bayern_heat_decentral_storage_0)"
-                matches = re.findall(
-                    rf"\w*\(((?:{'|'.join(ALTERNATIVES_REGIONS)})_\w*)_"
-                    rf"(((?:{'|'.join(ALTERNATIVES_REGIONS)})\w*))_0\)",
-                    component_raw,
-                )
-                first_component = get_region_carrier_component(matches[0][0])
-                second_component = get_region_carrier_component(matches[0][1])
-                if first_component[2] is None:
-                    region, carrier, component, store_component = second_component
-                    var_name = f"invest_costs_in_{first_component[1]}"
-                    if "storage" in component_raw:
-                        component_type = "capacity in"
+            alternative = models.Alternative(divergence=divergence, region=scenario)
+            alternative.save()
+            for component_raw, result in components.items():
+                if "min_results" not in result or "max_results" not in result:
+                    continue
+                min_file = result["min_results"]
+                min_results = pd.read_csv(pathlib.Path(ZIB_DATA) / min_file, delimiter=";", encoding="utf-8")
+                max_file = result["max_results"]
+                max_results = pd.read_csv(pathlib.Path(ZIB_DATA) / max_file, delimiter=";", encoding="utf-8")
+
+                if component_raw.startswith("GenericInvestmentStorageBlock"):
+                    component_type = "storage capacity"
+                    # In this case we have an investment of storage capacity
+                    # Extract component between brackets (i.e. extract "BB_electricity_liion_battery_0" from
+                    # "GenericInvestmentStorageBlock_invest(BB_electricity_liion_battery_0)")
+                    composed_component = re.findall(
+                        rf"\w*\(((?:{'|'.join(ALTERNATIVES_REGIONS[scenario])})\w*)_0\)",
+                        component_raw,
+                    )[0]
+                    region, carrier, component, store_component = get_region_carrier_component(composed_component)
+                    var_name = "invest_costs"
                 else:
-                    region, carrier, component, store_component = first_component
-                    var_name = f"invest_costs_out_{second_component[1]}"
-                    if "storage" in component_raw:
-                        component_type = "capacity out"
+                    component_type = "capacity"
+                    # In this case a flow with two components is given
+                    # i.e. "InvestmentFlowBlock_invest(Brandenburg_heat_decentral_Bayern_heat_decentral_storage_0)"
+                    matches = re.findall(
+                        rf"\w*\(((?:{'|'.join(ALTERNATIVES_REGIONS[scenario])})_\w*)_"
+                        rf"(((?:{'|'.join(ALTERNATIVES_REGIONS[scenario])})\w*))_0\)",
+                        component_raw,
+                    )
+                    first_component = get_region_carrier_component(matches[0][0])
+                    second_component = get_region_carrier_component(matches[0][1])
+                    if first_component[2] is None:
+                        region, carrier, component, store_component = second_component
+                        var_name = f"invest_costs_in_{first_component[1]}"
+                        if "storage" in component_raw:
+                            component_type = "capacity in"
+                    else:
+                        region, carrier, component, store_component = first_component
+                        var_name = f"invest_costs_out_{second_component[1]}"
+                        if "storage" in component_raw:
+                            component_type = "capacity out"
 
-            min_capacity = result["min_obj"]
-            max_capacity = result["max_obj"]
+                min_capacity = result["min_obj"]
+                max_capacity = result["max_obj"]
 
-            if min_capacity is None or max_capacity is None:
-                continue
+                if min_capacity is None or max_capacity is None:
+                    continue
 
-            min_cost = float(
-                min_results.loc[
-                    (min_results["region"] == region)
-                    & (min_results["carrier"] == carrier)
-                    & (min_results["tech"] == component)
-                    & (min_results["var_name"] == var_name),
-                    "var_value",
-                ].iloc[0],
-            )
+                min_cost = float(
+                    min_results.loc[
+                        (min_results["region"] == region)
+                        & (min_results["carrier"] == carrier)
+                        & (min_results["tech"] == component)
+                        & (min_results["var_name"] == var_name),
+                        "var_value",
+                    ].iloc[0],
+                )
 
-            max_cost = float(
-                max_results.loc[
-                    (max_results["region"] == region)
-                    & (max_results["carrier"] == carrier)
-                    & (max_results["tech"] == component)
-                    & (max_results["var_name"] == var_name),
-                    "var_value",
-                ].iloc[0],
-            )
+                max_cost = float(
+                    max_results.loc[
+                        (max_results["region"] == region)
+                        & (max_results["carrier"] == carrier)
+                        & (max_results["tech"] == component)
+                        & (max_results["var_name"] == var_name),
+                        "var_value",
+                    ].iloc[0],
+                )
 
-            models.AlternativeResult(
-                alternative=alternative,
-                region=region,
-                component=store_component,
-                type=component_type,
-                carrier=carrier,
-                min_capacity=min_capacity,
-                max_capacity=max_capacity,
-                min_cost=min_cost,
-                max_cost=max_cost,
-            ).save()
+                models.AlternativeResult(
+                    alternative=alternative,
+                    region=region,
+                    component=store_component,
+                    type=component_type,
+                    carrier=carrier,
+                    min_capacity=min_capacity,
+                    max_capacity=max_capacity,
+                    min_cost=min_cost,
+                    max_cost=max_cost,
+                ).save()
