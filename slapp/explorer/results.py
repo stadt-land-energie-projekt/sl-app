@@ -241,6 +241,8 @@ def filter_alternatives(alternatives: dict, selected_tech: dict) -> dict:
 def get_potential(scenario: str, technology: str) -> str | float:
     """Return potential per technology."""
     potential = POTENTIALS[scenario].get(technology, INF_STRING)
+    if potential == float("inf"):
+        return INF_STRING
     if isinstance(potential, float):
         return round(potential, 1)
     return potential
