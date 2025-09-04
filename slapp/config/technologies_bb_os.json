@@ -1,12 +1,12 @@
 {
-  "gt": "gt",
-  "bpchp": "bpchp",
-  "ror": "electricity-ror",
-  "boiler_large": "boiler",
-  "heatpump_large": "electricity-heatpump",
-  "pth": "electricity-pth",
-  "pv": "electricity-pv",
-  "cavern": "cavern",
-  "onshore": "electricity-wind",
-  "electrolyzer": "electricity-electrolyzer"
+  "h2-gt": "gt",
+  "h2-bpchp": "bpchp",
+  "hydro-ror": "electricity-ror",
+  "ch4-boiler_large": "boiler",
+  "electricity-heatpump_large": "electricity-heatpump",
+  "electricity-pth": "electricity-pth",
+  "solar-pv": "electricity-pv",
+  "h2-cavern": "cavern",
+  "wind-onshore": "electricity-wind",
+  "electricity-electrolyzer": "electricity-electrolyzer"
 }

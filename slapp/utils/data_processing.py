@@ -196,7 +196,7 @@ def load_sensitivities() -> None:
                 scenario_name = f"{folder_name}_{folder.name}"
 
                 if Scenario.objects.filter(name=scenario_name).exists():
-                    logging.info("Sensitivity scenario '{scenario_name}' already exists. Skipping.")
+                    logging.info(f"Sensitivity scenario '{scenario_name}' already exists. Skipping.")
                     continue
 
                 logging.info(f"Upload data for sensitivity '{folder_name}' from folder '{folder.name}'.")

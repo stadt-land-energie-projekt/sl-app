@@ -673,15 +673,21 @@ def basic_charts(request: HttpRequest) -> JsonResponse:
 
 def ranges(request: HttpRequest) -> JsonResponse:
     """Return requested data for ranges on results page."""
-    selected_region = request.GET.get("region")
-    region = "B" if selected_region == "kiel" else "BB"
+    selected_region = request.GET["region"]
+    region = "OS" if selected_region in ("verbu", "einzeln") else selected_region
     divergence = float(request.GET.get("divergence", 1)) / 100
 
     alternatives = results.get_alternative_result(region, divergence)
+    if region == "BB":
+        alternatives = {
+            TECHNOLOGIES_FROM_BB_TO_OS[k]: v for k, v in alternatives.items() if k in TECHNOLOGIES_FROM_BB_TO_OS
+        }
     alternatives = results.filter_alternatives(alternatives, TECHNOLOGIES_SELECTED)
+    technologies_from_os_to_bb = {v: k for k, v in TECHNOLOGIES_FROM_BB_TO_OS.items()}
     for tech, vals in alternatives.items():
         vals["color"] = results.get_technology_color(tech)
-        vals["potential"] = results.get_potential("OS", tech) or 0
+        translated_tech = technologies_from_os_to_bb[tech] if region == "BB" else tech
+        vals["potential"] = results.get_potential(region, translated_tech) or 0
         vals["potential_unit"] = results.get_potential_unit(tech, vals["potential"])
 
     alternatives = results.prepare_table_data(alternatives)

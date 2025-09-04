@@ -23,9 +23,11 @@ for folder in SOURCE_FOLDER.iterdir():
             scenario_data = json.load(f)
         scenario_data["CostPerturbations"]["Perturbation1"] = scenario_data["CostPerturbations"]["CapacityCosts"]
         del scenario_data["CostPerturbations"]["CapacityCosts"]
-        scenario_data["CostPerturbations"]["Perturbation1"][0]["FileName"] = scenario_data["CostPerturbations"][
-            "Perturbation1"
-        ][0]["VariableName"]
+        scenario_data["CostPerturbations"]["Perturbation1"][0]["FileName"] = (
+            scenario_data["CostPerturbations"]["Perturbation1"][0]["Carrier"]
+            + "-"
+            + scenario_data["CostPerturbations"]["Perturbation1"][0]["VariableName"]
+        )
         del scenario_data["CostPerturbations"]["Perturbation1"][0]["VariableName"]
         scenario_data["CostPerturbations"]["Perturbation1"][0]["Column"] = "capacity_cost"
         (TARGET_FOLDER / folder.name).mkdir(exist_ok=True)

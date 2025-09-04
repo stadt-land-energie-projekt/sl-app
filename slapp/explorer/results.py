@@ -98,11 +98,12 @@ def merge_sensitivity_results(results: dict[float, dict[str, float]]) -> dict[fl
     return merged_results
 
 
-def get_alternative_result(region: str, divergence: float) -> dict:  # noqa: ARG001
+def get_alternative_result(region: str, divergence: float) -> dict:
     """Return Alternative Results for ranges by region."""
     results = AlternativeResult.objects.filter(
         # region=region,  # Not used currently, only Verbund available
         alternative__divergence=divergence,
+        alternative__region=region,
     )
 
     data_for_region_and_divergence = {}

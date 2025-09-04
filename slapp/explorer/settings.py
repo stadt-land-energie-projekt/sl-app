@@ -57,6 +57,15 @@ TECHNOLOGIES_SELECTED = [
     "heat_low_decentral-solarthermal_plant",
     "residual_waste-bpchp_heat_high",
     "residual_waste-bpchp_heat_low_central",
+    # From BB region
+    "gt",
+    "bpchp",
+    "electricity-ror",
+    "boiler",
+    "electricity-heatpump",
+    "electricity-pth",
+    "electricity-pv",
+    "cavern",
 ]
 
 
