@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from . import chart_data
-from .settings import REGIONS
+from .settings import REGIONS, REGIONS_BB
 
 
 def get_all_base_charts(scenario: str) -> dict:
@@ -43,7 +43,9 @@ def electricity_hydro_flow(scenario: str):
     template = "electricity_hydro_flow.html"
     scalars = chart_data.get_postprocessed_data(scenario)
     h2_elec_df = None
-    if scenario == "OS":
+
+    regions = REGIONS_BB if scenario == "BB" else REGIONS
+    if scenario in ("OS", "BB"):
         hydro_df = scalars[(scalars["var_name"] == "flow_in_h2_from_bus") & (scalars["var_value"] > 0)][
             ["name", "carrier", "region", "tech", "var_value"]
         ]
@@ -59,8 +61,8 @@ def electricity_hydro_flow(scenario: str):
         split_cols = h2_elec_df["region"].str.split("_", n=1, expand=True)
         h2_elec_df["source"] = split_cols.iloc[:, 0]
         h2_elec_df["target"] = split_cols.iloc[:, 1] if split_cols.shape[1] > 1 else pd.NA
-        h2_elec_df["target"] = h2_elec_df["target"].map(REGIONS).fillna(h2_elec_df["target"])
-        h2_elec_df["source"] = h2_elec_df["source"].map(REGIONS).fillna(h2_elec_df["source"])
+        h2_elec_df["target"] = h2_elec_df["target"].map(regions).fillna(h2_elec_df["target"])
+        h2_elec_df["source"] = h2_elec_df["source"].map(regions).fillna(h2_elec_df["source"])
 
     export_df = scalars[(scalars["tech"] == "export") & (scalars["var_value"] > 0)][
         ["name", "carrier", "region", "tech", "var_value"]
@@ -72,8 +74,8 @@ def electricity_hydro_flow(scenario: str):
     import_df = import_df.rename(columns={"var_value": "value"})
 
     for df in (import_df, export_df):
-        df["region_name"] = df["region"].map(REGIONS).fillna(df["region"])
-    regions = sorted(REGIONS.keys())
+        df["region_name"] = df["region"].map(regions).fillna(df["region"])
+    regions = sorted(regions.keys())
     net_labels = {reg: f"Netz{' ' * idx}" for idx, reg in enumerate(regions)}
     for df in (import_df, export_df):
         df["net_label"] = df["region"].map(net_labels)
@@ -169,7 +171,8 @@ def generation_consumption_per_sector(scenario: str):
 
     y2 = (
         scalars.loc[
-            (scalars["var_name"] == "flow_out_heat_low_decentral") & (scalars["var_value"] > 0),
+            (scalars["var_name"] == f"flow_out_heat{'_low' if scenario != 'BB' else ''}_decentral")
+            & (scalars["var_value"] > 0),
             ["name", "var_value"],
         ]
         .groupby("name")
@@ -177,11 +180,20 @@ def generation_consumption_per_sector(scenario: str):
         .mul(1e-3)
         .round(1)
     )
-    x2 = round(scalars.loc[(scalars["var_name"] == "flow_in_heat_low_decentral"), "var_value"].sum().sum() / 1000, 1)
+    x2 = round(
+        scalars.loc[
+            (scalars["var_name"] == f"flow_in_heat{'_low' if scenario != 'BB' else ''}_decentral"), "var_value"
+        ]
+        .sum()
+        .sum()
+        / 1000,
+        1,
+    )
 
     y3 = (
         scalars.loc[
-            (scalars["var_name"] == "flow_out_heat_low_central") & (scalars["var_value"] > 0),
+            (scalars["var_name"] == f"flow_out_heat{'_low' if scenario != 'BB' else ''}_central")
+            & (scalars["var_value"] > 0),
             ["name", "var_value"],
         ]
         .groupby("name")
@@ -189,7 +201,13 @@ def generation_consumption_per_sector(scenario: str):
         .mul(1e-3)
         .round(1)
     )
-    x3 = round(scalars.loc[(scalars["var_name"] == "flow_in_heat_low_central"), "var_value"].sum().sum() / 1000, 1)
+    x3 = round(
+        scalars.loc[(scalars["var_name"] == f"flow_in_heat{'_low' if scenario != 'BB' else ''}_central"), "var_value"]
+        .sum()
+        .sum()
+        / 1000,
+        1,
+    )
 
     y4 = (
         scalars.loc[

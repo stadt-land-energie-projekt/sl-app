@@ -29,7 +29,15 @@ from .models import Municipality, Region
 from .regions import get_case_studies_charts_data
 from .regions import get_regions_data as get_data
 from .regions import municipalities_details
-from .settings import CONFIG_DIR, NODES, REGIONS, TECHNOLOGIES, TECHNOLOGIES_FROM_BB_TO_OS, TECHNOLOGIES_SELECTED
+from .settings import (
+    CONFIG_DIR,
+    NODES,
+    NODES_BB,
+    REGIONS,
+    TECHNOLOGIES,
+    TECHNOLOGIES_FROM_BB_TO_OS,
+    TECHNOLOGIES_SELECTED,
+)
 
 MAX_MUNICIPALITY_COUNT = 3
 
@@ -585,13 +593,14 @@ class Results(TemplateView):
         context["os_regions"] = REGIONS
         context["technologies"] = TECHNOLOGIES
         context["nodes"] = NODES
+        context["nodes_bb"] = NODES_BB
         context["regions_dropdown"] = RegionForm()
         return context
 
 
 def flow_chart(request: HttpRequest) -> JsonResponse:
     """Return requested data for flow charts on results page."""
-    region = request.GET.get("type", "")
+    region = request.GET.get("region", "")
     region = "OS" if region == "verbu" else region
     region = "single" if region == "einzeln" else region
     _, data = charts.electricity_hydro_flow(region)

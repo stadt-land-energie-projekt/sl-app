@@ -18,6 +18,9 @@ with (CONFIG_DIR / "technologies_bb_os.json").open("r", encoding="utf-8") as f:
 with (CONFIG_DIR / "nodes.json").open("r", encoding="utf-8") as f:
     NODES = json.load(f)
 
+with (CONFIG_DIR / "nodes_bb.json").open("r", encoding="utf-8") as f:
+    NODES_BB = json.load(f)
+
 with (CONFIG_DIR / "demand_colors.json").open("r", encoding="utf-8") as f:
     DEMAND_COLORS = json.load(f)
 
@@ -28,7 +31,7 @@ REGIONS = {
     "r120670201201": "Grünheide",
     "r120670124124": "Erkner",
 }
-REGIONS_BB = ["BB", "B"]
+REGIONS_BB = {"BB": "Brandenburg", "B": "Berlin"}
 
 TECHNOLOGIES_SELECTED = [
     # "electricity-large_battery_storage",

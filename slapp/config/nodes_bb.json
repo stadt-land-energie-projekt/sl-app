@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Berlin",
+    "x": 0,
+    "y": 0,
+    "itemStyle": {"color": "#798897"},
+    "symbolSize": 30
+  },
+  {
+    "name": "Brandenburg",
+    "x": -10,
+    "y": 50,
+    "itemStyle": {"color": "#798897"},
+    "symbolSize": 30
+  },
+  {
+    "name": "Netz",
+    "x": -20,
+    "y": -20,
+    "itemStyle": {"color": "#000000"},
+    "symbolSize": 10
+  },
+  {
+    "name": "Netz ",
+    "x": -20,
+    "y": 75,
+    "itemStyle": {"color": "#000000"},
+    "symbolSize": 10
+  }
+]

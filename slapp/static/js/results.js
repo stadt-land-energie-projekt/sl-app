@@ -8,6 +8,7 @@ let chartZoomEnd = {};
 const numberFormat = Intl.NumberFormat("de-DE", { maximumFractionDigits: 1 });
 
 const nodes = JSON.parse(document.getElementById("nodes").innerText);
+const nodesBB = JSON.parse(document.getElementById("nodes_bb").innerText);
 
 const regionDropdown = document.getElementById("id_region");
 
@@ -138,7 +139,7 @@ function removeChart(domElement) {
     }
 }
 
-async function loadFlowsChart(chartType, region) {
+async function loadFlowsChart(region, chartType) {
     const url = `${window.location.origin}/explorer/chart/flow_chart?type=${encodeURIComponent(chartType)}&region=${encodeURIComponent(region)}`;
     try {
         const response = await fetch(url, {
@@ -151,14 +152,14 @@ async function loadFlowsChart(chartType, region) {
         const jsonObj = await response.json();
         const hydroData = jsonObj.flow_data.filter(d => d.carrier === "h2");
         const electricityData = jsonObj.flow_data.filter(d => d.carrier === "electricity");
-        createFlowChart(electricityData, "electricity", "electricity-chart");
-        createFlowChart(hydroData, "hydrogen", "hydrogen-chart");
+        createFlowChart(electricityData, "electricity", "electricity-chart", region);
+        createFlowChart(hydroData, "hydrogen", "hydrogen-chart", region);
     } catch (error) {
         console.error("Error loading flow chart:", error);
     }
 }
 
-function createFlowChart(data, resource, chartID) {
+function createFlowChart(data, resource, chartID, region) {
     if (!data || data.length === 0) {
       const resource_de = resource === "hydrogen" ? "Wasserstoff" : "Strom";
       const chartDiv = document.getElementById(chartID);
@@ -217,7 +218,7 @@ function createFlowChart(data, resource, chartID) {
                 curveness: 0.2,
                 opacity: 0.8
             },
-            data: nodes,
+            data: region === "BB" ? nodesBB : nodes,
             links: links,
             emphasis: { focus: "adjacency" }
         }]
