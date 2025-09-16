@@ -108,14 +108,20 @@ def get_alternative_result(region: str, divergence: float) -> dict:
 
     data_for_region_and_divergence = {}
     for r in results:
-        data_for_region_and_divergence[r.component] = {
-            "min_capacity": r.min_capacity,
-            "max_capacity": r.max_capacity,
-            "min_cost": r.min_cost,
-            "max_cost": r.max_cost,
-            "carrier": r.carrier,
-            "type": r.type,
-        }
+        if r.component not in data_for_region_and_divergence:
+            data_for_region_and_divergence[r.component] = {
+                "min_capacity": r.min_capacity,
+                "max_capacity": r.max_capacity,
+                "min_cost": r.min_cost,
+                "max_cost": r.max_cost,
+                "carrier": r.carrier,
+                "type": r.type,
+            }
+        else:
+            data_for_region_and_divergence[r.component]["min_capacity"] += r.min_capacity
+            data_for_region_and_divergence[r.component]["max_capacity"] += r.max_capacity
+            data_for_region_and_divergence[r.component]["min_cost"] += r.min_cost
+            data_for_region_and_divergence[r.component]["max_cost"] += r.max_cost
 
     return data_for_region_and_divergence
 
@@ -214,12 +220,11 @@ def build_tech_comp_data(bar_entry: dict, current_tech: str) -> list:
 
 def build_cost_cap_data(sensitivity_data: dict, current_tech: str) -> [float, float]:
     """Build a dictionary for the cost capacity chart data for the selected technology."""
-    cost_cap_data = {}
+    cost_cap_data = defaultdict(float)
     for x, inner_dict in sensitivity_data.items():
         for key in inner_dict:
             if current_tech in key:
-                cost_cap_data[x] = inner_dict[key]
-                break
+                cost_cap_data[x] += inner_dict[key]
 
     array_data = sorted(
         ([round(float(k)), v] for k, v in cost_cap_data.items()),
