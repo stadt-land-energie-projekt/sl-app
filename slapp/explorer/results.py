@@ -10,7 +10,14 @@ import pandas as pd
 from django.db.models import Prefetch, Q
 
 from .models import AlternativeResult, Result, Scenario, Sensitivity
-from .settings import CAPACITY_COST, DEMAND_COLORS, POTENTIALS, TECHNOLOGIES, TECHNOLOGIES_FROM_BB_TO_OS
+from .settings import (
+    BB_ANNUITY_FACTOR,
+    CAPACITY_COST,
+    DEMAND_COLORS,
+    POTENTIALS,
+    TECHNOLOGIES,
+    TECHNOLOGIES_FROM_BB_TO_OS,
+)
 
 INF_STRING = "Keine obere Grenze"
 
@@ -190,7 +197,7 @@ def calculate_capacity_cost_for_technology(
         }
     elif method == "addition":
         sensitivity_data = {
-            round(cost + base_technology_cost if cost != 0 else base_technology_cost): technologies
+            round(cost * BB_ANNUITY_FACTOR + base_technology_cost if cost != 0 else base_technology_cost): technologies
             for cost, technologies in sensitivity_data.items()
         }
     else:

@@ -33,6 +33,10 @@ REGIONS = {
 }
 REGIONS_BB = {"BB": "Brandenburg", "B": "Berlin"}
 
+BB_WACC = 0.04
+BB_LIFETIME = 20
+BB_ANNUITY_FACTOR = BB_WACC / (1.0 - (1.0 + BB_WACC) ** (-BB_LIFETIME))
+
 TECHNOLOGIES_SELECTED = [
     # "electricity-large_battery_storage",
     # "electricity-small_battery_storage",
