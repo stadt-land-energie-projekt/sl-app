@@ -70,6 +70,19 @@
             </div>
           </div>
         </div>
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <p>
+              <i class="fas fa-file-pdf"
+                 aria-hidden="true"
+                 style="padding-right: 0.5rem"></i>
+              Download: <a href="{% static 'files/stadt_land_energie_annahmen_berechnung_direkte_wertschoepfung.pdf' %}"
+    download
+    target="_blank"
+    rel="noopener">Annahmen & Berechnung der direkten Wertschöpfung (PDF)</a>
+            </p>
+          </div>
+        </div>
         <form action="{% url 'kommWertTool:submit' %}" method="POST">
           {% csrf_token %}
           <section class="av-section">
