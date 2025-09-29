@@ -83,20 +83,13 @@
         <section class="bg-light">
           <div class="results__container">
             <div class="results__tabs">
-              <button class="tab-button active" data-tab="exchange">Austausch</button>
-              <button class="tab-button" data-tab="basic-solution">Basislösung</button>
+              <button class="tab-button active" data-tab="basic-solution">Basislösung</button>
+              <button class="tab-button" data-tab="exchange">Austausch</button>
               <button class="tab-button" data-tab="sensitivity">Sensitivitäten</button>
               <button class="tab-button alternative" data-tab="alternatives">Alternative Lösungen erkunden</button>
             </div>
             <div class="results__tabs-content">
-              <div id="exchange" class="tab-content tab-content--exchange active">
-                <p>Hier sehen Sie, welche Strom- und Wasserstoffmengen ausgetauscht werden.</p>
-                <div>
-                  <div id="electricity-chart"></div>
-                  <div id="hydrogen-chart"></div>
-                </div>
-              </div>
-              <div class="tab-content tab-content--basic" id="basic-solution">
+              <div class="tab-content tab-content--basic active" id="basic-solution">
                 <p>Hier sehen Sie die Ergebnisse der optimalen Lösung des Energiesystems.</p>
                 <p>{{ regions_dropdown }}</p>
                 <div id="basic-charts">
@@ -112,6 +105,13 @@
                     <div id="suppliedHoursChart" class="chart-container"></div>
                     <div id="totalElectricityChart" class="chart-container"></div>
                   </div>
+                </div>
+              </div>
+              <div id="exchange" class="tab-content tab-content--exchange">
+                <p>Hier sehen Sie, welche Strom- und Wasserstoffmengen ausgetauscht werden.</p>
+                <div>
+                  <div id="electricity-chart"></div>
+                  <div id="hydrogen-chart"></div>
                 </div>
               </div>
               <div class="tab-content tab-content--sensitivity" id="sensitivity">
