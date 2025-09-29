@@ -868,7 +868,7 @@ function loadDemandChart(data) {
     graphic,
     tooltip: {
       trigger: 'item',
-      formatter: "{a} {c} MWh"
+      formatter: "{a} {c} GWh"
     },
     legend: { show: false }
   };
