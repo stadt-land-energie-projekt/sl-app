@@ -100,36 +100,37 @@ def get_regions_data() -> list:
             "demand_heat_dec": heat_demand_decentral,
         },
         {
-            "title": "Region Kiel",
+            "title": "Region Berlin-Brandenburg",
             "bbox": region_bbox["Kiel"],
-            "info": "Hier steht mehr Info über die Region Kiel",
-            "img_source": "Kiel-Map.png",
-            "text": "Die Stadt ist ein bedeutender Standort für die Schiffbauindustrie, Offshore-Windenergie und "
-            "innovative Forschung. Die starke Verbindung zur Ostsee prägt das wirtschaftliche und kulturelle "
-            "Leben Kiels und macht die Region zu einem wichtigen Akteur der nachhaltigen maritimen Entwicklung.",
+            "info": "Hier steht mehr Info über die Region Berlin-Brandenburg",
+            "img_source": "Berlin-Brandenburg_small.png",
+            "text": "Die Region vereint die hohe Energienachfrage der Metropole Berlin mit den großen "
+            "Erzeugungskapazitäten im ländlich geprägten Brandenburg. Windkraft, Photovoltaik und "
+            "innovative Speicherlösungen prägen die Energieproduktion, während Forschung und "
+            "Technologiezentren Impulse für die Energiewende setzen. Das Zusammenspiel von Stadt und Land "
+            "macht die Region zu einem zentralen Knotenpunkt der nachhaltigen Energieversorgung.",
             "keyfacts": [
                 {
                     "title": "Struktur",
-                    "fact": "Mischung aus Hafenwirtschaft, Wissenschaft und urbanem Leben",
+                    "fact": "Berlin als Verbrauchszentrum, Brandenburg als Erzeugungsregion ",
                     "icon": "/static/images/icons/case-study-structure.svg",
                 },
                 {
                     "title": "Besonderheit",
-                    "fact": "Hafen als Knotenpunkt für Schifffahrt und internationale Logistik",
+                    "fact": "Großes Stadt-Land-Gefälle bei Energie, Hauptstadtmetropole mit hohem Importbedarf ",
                     "icon": "/static/images/icons/case-study-particularity.svg",
                 },
                 {
                     "title": "Erneuerbare Energien",
-                    "fact": "Offshore-Windenergie und nachhaltige Mobilitätsprojekte",
+                    "fact": "Starker Wind- und Solarstrom, geplanter Wasserstoffanschluss ",
                     "icon": "/static/images/icons/case-study-renewable.svg",
                 },
                 {
                     "title": "Herausforderung",
-                    "fact": "Transformation der Werftindustrie und Anpassung an den Klimawandel",
+                    "fact": "Abgleich von Erzeugung und Verbrauch, Netzausbau nötig ",
                     "icon": "/static/images/icons/case-study-challenge.svg",
                 },
             ],
-            # TODO: Insert data for Kiel  # noqa: TD002, TD003
         },
     ]
 

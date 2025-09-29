@@ -31,6 +31,11 @@ function regionSelected(buttonElement, regionTitle) {
 }
 
 function display_details(regionTitle){
+  if (regionTitle === "Region Berlin-Brandenburg") {
+    document.getElementById('cs-details').style.display = "none";
+  } else {
+    document.getElementById('cs-details').style.display = "block";
+  }
   const divOs = document.getElementById('table-details-os');
   const divKiel = document.getElementById('table-details-kiel');
 
