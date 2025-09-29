@@ -197,7 +197,7 @@ function createFlowChart(data, resource, chartID, region) {
           lineStyle: { width: scaleLineWidth(d.value) }
         }));
     let option = {
-        title: { text: data.title || "Flussdiagramm", left: "center" },
+        title: { text: data.title || "Stromaustausch", left: "center" },
         tooltip: {
             trigger: "item",
             formatter: function (params) {
