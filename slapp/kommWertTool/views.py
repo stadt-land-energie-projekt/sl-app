@@ -11,8 +11,7 @@ from slapp.kommWertTool.cal_mun_rev import main
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 muns = [
-    {"id": 0, "name": "Case Study 1: Gemeinde in Oderland-Spree"},
-    {"id": 1, "name": "Case Study 2: Kiel"},
+    {"id": 0, "name": "Gemeinde in Brandenburg"},
 ]
 
 
@@ -22,13 +21,13 @@ def index(request: HttpRequest) -> HttpResponse:
         next_url = None
         prev_url = reverse("explorer:results_variation")
         active_tab = "step_7_added_value"
-        #sidepanel = True
+        # sidepanel = True
 
         if request.session.get("prev_before_added_value") == "robustness":
             prev_url = reverse("explorer:results_robustness")
 
-        #ids = request.session.get("municipality_ids", [])
-        #muns = Municipality.objects.filter(id__in=ids) if ids else None
+        # ids = request.session.get("municipality_ids", [])
+        # muns = Municipality.objects.filter(id__in=ids) if ids else None
 
         context = {
             "next_url": next_url,
@@ -53,10 +52,10 @@ def submit(request: HttpRequest) -> HttpResponse:
         next_url = None
         prev_url = reverse("kommWertTool:added_value")
         active_tab = "step_7_added_value"
-        #sidepanel = True
+        # sidepanel = True
 
-        #ids = request.session.get("municipality_ids", [])
-        #muns = Municipality.objects.filter(id__in=ids) if ids else None
+        # ids = request.session.get("municipality_ids", [])
+        # muns = Municipality.objects.filter(id__in=ids) if ids else None
         return render(
             request,
             "added_value_results.html",
