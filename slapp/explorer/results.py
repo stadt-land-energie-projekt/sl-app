@@ -115,6 +115,8 @@ def get_alternative_result(region: str, divergence: float) -> dict:
 
     data_for_region_and_divergence = {}
     for r in results:
+        if r.type == "storage capacity":
+            continue
         if r.component not in data_for_region_and_divergence:
             data_for_region_and_divergence[r.component] = {
                 "min_capacity": r.min_capacity,
