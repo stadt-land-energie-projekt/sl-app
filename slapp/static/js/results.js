@@ -45,7 +45,7 @@ async function showHiddenDiv(region, button) {
 
     try {
         await loadFlowsChart(region, "electricity");
-        await loadFlowsChart(region, "hydrogen");
+        // await loadFlowsChart(region, "hydrogen");
         const basicRegion = region === "einzeln" ? regionDropdown.value : region;
         await loadBasicData(basicRegion);
     } catch (error) {
@@ -153,7 +153,7 @@ async function loadFlowsChart(region, chartType) {
         const hydroData = jsonObj.flow_data.filter(d => d.carrier === "h2");
         const electricityData = jsonObj.flow_data.filter(d => d.carrier === "electricity");
         createFlowChart(electricityData, "electricity", "electricity-chart", region);
-        createFlowChart(hydroData, "hydrogen", "hydrogen-chart", region);
+        // createFlowChart(hydroData, "hydrogen", "hydrogen-chart", region);
     } catch (error) {
         console.error("Error loading flow chart:", error);
     }

@@ -108,10 +108,9 @@
                 </div>
               </div>
               <div id="exchange" class="tab-content tab-content--exchange">
-                <p>Hier sehen Sie, welche Strom- und Wasserstoffmengen ausgetauscht werden.</p>
+                <p>Hier sehen Sie, welche Strommengen ausgetauscht werden.</p>
                 <div>
-                  <div id="electricity-chart"></div>
-                  <div id="hydrogen-chart"></div>
+                  <div id="electricity-chart" class="chart-container"></div>
                 </div>
               </div>
               <div class="tab-content tab-content--sensitivity" id="sensitivity">
@@ -145,40 +144,12 @@
                 </div>
               </div>
               <div class="tab-content tab-content--alternatives" id="alternatives">
-                {#              <h3>Modelling to Generate Alternatives (MGA)</h3>#}
-                {#              <div class="more-info-box" id="more-info-box">#}
                 <p>
                   Wir haben alternative Lösungen berechnet. Das sind verschiedene Ausbaukombinationen
                   erneuerbarer Technologien bei nahezu gleichen Gesamtkosten. So lassen sich technologische Prioritäten
                   setzen, ohne das Budget zu sprengen. Mehr dazu erfahren Sie auf der Einstiegsseite zu
                   <a href="{% url 'explorer:esys_robust' %}">Energiesystem & Robustheit</a>.
                 </p>
-                {#                <button onclick="toggleMoreInfo()">#}
-                {#                  <span>Mehr Infos</span>#}
-                {#                  <span id="info-arrow" class="arrow-icon">#}
-                {#                    <svg xmlns="http://www.w3.org/2000/svg"#}
-                {#                         width="16"#}
-                {#                         height="16"#}
-                {#                         fill="currentColor"#}
-                {#                         viewBox="0 0 16 16">#}
-                {#                      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708" />#}
-                {#                    </svg>#}
-                {#                  </span>#}
-                {#                </button>#}
-                {#                <div class="more-info-box__text" id="more-info-text">#}
-                {#                  <p>#}
-                {#                    Neben der obigen Basislösung haben wir zahlreiche alternative Wege zu einem erneuerbaren Energiesystem berechnet.#}
-                {#                    Dafür haben wir den sogenannten Ansatz <span>Modelling to Generate Alternatives</span> (MGA) verwendet.#}
-                {#                    Das bedeutet, dass für jede Technologie <span>verschiedene Ausbaumöglichkeiten</span> existieren, ohne dass die Gesamtsystemkosten#}
-                {#                    stark von den Kosten der (optimalen) Basislösung abweichen. Die Alternativen sollten nicht mehr als <span>1-2 %#}
-                {#                    günstiger oder teurer als die Basislösung</span> sein.#}
-                {#                    Der verstärkte Ausbau einer Technologie bei nahezu#}
-                {#                    gleichbleibenden Kosten funktioniert natürlich nur, wenn andere Technologien dafür weniger stark wachsen.#}
-                {#                    Das bedeutet, dass sich die Zusammensetzung des künftigen Energiesystems mit dem Fokus auf eine oder mehrere#}
-                {#                    Technologien mehr oder weniger stark ändern muss, um im Kostenrahmen zu bleiben.#}
-                {#                  </p>#}
-                {#                </div>#}
-                {#              </div>#}
                 <div>
                   <div class="toggle-buttons">
                     <button class="alternative toggle-button active"
